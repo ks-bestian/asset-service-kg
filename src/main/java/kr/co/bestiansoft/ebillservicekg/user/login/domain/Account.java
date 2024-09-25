@@ -53,4 +53,47 @@ public class Account extends User {
         }
     }
 
+
+    public Account(EmployeeEntity user, DepartmentEntity dept, List<GrantedAuthority> grantedAuthorities) {
+
+        super(user.getUserId(), user.getPswd(), grantedAuthorities);
+
+        if (user!=null) {
+            this.accountType = "user";
+            this.accountId = user.getUserId();
+            this.pswd = user.getPswd();
+            this.user = user;
+        }
+
+        if (dept!=null) {
+            this.deptCd = dept.getDeptId();
+            this.deptNm1 = dept.getDeptNm1();
+            this.deptNm2 = dept.getDeptNm2();
+            this.shrtNm = dept.getShrtNm();
+            this.uprDeptId = dept.getUprDeptId();
+        }
+
+    }
+
+    public Account(MemberEntity member, DepartmentEntity dept, List<GrantedAuthority> grantedAuthorities) {
+
+        super( member.getMemberId(), member.getPswd(), grantedAuthorities);
+
+        if (member!=null) {
+            this.accountType = "member";
+            this.accountId = member.getMemberId();
+            this.pswd = member.getPswd();
+            this.member = member;
+        }
+
+        if (dept!=null) {
+            this.deptCd = dept.getDeptId();
+            this.deptNm1 = dept.getDeptNm1();
+            this.deptNm2 = dept.getDeptNm2();
+            this.shrtNm = dept.getShrtNm();
+            this.uprDeptId = dept.getUprDeptId();
+        }
+
+
+    }
 }

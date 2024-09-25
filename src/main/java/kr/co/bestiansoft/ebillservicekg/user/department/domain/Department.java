@@ -1,7 +1,6 @@
 package kr.co.bestiansoft.ebillservicekg.user.department.domain;
 
-import kr.co.bestiansoft.ebillservice.department.domain.entity.DepartmentEntity;
-import kr.co.bestiansoft.ebillservice.department.dto.DepartmentCreate;
+import kr.co.bestiansoft.ebillservicekg.user.department.repository.entity.DepartmentEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -51,44 +50,6 @@ public class Department {
         this.parentDepartment = parentDepartment;
         this.mngrId = mngrId;
     }
-
-    public static Department from(DepartmentCreate departmentCreate, Department parentDepartment) {
-        return Department.builder()
-                .deptId(departmentCreate.getDeptId())
-                .deptNm1(departmentCreate.getDeptNm1())
-                .deptNm2(departmentCreate.getDeptNm2())
-                .shrtNm(departmentCreate.getShrtNm())
-                .bgDt(departmentCreate.getBgDt())
-                .ord(departmentCreate.getOrd())
-                .uprDeptId(departmentCreate.getUprDeptId())
-                .ctgrId(departmentCreate.getCtgrId())
-                .edDt(departmentCreate.getEdDt())
-                .mngrId(departmentCreate.getMngrId())
-                .parentDepartment(parentDepartment)
-                .build();
-    }
-
-
-    public static Department from(DepartmentCreate departmentCreate) {
-        return Department.builder()
-                .deptId(departmentCreate.getDeptId())
-                .deptNm1(departmentCreate.getDeptNm1())
-                .deptNm2(departmentCreate.getDeptNm2())
-                .shrtNm(departmentCreate.getShrtNm())
-                .ord(departmentCreate.getOrd())
-                .uprDeptId(departmentCreate.getUprDeptId())
-                .ctgrId(departmentCreate.getCtgrId())
-                .useYn(null)
-                .bgDt(departmentCreate.getBgDt())
-                .edDt(departmentCreate.getEdDt())
-                .regDt(null)
-                .regId(null)
-                .modDt(null)
-                .modId(null)
-                .mngrId(departmentCreate.getMngrId())
-                .build();
-    }
-
 
     public Department addParentDepartment(Department parentDepartment) {
         this.parentDepartment = parentDepartment;
