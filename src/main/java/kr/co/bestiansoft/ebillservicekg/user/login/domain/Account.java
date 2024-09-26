@@ -10,7 +10,6 @@ import org.springframework.security.core.userdetails.User;
 
 import java.util.List;
 
-@Builder
 @Getter
 public class Account extends User {
 	
@@ -52,7 +51,6 @@ public class Account extends User {
         	this.user.clearPassword();
         }
     }
-
 
     public Account(EmployeeEntity user, DepartmentEntity dept, List<GrantedAuthority> grantedAuthorities) {
 

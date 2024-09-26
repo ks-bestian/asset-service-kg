@@ -1,3 +1,6 @@
+server:
+  port: 8081
+
 spring:
   application:
     name: ebill-service-kg
@@ -32,5 +35,11 @@ logging:
     org.hibernate.SQL: debug
     org.hibernate.type: trace
 
-server:
-  port: 8081
+mybatis:
+  mapper-locations: classpath:mapper/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
+jwt:
+  secret: 2fdd12003e9607e97e71e0076daea1ec542430ac32a24c16bb322025e36f79d6
+  token-validity-in-seconds: 3600

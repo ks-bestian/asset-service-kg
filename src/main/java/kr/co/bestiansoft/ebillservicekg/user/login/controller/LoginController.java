@@ -1,0 +1,84 @@
+package kr.co.bestiansoft.ebillservicekg.user.login.controller;
+
+import io.swagger.annotations.ApiOperation;
+import kr.co.bestiansoft.ebillservicekg.config.security.JwtFilter;
+import kr.co.bestiansoft.ebillservicekg.config.security.TokenProvider;
+import kr.co.bestiansoft.ebillservicekg.user.login.domain.LoginCondition;
+import kr.co.bestiansoft.ebillservicekg.user.login.domain.LoginResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
+
+@Slf4j
+@RequiredArgsConstructor
+@RestController
+public class LoginController {
+
+    private final TokenProvider tokenProvider;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+/* //<FIXME> 로그인 진행중
+    @ApiOperation(value = "jwt 로그인", notes = "로그인 및 세션 생성")
+    @PostMapping("/api/authenticate")
+    public ResponseEntity<LoginResponse> authorize(@RequestBody @Valid LoginCondition loginCondition) {
+
+        boolean result = false;
+        String msg ="";
+
+        try {
+
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(loginCondition.getUserId(), loginCondition.getPassword());
+
+            // authenticate 메소드가 실행이 될 때 CustomUserDetailsService class의 loadUserByUsername 메소드가 실행
+            Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+            // 해당 객체를 SecurityContextHolder에 저장하고
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            // authentication 객체를 createToken 메소드를 통해서 JWT Token을 생성
+            String jwt = tokenProvider.createToken(authentication);
+
+            HttpHeaders httpHeaders = new HttpHeaders();
+            // response header에 jwt token에 넣어줌
+
+            ResponseCookie jwtCookie = ResponseCookie.from("jwtToken", jwt)
+                                                     .httpOnly(true)
+                                                     .secure(true) // HTTPS를 사용하는 경우에만
+                                                     .path("/")
+                                                     .maxAge(24 * 60 * 60) // 쿠키의 유효 기간 설정 (1일)
+                                                     .build();
+
+            httpHeaders.add(HttpHeaders.SET_COOKIE, jwtCookie.toString());
+
+            httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+
+            LoginResponse loginResponse = loginService.getLoginInfo(result, msg, jwt);
+
+
+            return new ResponseEntity<>(loginResponse, httpHeaders, HttpStatus.OK);
+
+        } catch (BadCredentialsException e) {
+            msg = "LOGIN_FAIL";
+            result = false;
+            return new ResponseEntity<>(LoginResponse.from(result, msg), HttpStatus.UNAUTHORIZED);
+        } catch (AuthenticationException e) {
+            msg = "AUTH_FAIL";
+            result = false;
+            return new ResponseEntity<>(LoginResponse.from(result, msg), HttpStatus.UNAUTHORIZED);
+        }
+    }*/
+}

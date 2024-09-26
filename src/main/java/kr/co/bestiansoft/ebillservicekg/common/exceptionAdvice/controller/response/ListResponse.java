@@ -19,12 +19,25 @@ public class ListResponse<T> {
         this.content = content;
     }
 
+    @Builder
+    public ListResponse(Long count, List<T> content) {
+        this.count = count;
+        this.content = content;
+    }
+
     public static <T> ListResponse<T> from(Long count, int totalPage, List<T> content) {
         return ListResponse.<T>builder()
                 .count(count)
                 .totalPage(totalPage)
                 .content(content)
                 .build();
+    }
+
+    public static <T> ListResponse<T> from(Long count, List<T> content) {
+        return ListResponse.<T>builder()
+                           .count(count)
+                           .content(content)
+                           .build();
     }
 
     public ListResponse<T> addContent(List<T> content) {

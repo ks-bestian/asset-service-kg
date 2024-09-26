@@ -1,4 +1,4 @@
-package kr.co.bestiansoft.ebillservicekg.config;
+package kr.co.bestiansoft.ebillservicekg.config.util;
 
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.IdentifierGenerator;

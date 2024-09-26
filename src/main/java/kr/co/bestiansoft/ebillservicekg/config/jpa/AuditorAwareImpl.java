@@ -1,8 +1,11 @@
 package kr.co.bestiansoft.ebillservicekg.config.jpa;
 
+import kr.co.bestiansoft.ebillservicekg.user.login.domain.Account;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.lang.NonNull;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Optional;
 
@@ -13,9 +16,6 @@ public class AuditorAwareImpl implements AuditorAware<String> {
     @Override
     public Optional<String> getCurrentAuditor() {
 
-        return Optional.empty();
-        /*
-        <FIXME> Spring Security 설정 후 주석 해제 필요
         return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
                        .map(Authentication::getPrincipal)
                        .filter(Account.class::isInstance)
@@ -25,6 +25,5 @@ public class AuditorAwareImpl implements AuditorAware<String> {
                            return account.getAccountId();
                        });
 
-        */
     }
 }
