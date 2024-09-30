@@ -8,6 +8,7 @@ import kr.co.bestiansoft.ebillservicekg.user.login.domain.Account;
 import kr.co.bestiansoft.ebillservicekg.user.member.repository.MemberRepository;
 import kr.co.bestiansoft.ebillservicekg.user.member.repository.entity.MemberEntity;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
+@Slf4j
 @Component("userDetailsService")
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {

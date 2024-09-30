@@ -2,6 +2,7 @@ package kr.co.bestiansoft.ebillservicekg.config.web.interceptor;
 
 import kr.co.bestiansoft.ebillservicekg.admin.log.domain.LogCreate;
 import kr.co.bestiansoft.ebillservicekg.admin.log.service.LogService;
+import kr.co.bestiansoft.ebillservicekg.user.login.util.SecurityInfoUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -36,9 +37,7 @@ public class LogInterceptor implements HandlerInterceptor {
                 &&!reqServletPath.contains("/api/menus/menuBreadcrumbs")
         ) {//로그조회는 제외
             if(!reqServletPath.contains("/api/authenticate")) {
-//                <FIXME> 로그인 추가 후 userId에 해당 값을 넣어줘 함.
-//                userId = new SecurityInfoUtil().getAccountId();
-                userId = "test-admin";
+                userId = new SecurityInfoUtil().getAccountId();
             }
 
             //reqMethod

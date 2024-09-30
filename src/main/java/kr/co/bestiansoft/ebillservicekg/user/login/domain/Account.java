@@ -3,7 +3,6 @@ package kr.co.bestiansoft.ebillservicekg.user.login.domain;
 import kr.co.bestiansoft.ebillservicekg.user.department.repository.entity.DepartmentEntity;
 import kr.co.bestiansoft.ebillservicekg.user.employee.repository.entity.EmployeeEntity;
 import kr.co.bestiansoft.ebillservicekg.user.member.repository.entity.MemberEntity;
-import lombok.Builder;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -40,7 +39,7 @@ public class Account extends User {
     private String uprDeptId;
     
     private MemberEntity member;
-    private EmployeeEntity user;
+    private EmployeeEntity employee;
     
     // 패스워드를 지우는 메서드
     public void clearPassword() {
@@ -48,19 +47,19 @@ public class Account extends User {
         if (this.member!=null) {
         	this.member.clearPassword();
         }else {
-        	this.user.clearPassword();
+        	this.employee.clearPassword();
         }
     }
 
-    public Account(EmployeeEntity user, DepartmentEntity dept, List<GrantedAuthority> grantedAuthorities) {
+    public Account(EmployeeEntity employee, DepartmentEntity dept, List<GrantedAuthority> grantedAuthorities) {
 
-        super(user.getUserId(), user.getPswd(), grantedAuthorities);
+        super(employee.getUserId(), employee.getPswd(), grantedAuthorities);
 
-        if (user!=null) {
+        if (employee !=null) {
             this.accountType = "user";
-            this.accountId = user.getUserId();
-            this.pswd = user.getPswd();
-            this.user = user;
+            this.accountId = employee.getUserId();
+            this.pswd = employee.getPswd();
+            this.employee = employee;
         }
 
         if (dept!=null) {

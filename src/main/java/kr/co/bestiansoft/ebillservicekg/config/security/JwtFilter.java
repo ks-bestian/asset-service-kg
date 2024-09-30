@@ -40,12 +40,12 @@ public class JwtFilter extends GenericFilterBean {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 logger.debug("Security Context에 '{}' 인증 정보를 저장했습니다, uri: {}", authentication.getName(), requestURI);
             } else {
-                logger.debug("블랙리스트에 있는 JWT 토큰입니다, uri: {}", requestURI);
+                logger.info("블랙리스트에 있는 JWT 토큰입니다, uri: {}", requestURI);
             }
             
             
         } else {
-            logger.debug("유효한 JWT 토큰이 없습니다, uri: {}", requestURI);
+            logger.info("유효한 JWT 토큰이 없습니다, uri: {}", requestURI);
         }
 
         filterChain.doFilter(servletRequest, servletResponse);
