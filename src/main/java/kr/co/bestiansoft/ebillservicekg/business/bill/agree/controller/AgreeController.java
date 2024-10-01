@@ -1,4 +1,4 @@
-package kr.co.bestiansoft.ebillservicekg.bill.agree.controller;
+package kr.co.bestiansoft.ebillservicekg.business.bill.agree.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 

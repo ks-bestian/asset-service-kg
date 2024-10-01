@@ -65,7 +65,7 @@ public class LoginController {
                                                      .httpOnly(true)
                                                      .secure(true) // HTTPS를 사용하는 경우에만
                                                      .path("/")
-                                                     .maxAge(24 * 60 * 60) // 쿠키의 유효 기간 설정 (1일)
+                                                     .maxAge(24 * 60 * 60L) // 쿠키의 유효 기간 설정 (1일)
                                                      .build();
 
             httpHeaders.add(HttpHeaders.SET_COOKIE, jwtCookie.toString());
