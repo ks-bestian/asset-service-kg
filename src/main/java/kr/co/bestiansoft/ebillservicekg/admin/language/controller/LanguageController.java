@@ -1,6 +1,5 @@
 package kr.co.bestiansoft.ebillservicekg.admin.language.controller;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +13,6 @@ public class LanguageController {
 
     @GetMapping("/api/languages")
     public void initLanguage() {
-
+        log.info("language init!");
     }
 }
