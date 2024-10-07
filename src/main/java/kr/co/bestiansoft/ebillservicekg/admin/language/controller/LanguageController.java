@@ -2,7 +2,6 @@ package kr.co.bestiansoft.ebillservicekg.admin.language.controller;
 
 import kr.co.bestiansoft.ebillservicekg.admin.language.domain.LanguageResponse;
 import kr.co.bestiansoft.ebillservicekg.admin.language.service.LanguageService;
-import kr.co.bestiansoft.ebillservicekg.admin.log.domain.Logs;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionAdvice.controller.response.ListResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
