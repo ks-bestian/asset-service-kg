@@ -7,6 +7,7 @@ import kr.co.bestiansoft.ebillservicekg.admin.menu.repository.entity.MenuEntity;
 import kr.co.bestiansoft.ebillservicekg.admin.menu.service.MenuService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public class MenuServiceImpl implements MenuService {
         log.info("initMenu Service! >> {}" , accountId);
 
         if(accountId.equals("admin")) {
-            List<MenuEntity> menuEntityList = menuRepository.findAll();
+            List<MenuEntity> menuEntityList = menuRepository.findAll(Sort.by(Sort.Direction.ASC, "ord"));
             return menuEntityList.stream().map(entity -> MenuInitResponse.from(entity, languageType)).collect(Collectors.toList());
         }
 
