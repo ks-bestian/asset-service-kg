@@ -8,4 +8,10 @@ public class ListRequest {
     private Long page;
     private Long size;
 
+
+    public void setPage(Long page) {
+
+        this.page = page-1;
+    }
+
 }

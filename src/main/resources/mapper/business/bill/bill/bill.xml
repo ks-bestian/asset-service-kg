@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.bestiansoft.ebillservicekg.business.bill.bill.repository.BillMapper">
+
+    <select id="selectBills" parameterType="kr.co.bestiansoft.ebillservicekg.business.bill.bill.domain.BillSearch" resultType="kr.co.bestiansoft.ebillservicekg.business.bill.bill.domain.BillList">
+        select
+            em.bill_id
+            , em.bill_no
+            , em.bill_name
+            , em.ppsr_nm as proposer
+            , em.ppsl_dt as proposeDate
+            , em.submit_dt as submitDate
+            , cc.code_nm1 as status
+        from
+            ebs_master em left join com_code cc on em.stat_cd = cc.code_id
+        <include refid="billWhere"/>
+        order by
+            em.bill_no desc
+        limit #{size}
+        offset (#{page} * #{size})
+    </select>
+
+    <select id="selectBillCount" parameterType="kr.co.bestiansoft.ebillservicekg.business.bill.bill.domain.BillSearch" resultType="java.lang.Long">
+        select
+         count(*)
+        from
+        ebs_master em
+        <include refid="billWhere"/>
+    </select>
+
+    <sql id="billWhere">
+        <where>
+            <if test = "billNo != '' and billNo != null">
+                em.bill_no like CONCAT('%',#{billNo},'%')
+            </if>
+            <if test = "billName != '' and billName != null">
+                and em.bill_name like CONCAT('%',#{billName},'%')
+            </if>
+            <if test = "status != '' and status != null">
+            <![CDATA[
+                and em.stat_cd = ${status}
+            ]]>
+            </if>
+            <if test = "proposeDate != '' and proposeDate != null">
+            <![CDATA[
+                and em.ppsl_dt = #{proposeDate}
+            ]]>
+            </if>
+        </where>
+    </sql>
+
+
+</mapper>
