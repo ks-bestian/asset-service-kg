@@ -3,7 +3,7 @@ package kr.co.bestiansoft.ebillservicekg.admin.language.service.impl;
 import kr.co.bestiansoft.ebillservicekg.admin.language.domain.LanguageResponse;
 import kr.co.bestiansoft.ebillservicekg.admin.language.repository.LanguageMapper;
 import kr.co.bestiansoft.ebillservicekg.admin.language.service.LanguageService;
-import kr.co.bestiansoft.ebillservicekg.common.exceptionAdvice.controller.response.ListResponse;
+import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.ListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +17,10 @@ public class LanguageServiceImpl implements LanguageService {
 
     @Override
     public ListResponse<LanguageResponse> selectLanguages() {
-        List<LanguageResponse> LanguageList = languageMapper.selectLanguages();
+        List<LanguageResponse> languageList = languageMapper.selectLanguages();
         Long count = languageMapper.selectLanguageCount();
 
 
-        return new ListResponse<>(count, LanguageList);
+        return new ListResponse<>(count, languageList);
     }
 }

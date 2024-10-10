@@ -6,7 +6,7 @@ import kr.co.bestiansoft.ebillservicekg.admin.log.domain.LogList;
 import kr.co.bestiansoft.ebillservicekg.admin.log.domain.LogRead;
 import kr.co.bestiansoft.ebillservicekg.admin.log.domain.Logs;
 import kr.co.bestiansoft.ebillservicekg.admin.log.service.LogService;
-import kr.co.bestiansoft.ebillservicekg.common.exceptionAdvice.controller.response.ListResponse;
+import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.ListResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Api(tags = "접속이력 API")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -27,7 +26,9 @@ public class LogController {
 
     @ApiOperation(value = "접속이력 리스트 조회", notes = "접속이력 리스트를 조회한다.")
     @GetMapping("/api/logs")
-    public ResponseEntity<ListResponse<Logs>> logList(@Valid @ModelAttribute LogRead logRead) {
+    public ResponseEntity<ListResponse<Logs>> logList(@ModelAttribute LogRead logRead) {
+
+        log.info("logRead : {}", logRead);
 
         LogList logList = logService.logList(logRead);
 

@@ -1,7 +1,7 @@
 package kr.co.bestiansoft.ebillservicekg.admin.language.service;
 
 import kr.co.bestiansoft.ebillservicekg.admin.language.domain.LanguageResponse;
-import kr.co.bestiansoft.ebillservicekg.common.exceptionAdvice.controller.response.ListResponse;
+import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.ListResponse;
 
 public interface LanguageService {
 

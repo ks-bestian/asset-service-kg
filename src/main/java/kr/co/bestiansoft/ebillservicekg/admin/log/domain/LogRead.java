@@ -2,17 +2,18 @@ package kr.co.bestiansoft.ebillservicekg.admin.log.domain;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Builder;
+import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.request.ListRequest;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 
+@EqualsAndHashCode(callSuper = true)
 @ApiModel(description = "접속이력 조회")
 @Data
-public class LogRead {
+public class LogRead extends ListRequest {
+
 
 	@ApiModelProperty(value = "접속자 아이디")
     private String userId;
@@ -27,13 +28,5 @@ public class LogRead {
     @ApiModelProperty(value = "접속일자 조회 종료일")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate endDate;
-
-    @Builder
-	public LogRead(String userId, String accessIp, String reqUrl, LocalDate startDate, LocalDate endDate) {
-		this.userId = userId;
-		this.reqUrl = reqUrl;
-		this.startDate = startDate;
-		this.endDate = endDate;
-	}
 
 }

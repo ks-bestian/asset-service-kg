@@ -1,14 +1,15 @@
-package kr.co.bestiansoft.ebillservicekg.common.exceptionAdvice.controller;
+package kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller;
 
-import kr.co.bestiansoft.ebillservicekg.common.exceptionAdvice.controller.response.CommonResponse;
-import kr.co.bestiansoft.ebillservicekg.common.exceptionAdvice.exception.AlreadyExistsException;
-import kr.co.bestiansoft.ebillservicekg.common.exceptionAdvice.exception.ResourceNotFoundException;
-import kr.co.bestiansoft.ebillservicekg.common.exceptionAdvice.exception.UnauthorizedException;
+import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
+import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.exception.AlreadyExistsException;
+import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.exception.ResourceNotFoundException;
+import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.exception.UnauthorizedException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -85,7 +86,6 @@ public class ExceptionControllerAdvice {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value())
                              .body(response);
     }
-/*
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler({AccessDeniedException.class})
     public ResponseEntity<CommonResponse> accessDeniedException(AccessDeniedException e) {
@@ -99,5 +99,4 @@ public class ExceptionControllerAdvice {
                              .body(response);
     }
 
- */
 }

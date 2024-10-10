@@ -1,4 +1,4 @@
-package kr.co.bestiansoft.ebillservicekg.common.exceptionAdvice.controller.response;
+package kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response;
 
 import lombok.Builder;
 import lombok.Data;

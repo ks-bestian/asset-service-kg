@@ -1,4 +1,4 @@
-package kr.co.bestiansoft.ebillservicekg.common.exceptionAdvice.exception;
+package kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.exception;
 
 
 import java.util.function.Supplier;

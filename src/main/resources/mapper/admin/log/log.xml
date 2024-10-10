@@ -34,6 +34,8 @@
         <include refid="logWhere"/>
         order by
             ah.reg_dt desc
+        limit #{size}
+        offset #{page} * #{size}
     </select>
 
     <select id="selectLogCount" parameterType="kr.co.bestiansoft.ebillservicekg.admin.log.domain.LogRead" resultType="java.lang.Long">
@@ -46,10 +48,10 @@
 
     <sql id="logWhere">
         <where>
-            <if test = "userId != null">
+            <if test = "userId != '' and userId != null">
                 ah.user_id like CONCAT('%',#{userId},'%')
             </if>
-            <if test = "reqUrl != null">
+            <if test = "reqUrl != '' and reqUrl != null">
                 and ah.req_url like CONCAT('%',#{reqUrl},'%')
             </if>
             <if test = "startDate != null">

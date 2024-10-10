@@ -1,6 +1,6 @@
 package kr.co.bestiansoft.ebillservicekg.user.login.util;
 
-import kr.co.bestiansoft.ebillservicekg.common.exceptionAdvice.exception.UnauthorizedException;
+import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.exception.UnauthorizedException;
 import kr.co.bestiansoft.ebillservicekg.user.employee.repository.entity.EmployeeEntity;
 import kr.co.bestiansoft.ebillservicekg.user.login.domain.Account;
 import kr.co.bestiansoft.ebillservicekg.user.member.repository.entity.MemberEntity;
