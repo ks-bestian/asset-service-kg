@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.bestiansoft.ebillservicekg.admin.bbs.repository.BoardMapper">
+
+    <select id="getBoardList" parameterType="java.lang.String"
+            resultType="kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo">
+        select *, row_number() over(order by reg_dt desc) as num
+        from com_board
+        where brd_type = #{brdType}
+        and brd_sj like concat('%', #{brdSj}, '%')
+    </select>
+
+    <select id="getBoardById" parameterType="java.lang.Long"
+            resultType="kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo">
+        select *, row_number() over(order by reg_dt desc) as num
+        from com_board
+        where brd_id = #{brdId}
+    </select>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+        delete from com_board
+        where brd_id = #{brdId}
+    </delete>
+
+    <update id="updateById" parameterType="kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo">
+        update com_board
+        set
+        brd_sj = #{brdSj},
+        brd_cn = #{brdCn},
+        pup_yn = #{pupYn},
+        pup_bg_dt = #{pupBgDt},
+        pup_ed_dt = #{pupEdDt},
+        ord = #{ord},
+        file_group_id = #{fileGroupId}
+        WHERE brd_id = #{brdId}
+    </update>
+
+
+    <select id="getBoardMainList" parameterType="java.lang.String"   resultType="kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo">
+		select
+		    brd_id
+		  , brd_type
+		  , brd_sj
+		  , brd_cn
+		  , TO_CHAR(reg_dt, 'DD/MM/YY') AS reg_dt
+		from com_board
+		where brd_type = #{brdType}
+		order by brd_id desc
+		limit 5
+    </select>
+    
+    <select id="getBoardMainPopupList" parameterType="java.lang.String"   resultType="kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo">
+		select *
+		from sndb.com_board
+		where 1=1
+		and brd_type = 'NOTI'
+		and pup_yn = 'Y'
+		and (pup_bg_dt is null or to_char(current_date, 'YYYY-MM-DD') <![CDATA[>=]]> pup_bg_dt) 
+		and (pup_ed_dt is null or to_char(current_date, 'YYYY-MM-DD') <![CDATA[<=]]> pup_ed_dt)
+    </select>
+
+    <update id="updateNotiInqCnt" parameterType="java.lang.Long">
+        update com_board
+        set noti_inq_cnt = #{notiInqCnt}
+        where brd_id = #{brdId}
+    </update>
+    
+    <insert id="insertBoard" parameterType="kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo">
+        insert into	kgst.com_board (
+			brd_type,
+			brd_sj,
+			brd_cn,
+			noti_inq_cnt,
+			pup_yn,
+			pup_bg_dt,
+			pup_ed_dt,
+			ord,
+			file_group_id,
+			reg_id,
+			reg_dt,
+			mod_id,
+			mod_dt
+		)
+		values (
+			#{brdType},
+			#{brdSj},
+			#{brdCn},
+			#{notiInqCnt},
+			#{pupYn},
+			#{pupBgDt},
+			#{pupEdDt},
+			#{ord},
+			#{fileGroupId},
+			#{regId},
+			now(),
+			'',
+			''
+		)
+    </insert>
+    
+</mapper>
