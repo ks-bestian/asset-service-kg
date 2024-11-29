@@ -3,7 +3,7 @@ package kr.co.bestiansoft.ebillservicekg.common.vo;
 import lombok.Data;
 
 @Data
-public class ComDefaultVO {
+public class DefaultVO {
 	
 	/** 검색조건 */
     private String searchCondition = "";

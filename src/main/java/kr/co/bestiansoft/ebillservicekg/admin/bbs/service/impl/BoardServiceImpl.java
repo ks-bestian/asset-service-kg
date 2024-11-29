@@ -3,9 +3,8 @@ package kr.co.bestiansoft.ebillservicekg.admin.bbs.service.impl;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.bestiansoft.ebillservicekg.admin.bbs.repository.BoardMapper;
 import kr.co.bestiansoft.ebillservicekg.admin.bbs.service.BoardService;

@@ -1,20 +1,18 @@
 package kr.co.bestiansoft.ebillservicekg.config.web.interceptor;
 
-import kr.co.bestiansoft.ebillservicekg.admin.log.domain.LogCreate;
-import kr.co.bestiansoft.ebillservicekg.admin.log.service.LogService;
-import kr.co.bestiansoft.ebillservicekg.user.login.util.SecurityInfoUtil;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.servlet.HandlerInterceptor;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.web.servlet.HandlerInterceptor;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Slf4j
 public class LogInterceptor implements HandlerInterceptor {
 
-    private final LogService logService;
+//    private final LogService logService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -36,12 +34,12 @@ public class LogInterceptor implements HandlerInterceptor {
                 &&!reqServletPath.contains("/api/lngCode")
                 &&!reqServletPath.contains("/api/menus/menuBreadcrumbs")
         ) {//로그조회는 제외
-            if(!reqServletPath.contains("/api/authenticate")) {
-                userId = new SecurityInfoUtil().getAccountId();
-            }
+//            if(!reqServletPath.contains("/api/authenticate")) {
+//                userId = new SecurityInfoUtil().getAccountId();
+//            }
 
             //reqMethod
-            logService.createLog(new LogCreate(userId, accessIp, reqURL, reqMethod));
+//            logService.createLog(new LogCreate(userId, accessIp, reqURL, reqMethod));
         }
 
         return true;

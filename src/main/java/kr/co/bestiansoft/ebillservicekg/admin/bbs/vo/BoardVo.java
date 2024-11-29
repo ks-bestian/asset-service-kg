@@ -3,11 +3,11 @@ package kr.co.bestiansoft.ebillservicekg.admin.bbs.vo;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
+import kr.co.bestiansoft.ebillservicekg.common.vo.DefaultVO;
 import lombok.Data;
 
 @Data
-public class BoardVo extends ComDefaultVO {
+public class BoardVo extends DefaultVO {
 
 	private Long brdId;
     private String brdSj;
