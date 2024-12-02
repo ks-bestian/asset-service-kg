@@ -3,6 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.admin.menu.repository.MenuMapper">
 
+<!--
     <select id="selectMenuByUserId" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.admin.menu.repository.entity.MenuEntity">
         select
             cm.*
@@ -14,5 +15,6 @@
             cau.user_id = #{userId}
         order by cm.ord
     </select>
+-->
 
 </mapper>

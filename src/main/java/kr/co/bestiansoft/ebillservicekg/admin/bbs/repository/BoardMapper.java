@@ -2,6 +2,7 @@ package kr.co.bestiansoft.ebillservicekg.admin.bbs.repository;
 
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
+
 import kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo;
 
 @Mapper

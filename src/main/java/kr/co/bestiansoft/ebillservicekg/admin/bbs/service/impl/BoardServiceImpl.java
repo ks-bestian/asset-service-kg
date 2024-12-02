@@ -22,7 +22,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public List<BoardVo> getBoardList(HashMap<String, Object> param, String brdType) {
-        String brdSj = String.valueOf(param.get("brdSj"));
+        String brdSj = String.valueOf(param.getOrDefault("brdSj", ""));
 
         List<BoardVo> result = boardMapper.getBoardList(brdSj, brdType);
         return result;
@@ -58,9 +58,10 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public BoardVo getBoardById(Long brdId) {
     	BoardVo dto = boardMapper.getBoardById(brdId);
-        dto.setNotiInqCnt(dto.getNotiInqCnt() + 1);
-
-        boardMapper.updateNotiInqCnt(brdId, dto.getNotiInqCnt());
+    	if(dto != null) {
+    		dto.setNotiInqCnt(dto.getNotiInqCnt() + 1);
+            boardMapper.updateNotiInqCnt(brdId, dto.getNotiInqCnt());
+    	}
         return dto;
     }
 }

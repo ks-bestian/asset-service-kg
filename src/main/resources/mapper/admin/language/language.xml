@@ -3,6 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.admin.language.repository.LanguageMapper">
 
+<!--
     <select id="selectLanguages" resultType="kr.co.bestiansoft.ebillservicekg.admin.language.domain.LanguageResponse">
         select
               lng_id
@@ -20,7 +21,7 @@
         from
             com_lng_code clc
     </select>
-
+-->
 
 
 </mapper>

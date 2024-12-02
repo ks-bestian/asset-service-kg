@@ -6,6 +6,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import kr.co.bestiansoft.ebillservicekg.config.web.interceptor.LogInterceptor;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -20,7 +21,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(new LogInterceptor(logService));
+        registry.addInterceptor(new LogInterceptor());
 //        registry.addInterceptor(new JwtFilteringInterceptor(tokenProvider));
     }
 

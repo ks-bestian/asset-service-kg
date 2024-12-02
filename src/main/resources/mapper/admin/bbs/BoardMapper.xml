@@ -66,7 +66,7 @@
         where brd_id = #{brdId}
     </update>
     
-    <insert id="insertBoard" parameterType="kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo">
+    <insert id="insertBoard" useGeneratedKeys="true" keyProperty="brdId" parameterType="kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo">
         insert into	kgst.com_board (
 			brd_type,
 			brd_sj,
@@ -94,8 +94,8 @@
 			#{fileGroupId},
 			#{regId},
 			now(),
-			'',
-			''
+			NULL,
+			NULL
 		)
     </insert>
     

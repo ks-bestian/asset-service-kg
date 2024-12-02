@@ -9,7 +9,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
+//import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -86,17 +86,17 @@ public class ExceptionControllerAdvice {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value())
                              .body(response);
     }
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    @ExceptionHandler({AccessDeniedException.class})
-    public ResponseEntity<CommonResponse> accessDeniedException(AccessDeniedException e) {
-
-        CommonResponse response = CommonResponse.builder()
-                                                .code(HttpStatus.FORBIDDEN.value())
-                                                .message(e.getMessage())
-                                                .build();
-
-        return ResponseEntity.status(HttpStatus.FORBIDDEN.value())
-                             .body(response);
-    }
+//    @ResponseStatus(HttpStatus.FORBIDDEN)
+//    @ExceptionHandler({AccessDeniedException.class})
+//    public ResponseEntity<CommonResponse> accessDeniedException(AccessDeniedException e) {
+//
+//        CommonResponse response = CommonResponse.builder()
+//                                                .code(HttpStatus.FORBIDDEN.value())
+//                                                .message(e.getMessage())
+//                                                .build();
+//
+//        return ResponseEntity.status(HttpStatus.FORBIDDEN.value())
+//                             .body(response);
+//    }
 
 }
