@@ -1,9 +1,19 @@
 package kr.co.bestiansoft.ebillservicekg.common.vo;
 
+import java.time.LocalDateTime;
+
 import lombok.Data;
 
 @Data
 public class ComDefaultVO {
+	
+	private String regId = "admin";
+	
+	private LocalDateTime regDt;
+	
+	private String modId = "admin";
+	
+	private LocalDateTime modDt;
 	
 	/** 검색조건 */
     private String searchCondition = "";

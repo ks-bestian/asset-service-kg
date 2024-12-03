@@ -5,7 +5,23 @@
 
     <select id="getBoardList" parameterType="java.lang.String"
             resultType="kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo">
-        select *, row_number() over(order by reg_dt desc) as num
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.bbs.repository.BoardMapper.getBoardList */
+        select 
+        	  row_number() over(order by reg_dt desc) as num
+        	, brd_id
+        	, brd_type --보드타입
+        	, brd_sj
+        	, brd_cn
+        	, noti_inq_cnt
+        	, pup_yn
+        	, pup_bg_dt
+        	, pup_ed_dt
+        	, ord
+        	, file_group_id
+        	, reg_id
+        	, reg_dt
+        	, mod_id
+        	, mod_dt
         from com_board
         where brd_type = #{brdType}
         and brd_sj like concat('%', #{brdSj}, '%')
@@ -13,7 +29,22 @@
 
     <select id="getBoardById" parameterType="java.lang.Long"
             resultType="kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo">
-        select *, row_number() over(order by reg_dt desc) as num
+        select 
+        	  row_number() over(order by reg_dt desc) as num
+        	, brd_id
+        	, brd_type
+        	, brd_sj
+        	, brd_cn
+        	, noti_inq_cnt
+        	, pup_yn
+        	, pup_bg_dt
+        	, pup_ed_dt
+        	, ord
+        	, file_group_id
+        	, reg_id
+        	, reg_dt
+        	, mod_id
+        	, mod_dt
         from com_board
         where brd_id = #{brdId}
     </select>
@@ -26,13 +57,15 @@
     <update id="updateById" parameterType="kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo">
         update com_board
         set
-        brd_sj = #{brdSj},
-        brd_cn = #{brdCn},
-        pup_yn = #{pupYn},
-        pup_bg_dt = #{pupBgDt},
-        pup_ed_dt = #{pupEdDt},
-        ord = #{ord},
-        file_group_id = #{fileGroupId}
+          brd_sj = #{brdSj}
+        , brd_cn = #{brdCn}
+        , pup_yn = #{pupYn}
+        , pup_bg_dt = #{pupBgDt}
+        , pup_ed_dt = #{pupEdDt}
+        , ord = #{ord}
+        , file_group_id = #{fileGroupId}
+        , mod_id = #{modId}
+        , mod_dt = #{modDt}
         WHERE brd_id = #{brdId}
     </update>
 
@@ -51,7 +84,21 @@
     </select>
     
     <select id="getBoardMainPopupList" parameterType="java.lang.String"   resultType="kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo">
-		select *
+		select 
+			  brd_id
+			, brd_type
+			, brd_sj
+			, brd_cn
+			, noti_inq_cnt
+			, pup_yn
+			, pup_bg_dt
+			, pup_ed_dt
+			, ord
+			, file_group_id
+			, reg_id
+			, reg_dt
+			, mod_id
+			, mod_dt
 		from sndb.com_board
 		where 1=1
 		and brd_type = 'NOTI'
@@ -68,34 +115,30 @@
     
     <insert id="insertBoard" useGeneratedKeys="true" keyProperty="brdId" parameterType="kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo">
         insert into	kgst.com_board (
-			brd_type,
-			brd_sj,
-			brd_cn,
-			noti_inq_cnt,
-			pup_yn,
-			pup_bg_dt,
-			pup_ed_dt,
-			ord,
-			file_group_id,
-			reg_id,
-			reg_dt,
-			mod_id,
-			mod_dt
+			  brd_type
+			, brd_sj
+			, brd_cn
+			, noti_inq_cnt
+			, pup_yn
+			, pup_bg_dt
+			<if test="pupEdDt       != null"> , pup_ed_dt        </if>
+			, ord
+			, file_group_id
+			, reg_id
+			, reg_dt
 		)
 		values (
-			#{brdType},
-			#{brdSj},
-			#{brdCn},
-			#{notiInqCnt},
-			#{pupYn},
-			#{pupBgDt},
-			#{pupEdDt},
-			#{ord},
-			#{fileGroupId},
-			#{regId},
-			now(),
-			NULL,
-			NULL
+			  #{brdType}
+			, #{brdSj}
+			, #{brdCn}
+			, #{notiInqCnt}
+			, #{pupYn}
+			, #{pupBgDt}
+			<if test="pupEdDt       != null"> , #{pupEdDt}        </if>
+			, #{ord}
+			, #{fileGroupId}
+			, #{regId}
+			, now()
 		)
     </insert>
     
