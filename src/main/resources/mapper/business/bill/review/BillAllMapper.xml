@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper">
+
+    <select id="getBillList" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billAll.vo.BillAllVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper.getBillList */
+        /* 의안번호가 있는 것 부터 나오게 해야함. 2순위는 일단 등록일 기준 정렬 */
+        /* 탭으로 구분되어있는 것은 앞단에서 필터링 해서 사용할 것이므로 필터링용 필드 만 잘 넘겨주도록 하자. */
+        /* ppsl_knd_cd : 제안자 종류 (정부/의원), stat_cd : 상태코드 (위원회 심사, 본회의, 정부이송...) */ 
+		SELECT
+			  row_number() over(order by CASE WHEN em.bill_no IS NOT NULL THEN 1 ELSE 2 END, em.reg_dt desc) as num
+		    , em.bill_id                -- 안건 ID
+		    , em.bill_no                -- 안건 번호
+		    , em.bill_kind              -- 의안 종류 (법률안/예산안 등)
+		    , em.na_term_cd             -- 대수 코드
+		    , em.bill_name_kg           -- 의안명 - kg
+		    , em.bill_name_ru           -- 의안명 - ru
+		    , em.ppsl_knd_cd            -- 제안자 종류 (정부/의원)
+		    , em.ppsr_nm                -- 발의자
+		    , em.ppsr_id                -- 발의자 아이디
+		    , em.ppsl_dt                -- 제안일
+		    , em.stat_cd                -- 상태 코드
+			, CASE 
+			  WHEN #{lang} = 'lng_type_1' then cc.code_nm1
+			  WHEN #{lang} = 'lng_type_2' then cc.code_nm2
+	          ELSE cc.code_nm2
+	          END stat_nm               -- 상태코드 명 (언어 필드 변경되는 것에 따라 수정 해야할 듯)
+		    , em.cmt_id                 -- 위원회 아이디
+		    , em.submit_dt              -- 위원회 회부일
+		    , em.plnr_prsnt_dt          -- 본회의 예정일
+		    , em.plnr_dt                -- 본회의 처리일
+		    , em.plnr_result            -- 본회의 처리 결과
+		    , em.gvrn_trsf_dt           -- 정부 이송일
+		    , em.prmg_dt                -- 공포일자
+		    , em.prmg_no                -- 공포 번호
+		    , em.smr_cn                 -- 요약 내용
+		    , em.bill_ty                -- 제개정 타입
+		    , em.law_id                 -- 법률 아이디
+		    , em.wt_cn                  -- 철회 사유
+		    , em.reg_id                 -- 등록자 아이디
+		    , em.reg_dt                 -- 등록 일자
+		    , em.mod_id                 -- 수정자 아이디
+		    , em.mod_dt                 -- 수정 일자
+		FROM ebs_master em        
+		LEFT OUTER JOIN com_code cc ON (em.stat_cd = cc.code_id and cc.grp_code = 'STGRP')
+		WHERE 1=1     -- 내/외부, 접수 구분 뭔지 물어보고 추가해야함.
+	    <if test="searchBillName != null and searchBillName != ''">
+	    	AND (em.bill_name_kg like CONCAT('%', #{searchBillName}, '%') OR em.bill_name_ru like CONCAT('%', #{searchBillName}, '%'))   -- 의안명 검색,키르어,러시아어 별로 검색 규틱 어찌할지.일단 prefix로 search 붙일 예정. 
+	    </if>		
+		<if test="billNo != null and billNo != ''">
+	    	AND em.bill_no like CONCAT('%', #{billNo}, '%')
+	    </if>
+		<if test="statCd != null and statCd != ''">
+	    	AND em.stat_cd = #{statCd} -- 상태 검색
+	    </if>
+		<if test="regDt != null and regDt != ''">
+    		AND to_char(em.reg_dt, 'YYYY-MM-DD') = #{regDt}  -- 등록일 검색, 화면 설계서에 등록일 이라고 되어있는데, 제안일 검색으로 나중에 바꾸게 될것같음.
+    	</if>
+    	<if test="naTermCd != null and naTermCd != ''">
+    		AND em.na_term_cd = #{naTermCd}
+    	</if>
+    </select>
+
+    <select id="getBillById" parameterType="java.lang.String"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billAll.vo.BillAllVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper.getBillById */    
+        select 
+		      bill_id                -- 안건 ID
+		    , bill_no                -- 안건 번호
+		    , bill_kind              -- 의안 종류 (법률안/예산안 등)
+		    , na_term_cd             -- 대수 코드
+		    , bill_name_kg           -- 의안명 - kg
+		    , bill_name_ru           -- 의안명 - ru
+		    , ppsl_knd_cd            -- 제안자 종류 (정부/의원)
+		    , ppsr_nm                -- 발의자
+		    , ppsr_id                -- 발의자 아이디
+		    , ppsl_dt                -- 제안일
+		    , stat_cd                -- 상태 코드
+		    , cmt_id                 -- 위원회 아이디
+		    , submit_dt              -- 위원회 회부일
+		    , plnr_prsnt_dt          -- 본회의 예정일
+		    , plnr_dt                -- 본회의 처리일
+		    , plnr_result            -- 본회의 처리 결과
+		    , gvrn_trsf_dt           -- 정부 이송일
+		    , prmg_dt                -- 공포일자
+		    , prmg_no                -- 공포 번호
+		    , smr_cn                 -- 요약 내용
+		    , bill_ty                -- 제개정 타입
+		    , law_id                 -- 법률 아이디
+		    , wt_cn                  -- 철회 사유
+		    , reg_id                 -- 등록자 아이디
+		    , reg_dt                 -- 등록 일자
+		    , mod_id                 -- 수정자 아이디
+		    , mod_dt                 -- 수정 일자
+        from ebs_master
+        where bill_id = #{billId}
+    </select>
+
+
+	
+</mapper>

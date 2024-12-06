@@ -1,4 +1,4 @@
-package kr.co.bestiansoft.ebillservicekg.bill.review.billAll.vo;
+package kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -7,7 +7,7 @@ import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
 
 @Data
-public class BillAllVo extends ComDefaultVO {
+public class BillMngVo extends ComDefaultVO {
 	
     private String billId;// 안건아이디
     // 안건번호
@@ -55,16 +55,15 @@ public class BillAllVo extends ComDefaultVO {
     // 철회 사유
     private String wtCn;
     
-    // 비고
-    private String etcKg;
-    private String etcRu;
-    
     // 목록 검색용 : 넘버링
     private String num; 
     // 목록 검색용 : 의안명 검색
     private String searchBillName; 
     // 언어 구분에 따른 상태코드명 
     private String statNm; 
+    
+    // 위원회 심사 차수
+    private String cmtCnt;
     
     
 
