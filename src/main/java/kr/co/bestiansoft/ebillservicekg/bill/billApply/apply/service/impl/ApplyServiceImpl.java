@@ -8,6 +8,8 @@ import java.util.Set;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.repository.AgreeMapper;
+import kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.vo.AgreeVo;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.service.ApplyService;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyResponse;
@@ -24,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ApplyServiceImpl implements ApplyService {
 	
 	private final ApplyMapper applyMapper;
+	private final AgreeMapper agreeMapper;
 	
 	@Transactional
 	@Override
@@ -107,7 +110,13 @@ public class ApplyServiceImpl implements ApplyService {
 	public ApplyResponse getApplyDetail(String billId) {
 		ApplyResponse result = new ApplyResponse();
 		
-		result.setApplyVo(applyMapper.getApplyDetail(billId));
+		//안건 상세
+		ApplyVo applyDetail = applyMapper.getApplyDetail(billId);
+		result.setApplyDetail(applyDetail);
+		
+		//발의자 대상
+		List<AgreeVo> proposerList = agreeMapper.getAgreeProposerList(billId);
+		result.setProposerList(proposerList);
 		
 		return result;
 	}

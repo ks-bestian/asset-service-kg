@@ -2,15 +2,15 @@ package kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo;
 
 import java.util.List;
 
+import kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.vo.AgreeVo;
 import lombok.Data;
 
 @Data
 public class ApplyResponse {
 	
-	ApplyVo applyVo;
+	ApplyVo applyDetail;
 	
 	List<ApplyVo> applyList;
 	
-//	todo :: memberVo 필요
-//	List<MemberVo> proposerList; 
+	List<AgreeVo> proposerList;
 }
