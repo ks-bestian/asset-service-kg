@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.bestiansoft.ebillservicekg.admin.comCode.repository.ComCodeMapper">
+    <select id="getGrpCodeList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeVo">
+        select
+            grp_code
+            , grp_code_nm1
+            , grp_code_nm2
+            , grp_code_nm3
+            , use_yn
+            , rmk
+            , reg_dt
+            , reg_id
+            , mod_dt
+            , mod_id
+        from com_code
+        where 1=1
+        <if test="grpCode != null and grpCode != ''">
+            and grp_code like concat('%', #{grpCode}, '%')
+        </if>
+    </select>
+
+    <select id="getComCodeList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeDetailVo">
+        select
+            code_id
+            , code_nm1
+            , code_nm2
+            , code_nm3
+            , grp_code
+            , use_yn
+            , ord
+            , rmk
+            , reg_dt
+            , reg_id
+            , mod_dt
+            , mod_id
+        from com_code_detail
+        where grp_code = #{grpCode}
+        <if test="codeId != null and codeId != ''">
+            and code_id like concat('%', #{codeId}, '%')
+        </if>
+    </select>
+
+    <select id="getGrpCodeById" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeVo">
+        select
+            grp_code
+            , grp_code_nm1
+            , grp_code_nm2
+            , grp_code_nm3
+            , use_yn
+            , rmk
+            , reg_dt
+            , reg_id
+            , mod_dt
+            , mod_id
+        from com_code
+        where grp_code = #{grpCode}
+    </select>
+
+    <select id="getComCodeById" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeDetailVo">
+        select
+            code_id
+            , code_nm1
+            , code_nm2
+            , code_nm3
+            , grp_code
+            , use_yn
+            , ord
+            , rmk
+            , reg_dt
+            , reg_id
+            , mod_dt
+            , mod_id
+        from com_code_detail
+        where grp_code = #{grpCode}
+    </select>
+
+    <insert id="insertGrpCode" parameterType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeVo">
+        insert into kgst.com_code (
+            grp_code
+            , grp_code_nm1
+            , grp_code_nm2
+            , grp_code_nm3
+            , use_yn
+            , rmk
+            , reg_dt
+            , reg_id
+            , mod_dt
+            , mod_id
+        )
+        values (
+            #{grpCode},
+            #{grpCodeNm1},
+            #{grpCodeNm2},
+            #{grpCodeNm3},
+            #{useYn},
+            #{rmk},
+            now(),
+            #{regId},
+            NULL,
+            NULL
+        )
+    </insert>
+    <insert id="insertComCode" parameterType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeDetailVo">
+        insert into kgst.com_code_detail (
+            code_id
+            , code_nm1
+            , code_nm2
+            , code_nm3
+            , grp_code
+            , use_yn
+            , ord
+            , rmk
+            , reg_dt
+            , reg_id
+            , mod_dt
+            , mod_id
+        )
+        values (
+            #{codeId},
+            #{codeNm1},
+            #{codeNm2},
+            #{codeNm3},
+            #{grpCode},
+            #{useYn},
+            #{ord},
+            #{rmk},
+            now(),
+            #{regId},
+            NULL,
+            NULL
+        )
+    </insert>
+
+    <update id="updateGrpCode" parameterType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeVo">
+        update com_code
+        set
+        grp_code_nm1 = #{grpCodeNm1},
+        grp_code_nm2 = #{grpCodeNm2},
+        grp_code_nm3 = #{grpCodeNm3},
+        use_yn = #{useYn},
+        rmk = #{rmk}
+        WHERE grp_code = #{grpCode}
+    </update>
+
+    <update id="updateComCode" parameterType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeDetailVo">
+        update com_code_detail
+        set
+        code_nm1 = #{codeNm1},
+        code_nm2 = #{codeNm2},
+        code_nm3 = #{codeNm3},
+        grp_code = #{grpCode},
+        use_yn = #{useYn},
+        ord = #{ord},
+        rmk = #{rmk}
+        WHERE code_id = #{codeId}
+    </update>
+
+    <delete id="deleteGrpCode" parameterType="java.lang.Integer">
+        delete from com_code
+        where grp_code = #{grpCode}
+    </delete>
+
+    <delete id="deleteComCode" parameterType="java.lang.String">
+        delete from com_code_detail
+        where code_id = #{codeId}
+    </delete>
+
+    <select id="existCodeId" parameterType="java.lang.String" resultType="boolean">
+        select exists (
+        select 1 from com_code_detail
+        where grp_code = #{id}
+        )
+    </select>
+</mapper>
