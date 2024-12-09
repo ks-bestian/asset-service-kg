@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface BaseCodeService {
     List<BaseCodeVo> getBaseCodeList(HashMap<String, Object> param);
-    BoardVo createBaseCode(BaseCodeVo baseCodeVo);
+    BaseCodeVo createBaseCode(BaseCodeVo baseCodeVo);
     int updateBaseCode(BaseCodeVo baseCodeVo);
     void deleteBaseCode(List<Long> ids);
-    BoardVo getBaseCodeById(Long baseCode);
+    BaseCodeVo getBaseCodeById(Long baseCode);
 }

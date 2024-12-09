@@ -3,17 +3,18 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.admin.comCode.repository.ComCodeMapper">
     <select id="getGrpCodeList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.baseCode.repository.BaseCodeMapper.getGrpCodeList */
         select
-            grp_code
-            , grp_code_nm1
-            , grp_code_nm2
-            , grp_code_nm3
-            , use_yn
-            , rmk
-            , reg_dt
-            , reg_id
-            , mod_dt
-            , mod_id
+            grp_code --그룹코드
+            , grp_code_nm1 --그룹명1
+            , grp_code_nm2 --그룹명2
+            , grp_code_nm3 --그룹명3
+            , use_yn -사용여부
+            , rmk --비고
+            , reg_dt --등록자
+            , reg_id --등록일자
+            , mod_dt --수정일자
+            , mod_id --수정자
         from com_code
         where 1=1
         <if test="grpCode != null and grpCode != ''">
@@ -140,7 +141,9 @@
         grp_code_nm2 = #{grpCodeNm2},
         grp_code_nm3 = #{grpCodeNm3},
         use_yn = #{useYn},
-        rmk = #{rmk}
+        rmk = #{rmk},
+        mod_id = #{modId},
+        mod_dt = #{modDt}
         WHERE grp_code = #{grpCode}
     </update>
 
@@ -153,7 +156,9 @@
         grp_code = #{grpCode},
         use_yn = #{useYn},
         ord = #{ord},
-        rmk = #{rmk}
+        rmk = #{rmk},
+        mod_id = #{modId}
+        mod_dt = #{modDt}
         WHERE code_id = #{codeId}
     </update>
 
@@ -167,10 +172,21 @@
         where code_id = #{codeId}
     </delete>
 
+    <select id="existCodeIdInGrp" parameterType="java.lang.Integer" resultType="boolean">
+        select exists (
+            select 1 from com_code_detail
+            where grp_code = #{id}
+        )
+    </select>
+
     <select id="existCodeId" parameterType="java.lang.String" resultType="boolean">
         select exists (
-        select 1 from com_code_detail
-        where grp_code = #{id}
+            select 1 from com_code_detail
+            where code_id = #{codeId}
         )
+    </select>
+
+    <select id="createGrpId" resultType="java.lang.Integer">
+        select coalesce(max(grp_code) + 1, 1000) from com_code;
     </select>
 </mapper>

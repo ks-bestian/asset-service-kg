@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.bestiansoft.ebillservicekg.admin.baseCode.repository.BaseCodeMapper">
+
+    <select id="getBaseCodeList" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.baseCode.repository.BaseCodeMapper.getBaseCodeList */
+        select
+        seq
+        , code_id
+        , code_kind
+        , code_nm
+        , bg_dt
+        , ed_dt
+        , ord
+        , curr_yn
+        , rmk
+        , use_yn
+        , reg_id
+        , reg_dt
+        , mod_id
+        , mod_dt
+        from ebs_base_code
+    </select>
+
+    <insert id="insertBaseCode" parameterType="kr.co.bestiansoft.ebillservicekg.admin.baseCode.vo.BaseCodeVo">
+        insert into kgst.ebs_base_code (
+            code_id
+            , code_kind
+            , code_nm
+            , bg_Dt
+            , ed_dt
+            , ord
+            , curr_yn
+            , rmk
+            , use_yn
+            , reg_id
+            , reg_dt
+            , mod_id
+            , mod_dt
+        )
+        values (
+            #{codeId},
+            #{codeKind},
+            #{codeNm},
+            #{bgDt},
+            #{edDt},
+            #{ord},
+            #{currYn},
+            #{rmk},
+            #{useYn},
+            #{regId},
+            now(),
+            NULL,
+            NULL
+        )
+    </insert>
+
+    <update id="updateBaseCode" parameterType="kr.co.bestiansoft.ebillservicekg.admin.baseCode.vo.BaseCodeVo">
+        update ebs_base_code
+        set
+            code_kind = #{codeKind},
+            code_nm = #{codeNm},
+            bg_dt = #{bgDt},
+            ed_dt = #{edDt},
+            rmk = #{rmk},
+            ord = #{ord},
+            use_yn = #{useYn},
+            curr_yn = #{currYn},
+            mod_id = #{modId},
+            mod_dt = #{modDt}
+        where seq = #{seq}
+    </update>
+
+    <delete id="deleteBaseCode" parameterType="java.lang.Long">
+        delete from ebs_base_code
+        where seq = #{seq}
+    </delete>
+
+    <select id="getBaseCodeById" parameterType="java.lang.Long" resultType="kr.co.bestiansoft.ebillservicekg.admin.baseCode.vo.BaseCodeVo">
+        select
+            seq
+            , code_id
+            , code_kind
+            , code_nm
+            , bg_dt
+            , ed_dt
+            , ord
+            , curr_yn
+            , rmk
+            , use_yn
+            , reg_id
+            , reg_dt
+            , mod_id
+            , mod_dt
+        from ebs_base_code
+        where seq = #{seq}
+    </select>
+
+    <select id="existCode" parameterType="java.lang.String" resultType="boolean">
+        select exists (
+            select 1 from ebs_base_code
+            where code_id = #{codeId}
+        )
+    </select>
+</mapper>

@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class BaseCodeVo extends ComDefaultVO {
-    private Integer seq;
+    private Long seq;
     private String codeId;
     private String codeKind;
     private String codeNm;
