@@ -11,5 +11,4 @@ public class BoardResponse {
     private List<BoardVo> boardList;
     private List<BoardVo> boardList2;
     private BoardVo boardVo;
-    
 }
