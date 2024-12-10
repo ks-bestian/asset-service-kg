@@ -1,9 +1,13 @@
 package kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.service.impl;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.swing.text.DateFormatter;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -136,6 +140,8 @@ public class ApplyServiceImpl implements ApplyService {
 		String statCd = "ST310";
 		applyVo.setStatCd(statCd);
 		applyVo.setBillId(billId);
+		applyMapper.updateBillPpsrRevoke(applyVo);
+		
 		return applyMapper.updateRevokeBill(applyVo);
 	}
 	

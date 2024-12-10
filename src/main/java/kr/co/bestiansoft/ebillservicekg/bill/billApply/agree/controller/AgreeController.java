@@ -28,6 +28,7 @@ public class AgreeController {
     @ApiOperation(value = "동의서명 목록", notes = "동의서명 목록을 조회")
     @GetMapping("/bill/agree")
     public ResponseEntity<CommonResponse> getApplyList(@RequestParam HashMap<String, Object> param) {
+		// TODO :: 대수 검색조건 설정 필요(현재 14로 하드코딩)
         return new ResponseEntity<>(new CommonResponse(200, "OK", agreeService.getAgreeList(param)), HttpStatus.OK);
     }
     
@@ -41,7 +42,7 @@ public class AgreeController {
     @ApiOperation(value = "동의 서명", notes = "안건에 대해 동의 및 동의 취소")
     @PutMapping("/bill/agree/{billId}")
     public ResponseEntity<CommonResponse> setBillAgree(@PathVariable String billId, @RequestParam HashMap<String, Object> param) {
-    	return new ResponseEntity<>(new CommonResponse(200, "OK", agreeService.setBillAgree(billId, param)), HttpStatus.OK);
+    	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill agree successfully", agreeService.setBillAgree(billId, param)), HttpStatus.OK);
     }
     
     

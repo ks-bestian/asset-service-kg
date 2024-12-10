@@ -34,4 +34,6 @@ public interface ApplyMapper {
 
 	void deleteProposerByPpsrId(String ppsrId);
 
+	void updateBillPpsrRevoke(ApplyVo applyVo);
+
 }

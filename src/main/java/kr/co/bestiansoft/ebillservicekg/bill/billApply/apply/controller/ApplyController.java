@@ -38,19 +38,20 @@ public class ApplyController {
     @ApiOperation(value = "목록 조회", notes = "안건제출 목록을 조회한다")
     @GetMapping("/bill/apply")
     public ResponseEntity<CommonResponse> getApplyList(@RequestParam HashMap<String, Object> param) {
+		// TODO :: 대수 검색조건 설정 필요(현재 14로 하드코딩)
         return new ResponseEntity<>(new CommonResponse(200, "OK", applyService.getApplyList(param)), HttpStatus.OK);
     }
     
     @ApiOperation(value = "안건 수정", notes = "안건을 수정한다")
     @PutMapping("/bill/apply/{billId}")
     public ResponseEntity<CommonResponse> updateBillUpdate(@RequestBody ApplyVo applyVo, @PathVariable String billId) {
-    	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "apply updated successfully", applyService.updateApply(applyVo, billId)), HttpStatus.CREATED);
+    	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "apply updated successfully", applyService.updateApply(applyVo, billId)), HttpStatus.OK);
     }
     
     @ApiOperation(value = "안건 삭제", notes = "안건을 삭제한다")
     @DeleteMapping("/bill/apply/{billId}")
     public ResponseEntity<CommonResponse> deleteApply(@PathVariable String billId) {
-    	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "apply delete successfully", applyService.deleteApply(billId)), HttpStatus.CREATED);
+    	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "apply delete successfully", applyService.deleteApply(billId)), HttpStatus.OK);
     }
     
     @ApiOperation(value = "안건 상세 조회", notes = "안건의 상세를 조회한다")

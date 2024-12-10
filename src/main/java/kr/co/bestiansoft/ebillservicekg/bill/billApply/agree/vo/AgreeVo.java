@@ -6,6 +6,8 @@ import lombok.Data;
 @Data
 public class AgreeVo extends ComDefaultVO {
 	
+	//등록번호(사회토론번호?)
+	private String sclDscRcpNmb;
 	//안건아이디
 	private String billId;
 	//안건이름kg

@@ -16,9 +16,11 @@
 				when (ep.sign_dt is not null and ep.sign_cnc_dt is null) then to_char(ep.sign_dt, 'DD-MM-YYYY')	
 				else null
 			 end as signDate 		--동의날짜
+		    , scl_dsc_rcp_nmb 		--사회토론번호
 		from ebs_proposer ep
 		left join ebs_master em on em.bill_id = ep.bill_id 
 		where ep.proposer_id = #{userId}
+			and em.na_term_cd = '14'
 		<if test="billName != null and billName != ''">
 			and (em.bill_name_ru like concat('%', #{billName}, '%') or em.bill_name_kg like concat('%', #{billName}, '%'))
 		</if>
@@ -51,6 +53,7 @@
 				when (ep.sign_dt is not null and ep.sign_cnc_dt is null) then 'Y'
 				else 'N'
 			 end as agreeYn 		--동의여부
+			, scl_dsc_rcp_nmb 		--사회토론번호
 		from ebs_proposer ep
 			left join ebs_master em on em.bill_id = ep.bill_id 
 		where 

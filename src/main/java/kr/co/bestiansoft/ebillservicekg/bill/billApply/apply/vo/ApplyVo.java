@@ -8,6 +8,8 @@ import lombok.Data;
 @Data
 public class ApplyVo extends ComDefaultVO {
 
+	//등록번호(사회토론번호?)
+	private String sclDscRcpNmb;
 	//안건아이디
 	private String billId;
 	//안건번호
@@ -32,12 +34,12 @@ public class ApplyVo extends ComDefaultVO {
 	private String ppsrId;
 	//안건 상태
 	private String statCd;
-	//제개정타입(제정/개정/폐지)
-	private String billTy;
-	//법률아이디
-	private Integer lawId;
-	//철회사유
-	private String wtCn;
+	//철회사유kg
+	private String wtCnKg;
+	//철회사유ru
+	private String wtCnRu;
+	//제출날짜
+	private String ppslDt;
 	
 	//제안자 목록
 	private List<String> proposerList;
