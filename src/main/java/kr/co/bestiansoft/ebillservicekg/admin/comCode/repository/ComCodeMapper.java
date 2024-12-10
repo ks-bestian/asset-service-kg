@@ -12,8 +12,8 @@ public interface ComCodeMapper {
 
     List<ComCodeVo> getGrpCodeList(HashMap<String, Object> param);
     List<ComCodeVo> getComCodeList(HashMap<String, Object> param);
-    ComCodeVo getGrpCodeById(String grpCode);
-    ComCodeVo getComCodeById(String codeId);
+    ComCodeVo getGrpCodeById(Integer grpCode);
+    ComCodeDetailVo getComCodeById(String codeId);
     int insertGrpCode(ComCodeVo comCodeVo);
     int insertComCode(ComCodeDetailVo comCodeDetailVo);
     int updateGrpCode(ComCodeVo comCodeVo);

@@ -32,12 +32,12 @@ public class ComCodeServiceImpl implements ComCodeService {
     }
 
     @Override
-    public ComCodeVo getGrpCodeById(String grpCode) {
+    public ComCodeVo getGrpCodeById(Integer grpCode) {
         return comCodeMapper.getGrpCodeById(grpCode);
     }
 
     @Override
-    public ComCodeVo getComCodeById(String codeId) {
+    public ComCodeDetailVo getComCodeById(String codeId) {
         return comCodeMapper.getComCodeById(codeId);
     }
 

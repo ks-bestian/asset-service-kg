@@ -39,7 +39,7 @@ public class ComCodeController {
 
     @ApiOperation(value = "그룹코드 상세 조회", notes = "그룹코드 상세를 조회한다.")
     @GetMapping("/admin/grpCode/{codeId}")
-    public ResponseEntity<CommonResponse> getGrpCodeById(@PathVariable String grpCode) {
+    public ResponseEntity<CommonResponse> getGrpCodeById(@PathVariable Integer grpCode) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", comCodeService.getGrpCodeById(grpCode)), HttpStatus.OK);
     }
 

@@ -9,7 +9,7 @@
             , grp_code_nm1 --그룹명1
             , grp_code_nm2 --그룹명2
             , grp_code_nm3 --그룹명3
-            , use_yn -사용여부
+            , use_yn --사용여부
             , rmk --비고
             , reg_dt --등록자
             , reg_id --등록일자
@@ -18,7 +18,10 @@
         from com_code
         where 1=1
         <if test="grpCode != null and grpCode != ''">
-            and grp_code like concat('%', #{grpCode}, '%')
+            and grp_code::text like concat('%', #{grpCode}, '%')
+        </if>
+        <if test="grpCodeNm1">
+            and grp_code_nm1 like concat('%', #{grpCodeNm1}, '%')
         </if>
     </select>
 
@@ -37,13 +40,13 @@
             , mod_dt
             , mod_id
         from com_code_detail
-        where grp_code = #{grpCode}
+        where grp_code::text = #{grpCode}
         <if test="codeId != null and codeId != ''">
             and code_id like concat('%', #{codeId}, '%')
         </if>
     </select>
 
-    <select id="getGrpCodeById" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeVo">
+    <select id="getGrpCodeById" parameterType="java.lang.Integer" resultType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeVo">
         select
             grp_code
             , grp_code_nm1
@@ -74,7 +77,7 @@
             , mod_dt
             , mod_id
         from com_code_detail
-        where grp_code = #{grpCode}
+        where code_id = #{codeId}
     </select>
 
     <insert id="insertGrpCode" parameterType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeVo">

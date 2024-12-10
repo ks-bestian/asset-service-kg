@@ -4,23 +4,23 @@
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.admin.baseCode.repository.BaseCodeMapper">
 
     <select id="getBaseCodeList" parameterType="java.util.HashMap"
-            resultType="kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo">
+            resultType="kr.co.bestiansoft.ebillservicekg.admin.baseCode.vo.BaseCodeVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.baseCode.repository.BaseCodeMapper.getBaseCodeList */
         select
         seq
-        , code_id
-        , code_kind
-        , code_nm
-        , bg_dt
-        , ed_dt
-        , ord
-        , curr_yn
-        , rmk
-        , use_yn
-        , reg_id
-        , reg_dt
-        , mod_id
-        , mod_dt
+        , code_id --코드아이디
+        , code_kind --코드종류
+        , code_nm --코드이름
+        , bg_dt --시작일자
+        , ed_dt --종료일자
+        , ord --순서
+        , curr_yn --현재여부
+        , rmk --비고
+        , use_yn --사용여부
+        , reg_id --등록자아이디
+        , reg_dt --등록일자
+        , mod_id --수정자아이디
+        , mod_dt --수정일자
         from ebs_base_code
     </select>
 
