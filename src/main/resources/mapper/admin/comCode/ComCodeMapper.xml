@@ -160,7 +160,7 @@
         use_yn = #{useYn},
         ord = #{ord},
         rmk = #{rmk},
-        mod_id = #{modId}
+        mod_id = #{modId},
         mod_dt = #{modDt}
         WHERE code_id = #{codeId}
     </update>
