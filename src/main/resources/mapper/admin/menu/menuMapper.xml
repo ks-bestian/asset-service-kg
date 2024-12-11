@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.bestiansoft.ebillservicekg.admin.menu.repository.MenuMapper">
+
+<!--
+    <select id="selectMenuByUserId" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.admin.menu.repository.entity.MenuEntity">
+        select
+            cm.*
+        from
+            com_menu cm
+                left join com_auth_menu cam on cm.menu_id = cam.menu_id
+                left join com_auth_user cau on cam.auth_id = cau.auth_id
+        where
+            cau.user_id = #{userId}
+        order by cm.ord
+    </select>
+-->
+
+    <select id="getMenuList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.menu.vo.MenuVo">
+        select
+            menu_id
+            , menu_nm1
+            , menu_nm2
+            , menu_nm3
+            , ord
+            , upr_menu_id
+            , menu_path
+            , use_yn
+            , rmk
+            , reg_dt
+            , reg_id
+            , mod_dt
+            , mod_id
+        from com_menu
+    </select>
+    
+    <select id="getMenuDetail" parameterType="java.lang.Long" resultType="kr.co.bestiansoft.ebillservicekg.admin.menu.vo.MenuVo">
+        select
+            menu_id
+            , menu_nm1
+            , menu_nm2
+            , menu_nm3
+            , ord
+            , upr_menu_id
+            , menu_path
+            , use_yn
+            , rmk
+            , reg_dt
+            , reg_id
+            , mod_dt
+            , mod_id
+        from com_menu
+        where menu_id = #{menuId}
+    </select>
+
+    <insert id="insertMenu" parameterType="kr.co.bestiansoft.ebillservicekg.admin.menu.vo.MenuVo">
+        insert into com_menu (
+            menu_nm1
+            , menu_nm2
+            , menu_nm3
+            , ord
+            , upr_menu_id
+            , menu_path
+            , use_yn
+            , rmk
+            , reg_dt
+            , reg_id
+            , mod_dt
+            , mod_id
+        )
+        values (
+        #{menuNm1},
+        #{menuNm2},
+        #{menuNm3},
+        #{ord},
+        #{uprMenuId},
+        #{menuPath},
+        #{useYn},
+        #{rmk},
+        now(),
+        #{regId},
+        null,
+        null
+        )
+    </insert>
+
+    <update id="updateMenu" parameterType="kr.co.bestiansoft.ebillservicekg.admin.menu.vo.MenuVo">
+        update com_menu
+        set
+        menu_nm1 = #{menuNm1},
+        menu_nm2 = #{menuNm2},
+        menu_nm3 = #{menuNm3},
+        ord = #{ord},
+        upr_menu_id = #{uprMenuId},
+        menu_path = #{menuPath},
+        use_yn = #{useYn},
+        rmk = #{rmk},
+        mod_id = #{modId},
+        mod_dt = #{modDt}
+        where menu_id = #{menuId}
+    </update>
+
+
+    <select id="existUprId" parameterType="java.lang.Long" resultType="boolean">
+        select exists (
+            select 1 from com_menu
+            where upr_menu_id = #{menuId}
+        )
+    </select>
+</mapper>
