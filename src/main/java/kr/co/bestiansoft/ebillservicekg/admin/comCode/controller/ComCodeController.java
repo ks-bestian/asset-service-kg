@@ -80,13 +80,8 @@ public class ComCodeController {
     @ApiOperation(value = "그룹코드 삭제", notes = "그룹코드를 정보를 삭제한다.") //그룹코드의 경우 하위코드 존재하면 삭제불가
     @DeleteMapping("/admin/grpCode")
     public ResponseEntity<CommonResponse> deleteGrpCode(@RequestBody Integer grpCode) {
-        try {
-            comCodeService.deleteGrpCode(grpCode);
-            return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "ok", "group code deleted successfully"), HttpStatus.OK);
-        } catch (UnsupportedOperationException e) {
-            return new ResponseEntity<>(new CommonResponse(HttpStatus.BAD_REQUEST.value(), "bad", e.getMessage()), HttpStatus.BAD_REQUEST);
-        }
-
+        comCodeService.deleteGrpCode(grpCode);
+        return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "ok", "group code deleted successfully"), HttpStatus.OK);
     }
 
     @ApiOperation(value = "하위코드 삭제", notes = "하위코드를 정보를 삭제한다.") //그룹코드의 경우 하위코드 존재하면 삭제불가

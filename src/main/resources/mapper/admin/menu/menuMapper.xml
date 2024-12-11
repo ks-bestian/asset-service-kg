@@ -19,15 +19,15 @@
 
     <select id="getMenuList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.menu.vo.MenuVo">
         select
-            menu_id
-            , menu_nm1
-            , menu_nm2
-            , menu_nm3
-            , ord
-            , upr_menu_id
-            , menu_path
-            , use_yn
-            , rmk
+              menu_id --메뉴아이디
+            , menu_nm1 --메뉴명(키르기스어)
+            , menu_nm2 --메뉴명(러시아어)
+            , menu_nm3 --메뉴명(한국어)
+            , ord --순서
+            , upr_menu_id --상위메뉴아이디
+            , menu_path --메뉴경로
+            , use_yn --사용여부
+            , rmk --비고
             , reg_dt
             , reg_id
             , mod_dt
@@ -37,7 +37,7 @@
     
     <select id="getMenuDetail" parameterType="java.lang.Long" resultType="kr.co.bestiansoft.ebillservicekg.admin.menu.vo.MenuVo">
         select
-            menu_id
+              menu_id
             , menu_nm1
             , menu_nm2
             , menu_nm3
@@ -56,7 +56,7 @@
 
     <insert id="insertMenu" parameterType="kr.co.bestiansoft.ebillservicekg.admin.menu.vo.MenuVo">
         insert into com_menu (
-            menu_nm1
+              menu_nm1
             , menu_nm2
             , menu_nm3
             , ord
@@ -70,37 +70,36 @@
             , mod_id
         )
         values (
-        #{menuNm1},
-        #{menuNm2},
-        #{menuNm3},
-        #{ord},
-        #{uprMenuId},
-        #{menuPath},
-        #{useYn},
-        #{rmk},
-        now(),
-        #{regId},
-        null,
-        null
+              #{menuNm1}
+            , #{menuNm2}
+            , #{menuNm3}
+            , #{ord}
+            , #{uprMenuId}
+            , #{menuPath}
+            , #{useYn}
+            , #{rmk}
+            , now()
+            , #{regId}
+            , null
+            , null
         )
     </insert>
 
     <update id="updateMenu" parameterType="kr.co.bestiansoft.ebillservicekg.admin.menu.vo.MenuVo">
         update com_menu
         set
-        menu_nm1 = #{menuNm1},
-        menu_nm2 = #{menuNm2},
-        menu_nm3 = #{menuNm3},
-        ord = #{ord},
-        upr_menu_id = #{uprMenuId},
-        menu_path = #{menuPath},
-        use_yn = #{useYn},
-        rmk = #{rmk},
-        mod_id = #{modId},
-        mod_dt = #{modDt}
+            menu_nm1 = #{menuNm1}
+            , menu_nm2 = #{menuNm2}
+            , menu_nm3 = #{menuNm3}
+            , ord = #{ord}
+            , upr_menu_id = #{uprMenuId}
+            , menu_path = #{menuPath}
+            , use_yn = #{useYn}
+            , rmk = #{rmk}
+            , mod_id = #{modId}
+            , mod_dt = #{modDt}
         where menu_id = #{menuId}
     </update>
-
 
     <select id="existUprId" parameterType="java.lang.Long" resultType="boolean">
         select exists (

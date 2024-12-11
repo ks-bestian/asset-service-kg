@@ -7,16 +7,16 @@
             resultType="kr.co.bestiansoft.ebillservicekg.admin.lngCode.vo.LngCodeVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.lngCode.repository.LngCodeMapper.getLngCodeList */
         select
-        row_number() over(order by reg_dt desc) as num
-        , lng_id
-        , lng_ty1
-        , lng_ty2
-        , lng_ty3
-        , rmk
-        , reg_id
-        , reg_dt
-        , mod_id
-        , mod_dt
+              row_number() over(order by reg_dt desc) as num
+            , lng_id --언어아이디
+            , lng_ty1 --언어명(키르기스어)
+            , lng_ty2 --언어명(러시아어)
+            , lng_ty3 --언어명(한국어)
+            , rmk --비고
+            , reg_id
+            , reg_dt
+            , mod_id
+            , mod_dt
         from com_lng_code
         where 1=1
         <if test="lng_ty1 != null and lng_ty1 != ''">
@@ -31,8 +31,11 @@
     </select>
 
     <insert id="insertLngCode" parameterType="kr.co.bestiansoft.ebillservicekg.admin.lngCode.vo.LngCodeVo">
+        <selectKey keyProperty="lngId" resultType="java.lang.Long" order="BEFORE">
+            select coalesce(max(lng_id) + 1, 10000) from com_lng_code
+        </selectKey>
         insert into com_lng_code (
-            lng_id
+              lng_id
             , lng_ty1
             , lng_ty2
             , lng_ty3
@@ -43,31 +46,27 @@
             , mod_dt
         )
         values (
-            #{lngId},
-            #{lngTy1},
-            #{lngTy2},
-            #{lngTy3},
-            #{rmk},
-            #{regId},
-            now(),
-            null,
-            null
+              #{lngId}
+            , #{lngTy1}
+            , #{lngTy2}
+            , #{lngTy3}
+            , #{rmk}
+            , #{regId}
+            , now()
+            , null
+            , null
         )
     </insert>
-
-    <select id="createLngId" resultType="java.lang.Long">
-        select coalesce(max(lng_id) + 1, 10000) from com_lng_code
-    </select>
 
     <update id="updateLngCode" parameterType="kr.co.bestiansoft.ebillservicekg.admin.lngCode.vo.LngCodeVo">
         update com_lng_code
         set
-        lng_ty1 = #{lngTy1},
-        lng_ty2 = #{lngTy2},
-        lng_ty3 = #{lngTy3},
-        rmk = #{rmk},
-        mod_id = #{modId},
-        mod_dt = #{modDt}
+              lng_ty1 = #{lngTy1}
+            , lng_ty2 = #{lngTy2}
+            , lng_ty3 = #{lngTy3}
+            , rmk = #{rmk}
+            , mod_id = #{modId}
+            , mod_dt = #{modDt}
         where lng_id = #{lngId}
     </update>
 
@@ -78,16 +77,16 @@
 
     <select id="getLngCodeById" parameterType="java.lang.Long">
         select
-        row_number() over(order by reg_dt desc) as num
-        , lng_id
-        , lng_ty1
-        , lng_ty2
-        , lng_ty3
-        , rmk
-        , reg_id
-        , reg_dt
-        , mod_id
-        , mod_dt
+              row_number() over(order by reg_dt desc) as num
+            , lng_id
+            , lng_ty1
+            , lng_ty2
+            , lng_ty3
+            , rmk
+            , reg_id
+            , reg_dt
+            , mod_id
+            , mod_dt
         from com_lng_code
         where lng_id = #{lngId}
     </select>

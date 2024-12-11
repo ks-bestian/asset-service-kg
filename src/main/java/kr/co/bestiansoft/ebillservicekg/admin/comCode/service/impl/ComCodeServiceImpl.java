@@ -43,19 +43,13 @@ public class ComCodeServiceImpl implements ComCodeService {
 
     @Override
     public ComCodeVo createGrpCode(ComCodeVo comCodeVo) {
-        comCodeVo.setGrpCode(comCodeMapper.createGrpId());
         comCodeMapper.insertGrpCode(comCodeVo);
         return comCodeVo;
     }
 
     @Override
     public ComCodeDetailVo createComCode(ComCodeDetailVo comCodeDetailVo) {
-        boolean existId = comCodeMapper.existCodeId(comCodeDetailVo.getCodeId());
-        if (existId) {
-            throw new DuplicateKeyException("중복코드가 존재합니다. : " + comCodeDetailVo.getCodeId());
-        } else {
-            comCodeMapper.insertComCode(comCodeDetailVo);
-        }
+        comCodeMapper.insertComCode(comCodeDetailVo);
         return comCodeDetailVo;
     }
 
@@ -74,8 +68,6 @@ public class ComCodeServiceImpl implements ComCodeService {
         boolean existCodeId = comCodeMapper.existCodeIdInGrp(grpCode);
         if (!existCodeId) {
             comCodeMapper.deleteGrpCode(grpCode);
-        } else {
-            throw new UnsupportedOperationException("하위코드가 존재합니다. : " + grpCode);
         }
     }
 

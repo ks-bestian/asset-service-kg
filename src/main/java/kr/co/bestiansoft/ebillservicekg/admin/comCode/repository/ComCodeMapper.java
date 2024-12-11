@@ -21,6 +21,4 @@ public interface ComCodeMapper {
     void deleteGrpCode(Integer codeId);
     void deleteComCode(String codeId);
     boolean existCodeIdInGrp(Integer id);
-    boolean existCodeId(String codeId);
-    Integer createGrpId();
 }

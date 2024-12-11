@@ -48,12 +48,9 @@ public class MenuController {
     @ApiOperation(value = "메뉴 삭제", notes = "메뉴 삭제한다.")//하위코드 있는 경우 상위코드 삭제 불가
     @DeleteMapping("admin/menu")
     public ResponseEntity<CommonResponse> deleteMenu(@RequestBody Long menuId) {
-        try {
-            menuService.deleteMenu(menuId);
-            return new ResponseEntity<>(new CommonResponse(200, "ok", "Menu code deleted successfully."), HttpStatus.OK);
-        } catch (UnsupportedOperationException e) {
-            return new ResponseEntity<>(new CommonResponse(HttpStatus.BAD_REQUEST.value(), "bad", e.getMessage()), HttpStatus.BAD_REQUEST);
-        }
+        menuService.deleteMenu(menuId);
+        return new ResponseEntity<>(new CommonResponse(200, "ok", "Menu code deleted successfully."), HttpStatus.OK);
+
     }
 
 }

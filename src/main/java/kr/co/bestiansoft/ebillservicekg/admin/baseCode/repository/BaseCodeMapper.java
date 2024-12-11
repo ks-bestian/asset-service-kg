@@ -13,7 +13,4 @@ public interface BaseCodeMapper {
     int updateBaseCode(BaseCodeVo baseCodeVo);
     void deleteBaseCode(Long ids);
     BaseCodeVo getBaseCodeById(Long seq);
-    boolean existCode(String existCode);
-
-
 }

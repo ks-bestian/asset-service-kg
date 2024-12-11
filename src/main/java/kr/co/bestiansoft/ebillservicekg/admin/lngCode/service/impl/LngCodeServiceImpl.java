@@ -26,8 +26,6 @@ public class LngCodeServiceImpl implements LngCodeService {
 
     @Override
     public LngCodeVo createLngCode(LngCodeVo lngCodeVo) {
-        Long lngId = lngCodeMapper.createLngId();
-        lngCodeVo.setLngId(lngId);
         lngCodeMapper.insertLngCode(lngCodeVo);
 
         return lngCodeVo;

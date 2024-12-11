@@ -7,26 +7,26 @@
             resultType="kr.co.bestiansoft.ebillservicekg.admin.baseCode.vo.BaseCodeVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.baseCode.repository.BaseCodeMapper.getBaseCodeList */
         select
-        seq
-        , code_id --코드아이디
-        , code_kind --코드종류
-        , code_nm --코드이름
-        , bg_dt --시작일자
-        , ed_dt --종료일자
-        , ord --순서
-        , curr_yn --현재여부
-        , rmk --비고
-        , use_yn --사용여부
-        , reg_id --등록자아이디
-        , reg_dt --등록일자
-        , mod_id --수정자아이디
-        , mod_dt --수정일자
+              seq
+            , code_id --코드아이디
+            , code_kind --코드종류
+            , code_nm --코드이름
+            , bg_dt --시작일자
+            , ed_dt --종료일자
+            , ord --순서
+            , curr_yn --현재여부
+            , rmk --비고
+            , use_yn --사용여부
+            , reg_id --등록자아이디
+            , reg_dt --등록일자
+            , mod_id --수정자아이디
+            , mod_dt --수정일자
         from ebs_base_code
     </select>
 
     <insert id="insertBaseCode" parameterType="kr.co.bestiansoft.ebillservicekg.admin.baseCode.vo.BaseCodeVo">
         insert into kgst.ebs_base_code (
-            code_id
+              code_id
             , code_kind
             , code_nm
             , bg_Dt
@@ -41,35 +41,35 @@
             , mod_dt
         )
         values (
-            #{codeId},
-            #{codeKind},
-            #{codeNm},
-            #{bgDt},
-            #{edDt},
-            #{ord},
-            #{currYn},
-            #{rmk},
-            #{useYn},
-            #{regId},
-            now(),
-            NULL,
-            NULL
+              #{codeId}
+            , #{codeKind}
+            , #{codeNm}
+            , #{bgDt}
+            , #{edDt}
+            , #{ord}
+            , #{currYn}
+            , #{rmk}
+            , #{useYn}
+            , #{regId}
+            , now()
+            , NULL
+            , NULL
         )
     </insert>
 
     <update id="updateBaseCode" parameterType="kr.co.bestiansoft.ebillservicekg.admin.baseCode.vo.BaseCodeVo">
         update ebs_base_code
         set
-            code_kind = #{codeKind},
-            code_nm = #{codeNm},
-            bg_dt = #{bgDt},
-            ed_dt = #{edDt},
-            rmk = #{rmk},
-            ord = #{ord},
-            use_yn = #{useYn},
-            curr_yn = #{currYn},
-            mod_id = #{modId},
-            mod_dt = #{modDt}
+              code_kind = #{codeKind}
+            , code_nm = #{codeNm}
+            , bg_dt = #{bgDt}
+            , ed_dt = #{edDt}
+            , rmk = #{rmk}
+            , ord = #{ord}
+            , use_yn = #{useYn}
+            , curr_yn = #{currYn}
+            , mod_id = #{modId}
+            , mod_dt = #{modDt}
         where seq = #{seq}
     </update>
 
@@ -80,7 +80,7 @@
 
     <select id="getBaseCodeById" parameterType="java.lang.Long" resultType="kr.co.bestiansoft.ebillservicekg.admin.baseCode.vo.BaseCodeVo">
         select
-            seq
+              seq
             , code_id
             , code_kind
             , code_nm
@@ -96,12 +96,5 @@
             , mod_dt
         from ebs_base_code
         where seq = #{seq}
-    </select>
-
-    <select id="existCode" parameterType="java.lang.String" resultType="boolean">
-        select exists (
-            select 1 from ebs_base_code
-            where code_id = #{codeId}
-        )
     </select>
 </mapper>

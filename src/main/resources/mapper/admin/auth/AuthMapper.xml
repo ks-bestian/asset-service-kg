@@ -4,12 +4,12 @@
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.admin.auth.repository.AuthMapper">
     <select id="getAuthList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.auth.vo.AuthVo">
         select
-            auth_id
-            , auth_nm1
-            , auth_nm2
-            . auth_nm3
-            , use_yn
-            , ord
+              auth_id --권한아이디
+            , auth_nm1 --권한명(키르키즈어)
+            , auth_nm2 --권한명(러시아어)
+            . auth_nm3 --권한명(한국어)
+            , use_yn --사용여부
+            , ord --순서
             , reg_id
             , reg_dt
             , mod_id
@@ -29,7 +29,7 @@
 
     <select id="getAuthDetail" parameterType="java.lang.Long" resultType="kr.co.bestiansoft.ebillservicekg.admin.auth.vo.AuthVo">
         select
-            auth_id
+              auth_id
             , auth_nm1
             , auth_nm2
             , auth_nm3
@@ -45,7 +45,7 @@
 
     <insert id="insertAuth" parameterType="kr.co.bestiansoft.ebillservicekg.admin.auth.vo.AuthVo">
         insert into com_auth (
-            auth_nm1
+              auth_nm1
             , auth_nm2
             , auth_nm3
             , use_yn
@@ -56,28 +56,28 @@
             , mod_dt
         )
         values (
-        #{authNm1},
-        #{authNm2},
-        #{authNm3},
-        #{useYn},
-        #{ord},
-        #{regId},
-        now(),
-        null,
-        null
+              #{authNm1}
+            , #{authNm2}
+            , #{authNm3}
+            , #{useYn}
+            , #{ord}
+            , #{regId}
+            , now()
+            , null
+            , null
         )
     </insert>
 
     <update id="updateAuth" parameterType="kr.co.bestiansoft.ebillservicekg.admin.auth.vo.AuthVo">
         update com_auth
         set
-        auth_nm1 = #{authNm1},
-        auth_nm2 = #{authNm2},
-        auth_nm3 = #{authNm3},
-        use_yn = #{useYn},
-        ord = #{ord},
-        mod_id = #{modId},
-        mod_dt = #{modDt}
+              auth_nm1 = #{authNm1}
+            , auth_nm2 = #{authNm2}
+            , auth_nm3 = #{authNm3}
+            , use_yn = #{useYn}
+            , ord = #{ord}
+            , mod_id = #{modId}
+            , mod_dt = #{modDt}
         where auth_id = #{authId}
     </update>
 

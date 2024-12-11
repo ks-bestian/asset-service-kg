@@ -5,10 +5,10 @@
     <select id="getGrpCodeList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.baseCode.repository.ComCodeMapper.getGrpCodeList */
         select
-            grp_code --그룹코드
-            , grp_code_nm1 --그룹명1
-            , grp_code_nm2 --그룹명2
-            , grp_code_nm3 --그룹명3
+              grp_code --그룹코드
+            , grp_code_nm1 --그룹명(키르키즈어)
+            , grp_code_nm2 --그룹명(러시아어)
+            , grp_code_nm3 --그룹명(한국어)
             , use_yn --사용여부
             , rmk --비고
             , reg_dt --등록자
@@ -27,7 +27,7 @@
 
     <select id="getComCodeList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeDetailVo">
         select
-            code_id
+              code_id
             , code_nm1
             , code_nm2
             , code_nm3
@@ -48,7 +48,7 @@
 
     <select id="getGrpCodeById" parameterType="java.lang.Integer" resultType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeVo">
         select
-            grp_code
+              grp_code
             , grp_code_nm1
             , grp_code_nm2
             , grp_code_nm3
@@ -64,7 +64,7 @@
 
     <select id="getComCodeById" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeDetailVo">
         select
-            code_id
+              code_id
             , code_nm1
             , code_nm2
             , code_nm3
@@ -80,9 +80,13 @@
         where code_id = #{codeId}
     </select>
 
+
     <insert id="insertGrpCode" parameterType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeVo">
+        <selectKey keyProperty="grpCode" resultType="java.lang.Integer" order="BEFORE">
+            select coalesce(max(grp_code) + 1, 1000) from com_code
+        </selectKey>
         insert into kgst.com_code (
-            grp_code
+              grp_code
             , grp_code_nm1
             , grp_code_nm2
             , grp_code_nm3
@@ -94,21 +98,21 @@
             , mod_id
         )
         values (
-            #{grpCode},
-            #{grpCodeNm1},
-            #{grpCodeNm2},
-            #{grpCodeNm3},
-            #{useYn},
-            #{rmk},
-            now(),
-            #{regId},
-            NULL,
-            NULL
+              #{grpCode}
+            , #{grpCodeNm1}
+            , #{grpCodeNm2}
+            , #{grpCodeNm3}
+            , #{useYn}
+            , #{rmk}
+            , now()
+            , #{regId}
+            , NULL
+            , NULL
         )
     </insert>
     <insert id="insertComCode" parameterType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeDetailVo">
         insert into kgst.com_code_detail (
-            code_id
+              code_id
             , code_nm1
             , code_nm2
             , code_nm3
@@ -122,46 +126,46 @@
             , mod_id
         )
         values (
-            #{codeId},
-            #{codeNm1},
-            #{codeNm2},
-            #{codeNm3},
-            #{grpCode},
-            #{useYn},
-            #{ord},
-            #{rmk},
-            now(),
-            #{regId},
-            NULL,
-            NULL
+            #{codeId}
+            , #{codeNm1}
+            , #{codeNm2}
+            , #{codeNm3}
+            , #{grpCode}
+            , #{useYn}
+            , #{ord}
+            , #{rmk}
+            , now()
+            , #{regId}
+            , NULL
+            , NULL
         )
     </insert>
 
     <update id="updateGrpCode" parameterType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeVo">
         update com_code
         set
-        grp_code_nm1 = #{grpCodeNm1},
-        grp_code_nm2 = #{grpCodeNm2},
-        grp_code_nm3 = #{grpCodeNm3},
-        use_yn = #{useYn},
-        rmk = #{rmk},
-        mod_id = #{modId},
-        mod_dt = #{modDt}
+              grp_code_nm1 = #{grpCodeNm1}
+            , grp_code_nm2 = #{grpCodeNm2}
+            , grp_code_nm3 = #{grpCodeNm3}
+            , use_yn = #{useYn}
+            , rmk = #{rmk}
+            , mod_id = #{modId}
+            , mod_dt = #{modDt}
         WHERE grp_code = #{grpCode}
     </update>
 
     <update id="updateComCode" parameterType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeDetailVo">
         update com_code_detail
         set
-        code_nm1 = #{codeNm1},
-        code_nm2 = #{codeNm2},
-        code_nm3 = #{codeNm3},
-        grp_code = #{grpCode},
-        use_yn = #{useYn},
-        ord = #{ord},
-        rmk = #{rmk},
-        mod_id = #{modId}
-        mod_dt = #{modDt}
+            code_nm1 = #{codeNm1}
+            , code_nm2 = #{codeNm2}
+            , code_nm3 = #{codeNm3}
+            , grp_code = #{grpCode}
+            , use_yn = #{useYn}
+            , ord = #{ord}
+            , rmk = #{rmk}
+            , mod_id = #{modId}
+            , mod_dt = #{modDt}
         WHERE code_id = #{codeId}
     </update>
 
@@ -180,16 +184,5 @@
             select 1 from com_code_detail
             where grp_code = #{id}
         )
-    </select>
-
-    <select id="existCodeId" parameterType="java.lang.String" resultType="boolean">
-        select exists (
-            select 1 from com_code_detail
-            where code_id = #{codeId}
-        )
-    </select>
-
-    <select id="createGrpId" resultType="java.lang.Integer">
-        select coalesce(max(grp_code) + 1, 1000) from com_code;
     </select>
 </mapper>

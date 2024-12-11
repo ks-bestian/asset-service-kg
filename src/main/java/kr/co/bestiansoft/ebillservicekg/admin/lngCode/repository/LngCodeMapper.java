@@ -11,7 +11,6 @@ public interface LngCodeMapper {
 
     List<LngCodeVo> getLngCodeList(HashMap<String, Object> param);
     int insertLngCode(LngCodeVo lngCodeVo);
-    Long createLngId();
     int updateLngCode(LngCodeVo lngCodeVo);
     void deleteLngCode(Long lngId);
     LngCodeVo getLngCodeById(Long lngId);

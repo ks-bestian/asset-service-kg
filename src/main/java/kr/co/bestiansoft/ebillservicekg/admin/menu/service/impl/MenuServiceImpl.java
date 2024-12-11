@@ -43,11 +43,8 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public void deleteMenu(Long menuId) {
-
         boolean exist = menuMapper.existUprId(menuId);
-        if (exist) {
-            throw new UnsupportedOperationException("하위코드가 존재합니다.");
-        } else {
+        if (!exist) {
             menuMapper.deleteMenu(menuId);
         }
     }
