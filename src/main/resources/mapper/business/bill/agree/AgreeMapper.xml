@@ -21,6 +21,7 @@
 		left join ebs_master em on em.bill_id = ep.bill_id 
 		where ep.proposer_id = #{userId}
 			and em.na_term_cd = '14'
+			and em.stat_cd in ('ST010', 'ST020', 'ST030', 'ST040')
 		<if test="billName != null and billName != ''">
 			and (em.bill_name_ru like concat('%', #{billName}, '%') or em.bill_name_kg like concat('%', #{billName}, '%'))
 		</if>
