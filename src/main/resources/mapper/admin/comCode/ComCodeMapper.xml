@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.admin.comCode.repository.ComCodeMapper">
     <select id="getGrpCodeList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.baseCode.repository.BaseCodeMapper.getGrpCodeList */
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.baseCode.repository.ComCodeMapper.getGrpCodeList */
         select
             grp_code --그룹코드
             , grp_code_nm1 --그룹명1
@@ -160,7 +160,7 @@
         use_yn = #{useYn},
         ord = #{ord},
         rmk = #{rmk},
-        mod_id = #{modId},
+        mod_id = #{modId}
         mod_dt = #{modDt}
         WHERE code_id = #{codeId}
     </update>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.bestiansoft.ebillservicekg.admin.dept.repository.DeptMapper">
+    <select id="getComDeptList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.dept.vo.DeptVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.comDept.repository.ComDeptMapper.getComDeptList */
+        select
+        dept_cd --부서코드
+        , dept_nm1 --부서명1
+        , dept_nm2 --부서명2
+        , dept_nm3 --부서명3
+        , shrt_nm1 --부서 약칭1
+        , shrt_nm2 --부서 약칭2
+        , shrt_nm3 --부서 약칭3
+        , ord --순서
+        , upr_dept_cd --상위부서코드
+        , use_yn --사용여부
+        , reg_dt --등록일자
+        , reg_id --등록자
+        , mod_id --수정자
+        , mod_dt --수정일자
+        from com_dept
+        where 1=1
+        <if test="deptNm1 != null and deptNm1 != ''">
+            and dept_nm1 like concat('%', #{deptNm1}, '%')
+        </if>
+        <if test="deptNm2 != null and deptNm2 != ''">
+            and dept_nm2 like concat('%', #{deptNm2}, '%')
+        </if>
+        <if test="deptNm2 != null and deptNm2 != ''">
+            and dept_nm3 like concat('%', #{deptNm3}, '%')
+        </if>
+    </select>
+
+    <select id="getComDeptById" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.admin.dept.vo.DeptVo">
+        select
+        dept_cd --부서코드
+        , dept_nm1 --부서명1
+        , dept_nm2 --부서명2
+        , dept_nm3 --부서명3
+        , shrt_nm1 --부서 약칭1
+        , shrt_nm2 --부서 약칭2
+        , shrt_nm3 --부서 약칭3
+        , ord --순서
+        , upr_dept_cd --상위부서코드
+        , use_yn --사용여부
+        , reg_dt --등록일자
+        , reg_id --등록자
+        , mod_id --수정자
+        , mod_dt --수정일자
+        from com_dept
+        where dept_cd = #{deptCd}
+    </select>
+</mapper>

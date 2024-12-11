@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.bestiansoft.ebillservicekg.admin.auth.repository.AuthMapper">
+    <select id="getAuthList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.auth.vo.AuthVo">
+        select
+            auth_id
+            , auth_nm1
+            , auth_nm2
+            . auth_nm3
+            , use_yn
+            , ord
+            , reg_id
+            , reg_dt
+            , mod_id
+            , mod_dt
+        from com_auth
+        where 1=1
+        <if test="authNm1 != null and authNm1 != ''">
+            and auth_nm1 like concat('%', #{authNm1}, '%')
+        </if>
+        <if test="authNm2 != null and authNm2 != ''">
+            and auth_nm2 like concat('%', #{authNm2}, '%')
+        </if>
+        <if test="authNm3 != null and authNm3 != ''">
+            and auth_nm3 like concat('%', #{authNm3}, '%')
+        </if>
+    </select>
+
+    <select id="getAuthDetail" parameterType="java.lang.Long" resultType="kr.co.bestiansoft.ebillservicekg.admin.auth.vo.AuthVo">
+        select
+            auth_id
+            , auth_nm1
+            , auth_nm2
+            , auth_nm3
+            , use_yn
+            , ord
+            , reg_id
+            , reg_dt
+            , mod_id
+            , mod_dt
+            from com_auth
+        where auth_id = #{authId}
+    </select>
+
+    <insert id="insertAuth" parameterType="kr.co.bestiansoft.ebillservicekg.admin.auth.vo.AuthVo">
+        insert into com_auth (
+            auth_nm1
+            , auth_nm2
+            , auth_nm3
+            , use_yn
+            , ord
+            , reg_id
+            , reg_dt
+            , mod_id
+            , mod_dt
+        )
+        values (
+        #{authNm1},
+        #{authNm2},
+        #{authNm3},
+        #{useYn},
+        #{ord},
+        #{regId},
+        now(),
+        null,
+        null
+        )
+    </insert>
+
+    <update id="updateAuth" parameterType="kr.co.bestiansoft.ebillservicekg.admin.auth.vo.AuthVo">
+        update com_auth
+        set
+        auth_nm1 = #{authNm1},
+        auth_nm2 = #{authNm2},
+        auth_nm3 = #{authNm3},
+        use_yn = #{useYn},
+        ord = #{ord},
+        mod_id = #{modId},
+        mod_dt = #{modDt}
+        where auth_id = #{authId}
+    </update>
+
+    <delete id="deleteAuth" parameterType="java.lang.Long">
+        delete from com_auth
+        where auth_id = #{authId}
+    </delete>
+</mapper>
