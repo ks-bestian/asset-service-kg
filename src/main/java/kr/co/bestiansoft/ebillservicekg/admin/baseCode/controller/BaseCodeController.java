@@ -34,11 +34,9 @@ public class BaseCodeController {
     @PostMapping(value = "/admin/baseCode")
     public ResponseEntity<CommonResponse> createBoard(@RequestBody BaseCodeVo baseCodeVo) {
 
-        try {
-            return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "BaseCode created successfully", basecodeService.createBaseCode(baseCodeVo)), HttpStatus.CREATED);
-        } catch (DuplicateKeyException e) {
-            return new ResponseEntity<>(new CommonResponse(HttpStatus.BAD_REQUEST.value(), "bad", e.getMessage()), HttpStatus.BAD_REQUEST);
-        }
+    	BaseCodeVo returnVo = basecodeService.createBaseCode(baseCodeVo);
+    	return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "BaseCode created successfully", returnVo), HttpStatus.CREATED);
+
     }
 
     @ApiOperation(value = "대별코드 수정", notes = "대별코드를 수정한다.")
