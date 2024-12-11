@@ -27,14 +27,10 @@ public class BaseCodeServiceImpl implements BaseCodeService {
         return baseCodeMapper.getBaseCodeList(param);
     }
 
+
     @Override
     public BaseCodeVo createBaseCode(BaseCodeVo baseCodeVo) {
-        boolean existCd = baseCodeMapper.existCode(baseCodeVo.getCodeId());
-        if (existCd) {
-            throw new DuplicateKeyException("중복된 코드가 존재합니다. : " + baseCodeVo.getCodeId());
-        } else {
-            baseCodeMapper.insertBaseCode(baseCodeVo);
-        }
+    	baseCodeMapper.insertBaseCode(baseCodeVo);
         return baseCodeVo;
     }
 
