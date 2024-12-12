@@ -3,18 +3,19 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.admin.auth.repository.AuthMapper">
     <select id="getAuthList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.auth.vo.AuthVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.auth.repository.AuthMapper.getAuthList */
         select
               auth_id --권한아이디
             , auth_nm1 --권한명(키르키즈어)
             , auth_nm2 --권한명(러시아어)
-            . auth_nm3 --권한명(한국어)
+            , auth_nm3 --권한명(한국어)
             , use_yn --사용여부
             , ord --순서
             , reg_id
             , reg_dt
             , mod_id
             , mod_dt
-        from com_auth
+        from kgst.com_auth
         where 1=1
         <if test="authNm1 != null and authNm1 != ''">
             and auth_nm1 like concat('%', #{authNm1}, '%')
@@ -25,9 +26,11 @@
         <if test="authNm3 != null and authNm3 != ''">
             and auth_nm3 like concat('%', #{authNm3}, '%')
         </if>
+        order by reg_dt desc
     </select>
 
     <select id="getAuthDetail" parameterType="java.lang.Long" resultType="kr.co.bestiansoft.ebillservicekg.admin.auth.vo.AuthVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.auth.repository.AuthMapper.getAuthDetail */
         select
               auth_id
             , auth_nm1
@@ -44,6 +47,7 @@
     </select>
 
     <insert id="insertAuth" parameterType="kr.co.bestiansoft.ebillservicekg.admin.auth.vo.AuthVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.auth.repository.AuthMapper.insertAuth */
         insert into com_auth (
               auth_nm1
             , auth_nm2
@@ -69,6 +73,7 @@
     </insert>
 
     <update id="updateAuth" parameterType="kr.co.bestiansoft.ebillservicekg.admin.auth.vo.AuthVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.auth.repository.AuthMapper.updateAuth */
         update com_auth
         set
               auth_nm1 = #{authNm1}
@@ -82,6 +87,7 @@
     </update>
 
     <delete id="deleteAuth" parameterType="java.lang.Long">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.auth.repository.AuthMapper.deleteAuth */
         delete from com_auth
         where auth_id = #{authId}
     </delete>

@@ -18,6 +18,7 @@
 -->
 
     <select id="getMenuList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.menu.vo.MenuVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.menu.repository.MenuMapper.getMenuList */
         select
               menu_id --메뉴아이디
             , menu_nm1 --메뉴명(키르기스어)
@@ -36,6 +37,7 @@
     </select>
     
     <select id="getMenuDetail" parameterType="java.lang.Long" resultType="kr.co.bestiansoft.ebillservicekg.admin.menu.vo.MenuVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.menu.repository.MenuMapper.geMenuDetail */
         select
               menu_id
             , menu_nm1
@@ -55,6 +57,7 @@
     </select>
 
     <insert id="insertMenu" parameterType="kr.co.bestiansoft.ebillservicekg.admin.menu.vo.MenuVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.menu.repository.MenuMapper.insertMenu */
         insert into com_menu (
               menu_nm1
             , menu_nm2
@@ -86,6 +89,7 @@
     </insert>
 
     <update id="updateMenu" parameterType="kr.co.bestiansoft.ebillservicekg.admin.menu.vo.MenuVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.menu.repository.MenuMapper.updateMenu */
         update com_menu
         set
             menu_nm1 = #{menuNm1}
@@ -101,10 +105,9 @@
         where menu_id = #{menuId}
     </update>
 
-    <select id="existUprId" parameterType="java.lang.Long" resultType="boolean">
-        select exists (
-            select 1 from com_menu
-            where upr_menu_id = #{menuId}
-        )
-    </select>
+    <delete id="deleteMenu" parameterType="java.lang.Long">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.menu.repository.MenuMapper.deleteMenu */
+        delete from com_menu
+        where menu_id = #{menuId}
+    </delete>
 </mapper>

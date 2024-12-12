@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.admin.comCode.repository.ComCodeMapper">
     <select id="getGrpCodeList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.baseCode.repository.ComCodeMapper.getGrpCodeList */
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.comCode.repository.ComCodeMapper.getGrpCodeList */
         select
               grp_code --그룹코드
             , grp_code_nm1 --그룹명(키르키즈어)
@@ -26,6 +26,7 @@
     </select>
 
     <select id="getComCodeList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeDetailVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.comCode.repository.ComCodeMapper.getComCodeList */
         select
               code_id
             , code_nm1
@@ -47,6 +48,7 @@
     </select>
 
     <select id="getGrpCodeById" parameterType="java.lang.Integer" resultType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.comCode.repository.ComCodeMapper.getGrpCodeById */
         select
               grp_code
             , grp_code_nm1
@@ -63,6 +65,7 @@
     </select>
 
     <select id="getComCodeById" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeDetailVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.comCode.repository.ComCodeMapper.getComCodeById */
         select
               code_id
             , code_nm1
@@ -82,6 +85,7 @@
 
 
     <insert id="insertGrpCode" parameterType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.comCode.repository.ComCodeMapper.insertGrpCode */
         <selectKey keyProperty="grpCode" resultType="java.lang.Integer" order="BEFORE">
             select coalesce(max(grp_code) + 1, 1000) from com_code
         </selectKey>
@@ -111,6 +115,7 @@
         )
     </insert>
     <insert id="insertComCode" parameterType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeDetailVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.comCode.repository.ComCodeMapper.insertComCode */
         insert into kgst.com_code_detail (
               code_id
             , code_nm1
@@ -141,7 +146,9 @@
         )
     </insert>
 
-    <update id="updateGrpCode" parameterType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeVo">
+    <update id="updateGrpC
+    selectode" parameterType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.comCode.repository.ComCodeMapper.updateGrpCode */
         update com_code
         set
               grp_code_nm1 = #{grpCodeNm1}
@@ -155,6 +162,7 @@
     </update>
 
     <update id="updateComCode" parameterType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeDetailVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.comCode.repository.ComCodeMapper.updateComCode */
         update com_code_detail
         set
             code_nm1 = #{codeNm1}
@@ -170,16 +178,19 @@
     </update>
 
     <delete id="deleteGrpCode" parameterType="java.lang.Integer">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.comCode.repository.ComCodeMapper.deleteGrpCode */
         delete from com_code
         where grp_code = #{grpCode}
     </delete>
 
     <delete id="deleteComCode" parameterType="java.lang.String">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.comCode.repository.ComCodeMapper.deleteComCode */
         delete from com_code_detail
         where code_id = #{codeId}
     </delete>
 
     <select id="existCodeIdInGrp" parameterType="java.lang.Integer" resultType="boolean">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.comCode.repository.ComCodeMapper.existCodeIdInGrp */
         select exists (
             select 1 from com_code_detail
             where grp_code = #{id}

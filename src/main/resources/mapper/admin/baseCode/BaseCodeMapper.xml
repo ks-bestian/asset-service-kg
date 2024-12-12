@@ -25,6 +25,7 @@
     </select>
 
     <insert id="insertBaseCode" parameterType="kr.co.bestiansoft.ebillservicekg.admin.baseCode.vo.BaseCodeVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.baseCode.repository.BaseCodeMapper.insertBaseCode */
         insert into kgst.ebs_base_code (
               code_id
             , code_kind
@@ -58,6 +59,7 @@
     </insert>
 
     <update id="updateBaseCode" parameterType="kr.co.bestiansoft.ebillservicekg.admin.baseCode.vo.BaseCodeVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.baseCode.repository.BaseCodeMapper.updateBaseCode */
         update ebs_base_code
         set
               code_kind = #{codeKind}
@@ -79,6 +81,7 @@
     </delete>
 
     <select id="getBaseCodeById" parameterType="java.lang.Long" resultType="kr.co.bestiansoft.ebillservicekg.admin.baseCode.vo.BaseCodeVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.baseCode.repository.BaseCodeMapper.getBaseCodeById */
         select
               seq
             , code_id

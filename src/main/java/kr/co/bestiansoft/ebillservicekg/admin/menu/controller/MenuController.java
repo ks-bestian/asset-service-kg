@@ -5,6 +5,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import kr.co.bestiansoft.ebillservicekg.admin.menu.service.MenuService;
 import kr.co.bestiansoft.ebillservicekg.admin.menu.vo.MenuVo;
+import kr.co.bestiansoft.ebillservicekg.admin.menu.vo.QuickMenuVo;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,7 @@ public class MenuController {
 
     @ApiOperation(value = "메뉴 리스트 조회", notes = "메뉴 리스트를 조회한다.")
     @GetMapping("admin/menu")
-    public ResponseEntity<CommonResponse> getMenuList(HashMap<String, Object> param) {
+    public ResponseEntity<CommonResponse> getMenuList(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "ok", menuService.getMenuList(param)), HttpStatus.OK);
     }
 
@@ -45,12 +46,25 @@ public class MenuController {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Menu code updated successfully", menuService.updateMenu(menuVo)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "메뉴 삭제", notes = "메뉴 삭제한다.")//하위코드 있는 경우 상위코드 삭제 불가
+    @ApiOperation(value = "메뉴 삭제", notes = "메뉴 삭제한다.")
     @DeleteMapping("admin/menu")
     public ResponseEntity<CommonResponse> deleteMenu(@RequestBody Long menuId) {
         menuService.deleteMenu(menuId);
         return new ResponseEntity<>(new CommonResponse(200, "ok", "Menu code deleted successfully."), HttpStatus.OK);
 
+    }
+
+    //--------quick menu--------
+    @ApiOperation(value = "퀵메뉴 리스트 조회", notes = "퀵메뉴 리스트를 조회한다.")
+    @GetMapping("admin/quickMenu")
+    public ResponseEntity<CommonResponse> getQuickMenuList(@RequestParam HashMap<String, Object> param) {
+        return new ResponseEntity<>(new CommonResponse(200, "ok", menuService.getQuickMenuList(param)), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "퀵메뉴 생성", notes = "퀵메뉴 리스트를 생성한다.")
+    @PostMapping("admin/quickMenu")
+    public ResponseEntity<CommonResponse> createQuickMenuList(@RequestParam HashMap<String, Object> param) {
+        return new ResponseEntity<>(new CommonResponse(200, "ok", menuService.createQuickMenuList(param)), HttpStatus.OK);
     }
 
 }

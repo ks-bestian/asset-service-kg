@@ -3,6 +3,7 @@ package kr.co.bestiansoft.ebillservicekg.admin.menu.service.impl;
 import kr.co.bestiansoft.ebillservicekg.admin.menu.repository.MenuMapper;
 import kr.co.bestiansoft.ebillservicekg.admin.menu.service.MenuService;
 import kr.co.bestiansoft.ebillservicekg.admin.menu.vo.MenuVo;
+import kr.co.bestiansoft.ebillservicekg.admin.menu.vo.QuickMenuVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
@@ -43,9 +44,16 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public void deleteMenu(Long menuId) {
-        boolean exist = menuMapper.existUprId(menuId);
-        if (!exist) {
-            menuMapper.deleteMenu(menuId);
-        }
+        menuMapper.deleteMenu(menuId);
+    }
+
+    @Override
+    public List<QuickMenuVo> getQuickMenuList(HashMap<String, Object> param) {
+        return null;
+    }
+
+    @Override
+    public List<QuickMenuVo> createQuickMenuList(HashMap<String, Object> param) {
+        return null;
     }
 }

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.bestiansoft.ebillservicekg.admin.user.repository.UserMapper">
+    <select id="getUserList" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.user.repository.UserMapper.getUserList */
+        select
+              seq
+            , dept_cd --부서코드
+            , email --이메일
+            , gen_cd --성별(M,F)
+            , profile_img_path --프로필이미지경로
+            , job_Cd --직급코드
+            , msg_rcv_yn --메세지수신여부
+            , pos_cd
+            , user_id --직원아이디
+            , user_nm_kg --이름(키르키즈어)
+            , user_nm_ru --이름(러시아어)
+            , dept_head_yn --부서장여부
+            , doc_mgr_yn --문서관리자여부
+            , reg_id
+            , reg_dt
+            , mod_id
+            , mod_dt
+        from com_user
+    </select>
+
+    <select id="getUserDetail" parameterType="java.lang.Long" resultType="kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.user.repository.UserMapper.getUserDetail */
+        select
+              seq
+            , dept_cd --부서코드
+            , email --이메일
+            , gen_cd --성별(M,F)
+            , profile_img_path --프로필이미지경로
+            , job_Cd --직급코드
+            , msg_rcv_yn --메세지수신여부
+            , pos_cd
+            , user_id --직원아이디
+            , user_nm_kg --이름(키르키즈어)
+            , user_nm_ru --이름(러시아어)
+            , dept_head_yn --부서장여부
+            , doc_mgr_yn --문서관리자여부
+            , reg_id
+            , reg_dt
+            , mod_id
+            , mod_dt
+        from com_user
+        where seq = #{seq}
+    </select>
+
+    <insert id="insertUser" parameterType="kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.user.repository.UserMapper.insertUser */
+        insert into com_user (
+              dept_cd --부서코드
+            , email --이메일
+            , gen_cd --성별(M,F)
+            , profile_img_path --프로필이미지경로
+            , job_Cd --직급코드
+            , msg_rcv_yn --메세지수신여부
+            , pos_cd
+            , user_id --직원아이디
+            , user_nm_kg --이름(키르키즈어)
+            , user_nm_ru --이름(러시아어)
+            , dept_head_yn --부서장여부
+            , doc_mgr_yn --문서관리자여부
+            , reg_id
+            , reg_dt
+            , mod_id
+            , mod_dt
+        )
+        values (
+              #{deptCd}
+            , #{email}
+            , #{genCd}
+            , #{profileImgPath}
+            , #{jobCd}
+            , #{msgRcvYn}
+            , #{posCd}
+            , #{userId}
+            , #{userNmKg}
+            , #{userNmRu}
+            , #{deptHeadYn}
+            , #{docMgrYn}
+            , #{regId}
+            , now()
+            , null
+            , null
+        )
+    </insert>
+
+    <update id="updateUser" parameterType="kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.user.repository.UserMapper.updateUser */
+        update com_user
+        set
+              dept_cd = #{deptCd}
+            , email = #{email}
+            , gen_cd = #{genCd}
+            , profile_img_path = #{profileImgPath}
+            , job_Cd = #{jobCd}
+            , msg_rcv_yn = #{msgRcvYn}
+            , pos_cd = #{posCd}
+            , user_id = #{userId}
+            , user_nm_kg = #{userNmKg}
+            , user_nm_ru = #{userNmRu}
+            , dept_head_yn = #{deptHeadYn}
+            , doc_mgr_yn = #{docMgrYn}
+            , mod_id = #{modId}
+            , mod_dt = #{modDt}
+        where seq = #{seq}
+    </update>
+
+    <delete id="deleteUser" parameterType="java.lang.Long">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.user.repository.UserMapper.deleteUser */
+        delete from com_user
+        where seq = #{seq}
+    </delete>
+
+</mapper>

@@ -1,6 +1,7 @@
 package kr.co.bestiansoft.ebillservicekg.admin.menu.repository;
 
 import kr.co.bestiansoft.ebillservicekg.admin.menu.vo.MenuVo;
+import kr.co.bestiansoft.ebillservicekg.admin.menu.vo.QuickMenuVo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.HashMap;
@@ -14,6 +15,5 @@ public interface MenuMapper {
     int insertMenu(MenuVo menuVo);
     int updateMenu(MenuVo menuVo);
     void deleteMenu(Long id);
-    boolean existUprId(Long id);
 
 }
