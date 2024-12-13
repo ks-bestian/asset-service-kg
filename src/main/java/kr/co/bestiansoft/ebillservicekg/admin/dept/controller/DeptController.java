@@ -34,6 +34,7 @@ public class DeptController {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "ok", deptService.getComDeptById(deptCd)), HttpStatus.OK);
     }
 
+
     @ApiOperation(value = "부서 생성", notes = "부서를 생성한다.")
     @PostMapping("admin/dept")
     public ResponseEntity<CommonResponse> createDept(@RequestBody DeptVo deptVo) {
@@ -53,5 +54,7 @@ public class DeptController {
         return new ResponseEntity<>(new CommonResponse(200, "ok", "Department code deleted successfully."), HttpStatus.OK);
 
     }
+
+
 
 }

@@ -30,31 +30,38 @@
         <if test="memberNmKg != null and memberNmKg != ''">
             and member_nm_kg like concat('%', #{memberNmKg}, '%')
         </if>
+        order by reg_dt
     </select>
 
     <select id="getMemberDetail" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.admin.member.vo.MemberVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.member.repository.MemberMapper.getMemberDetail */
         select
-              member_id --국회의원아이디
-            , member_nm_kg --이름(키르키즈어)
-            , member_nm_ru --이름(러시아어)
-            , age_cd --대수
-            , cmit_cd --소속위원회코드
-            , dept_id --부서
-            , poly_cd --정당코드
-            , poly_nm --정당명
-            , rsdn_rgst_nmbr --주민번호 본인을 구분하는 번호
-            , email -- 이메일주소
-            , gen_cd --성별(M,F)
-            , profile_img_path --프로필이미지경로
-            , mbl_no --이동전화번호
-            , msg_rcv_yn --메세지수신여부
-            , doc_mgr_yn --문서관리자여부
-            , reg_id
-            , reg_dt
-            , mod_id
-            , mod_dt
-        from com_member
+              cm.member_id --국회의원아이디
+            , cm.member_nm_kg --이름(키르키즈어)
+            , cm.member_nm_ru --이름(러시아어)
+            , cm.age_cd --대수
+            , cm.cmit_cd --소속위원회코드
+            , cm.dept_id --부서
+            , cm.poly_cd --정당코드
+            , cm.poly_nm --정당명
+            , cm.rsdn_rgst_nmbr --주민번호 본인을 구분하는 번호
+            , cm.email -- 이메일주소
+            , cm.gen_cd --성별(M,F)
+            , cm.profile_img_path --프로필이미지경로
+            , cm.mbl_no --이동전화번호
+            , cm.msg_rcv_yn --메세지수신여부
+            , cm.doc_mgr_yn --문서관리자여부
+            , cm.reg_id
+            , cm.reg_dt
+            , cm.mod_id
+            , cm.mod_dt
+            , cd.dept_nm1 as dept_nm
+<!--            , (case when #{lang} = 'lng_type1' then cd.dept_nm1-->
+<!--                    when #{lang} = 'lng_type2' then cd.dept_nm2-->
+<!--                    else cd.dept_nm3-->
+<!--              end) as dept_nm-->
+        from com_member cm
+        inner join com_dept cd on cd.dept_cd = cm.dept_id
         where member_id = #{memberId}
     </select>
 

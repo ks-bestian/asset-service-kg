@@ -37,8 +37,10 @@ public class LngCodeServiceImpl implements LngCodeService {
     }
 
     @Override
-    public void deleteLngCode(Long lngId) {
-        lngCodeMapper.deleteLngCode(lngId);
+    public void deleteLngCode(List<Long> lngId) {
+        for (Long id : lngId) {
+            lngCodeMapper.deleteLngCode(id);
+        }
     }
 
     @Override

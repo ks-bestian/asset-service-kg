@@ -24,4 +24,5 @@ public class UserVo {
     private LocalDateTime regDt;
     private String modId;
     private LocalDateTime modDt;
+    private String deptNm;
 }

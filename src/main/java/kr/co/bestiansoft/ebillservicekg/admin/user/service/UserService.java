@@ -11,5 +11,5 @@ public interface UserService {
     UserVo getUserDetail(Long seq);
     UserVo createUser(UserVo userVo);
     int updateUser(UserVo userVo);
-    void deleteUser(Long seq);
+    void deleteUser(List<Long> seq);
 }

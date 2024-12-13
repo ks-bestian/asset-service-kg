@@ -22,6 +22,7 @@
             , mod_id --수정자아이디
             , mod_dt --수정일자
         from ebs_base_code
+        order by ord
     </select>
 
     <insert id="insertBaseCode" parameterType="kr.co.bestiansoft.ebillservicekg.admin.baseCode.vo.BaseCodeVo">

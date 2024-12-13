@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -47,9 +48,9 @@ public class UserController {
 
     @ApiOperation(value = "직원 삭제", notes = "직원을 삭제한다.")
     @DeleteMapping("admin/user")
-    public ResponseEntity<CommonResponse> deleteUser(@RequestBody Long seq) {
+    public ResponseEntity<CommonResponse> deleteUser(@RequestBody List<Long> seq) {
         userService.deleteUser(seq);
-        return new ResponseEntity<>(new CommonResponse(200, "ok", "USer code deleted successfully."), HttpStatus.OK);
+        return new ResponseEntity<>(new CommonResponse(200, "ok", "User code deleted successfully."), HttpStatus.OK);
 
     }
 }

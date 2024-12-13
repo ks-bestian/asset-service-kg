@@ -28,6 +28,7 @@
         <if test="lng_ty3 != null and lng_ty3 != ''">
             and lng_ty3 like concat('%', #{lngTy3}, '%')
         </if>
+        order by reg_dt desc
     </select>
 
     <insert id="insertLngCode" parameterType="kr.co.bestiansoft.ebillservicekg.admin.lngCode.vo.LngCodeVo">
@@ -49,7 +50,7 @@
         values (
               #{lngId}
             , #{lngTy1}
-            , #{lngTy2}ㅕㄴㄷㄱ_ㅜㅡ1 user_
+            , #{lngTy2}
             , #{lngTy3}
             , #{rmk}
             , #{regId}
