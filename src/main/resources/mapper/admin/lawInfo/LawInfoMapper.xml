@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.bestiansoft.ebillservicekg.admin.lawInfo.repository.LawInfoMapper">
+    <select id="getLawInfoList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.lawInfo.vo.LawInfoVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.lawInfo.repository.LawInfoMapper.getLawInfoList */
+        select
+              law_id --법률아이디
+            , law_nm1 --법률명(키르키즈어)
+            , law_nm2 --법률명(러시아어)
+            , law_nm3 --법률명(한국어)
+            , law_dept_cd
+            , use_yn --사용여부
+            , rmk --비고
+            , reg_id
+            , reg_dt
+            , mod_id
+            , mod_dt
+        from ebs_law_info
+        order by reg_dt desc
+    </select>
+
+    <select id="getLawInfoDetail" parameterType="java.lang.Long" resultType="kr.co.bestiansoft.ebillservicekg.admin.lawInfo.vo.LawInfoVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.lawInfo.repository.LawInfoMapper.getLawInfoDetail */
+        select
+              law_id --법률아이디
+            , law_nm1 --법률명(키르키즈어)
+            , law_nm2 --법률명(러시아어)
+            , law_nm3 --법률명(한국어)
+            , law_dept_cd
+            , use_yn --사용여부
+            , rmk --비고
+            , reg_id
+            , reg_dt
+            , mod_id
+            , mod_dt
+        from ebs_law_info
+        where law_id = #{lawId}
+    </select>
+
+    <insert id="insertLawInfo" parameterType="kr.co.bestiansoft.ebillservicekg.admin.lawInfo.vo.LawInfoVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.lawInfo.repository.LawInfoMapper.insertLawInfo */
+        insert into ebs_law_info (
+            law_nm1 --법률명(키르키즈어)
+            , law_nm2 --법률명(러시아어)
+            , law_nm3 --법률명(한국어)
+            , law_dept_cd
+            , use_yn --사용여부
+            , rmk --비고
+            , reg_id
+            , reg_dt
+            , mod_id
+            , mod_dt
+        )
+        values (
+              #{lawNm1}
+            , #{lawNm2}
+            , #{lawNm3}
+            , #{lawDeptCd}
+            , #{useYn}
+            , #{rmk}
+            , #{regId}
+            , now()
+            , null
+            , null
+        )
+    </insert>
+
+    <update id="updateLawInfo" parameterType="kr.co.bestiansoft.ebillservicekg.admin.lawInfo.vo.LawInfoVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.lawInfo.repository.LawInfoMapper.updateLawInfo */
+        update ebs_law_info
+        set
+              law_nm1 = #{lawNm1}
+            , law_nm2 = #{lawNm2}
+            , law_nm3 = #{lawNm3}
+            , law_dept_cd = #{lawDeptCd}
+            , use_yn = #{useYn}
+            , rmk = #{rmk}
+            , mod_id = #{modId}
+            , mod_dt = #{modDt}
+        where law_id = #{lawId}
+    </update>
+
+    <delete id="deleteLawInfo" parameterType="java.lang.Long">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.lawInfo.repository.LawInfoMapper.deleteLawInfo */
+        delete from ebs_law_info
+        where law_id = #{lawId}
+    </delete>
+
+</mapper>
