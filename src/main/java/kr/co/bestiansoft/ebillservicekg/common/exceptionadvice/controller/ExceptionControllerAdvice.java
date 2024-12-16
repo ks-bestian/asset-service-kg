@@ -5,6 +5,9 @@ import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.exception.Already
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.exception.ResourceNotFoundException;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.exception.UnauthorizedException;
 import lombok.extern.slf4j.Slf4j;
+
+import org.postgresql.util.PSQLException;
+import org.postgresql.util.PSQLState;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -72,7 +75,7 @@ public class ExceptionControllerAdvice {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST.value())
                              .body(response);
     }
-    
+
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler({UnauthorizedException.class})
@@ -86,6 +89,18 @@ public class ExceptionControllerAdvice {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value())
                              .body(response);
     }
+
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler({PSQLException.class})
+    public ResponseEntity<CommonResponse> psqlException(PSQLException ex) {
+
+    	String sqlState = ex.getSQLState(); // SQL 상태 코드
+    	String errMsg = "SqlState: "+sqlState+", ErrMsg: "+ex.getMessage();
+    	CommonResponse response = CommonResponse.builder().code(HttpStatus.BAD_REQUEST.value()).message(errMsg).build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST.value()).body(response);
+    }
+
 //    @ResponseStatus(HttpStatus.FORBIDDEN)
 //    @ExceptionHandler({AccessDeniedException.class})
 //    public ResponseEntity<CommonResponse> accessDeniedException(AccessDeniedException e) {

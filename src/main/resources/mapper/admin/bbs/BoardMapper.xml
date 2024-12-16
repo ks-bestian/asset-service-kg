@@ -6,7 +6,7 @@
     <select id="getBoardList" parameterType="java.lang.String"
             resultType="kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.bbs.repository.BoardMapper.getBoardList */
-        select 
+        select
         	  row_number() over(order by reg_dt desc) as num
         	, brd_id
         	, brd_type --보드타입
@@ -29,7 +29,7 @@
 
     <select id="getBoardById" parameterType="java.lang.Long"
             resultType="kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo">
-        select 
+        select
         	  row_number() over(order by reg_dt desc) as num
         	, brd_id
         	, brd_type
@@ -57,15 +57,15 @@
     <update id="updateById" parameterType="kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo">
         update com_board
         set
-          brd_sj = #{brdSj}
-        , brd_cn = #{brdCn}
-        , pup_yn = #{pupYn}
-        , pup_bg_dt = #{pupBgDt}
-        , pup_ed_dt = #{pupEdDt}
-        , ord = #{ord}
-        , file_group_id = #{fileGroupId}
-        , mod_id = #{modId}
-        , mod_dt = #{modDt}
+	          brd_sj = #{brdSj}
+	        , brd_cn = #{brdCn}
+	        , pup_yn = #{pupYn}
+	        , pup_bg_dt = #{pupBgDt}
+	        , pup_ed_dt = #{pupEdDt}
+	        , ord = #{ord}
+	        , file_group_id = #{fileGroupId}
+	        , mod_id = #{modId}
+	        , mod_dt = #{modDt}
         WHERE brd_id = #{brdId}
     </update>
 
@@ -82,9 +82,9 @@
 		order by brd_id desc
 		limit 5
     </select>
-    
+
     <select id="getBoardMainPopupList" parameterType="java.lang.String"   resultType="kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo">
-		select 
+		select
 			  brd_id
 			, brd_type
 			, brd_sj
@@ -103,7 +103,7 @@
 		where 1=1
 		and brd_type = 'NOTI'
 		and pup_yn = 'Y'
-		and (pup_bg_dt is null or to_char(current_date, 'YYYY-MM-DD') <![CDATA[>=]]> pup_bg_dt) 
+		and (pup_bg_dt is null or to_char(current_date, 'YYYY-MM-DD') <![CDATA[>=]]> pup_bg_dt)
 		and (pup_ed_dt is null or to_char(current_date, 'YYYY-MM-DD') <![CDATA[<=]]> pup_ed_dt)
     </select>
 
@@ -112,7 +112,7 @@
         set noti_inq_cnt = #{notiInqCnt}
         where brd_id = #{brdId}
     </update>
-    
+
     <insert id="insertBoard" useGeneratedKeys="true" keyProperty="brdId" parameterType="kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo">
         insert into	kgst.com_board (
 			  brd_type
@@ -141,5 +141,5 @@
 			, now()
 		)
     </insert>
-    
+
 </mapper>

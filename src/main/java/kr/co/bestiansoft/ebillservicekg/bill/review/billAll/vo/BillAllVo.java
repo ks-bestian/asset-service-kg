@@ -52,10 +52,21 @@ public class BillAllVo extends ComDefaultVO {
     private String billTy;
     // 법률아이디
     private Long lawId;
-    // 관련위
-    private String relCmtId;
     // 철회 사유
     private String wtCn;
+    
+    // 비고
+    private String etcKg;
+    private String etcRu;
+    
+    // 목록 검색용 : 넘버링
+    private String num; 
+    // 목록 검색용 : 의안명 검색
+    private String searchBillName; 
+    // 언어 구분에 따른 상태코드명 
+    private String statNm; 
+    
+    
 
     
 

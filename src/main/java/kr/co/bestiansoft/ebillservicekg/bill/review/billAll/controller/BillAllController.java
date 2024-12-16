@@ -22,16 +22,16 @@ public class BillAllController {
 
     private final BillAllService billAllService;
 
-    @ApiOperation(value = "안건 전체 리스트 조회", notes = "게시판 리스트를 조회한다.")
+    @ApiOperation(value = "안건 전체 리스트 조회", notes = "리스트를 조회한다.")
     @GetMapping("/bill/review/all")
-    public ResponseEntity<CommonResponse> getBoardList(@RequestParam HashMap<String, Object> param) {
+    public ResponseEntity<CommonResponse> getBillList(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", billAllService.getBillList(param)), HttpStatus.OK);
     }
 
 
-    @ApiOperation(value = "게시판 상세 조회", notes = "게시판 상세를 조회한다.")
+    @ApiOperation(value = "안건 전체 상세 조회", notes = "상세를 조회한다.")
     @GetMapping("/bill/review/all/detail/{billId}")
-    public ResponseEntity<CommonResponse> getBoardById(@PathVariable String billId) {
+    public ResponseEntity<CommonResponse> getBillById(@PathVariable String billId) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", billAllService.getBillById(billId)), HttpStatus.OK);
     }
 
