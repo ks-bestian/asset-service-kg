@@ -7,13 +7,17 @@ import lombok.Data;
 @Data
 public class ComDefaultVO {
 	
-	private String regId = "admin";
+	private String regId;
 	
 	private LocalDateTime regDt;
 	
-	private String modId = "admin";
+	private String modId;
 	
 	private LocalDateTime modDt;
+	
+	private String regNm;
+	
+	private String modNm;
 	
 	/** 검색조건 */
     private String searchCondition = "";

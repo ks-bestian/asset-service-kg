@@ -34,3 +34,16 @@ mybatis:
 security:
   allow:
     context-url: http://localhost:3000
+
+edv:
+#  rmi: http://localhost:7000/rmi
+  #rmi: http://192.168.0.212:7000/rmi
+  rmi: http://3.39.79.144:7000/rmi
+  root-folder: edv
+#  property-path: C:/proj/edv_postgre/edv-bestian/repository/datastore/directory.properties
+#  property-path: /home/eBill/edv-bestian/repository/datastore/directory.properties
+  property-path: /home/EDV/edv-bestian/repository/datastore/directory.properties  
+  property-name: subDir
+#  datastore-path: C:/proj/edv_postgre/edv-bestian/repository/datastore/${edv.root-folder}
+#  datastore-path: /home/eBill/edv-bestian/repository/datastore/${edv.root-folder}
+  datastore-path: /home/EDV/edv-bestian/repository/datastore/${edv.root-folder}
