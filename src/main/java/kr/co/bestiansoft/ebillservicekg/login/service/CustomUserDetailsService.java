@@ -11,21 +11,21 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import kr.co.bestiansoft.ebillservicekg.login.repository.UserMapper;
-import kr.co.bestiansoft.ebillservicekg.login.vo.UserVo;
+import kr.co.bestiansoft.ebillservicekg.login.repository.LoginMapper;
+import kr.co.bestiansoft.ebillservicekg.login.vo.LoginVo;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 	
-	private final UserMapper userMapper;
+	private final LoginMapper userMapper;
 	private final PasswordEncoder passwordEncoder;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
-		UserVo user = userMapper.selectUser(username);
+		LoginVo user = userMapper.selectUser(username);
 		if(user == null) {
 			return null;
 		}

@@ -4,7 +4,7 @@ import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
 
 @Data
-public class UserVo extends ComDefaultVO {
+public class LoginVo extends ComDefaultVO {
 
 	private String userId;
 	private String userNmKg;
