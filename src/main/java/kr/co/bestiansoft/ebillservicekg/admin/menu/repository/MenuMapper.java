@@ -16,4 +16,8 @@ public interface MenuMapper {
     int updateMenu(MenuVo menuVo);
     void deleteMenu(Long id);
 
+    List<QuickMenuVo> getQuickMenuList(HashMap<String, Object> param);
+    int insertQuickMenu(QuickMenuVo quickMenuVo);
+    void deleteQuickMenu(Long menuId, String userId);
+
 }

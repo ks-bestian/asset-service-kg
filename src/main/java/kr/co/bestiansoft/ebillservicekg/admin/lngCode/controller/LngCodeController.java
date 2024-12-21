@@ -43,12 +43,12 @@ public class LngCodeController {
 
     @ApiOperation(value = "언어코드 삭제", notes = "언어코드를 삭제한다.")
     @DeleteMapping("/admin/lngCode")
-    public ResponseEntity<CommonResponse> deleteLngCode(@RequestBody Long lngId) {
+    public ResponseEntity<CommonResponse> deleteLngCode(@RequestBody List<Long> lngId) {
         lngCodeService.deleteLngCode(lngId);
         return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "OK", "LngCode deleted c"), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "언어코드 상세 조회", notes = "대별코드 상세를 조회한다.")
+    @ApiOperation(value = "언어코드 상세 조회", notes = "언어코드 상세를 조회한다.")
     @GetMapping("/admin/lngCode/{lngId}")
     public ResponseEntity<CommonResponse> getBoardById(@PathVariable Long lngId) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", lngCodeService.getLngCodeById(lngId)), HttpStatus.OK);

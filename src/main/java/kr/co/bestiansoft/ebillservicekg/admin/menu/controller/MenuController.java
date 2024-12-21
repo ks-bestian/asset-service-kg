@@ -51,7 +51,6 @@ public class MenuController {
     public ResponseEntity<CommonResponse> deleteMenu(@RequestBody Long menuId) {
         menuService.deleteMenu(menuId);
         return new ResponseEntity<>(new CommonResponse(200, "ok", "Menu code deleted successfully."), HttpStatus.OK);
-
     }
 
     //--------quick menu--------
@@ -63,8 +62,15 @@ public class MenuController {
 
     @ApiOperation(value = "퀵메뉴 생성", notes = "퀵메뉴 리스트를 생성한다.")
     @PostMapping("admin/quickMenu")
-    public ResponseEntity<CommonResponse> createQuickMenuList(@RequestParam HashMap<String, Object> param) {
-        return new ResponseEntity<>(new CommonResponse(200, "ok", menuService.createQuickMenuList(param)), HttpStatus.OK);
+    public ResponseEntity<CommonResponse> createQuickMenu(@RequestBody QuickMenuVo quickMenuVo) {
+        return new ResponseEntity<>(new CommonResponse(200, "ok", menuService.createQuickMenu(quickMenuVo)), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "퀵메뉴 삭제", notes = "퀵메뉴 리스트를 삭제한다.")
+    @DeleteMapping("admin/quickMenu")
+    public ResponseEntity<CommonResponse> deleteQuickMenu(@RequestBody QuickMenuVo quickMenuVo) {
+        menuService.deleteQuickMenu(quickMenuVo);
+        return new ResponseEntity<>(new CommonResponse(200, "ok", "Deleted quick menu successfully."), HttpStatus.OK);
     }
 
 }

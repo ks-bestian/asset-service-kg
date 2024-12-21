@@ -26,4 +26,5 @@ public class MemberVo extends ComDefaultVO {
     private LocalDateTime regDt;
     private String modId;
     private LocalDateTime modDt;
+    private String deptNm;
 }

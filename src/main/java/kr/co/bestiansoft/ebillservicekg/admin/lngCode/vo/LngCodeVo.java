@@ -16,4 +16,5 @@ public class LngCodeVo extends ComDefaultVO {
     private LocalDateTime regDt;
     private String modId;
     private LocalDateTime modDt;
+    private Long num;
 }

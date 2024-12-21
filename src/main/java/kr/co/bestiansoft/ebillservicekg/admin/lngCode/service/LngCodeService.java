@@ -9,6 +9,6 @@ public interface LngCodeService {
     List<LngCodeVo> getLngCodeList(HashMap<String, Object> param);
     LngCodeVo createLngCode(LngCodeVo lngCodeVo);
     int updateLngCode(LngCodeVo lngCodeVo);
-    void deleteLngCode(Long lngId);
+    void deleteLngCode(List<Long> lngId);
     LngCodeVo getLngCodeById(Long lngId);
 }

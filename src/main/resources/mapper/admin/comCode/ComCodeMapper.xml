@@ -23,6 +23,7 @@
         <if test="grpCodeNm1">
             and grp_code_nm1 like concat('%', #{grpCodeNm1}, '%')
         </if>
+        order by reg_dt desc
     </select>
 
     <select id="getComCodeList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeDetailVo">
@@ -45,6 +46,7 @@
         <if test="codeId != null and codeId != ''">
             and code_id like concat('%', #{codeId}, '%')
         </if>
+        order by reg_dt desc
     </select>
 
     <select id="getGrpCodeById" parameterType="java.lang.Integer" resultType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeVo">
@@ -146,8 +148,7 @@
         )
     </insert>
 
-    <update id="updateGrpC
-    selectode" parameterType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeVo">
+    <update id="updateGrpCode" parameterType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.comCode.repository.ComCodeMapper.updateGrpCode */
         update com_code
         set

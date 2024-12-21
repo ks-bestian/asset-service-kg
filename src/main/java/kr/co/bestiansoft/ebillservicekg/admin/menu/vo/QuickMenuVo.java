@@ -1,5 +1,6 @@
 package kr.co.bestiansoft.ebillservicekg.admin.menu.vo;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
 
@@ -14,4 +15,6 @@ public class QuickMenuVo extends ComDefaultVO {
     private LocalDateTime regDt;
     private String modId;
     private LocalDateTime modDt;
+    private Boolean isFavorite;
+    private String menuNm;
 }

@@ -24,29 +24,36 @@
             , mod_id
             , mod_dt
         from com_user
+        order by reg_dt desc
     </select>
 
     <select id="getUserDetail" parameterType="java.lang.Long" resultType="kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.user.repository.UserMapper.getUserDetail */
         select
-              seq
-            , dept_cd --부서코드
-            , email --이메일
-            , gen_cd --성별(M,F)
-            , profile_img_path --프로필이미지경로
-            , job_Cd --직급코드
-            , msg_rcv_yn --메세지수신여부
-            , pos_cd
-            , user_id --직원아이디
-            , user_nm_kg --이름(키르키즈어)
-            , user_nm_ru --이름(러시아어)
-            , dept_head_yn --부서장여부
-            , doc_mgr_yn --문서관리자여부
-            , reg_id
-            , reg_dt
-            , mod_id
-            , mod_dt
-        from com_user
+              cu.seq
+            , cu.dept_cd --부서코드
+            , cu.email --이메일
+            , cu.gen_cd --성별(M,F)
+            , cu.profile_img_path --프로필이미지경로
+            , cu.job_Cd --직급코드
+            , cu.msg_rcv_yn --메세지수신여부
+            , cu.pos_cd
+            , cu.user_id --직원아이디
+            , cu.user_nm_kg --이름(키르키즈어)
+            , cu.user_nm_ru --이름(러시아어)
+            , cu.dept_head_yn --부서장여부
+            , cu.doc_mgr_yn --문서관리자여부
+            , cu.reg_id
+            , cu.reg_dt
+            , cu.mod_id
+            , cu.mod_dt
+            , cd.dept_nm1 as dept_nm
+<!--            , (case when #{lang} = 'lng_type1' then cd.dept_nm1-->
+<!--                    when #{lang} = 'lng_type2' then cd.dept_nm2-->
+<!--                    else cd.dept_nm3-->
+<!--              end) as dept_nm-->
+        from com_user cu
+        inner join com_dept cd on cd.dept_cd = cu.dept_cd
         where seq = #{seq}
     </select>
 

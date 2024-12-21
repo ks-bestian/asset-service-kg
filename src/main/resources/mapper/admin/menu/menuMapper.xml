@@ -34,6 +34,7 @@
             , mod_dt
             , mod_id
         from com_menu
+        order by ord
     </select>
     
     <select id="getMenuDetail" parameterType="java.lang.Long" resultType="kr.co.bestiansoft.ebillservicekg.admin.menu.vo.MenuVo">
@@ -109,5 +110,52 @@
         /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.menu.repository.MenuMapper.deleteMenu */
         delete from com_menu
         where menu_id = #{menuId}
+    </delete>
+
+    <select id="getQuickMenuList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.menu.vo.QuickMenuVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.menu.repository.MenuMapper.getQuickMenuList */
+        select
+              cq.seq
+            , cq.user_id
+            , cq.menu_id
+            , cq.reg_id
+            , cq.reg_dt
+            , cq.mod_id
+            , cq.mod_dt
+            , cm.menu_nm1 as menu_nm
+<!--            , (case when #{lang} = 'lng_type1' then cm.menu_nm1 &#45;&#45;수정-->
+<!--                    when #{lang} = 'lng_type2' then cm.menu_nm2-->
+<!--                    else cm.menu_nm3-->
+<!--              end) as menu_nm-->
+        from com_quick_menu cq
+        inner join com_menu cm on cm.menu_id = cq.menu_id
+        where cq.user_id = #{userId}
+        order by cm.ord
+    </select>
+
+    <insert id="insertQuickMenu" parameterType="kr.co.bestiansoft.ebillservicekg.admin.menu.vo.QuickMenuVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.menu.repository.MenuMapper.insertQuickMenu */
+        insert into com_quick_menu (
+              user_id
+            , menu_id
+            , reg_id
+            , reg_dt
+            , mod_id
+            , mod_dt
+        )
+        values (
+              #{userId}
+            , #{menuId}
+            , #{regId}
+            , now()
+            , null
+            , null
+        )
+    </insert>
+
+    <delete id="deleteQuickMenu" parameterType="java.util.HashMap">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.menu.repository.MenuMapper.deleteQuickMenu */
+        delete from com_quick_menu
+        where menu_id = #{menuId} and user_id = #{userId}
     </delete>
 </mapper>

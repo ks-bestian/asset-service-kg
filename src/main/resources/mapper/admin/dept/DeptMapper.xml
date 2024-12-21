@@ -30,6 +30,7 @@
         <if test="deptNm2 != null and deptNm2 != ''">
             and dept_nm3 like concat('%', #{deptNm3}, '%')
         </if>
+        order by ord
     </select>
 
     <select id="getComDeptById" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.admin.dept.vo.DeptVo">

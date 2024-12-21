@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.bestiansoft.ebillservicekg.login.repository.LoginMapper">
+
+	<select id="selectUser" resultType="kr.co.bestiansoft.ebillservicekg.login.vo.LoginVo">
+		SELECT 
+			  user_id
+			, user_nm_kg
+			, user_nm_ru
+			, member_id
+			, member_nm_kg
+			, member_nm_ru
+			, dept_cd
+			, email
+			, gen_cd
+			, profile_img_path
+			, msg_rcv_yn
+			, doc_mgr_yn
+			, dept_head_yn
+			, job_cd
+			, pos_cd
+			, age_cd
+			, cmit_cd
+			, poly_cd
+			, poly_nm
+			, rsdn_rgst_nmbr
+		FROM kgst.view_user_member
+		WHERE user_id = #{userId}
+	</select>
+    
+</mapper>
