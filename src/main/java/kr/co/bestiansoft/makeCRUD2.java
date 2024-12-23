@@ -37,7 +37,10 @@ public class makeCRUD2 {
 			     , "c:\\starproject_file"	//저장경로
 		     );
 			
-			System.out.println(map);
+			for(String tableName : map.keySet()) {
+				Long cnt = map.get(tableName);
+				System.out.println(tableName + " " + cnt);
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
