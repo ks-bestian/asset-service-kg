@@ -32,9 +32,13 @@ public class FileServiceImpl implements FileService {
     private final FileMapper fileMapper;
     private final EDVHelper edv;
     private final ThumbnailService thumbnailService;
+    
+    private final String tmpUserId = "admin";
+    private final String tmpDeptCd = "dept1";
 
     @Override
     public List<DeptFolderVo> selectDeptFolderListAll(DeptFolderVo vo) {
+    	vo.setDeptCd(tmpDeptCd);
         return fileMapper.selectDeptFolderListAll(vo);
     }
     
@@ -47,15 +51,15 @@ public class FileServiceImpl implements FileService {
     @Override
     public int insertDeptFolder(DeptFolderVo vo) {
     	
-    	vo.setRegId("admin");
-    	vo.setDeptCd("dept1");
+    	vo.setRegId(tmpUserId);
+    	vo.setDeptCd(tmpDeptCd);
     	return fileMapper.insertDeptFolder(vo);
     }
     
     @Transactional
     @Override
     public int updateDeptFolder(DeptFolderVo vo) {
-    	vo.setModId("admin");
+    	vo.setModId(tmpUserId);
     	return fileMapper.updateDeptFolder(vo);
     }
     
@@ -75,7 +79,7 @@ public class FileServiceImpl implements FileService {
     		DeptFolderVo vo = new DeptFolderVo();
         	vo.setFolderId(folderId);
         	vo.setDelYn("Y");
-        	vo.setModId("admin");
+        	vo.setModId(tmpUserId);
         	ret += fileMapper.updateDeptFolder(vo);
     	}
     	return ret;
@@ -89,7 +93,7 @@ public class FileServiceImpl implements FileService {
     		DeptFileVo vo = new DeptFileVo();
     		vo.setFileGroupId(fileGroupId);
     		vo.setDelYn("Y");
-    		vo.setModId("admin");
+    		vo.setModId(tmpUserId);
     		ret += fileMapper.updateDeptFileByFileGroupId(vo);
     	}
     	return ret;
@@ -111,7 +115,7 @@ public class FileServiceImpl implements FileService {
     		DeptFolderVo vo = new DeptFolderVo();
         	vo.setFolderId(folderId);
         	vo.setUpperFolderId(toFolderId);
-        	vo.setModId("admin");
+        	vo.setModId(tmpUserId);
         	ret += fileMapper.updateDeptFolder(vo);
     	}
     	return ret;
@@ -125,7 +129,7 @@ public class FileServiceImpl implements FileService {
     		DeptFileVo vo = new DeptFileVo();
     		vo.setFileGroupId(fileGroupId);
     		vo.setFolderId(toFolderId);
-    		vo.setModId("admin");
+    		vo.setModId(tmpUserId);
     		ret += fileMapper.updateDeptFileByFileGroupId(vo);
     	}
     	return ret;
@@ -191,7 +195,7 @@ public class FileServiceImpl implements FileService {
     	
     	String fileGroupId = "P_" + StringUtil.getUUUID();
     	vo.setFileGroupId(fileGroupId);
-    	vo.setRegId("admin");
+    	vo.setRegId(tmpUserId);
 
     	MultipartFile thumbnailImage = vo.getThumbnailImage();
     	if(thumbnailImage != null) {
@@ -210,7 +214,7 @@ public class FileServiceImpl implements FileService {
     	//중요여부 저장
 		String favoriteYn = vo.getFavoriteYn();
 		if("Y".equals(favoriteYn)) {
-			vo.setUserId("admin");
+			vo.setUserId(tmpUserId);
 			fileMapper.saveFavorite(vo);	
 		}
 		
@@ -232,7 +236,7 @@ public class FileServiceImpl implements FileService {
 			upperFolderId = createFolder(pre_path, map);
 		}
 		String folderNm = path.substring(idx + 1);
-		String userId = "admin";
+		String userId = tmpUserId;
 		String deptCd = "1234";
 		
 		DeptFolderVo folderVo = new DeptFolderVo();
@@ -288,11 +292,11 @@ public class FileServiceImpl implements FileService {
 			fileTitle = fileNm.substring(0, idx);
 			fileType = fileNm.substring(idx + 1);
 		}
-		String regId = "admin";
+		String regId = tmpUserId;
 		String groupYn = vo.getGroupYn();
 		String fileGroupId = vo.getFileGroupId();
 		
-		String deptCd = "dept1";
+		String deptCd = tmpDeptCd;
 		
 		String fileHash = null, filePath = null;
 		try (InputStream is = mpf.getInputStream()){
@@ -322,7 +326,7 @@ public class FileServiceImpl implements FileService {
 		if("N".equals(groupYn)) {
 			String favoriteYn = vo.getFavoriteYn();
 			if("Y".equals(favoriteYn)) {
-				fileVo.setUserId("admin");
+				fileVo.setUserId(tmpUserId);
 				fileVo.setFavoriteYn(favoriteYn);
 				fileMapper.saveFavorite(fileVo);	
 			}	
@@ -333,27 +337,27 @@ public class FileServiceImpl implements FileService {
     
     @Override
     public List<DeptFileVo> selectDeptFileList(DeptFileVo vo) {
-    	vo.setUserId("admin");
+    	vo.setUserId(tmpUserId);
     	return fileMapper.selectDeptFileList(vo);
     }
     
     @Override
     public List<DeptFileVo> selectDeptFileGroup(DeptFileVo vo) {
-    	vo.setUserId("admin");
+    	vo.setUserId(tmpUserId);
     	return fileMapper.selectDeptFileGroup(vo);
     }
     
     @Transactional
     @Override
     public int updateDeptFile(DeptFileVo vo) {
-    	vo.setModId("admin");
+    	vo.setModId(tmpUserId);
     	int ret = fileMapper.updateDeptFileByFileId(vo);
     	
     	String fileGroupId = fileMapper.selectDeptFile(vo.getFileId()).getFileGroupId();
     	vo.setFileGroupId(fileGroupId);
-    	vo.setUserId("admin");
-    	vo.setRegId("admin");
-    	vo.setModId("admin");
+    	vo.setUserId(tmpUserId);
+    	vo.setRegId(tmpUserId);
+    	vo.setModId(tmpUserId);
     	fileMapper.saveFavorite(vo);
     	return ret;
     }
@@ -361,8 +365,8 @@ public class FileServiceImpl implements FileService {
     @Transactional
     @Override
     public int updateDeptFileGroup(DeptFileVo vo) throws Exception {
-    	vo.setModId("admin");
-    	vo.setRegId("admin");
+    	vo.setModId(tmpUserId);
+    	vo.setRegId(tmpUserId);
 
     	// update thumbnail
     	MultipartFile thumbnailImage = vo.getThumbnailImage();
@@ -399,7 +403,7 @@ public class FileServiceImpl implements FileService {
     	}
     	
     	// save favoriteYn
-		vo.setUserId("admin");
+		vo.setUserId(tmpUserId);
     	fileMapper.saveFavorite(vo);
     	
     	return ret;
