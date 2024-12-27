@@ -1,5 +1,6 @@
 package kr.co.bestiansoft.ebillservicekg.config.web;
 import java.security.Key;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.stream.Collectors;
 
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -74,9 +76,10 @@ public class TokenProvider implements InitializingBean {
                 .parseClaimsJws(token)
                 .getBody();
 
-		UserDetails userDetails = customUserDetailsService.loadUserByUsername(claims.getSubject());
+        User principal = new User(claims.getSubject(), "", new ArrayList<>());
+//		UserDetails userDetails = customUserDetailsService.loadUserByUsername(claims.getSubject());
 
-		return new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword());
+		return new UsernamePasswordAuthenticationToken(principal, null, new ArrayList<>());
 
     }
 
