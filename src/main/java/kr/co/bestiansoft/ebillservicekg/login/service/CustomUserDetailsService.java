@@ -19,18 +19,19 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 	
-	private final LoginMapper userMapper;
-	private final PasswordEncoder passwordEncoder;
+	private final LoginMapper loginMapper;
+//	private final PasswordEncoder passwordEncoder;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
-		LoginVo user = userMapper.selectUser(username);
+		LoginVo user = loginMapper.selectUser(username);
 		if(user == null) {
 			return null;
 		}
 		// 임시 비밀번호
-		String password = passwordEncoder.encode("best1234");
+//		String password = passwordEncoder.encode("best1234");
+		String password = "best1234";
 		List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
 		return new User(username, password, grantedAuthorities);
 	}

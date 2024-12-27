@@ -35,6 +35,11 @@ security:
   allow:
     context-url: http://localhost:3000
 
+jwt:
+  secret: 2fdd12003e9607e97e71e0076daea1ec542430ac32a24c16bb322025e36f79d6
+  expiration: 3600000
+  token-validity-in-seconds: 3600
+
 edv:
 #  rmi: http://localhost:7000/rmi
   #rmi: http://192.168.0.212:7000/rmi
