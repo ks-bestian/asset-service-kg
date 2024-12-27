@@ -71,7 +71,7 @@ public class makeCRUD {
 			//ResultSet rsTables = dmd.getTables(conn.getCatalog(), null, "%", null);
 
 			ArrayList<String> tableList = new ArrayList<String>();
-			tableList.add("ebs_bp_instance");
+			tableList.add("ebs_bp_tasks");
 
 
 			for(int i=0;i<tableList.size();i++) {
