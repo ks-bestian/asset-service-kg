@@ -30,11 +30,12 @@ public class makeCRUD2 {
 //				     , "c:\\starproject_file"	//저장경로
 //				     );
 			
-			Map<String, Long> map = o.getTableRowCount("192.168.0.212:1433"	//db아이피
-			     ,"testdb"	//db명
-			     , "SA"	//계정
-			     , "bestian@1234"	//비밀번호
+			Map<String, Long> map = o.getTableRowCount("192.168.0.14:1433"	//db아이피
+			     ,"sed"	//db명
+			     , "admin_id"	//계정
+			     , "admin_pass"	//비밀번호
 			     , "c:\\starproject_file"	//저장경로
+			     , "cnt3" // table_div 테이블의 컬럼 이름(cnt1 / cnt2 / cnt3)
 		     );
 			
 			for(String tableName : map.keySet()) {
@@ -70,7 +71,7 @@ public class makeCRUD2 {
 	private Connection getMSSQLConnection(String ip, String db, String user, String pwd) throws Exception
 	{
 		Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-		return DriverManager.getConnection("jdbc:sqlserver://192.168.0.212:1433;database=testdb", user, pwd);
+		return DriverManager.getConnection("jdbc:sqlserver://" + ip + ";database=" + db, user, pwd);
 	}
 	
 	public List<String> getTableNames(Statement stmt) throws SQLException {
@@ -102,7 +103,18 @@ public class makeCRUD2 {
 		return ret;
 	}
 	
-	public Map<String, Long> getTableRowCount(String host, String db, String user, String pwd, String filePath) {
+	public void saveRowCount(Statement stmt, String tableName, Long cnt, String colname) throws SQLException {
+		String sql = "MERGE INTO test_div AS a\r\n"
+				+ "USING (SELECT 1 AS dual) AS b\r\n"
+				+ "   ON (a.table_name = '" + tableName + "')\r\n"
+				+ " WHEN MATCHED THEN\r\n"
+				+ "   UPDATE SET a." + colname + " = " + cnt + "\r\n"
+				+ " WHEN NOT MATCHED THEN\r\n"
+				+ "   INSERT(table_name, " + colname + ") VALUES('" + tableName + "', " + cnt + ");\r\n";
+		stmt.executeUpdate(sql);
+	}
+	
+	public Map<String, Long> getTableRowCount(String host, String db, String user, String pwd, String filePath, String colname) {
 		Connection conn = null;
 		Statement stmt = null;
 
@@ -116,6 +128,7 @@ public class makeCRUD2 {
 			for(String tableName : tableNames) {
 				Long cnt = getRowCount(stmt, tableName);
 				map.put(tableName, cnt);
+				saveRowCount(stmt, tableName, cnt, colname);
 			}
 
 			stmt = null;
