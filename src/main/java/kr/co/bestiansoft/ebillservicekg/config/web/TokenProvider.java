@@ -2,6 +2,8 @@ package kr.co.bestiansoft.ebillservicekg.config.web;
 import java.security.Key;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -24,6 +26,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import kr.co.bestiansoft.ebillservicekg.login.service.CustomUserDetailsService;
+import kr.co.bestiansoft.ebillservicekg.login.vo.Account;
+import kr.co.bestiansoft.ebillservicekg.login.vo.LoginUserVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -53,14 +57,16 @@ public class TokenProvider implements InitializingBean {
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
-
+        
         // 토큰의 expire 시간을 설정
         long now = (new Date()).getTime();
         Date validity = new Date(now + this.tokenValidityInSeconds*1000);
 
+        Account account = (Account)authentication.getPrincipal();
+        
         return Jwts.builder()
                 .setSubject(authentication.getName())
-                .claim("test_key", "test_val")
+                .claim("deptCd", account.getDeptCd())
                 .claim(AUTHORITIES_KEY, authorities) // 정보 저장
                 .signWith(key, SignatureAlgorithm.HS256) // 사용할 암호화 알고리즘과 , signature 에 들어갈 secret값 세팅
                 .setExpiration(validity) // set Expire Time 해당 옵션 안넣으면 expire안함
@@ -75,11 +81,20 @@ public class TokenProvider implements InitializingBean {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-
-        User principal = new User(claims.getSubject(), "", new ArrayList<>());
+        
+        String userId = claims.getSubject();
+        String deptCd = Objects.toString(claims.get("deptCd"), null);
+        
+        LoginUserVo vo = new LoginUserVo();
+        vo.setUserId(userId);
+        vo.setDeptCd(deptCd);
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+        Account accont = new Account(vo, grantedAuthorities);
+        
+//        User principal = new User(claims.getSubject(), "", new ArrayList<>());
 //		UserDetails userDetails = customUserDetailsService.loadUserByUsername(claims.getSubject());
 
-		return new UsernamePasswordAuthenticationToken(principal, null, new ArrayList<>());
+		return new UsernamePasswordAuthenticationToken(accont, null, grantedAuthorities);
 
     }
 
