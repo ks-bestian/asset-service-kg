@@ -54,6 +54,8 @@ public class ApplyVo extends ComDefaultVO {
 	private String signDt;
 	//날짜변환
 	private String regDate;
+	//아이디
+	private String memberId;
 	
 	
 	

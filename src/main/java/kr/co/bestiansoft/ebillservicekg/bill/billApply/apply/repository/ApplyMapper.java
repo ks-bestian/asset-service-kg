@@ -36,4 +36,8 @@ public interface ApplyMapper {
 
 	void updateBillPpsrRevoke(ApplyVo applyVo);
 
+	ApplyVo getProposerInfo(String memberId);
+
+	void insertBillProcess(String billId, String procId, String procKndCd);
+
 }

@@ -1,13 +1,9 @@
 package kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.service.impl;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import javax.swing.text.DateFormatter;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,9 +31,7 @@ public class ApplyServiceImpl implements ApplyService {
 	@Transactional
 	@Override
 	public ApplyVo createApply(ApplyVo applyVo) {
-	//todo :: 
-	//1.멤버 정보 필요!!
-	//2.메세지 알람 적용
+	//TODO :: 메세지 알람 적용해야함 
 	
 		//안건등록
 		String billId = StringUtil.getEbillId();
@@ -50,12 +44,14 @@ public class ApplyServiceImpl implements ApplyService {
 	    proposerList.add(ppsrId);
 		
 		int ord = proposerList.size();
-		for(String member : proposerList) {
+		for(String memberId : proposerList) {
+			ApplyVo member = applyMapper.getProposerInfo(memberId);
+			
 			applyVo.setOrd(++ord);
-			applyVo.setPolyCd("11");
-			applyVo.setPolyNm("22");
-			applyVo.setPpsrId(member);
-			if(member.equals(ppsrId)) {
+			applyVo.setPolyCd(member.getPolyCd());
+			applyVo.setPolyNm(member.getPolyNm());
+			applyVo.setPpsrId(member.getMemberId());
+			if(member.getMemberId().equals(ppsrId)) {
 				applyVo.setSignDt("sign");
 			}
 			applyMapper.insertProposerList(applyVo);
@@ -66,13 +62,14 @@ public class ApplyServiceImpl implements ApplyService {
 
 	@Override
 	public List<ApplyVo> getApplyList(HashMap<String, Object> param) {
+		// TODO :: 대수 검색조건 설정 필요(현재 14로 하드코딩)
 		return applyMapper.getApplyList(param);
 	}
 
 	@Transactional
 	@Override
 	public int updateApply(ApplyVo applyVo, String billId) {
-		//todo :: 
+		//TODO :: 
 		//1. 수정이 가능 또는 불가능한 항목 정의 필요!
 		//2. 메세지 알림 기능 적용
 		
@@ -92,10 +89,12 @@ public class ApplyServiceImpl implements ApplyService {
 		        applyMapper.deleteProposerByPpsrId(ppsrId);
 		    } else if (!proposerList.contains(ppsrId) && newProposerList.contains(ppsrId)) {
 		        // 추가: 새로운 리스트에만 있는 경우
+		    	ApplyVo member = applyMapper.getProposerInfo(ppsrId);
+		    	
 		        applyVo.setOrd(++ord);
-				applyVo.setPolyCd("11");
-				applyVo.setPolyNm("22");
-				applyVo.setPpsrId(ppsrId);
+				applyVo.setPolyCd(member.getPolyCd());
+				applyVo.setPolyNm(member.getPolyNm());
+				applyVo.setPpsrId(member.getMemberId());
 				applyMapper.insertProposerList(applyVo);
 		    }
 		}
@@ -129,7 +128,12 @@ public class ApplyServiceImpl implements ApplyService {
 	@Override
 	public int applyBill(String billId) {
 		
-		String statCd = "ST100";
+		String statCd = "ST010";
+		String procId = StringUtil.getEbillProcId();
+		String procKndCd = "PC010"; 
+				
+		applyMapper.insertBillProcess(billId, procId, procKndCd);
+		
 		return applyMapper.updateApplyBill(billId, statCd);
 	}
 	

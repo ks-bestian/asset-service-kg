@@ -186,4 +186,39 @@
         where proposer_id = #{ppsrId}
     </delete>
     
+    <select id="getProposerInfo" parameterType="java.lang.String"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.getProposerInfo */
+        select 
+			member_id 
+			, poly_cd 
+			, poly_nm 
+		from com_member
+		where member_id = #{memberId}
+    </select>
+    
+    <insert id="insertBillProcess" parameterType="java.util.HashMap">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.insertBillProcess */    
+        
+       insert into ebs_process (
+			  bill_id 		-- 안건아이디
+			, proc_id		-- 프로세스 아이디
+			, ord			-- 순서
+			, poly_cd		-- 정당 코드
+			, poly_nm		-- 정당 이름
+			, reg_id		-- 등록자
+			, reg_dt		-- 등록 날짜
+			<if test="signDt != null"> , sign_dt </if> -- 발의자 서명
+		)
+		values (
+			  #{billId}
+			, #{ppsrId}
+			, #{ord}
+			, #{polyCd}
+			, #{polyNm}
+			, #{regId}
+			, now()
+			<if test="signDt != null"> , now() </if>
+		)
+    </insert>
 </mapper>
