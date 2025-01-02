@@ -33,7 +33,7 @@ public class ExceptionControllerAdvice {
                                                 .code(HttpStatus.BAD_REQUEST.value())
                                                 .message(Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage())
                                                 .build();
-
+        log.error(e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST.value())
                              .body(response);
     }
@@ -45,7 +45,7 @@ public class ExceptionControllerAdvice {
                                                 .code(HttpStatus.BAD_REQUEST.value())
                                                 .message(e.getMessage())
                                                 .build();
-
+        log.error(e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST.value())
                              .body(response);
     }
@@ -58,7 +58,7 @@ public class ExceptionControllerAdvice {
                                                 .code(HttpStatus.NOT_FOUND.value())
                                                 .message(e.getMessage())
                                                 .build();
-
+        log.error(e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND.value())
                              .body(response);
     }
@@ -71,7 +71,7 @@ public class ExceptionControllerAdvice {
                                                 .code(HttpStatus.BAD_REQUEST.value())
                                                 .message(e.getMessage())
                                                 .build();
-
+        log.error(e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST.value())
                              .body(response);
     }
@@ -85,7 +85,7 @@ public class ExceptionControllerAdvice {
                                                 .code(HttpStatus.UNAUTHORIZED.value())
                                                 .message(e.getMessage())
                                                 .build();
-
+        log.error(e.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value())
                              .body(response);
     }
@@ -98,6 +98,7 @@ public class ExceptionControllerAdvice {
     	String sqlState = ex.getSQLState(); // SQL 상태 코드
     	String errMsg = "SqlState: "+sqlState+", ErrMsg: "+ex.getMessage();
     	CommonResponse response = CommonResponse.builder().code(HttpStatus.BAD_REQUEST.value()).message(errMsg).build();
+    	log.error(errMsg);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST.value()).body(response);
     }
 

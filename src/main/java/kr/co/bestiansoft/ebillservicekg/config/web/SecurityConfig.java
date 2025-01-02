@@ -7,20 +7,16 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.web.cors.CorsUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,18 +25,49 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
 	
+	private final TokenProvider tokenProvider;
+    private final TokenBlacklist tokenBlacklist;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+	
 	@Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		
 		http.csrf().disable().cors();
+		
+		http.exceptionHandling()
+	        .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+	        .accessDeniedHandler(jwtAccessDeniedHandler);
+		
+		http.sessionManagement()
+        	.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		
         http.authorizeHttpRequests((authorize) -> authorize
                 .antMatchers("/login").permitAll()
-//                .anyRequest().authenticated()
+                .anyRequest().authenticated()
         );
+        
+        http.apply(new JwtSecurityConfig(tokenProvider, tokenBlacklist, authenticationManagerBuilder)); // JwtFilter를 addFilterBefore로 등록했던 JwtSecurityConfig class 적용
 
-//        http.sessionManagement(session -> session
-//                .sessionFixation().migrateSession()
-//        );
+        
+        // 로그아웃 처리
+        http.logout()
+	        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+	        .logoutSuccessHandler((request, response, authentication) -> {
+	            // 로그아웃 성공 시 처리할 로직 (예: 토큰 블랙리스트 추가)
+	    		String bearerToken = request.getHeader("Authorization");
+	    		String jwt ="";
+	            if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+	            	jwt = bearerToken.substring(7);
+	            }
+	
+	            tokenBlacklist.addToBlacklist(jwt);
+	            response.setStatus(HttpServletResponse.SC_OK);
+	        })
+	        .deleteCookies("jwtToken")
+	        .invalidateHttpSession(true)
+	        .permitAll();
         
         return http.build();
     }
@@ -62,8 +89,8 @@ public class SecurityConfig {
 	
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new Sha256PasswordEncoder();
-//		return NoOpPasswordEncoder.getInstance();
+//        return new Sha256PasswordEncoder();
+		return NoOpPasswordEncoder.getInstance();
     }
 	
 }
