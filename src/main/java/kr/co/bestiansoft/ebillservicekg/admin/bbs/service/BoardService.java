@@ -11,5 +11,5 @@ public interface BoardService {
     int updateBoard(BoardVo boardVo, Long brdId);
     void deleteBoard(List<Long> boardIds);
     BoardVo getBoardById(Long brdId);
-
+    BoardVo createBoardFile(BoardVo boardVo, String brdType);
 }

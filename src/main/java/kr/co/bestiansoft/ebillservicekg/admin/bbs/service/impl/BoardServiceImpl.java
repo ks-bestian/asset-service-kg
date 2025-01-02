@@ -64,4 +64,18 @@ public class BoardServiceImpl implements BoardService {
     	}
         return dto;
     }
+    
+    @Transactional
+    @Override
+    public BoardVo createBoardFile(BoardVo boardVo, String brdType) {
+//    	String fileGroupId = FileService.saveFile(boardVo.getFiles());
+    	String fileGroupId = null;
+    	
+    	boardVo.setBrdType(brdType);
+    	boardVo.setFileGroupId(fileGroupId);
+    	
+    	boardMapper.insertBoard(boardVo);
+    	boardVo.setFiles(null);
+    	return boardVo;
+    }
 }
