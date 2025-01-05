@@ -109,7 +109,7 @@ public class makeCRUD {
 				}
 
 
-				makeVo(arrColumns);
+				//makeVo(arrColumns);
 				//System.out.println(getSelectQuery(tableList.get(i),arrColumns));
 				//System.out.println(getInsertQuery(tableList.get(i),arrColumns,"uid"));
 				//System.out.println(getUpdateQuery(tableList.get(i),arrColumns,arrPkColumns));

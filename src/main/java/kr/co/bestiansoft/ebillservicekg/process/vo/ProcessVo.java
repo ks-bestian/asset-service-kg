@@ -28,4 +28,8 @@ public class ProcessVo extends ComDefaultVO {
 	private String completedDt;
 	private String billAprvNo;
 
+	private ProcessVo prevStepVo;
+	private ProcessVo nextStepVo;
+
+
 }
