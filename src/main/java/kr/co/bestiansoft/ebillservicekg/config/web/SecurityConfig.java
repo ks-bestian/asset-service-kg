@@ -1,5 +1,7 @@
 package kr.co.bestiansoft.ebillservicekg.config.web;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,6 +16,7 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import lombok.RequiredArgsConstructor;
 
@@ -47,6 +50,25 @@ public class SecurityConfig {
         
         http.apply(new JwtSecurityConfig(tokenProvider, tokenBlacklist, authenticationManagerBuilder)); // JwtFilter를 addFilterBefore로 등록했던 JwtSecurityConfig class 적용
 
+        
+        // 로그아웃 처리
+        http.logout()
+	        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+	        .logoutSuccessHandler((request, response, authentication) -> {
+	            // 로그아웃 성공 시 처리할 로직 (예: 토큰 블랙리스트 추가)
+	    		String bearerToken = request.getHeader("Authorization");
+	    		String jwt ="";
+	            if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+	            	jwt = bearerToken.substring(7);
+	            }
+	
+	            tokenBlacklist.addToBlacklist(jwt);
+	            response.setStatus(HttpServletResponse.SC_OK);
+	        })
+	        .deleteCookies("jwtToken")
+	        .invalidateHttpSession(true)
+	        .permitAll();
+        
         return http.build();
     }
 	

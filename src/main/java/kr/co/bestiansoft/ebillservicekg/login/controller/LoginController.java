@@ -24,8 +24,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.config.web.JwtFilter;
 import kr.co.bestiansoft.ebillservicekg.config.web.TokenProvider;
+import kr.co.bestiansoft.ebillservicekg.login.vo.Account;
 import kr.co.bestiansoft.ebillservicekg.login.vo.LoginRequest;
 import kr.co.bestiansoft.ebillservicekg.login.vo.LoginResponse;
 import lombok.RequiredArgsConstructor;
@@ -80,7 +82,8 @@ public class LoginController {
 
 	        msg = "login success";
 	        result = true;
-	        return new ResponseEntity<>(LoginResponse.from(result, msg, token), httpHeaders, HttpStatus.OK);
+	        Account account = new SecurityInfoUtil().getAccount();
+	        return new ResponseEntity<>(LoginResponse.from(result, msg, token, account), httpHeaders, HttpStatus.OK);
 
         } catch (BadCredentialsException e) {
             msg = "LOGIN_FAIL";

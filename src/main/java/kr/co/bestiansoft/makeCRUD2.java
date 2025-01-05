@@ -30,12 +30,12 @@ public class makeCRUD2 {
 //				     , "c:\\starproject_file"	//저장경로
 //				     );
 			
-			Map<String, Long> map = o.getTableRowCount("192.168.0.14:1433"	//db아이피
+			Map<String, Long> map = o.getTableRowCount("192.168.0.31:1433"	//db아이피
 			     ,"sed"	//db명
 			     , "admin_id"	//계정
 			     , "admin_pass"	//비밀번호
 			     , "c:\\starproject_file"	//저장경로
-			     , "cnt3" // table_div 테이블의 컬럼 이름(cnt1 / cnt2 / cnt3)
+			     , "cnt5" // table_div 테이블의 컬럼 이름(cnt1 / cnt2 / cnt3)
 		     );
 			
 			for(String tableName : map.keySet()) {

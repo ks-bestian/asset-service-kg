@@ -12,7 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import kr.co.bestiansoft.ebillservicekg.login.repository.LoginMapper;
-import kr.co.bestiansoft.ebillservicekg.login.vo.LoginVo;
+import kr.co.bestiansoft.ebillservicekg.login.vo.Account;
+import kr.co.bestiansoft.ebillservicekg.login.vo.LoginUserVo;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -20,20 +21,18 @@ import lombok.RequiredArgsConstructor;
 public class CustomUserDetailsService implements UserDetailsService {
 	
 	private final LoginMapper loginMapper;
-//	private final PasswordEncoder passwordEncoder;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
-		LoginVo user = loginMapper.selectUser(username);
+		LoginUserVo user = loginMapper.selectUser(username);
 		if(user == null) {
 			return null;
 		}
-		// 임시 비밀번호
-//		String password = passwordEncoder.encode("best1234");
-		String password = "best1234";
+
 		List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-		return new User(username, password, grantedAuthorities);
+		return new Account(user, grantedAuthorities);
+		
 	}
 
 }
