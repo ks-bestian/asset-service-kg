@@ -2,7 +2,7 @@ package kr.co.bestiansoft.ebillservicekg.login.vo;
 
 import java.security.MessageDigest;
 
-import javax.xml.bind.DatatypeConverter;
+//import javax.xml.bind.DatatypeConverter;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -12,19 +12,19 @@ import lombok.Data;
 @ApiModel(description = "로그인 조회")
 @Data
 public class LoginRequest {
-	
+
 	@ApiModelProperty(value = "사용자 아이디")
     private String userId;
-	
+
 	@ApiModelProperty(value = "사용자 패스워드")
     private String pswd;
-	
+
     @Builder
 	public LoginRequest(String userId, String pswd) {
 		this.userId = userId;
 		this.pswd = pswd;
 	}
-    
+
 	public static String getSha256(String input){
 		/*
 		String sha256 ="";
@@ -39,7 +39,7 @@ public class LoginRequest {
 	    }
 	    return sha256;
 	    */
-		
+
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hash = digest.digest(input.getBytes());
