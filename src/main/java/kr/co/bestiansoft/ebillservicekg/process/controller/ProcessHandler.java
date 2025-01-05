@@ -1,5 +1,7 @@
 package kr.co.bestiansoft.ebillservicekg.process.controller;
 
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 import kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper;
@@ -20,9 +22,19 @@ public class ProcessHandler {
 		processVo.setBpDfId("1");//일단은 하나로 설정 여러개라면 안건유형에 따라서
 		processVo.setStatus("P");//진행중
 		processVo.setCurrentStepId("0");
+		
 		processMapper.insertBpInstance(processVo);
 
-		//executeServiceTasks(processVo);
+		List<ProcessVo> steps = processMapper.selectListBpStep(processVo);//전체 스텝가져오기
+		ProcessVo pStepVo = null;
+		for(ProcessVo vo: steps) {
+
+			if(vo.getStepId().equals(processVo.getStepId())) {
+				pStepVo = vo;
+			}
+		}
+		pStepVo.setBpInstanceId(processVo.getBpInstanceId());
+		executeServiceTasks(pStepVo);
 
 		return processVo;
     }
@@ -75,6 +87,7 @@ public class ProcessHandler {
 			taskVo.setBpInstanceId(argVo.getBpInstanceId());
 			taskVo.setStepId(argVo.getStepId());
 			taskVo.setStatus("C");
+			taskVo.setAssignedTo(null);
 			processMapper.insertBpTask(taskVo);
 		}
 

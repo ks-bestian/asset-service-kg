@@ -8,7 +8,7 @@ public interface ProcessService {
 	ProcessVo makeProcessEbs(ProcessVo vo);
 
 
-	void testProcess();
+	void testProcess() throws Exception;
 
 
 }

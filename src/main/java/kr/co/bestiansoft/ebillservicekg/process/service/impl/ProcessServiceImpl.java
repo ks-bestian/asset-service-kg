@@ -21,23 +21,20 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class ProcessServiceImpl implements ProcessService {
 
+
 	private final ProcessMapper processMapper;
 	private final ProcessHandler processHandler;
 
 	@Transactional
 	@Override
-	public void testProcess() {
+	public void testProcess() throws Exception {
 
 		String billId = "EB_cc4aeeb5-bad9-4b81-aa4a-effd2916ffb5";
 		ProcessVo processVo = new ProcessVo();
 		processVo.setBillId(billId);
+		processVo.setStepId("0");
 
-		try {
-			processHandler.createProcess(processVo);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		processHandler.createProcess(processVo);
 
 	}
 

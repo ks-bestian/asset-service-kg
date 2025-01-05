@@ -1,5 +1,6 @@
 package kr.co.bestiansoft.ebillservicekg.process.controller;
 
+import org.postgresql.util.PSQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -38,9 +39,10 @@ public class ProcessController {
 
     @ApiOperation(value = "process test", notes = "process test")
     @PostMapping("/testprocess/exe")
-    public ResponseEntity<CommonResponse> testProcess(@RequestBody ProcessVo vo) {
+    public ResponseEntity<CommonResponse> testProcess(@RequestBody ProcessVo vo) throws Exception {
 
     	ProcessVo returnVo = new ProcessVo();
+
     	rocessService.testProcess();
 
     	return new ResponseEntity<>(new CommonResponse(200, "OK", returnVo), HttpStatus.OK);
