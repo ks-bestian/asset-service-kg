@@ -27,7 +27,8 @@
 	    )
 	</insert>
 
-   <select id="selectBpDefine"  parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
+   <select id="selectBpDefine"  parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo"
+   	    resultType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
    /* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.selectBpDefine */
 	SELECT
 	        BP_DF_ID
@@ -64,37 +65,32 @@
 
 
     <!-- 프로세스 인스턴스 -->
-	<insert id="insertBpInstance" parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
+	<insert id="insertBpInstance" useGeneratedKeys="true" keyProperty="bpInstanceId"  parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
 	/* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.insertBpInstance */
 	INSERT INTO EBS_BP_INSTANCE
 	     (
-	       BP_INSTANCE_ID
-	     , BILL_ID
+	       BILL_ID
 	     , BP_DF_ID
 	     , START_DT
-	     , END_DT
 	     , STATUS
 	     , CURRENT_STEP_ID
 	     , REG_ID
 	     , REG_DT
-	     , MOD_ID
-	     , MOD_DT
 	     )
 	VALUES
 	     (
-	        #{BP_INSTANCE_ID}
-	     ,  #{BILL_ID}
-	     ,  #{BP_DF_ID}
-	     ,  #{START_DT}
-	     ,  #{END_DT}
-	     ,  #{STATUS}
-	     ,  #{CURRENT_STEP_ID}
-	     ,  #{REG_ID}
+	        #{billId}
+	     ,  #{bpDfId}
+	     ,  now()
+	     ,  #{status}
+	     ,  #{currentStepId}
+	     ,  #{regId}
 	     ,  now()
 	    )
 	</insert>
 
-   <select id="selectBpInstance"  parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
+   <select id="selectBpInstance"  parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo"
+   resultType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
    /* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.selectBpInstance */
 	SELECT
 	        BP_INSTANCE_ID
@@ -109,8 +105,7 @@
 	     ,  MOD_ID
 	     ,  MOD_DT
 	  FROM EBS_BP_INSTANCE
-	 WHERE BP_INSTANCE_ID = #{BP_INSTANCE_ID}
-	   AND BILL_ID = #{BILL_ID}
+	 WHERE BILL_ID = #{billId}
 
 	</select>
 
@@ -118,22 +113,28 @@
 	/* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.updateBpInstance */
 	UPDATE EBS_BP_INSTANCE
 	   SET
-	       BP_INSTANCE_ID = #{BP_INSTANCE_ID}
-	     , BILL_ID = #{BILL_ID}
-	     , BP_DF_ID = #{BP_DF_ID}
-	     , START_DT = #{START_DT}
-	     , END_DT = #{END_DT}
-	     , STATUS = #{STATUS}
-	     , CURRENT_STEP_ID = #{CURRENT_STEP_ID}
+	       CURRENT_STEP_ID = #{currentStepId}
+	     , MOD_ID = #{modId}
+	     , MOD_DT = now()
+	 WHERE BP_INSTANCE_ID = #{bpInstanceId}
+    </update>
+
+    <update id="updateEndBpInstance" parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
+	/* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.updateEndBpInstance */
+	UPDATE EBS_BP_INSTANCE
+	   SET
+	       END_DT = now()
+	     , STATUS = 'C'
+	     , CURRENT_STEP_ID = #{currentStepId}
 	     , MOD_ID = #{MOD_ID}
 	     , MOD_DT = now()
-	 WHERE BP_INSTANCE_ID = #{BP_INSTANCE_ID}
+	 WHERE BP_INSTANCE_ID = #{bpInstanceId}
     </update>
 
     <delete id="deleteBpInstance" parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
 	/* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.deleteBpInstance */
 	DELETE FROM EBS_BP_INSTANCE
-	WHERE BP_INSTANCE_ID = #{BP_INSTANCE_ID}
+	WHERE BP_INSTANCE_ID = #{bpInstanceId}
     </delete>
 
 
@@ -160,7 +161,8 @@
 	    )
 	</insert>
 
-   <select id="selectBpService"  parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
+   <select id="selectBpService"  parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo"
+   resultType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
    /* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.selectBpService */
 	SELECT
 	        STEP_ID
@@ -228,8 +230,9 @@
 
 	</insert>
 
-   <select id="selectBpStep"  parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
-   /* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.selectBpStep */
+   <select id="selectListBpStep"  parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo"
+   resultType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
+   /* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.selectListBpStep */
    SELECT
             STEP_ID
 	     ,  BP_DF_ID
@@ -244,8 +247,8 @@
 	     ,  MOD_ID
 	     ,  MOD_DT
 	FROM EBS_BP_STEP
-	WHERE STEP_ID = #{STEP_ID}
-	   AND BP_DF_ID = #{BP_DF_ID}
+	WHERE BP_DF_ID = #{bpDfId}
+	order by STEP_ORD
 	</select>
 
     <update id="updateBpStep" parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
@@ -278,40 +281,37 @@
 
 
     <!-- 프로세스 타스크 -->
-	<insert id="insertBpTasks" parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
-	/* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.insertBpTasks */
+	<insert id="insertBpTask" useGeneratedKeys="true" keyProperty="taskId" parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
+	/* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.insertBpTask */
 	INSERT INTO EBS_BP_TASKS
 	     (
-	       TASK_ID
-	     , TASK_NM
+	       TASK_NM
 	     , BP_INSTANCE_ID
 	     , STEP_ID
 	     , ASSIGNED_TO
 	     , STATUS
 	     , DUE_DT
-	     , COMPLETED_DT
 	     , BILL_APRV_NO
 	     , REG_ID
 	     , REG_DT
 	     )
 	VALUES
 	     (
-	       #{TASK_ID}
-	     ,  #{TASK_NM}
-	     ,  #{BP_INSTANCE_ID}
-	     ,  #{STEP_ID}
-	     ,  #{ASSIGNED_TO}
-	     ,  #{STATUS}
-	     ,  #{DUE_DT}
-	     ,  #{COMPLETED_DT}
-	     ,  #{BILL_APRV_NO}
-	     ,  #{REG_ID}
+	        #{taskNm}
+	     ,  #{bpInstanceId}
+	     ,  #{stepId}
+	     ,  #{assignedTo}
+	     ,  #{status}
+	     ,  #{dueDt}
+	     ,  #{billAprvNo}
+	     ,  #{regId}
 	     ,  now()
 	    )
 
 	</insert>
 
-   <select id="selectBpTasks"  parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
+   <select id="selectBpTasks"  parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo"
+    resultType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
    /* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.selectBpTasks */
 	SELECT
 	        TASK_ID
@@ -359,7 +359,17 @@
 	   AND BP_INSTANCE_ID = #{BP_INSTANCE_ID}
     </delete>
 
+   <!-- 해당안건의 소관위 -->
+   <select id="selectOneCmtt"  parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo"
+    resultType="kr.co.bestiansoft.ebillservicekg.process.vo.CmttVo">
+   /* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.selectOneCmtt */
+	select
+		bill_id
+	  , cmtt_id
+	from ebs_cmtt
+	where bill_id = #{billId}
+	  and cmtt_type = 'M'
 
-
+	</select>
 
 </mapper>
