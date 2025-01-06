@@ -1,4 +1,4 @@
-package kr.co.bestiansoft.ebillservicekg.file.service.impl;
+package kr.co.bestiansoft.ebillservicekg.common.file.service.impl;
 
 import java.io.File;
 import java.io.FileInputStream;

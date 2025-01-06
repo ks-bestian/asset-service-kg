@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import kr.co.bestiansoft.ebillservicekg.admin.bbs.repository.BoardMapper;
 import kr.co.bestiansoft.ebillservicekg.admin.bbs.service.BoardService;
 import kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo;
+import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class BoardServiceImpl implements BoardService {
     private final BoardMapper boardMapper;
+    private final ComFileService comFileService;
 
     @Override
     public List<BoardVo> getBoardList(HashMap<String, Object> param, String brdType) {
@@ -68,8 +70,7 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     @Override
     public BoardVo createBoardFile(BoardVo boardVo, String brdType) {
-//    	String fileGroupId = FileService.saveFile(boardVo.getFiles());
-    	String fileGroupId = null;
+    	String fileGroupId = comFileService.saveFile(boardVo.getFiles());
     	
     	boardVo.setBrdType(brdType);
     	boardVo.setFileGroupId(fileGroupId);

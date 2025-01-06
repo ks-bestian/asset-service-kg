@@ -1,4 +1,4 @@
-package kr.co.bestiansoft.ebillservicekg.file.vo;
+package kr.co.bestiansoft.ebillservicekg.document.vo;
 
 import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;

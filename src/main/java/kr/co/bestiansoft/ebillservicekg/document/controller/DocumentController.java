@@ -1,4 +1,4 @@
-package kr.co.bestiansoft.ebillservicekg.file.controller;
+package kr.co.bestiansoft.ebillservicekg.document.controller;
 
 import java.io.InputStream;
 import java.net.URLEncoder;
@@ -25,23 +25,23 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
+import kr.co.bestiansoft.ebillservicekg.common.file.service.impl.EDVHelper;
 import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
-import kr.co.bestiansoft.ebillservicekg.file.repository.FileMapper;
-import kr.co.bestiansoft.ebillservicekg.file.service.FileService;
-import kr.co.bestiansoft.ebillservicekg.file.service.impl.EDVHelper;
-import kr.co.bestiansoft.ebillservicekg.file.vo.DeptFileVo;
-import kr.co.bestiansoft.ebillservicekg.file.vo.DeptFolderVo;
+import kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper;
+import kr.co.bestiansoft.ebillservicekg.document.service.DocumentService;
+import kr.co.bestiansoft.ebillservicekg.document.vo.DeptFileVo;
+import kr.co.bestiansoft.ebillservicekg.document.vo.DeptFolderVo;
 import lombok.RequiredArgsConstructor;
 
 @Api(tags = "문서관리 API")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequiredArgsConstructor
 @RestController
-public class FileController {
+public class DocumentController {
 
-    private final FileService fileService;
+    private final DocumentService fileService;
     private final EDVHelper edv;
-    private final FileMapper fileMapper;
+    private final DocumentMapper fileMapper;
     
 
     @ApiOperation(value = "부서 폴더 등록", notes = "부서 폴더 등록")

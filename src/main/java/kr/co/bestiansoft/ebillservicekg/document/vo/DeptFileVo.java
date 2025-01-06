@@ -1,4 +1,4 @@
-package kr.co.bestiansoft.ebillservicekg.file.vo;
+package kr.co.bestiansoft.ebillservicekg.document.vo;
 
 import java.time.LocalDateTime;
 import java.util.List;
