@@ -20,9 +20,9 @@ import java.util.List;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class MsgController {
 
-    private MsgService msgService;
+    private final MsgService msgService;
     @ApiOperation(value = "메세지 수신 리스트 조회", notes = "메세지 수신 리스트를 조회한다.")
-    @GetMapping("/myPage/msg/rcv")
+    @GetMapping("myPage/msg/rcv")
     public ResponseEntity<CommonResponse> getMsgRcvList(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "ok", msgService.getRcvList(param)), HttpStatus.OK);
     }
