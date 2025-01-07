@@ -30,4 +30,22 @@
             and reg_dt &lt;= concat(#{edDt}, '23:59:59')
         </if>
     </select>
+    
+	<insert id="insertAcsHist" parameterType="kr.co.bestiansoft.ebillservicekg.admin.acsHist.vo.AcsHistVo">
+        insert into kgst.com_acs_hist (
+			  acs_ip
+			, req_url
+			, req_method
+			, reg_id
+			, reg_dt
+		)
+		values (
+			  #{acsIp}
+			, #{reqUrl}
+			, #{reqMethod}
+			, #{regId}
+			, now()
+		)
+    </insert>    
+    
 </mapper>
