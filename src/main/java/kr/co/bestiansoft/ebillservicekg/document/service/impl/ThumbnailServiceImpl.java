@@ -1,4 +1,4 @@
-package kr.co.bestiansoft.ebillservicekg.file.service.impl;
+package kr.co.bestiansoft.ebillservicekg.document.service.impl;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -28,10 +28,11 @@ import com.aspose.slides.Presentation;
 import com.aspose.words.Document;
 import com.aspose.words.SaveFormat;
 
+import kr.co.bestiansoft.ebillservicekg.common.file.service.impl.EDVHelper;
 import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
-import kr.co.bestiansoft.ebillservicekg.file.repository.FileMapper;
-import kr.co.bestiansoft.ebillservicekg.file.service.ThumbnailService;
-import kr.co.bestiansoft.ebillservicekg.file.vo.DeptFileVo;
+import kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper;
+import kr.co.bestiansoft.ebillservicekg.document.service.ThumbnailService;
+import kr.co.bestiansoft.ebillservicekg.document.vo.DeptFileVo;
 
 @Service
 public class ThumbnailServiceImpl implements ThumbnailService {
@@ -43,7 +44,7 @@ public class ThumbnailServiceImpl implements ThumbnailService {
 	private ExecutorService executorService;
 	
 	@Autowired
-	private FileMapper fileMapper;
+	private DocumentMapper fileMapper;
 	
 	private int DEFAULT_THUMBNAIL_WIDTH = 300;
 	private int DEFAULT_THUMBNAIL_HEIGHT = 200;

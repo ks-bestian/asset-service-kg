@@ -5,8 +5,10 @@ import io.swagger.annotations.ApiOperation;
 import kr.co.bestiansoft.ebillservicekg.admin.bbs.service.BoardService;
 import kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
+import kr.co.bestiansoft.ebillservicekg.document.vo.DeptFileVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,5 +52,10 @@ public class BoardController {
         return new ResponseEntity<>(new CommonResponse(200, "OK", boardService.getBoardById(brdId)), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "게시판 생성(파일)", notes = "게시판 생성(파일)")
+    @PostMapping(value = "/admin/board/file/{brdType}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<CommonResponse> createBoardFile(BoardVo boardVo, @PathVariable String brdType) {
+    	return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Board created successfully", boardService.createBoardFile(boardVo, brdType)), HttpStatus.CREATED);
+    }
 
 }

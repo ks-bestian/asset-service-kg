@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.bestiansoft.ebillservicekg.common.file.repository.ComFileMapper">
+
+	<insert id="insertFile" parameterType="kr.co.bestiansoft.ebillservicekg.common.file.vo.ComFileVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.common.file.repository.FileMapper.insertFile */
+		insert into kgst.com_file (
+			  file_id
+			, file_group_id
+			, org_file_nm
+			, file_size
+			, file_div
+			, upload_yn
+			, delete_yn
+			, reg_id
+			, reg_dt
+		) values (
+			  #{fileId}
+			, #{fileGroupId}
+			, #{orgFileNm}
+			, #{fileSize}
+			, #{fileDiv}
+			, #{uploadYn}
+			, 'N'
+			, #{regId}
+			, now()
+		)
+    </insert>
+    
+    <select id="findByFileGroupId" resultType="kr.co.bestiansoft.ebillservicekg.common.file.vo.ComFileVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.common.file.repository.FileMapper.findByFileGroupId */
+		select
+			  file_id
+			, file_group_id
+			, org_file_nm
+			, file_size
+			, file_div
+			, upload_yn
+			, delete_yn
+			, reg_id
+			, reg_dt
+			, mod_id
+			, mod_dt
+		from
+			kgst.com_file
+		where 1=1
+		and file_group_id = #{fileGroupId} 
+	</select>
+	
+	<select id="findByFileId" resultType="kr.co.bestiansoft.ebillservicekg.common.file.vo.ComFileVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.common.file.repository.FileMapper.findByFileId */
+		select
+			  file_id
+			, file_group_id
+			, org_file_nm
+			, file_size
+			, file_div
+			, upload_yn
+			, delete_yn
+			, reg_id
+			, reg_dt
+			, mod_id
+			, mod_dt
+		from
+			kgst.com_file
+		where 1=1
+		and file_id = #{fileId} 
+	</select>
+    
+</mapper>

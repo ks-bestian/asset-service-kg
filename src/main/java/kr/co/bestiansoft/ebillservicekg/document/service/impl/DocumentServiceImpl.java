@@ -1,4 +1,4 @@
-package kr.co.bestiansoft.ebillservicekg.file.service.impl;
+package kr.co.bestiansoft.ebillservicekg.document.service.impl;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,12 +14,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import kr.co.bestiansoft.ebillservicekg.common.file.service.impl.EDVHelper;
 import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
-import kr.co.bestiansoft.ebillservicekg.file.repository.FileMapper;
-import kr.co.bestiansoft.ebillservicekg.file.service.FileService;
-import kr.co.bestiansoft.ebillservicekg.file.service.ThumbnailService;
-import kr.co.bestiansoft.ebillservicekg.file.vo.DeptFileVo;
-import kr.co.bestiansoft.ebillservicekg.file.vo.DeptFolderVo;
+import kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper;
+import kr.co.bestiansoft.ebillservicekg.document.service.DocumentService;
+import kr.co.bestiansoft.ebillservicekg.document.service.ThumbnailService;
+import kr.co.bestiansoft.ebillservicekg.document.vo.DeptFileVo;
+import kr.co.bestiansoft.ebillservicekg.document.vo.DeptFolderVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,8 +29,8 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 @RequiredArgsConstructor
 @Service
-public class FileServiceImpl implements FileService {
-    private final FileMapper fileMapper;
+public class DocumentServiceImpl implements DocumentService {
+    private final DocumentMapper fileMapper;
     private final EDVHelper edv;
     private final ThumbnailService thumbnailService;
     

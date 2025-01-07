@@ -1,14 +1,14 @@
-package kr.co.bestiansoft.ebillservicekg.file.repository;
+package kr.co.bestiansoft.ebillservicekg.document.repository;
 
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import kr.co.bestiansoft.ebillservicekg.file.vo.DeptFileVo;
-import kr.co.bestiansoft.ebillservicekg.file.vo.DeptFolderVo;
+import kr.co.bestiansoft.ebillservicekg.document.vo.DeptFileVo;
+import kr.co.bestiansoft.ebillservicekg.document.vo.DeptFolderVo;
 
 @Mapper
-public interface FileMapper {
+public interface DocumentMapper {
     int insertDeptFolder(DeptFolderVo vo);
     int updateDeptFolder(DeptFolderVo vo);
     void deleteDeptFolder(Long folderId);

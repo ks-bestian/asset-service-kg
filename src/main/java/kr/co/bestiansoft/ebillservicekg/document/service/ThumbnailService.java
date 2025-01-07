@@ -1,4 +1,4 @@
-package kr.co.bestiansoft.ebillservicekg.file.service;
+package kr.co.bestiansoft.ebillservicekg.document.service;
 
 import java.awt.image.BufferedImage;
 import java.io.File;

@@ -1,11 +1,11 @@
-package kr.co.bestiansoft.ebillservicekg.file.service;
+package kr.co.bestiansoft.ebillservicekg.document.service;
 import java.io.InputStream;
 import java.util.List;
 
-import kr.co.bestiansoft.ebillservicekg.file.vo.DeptFileVo;
-import kr.co.bestiansoft.ebillservicekg.file.vo.DeptFolderVo;
+import kr.co.bestiansoft.ebillservicekg.document.vo.DeptFileVo;
+import kr.co.bestiansoft.ebillservicekg.document.vo.DeptFolderVo;
 
-public interface FileService {
+public interface DocumentService {
 
 	int insertDeptFolder(DeptFolderVo vo);
 	int updateDeptFolder(DeptFolderVo vo);
