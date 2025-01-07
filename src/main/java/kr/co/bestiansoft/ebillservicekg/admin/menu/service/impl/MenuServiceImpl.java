@@ -23,12 +23,12 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public List<MenuVo> getMenuList(HashMap<String, Object> param) {
-        return menuMapper.getMenuList(param);
+        return menuMapper.selectListMenu(param);
     }
 
     @Override
     public MenuVo getMenuDetail(Long menuId) {
-        return menuMapper.getMenuDetail(menuId);
+        return menuMapper.selectMenu(menuId);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public List<QuickMenuVo> getQuickMenuList(HashMap<String, Object> param) {
-        return menuMapper.getQuickMenuList(param);
+        return menuMapper.selectListQuickMenu(param);
     }
 
     @Override

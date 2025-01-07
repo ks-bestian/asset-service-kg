@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.admin.authMenu.repository.AuthMenuMapper">
-    <select id="getAuthMenuList" parameterType="java.lang.Long" resultType="kr.co.bestiansoft.ebillservicekg.admin.authMenu.vo.AuthMenuVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.authMenu.repository.AuthMenuMapper.getAuthMenuList */
+    <select id="selectListAuthMenu" parameterType="java.lang.Long" resultType="kr.co.bestiansoft.ebillservicekg.admin.authMenu.vo.AuthMenuVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.authMenu.repository.AuthMenuMapper.selectListAuthMenu */
         select
               seq
             , auth_id --권한아이디

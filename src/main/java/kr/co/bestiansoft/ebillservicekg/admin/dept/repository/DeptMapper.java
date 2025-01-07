@@ -9,8 +9,8 @@ import java.util.List;
 
 @Mapper
 public interface DeptMapper {
-    List<DeptVo> getComDeptList(HashMap<String, Object> param);
-    DeptVo getComDeptById(String deptCd);
+    List<DeptVo> selectListDept(HashMap<String, Object> param);
+    DeptVo selectDept(String deptCd);
     int insertDept(DeptVo deptVo);
     int updateDept(DeptVo deptVo);
     void deleteDept(String deptCd);

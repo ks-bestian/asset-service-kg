@@ -23,22 +23,22 @@ public class ComCodeServiceImpl implements ComCodeService {
 
     @Override
     public List<ComCodeVo> getGrpCodeList(HashMap<String, Object> param) {
-        return comCodeMapper.getGrpCodeList(param);
+        return comCodeMapper.selectListGrpCode(param);
     }
 
     @Override
     public List<ComCodeVo> getCodeList(HashMap<String, Object> param) {
-        return comCodeMapper.getComCodeList(param);
+        return comCodeMapper.selectListComCode(param);
     }
 
     @Override
     public ComCodeVo getGrpCodeById(Integer grpCode) {
-        return comCodeMapper.getGrpCodeById(grpCode);
+        return comCodeMapper.selectGrpCode(grpCode);
     }
 
     @Override
     public ComCodeDetailVo getComCodeById(String codeId) {
-        return comCodeMapper.getComCodeById(codeId);
+        return comCodeMapper.selectComCode(codeId);
     }
 
     @Override

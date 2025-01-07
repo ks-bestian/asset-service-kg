@@ -8,8 +8,8 @@ import java.util.List;
 
 @Mapper
 public interface AuthMapper {
-    List<AuthVo> getAuthList(HashMap<String, Object> param);
-    AuthVo getAuthDetail(Long authId);
+    List<AuthVo> selectListAuth(HashMap<String, Object> param);
+    AuthVo selectAuth(Long authId);
     int insertAuth(AuthVo authVo);
     int updateAuth(AuthVo authVo);
     void deleteAuth(Long id);

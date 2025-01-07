@@ -19,7 +19,7 @@ public class CcofServiceImpl implements CcofService {
     private final CcofMapper ccofMapper;
     @Override
     public List<CcofVo> getCcofList(HashMap<String, Object> param, String userId) {
-        return ccofMapper.getCcofList(param, userId);
+        return ccofMapper.selectListCcof(param, userId);
     }
 
     @Override

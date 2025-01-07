@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.myPage.message.repository.MsgMapper">
-    <select id="getRcvList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.myPage.message.vo.MsgVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.myPage.message.repository.MsgMapper.getRcvList */
+    <select id="selectListRcv" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.myPage.message.vo.MsgVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.myPage.message.repository.MsgMapper.selectListRcv */
         select
               em.msg_id --메세지아이디
             , em.cnc_dt --취소일시
@@ -44,8 +44,8 @@
         order by em.send_dt desc
     </select>
 
-    <select id="getSendList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.myPage.message.vo.MsgVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.myPage.message.repository.MsgMapper.getSendList */
+    <select id="selectListSend" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.myPage.message.vo.MsgVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.myPage.message.repository.MsgMapper.selectListSend */
         select
               em.msg_id --메세지아이디
             , em.cnc_dt --취소일시
@@ -87,8 +87,8 @@
     </select>
 
 
-    <select id="getMsgDetail" parameterType="java.lang.Long" resultType="kr.co.bestiansoft.ebillservicekg.myPage.message.vo.MsgVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.myPage.message.repository.MsgMapper.getMsgDetail */
+    <select id="selectMsg" parameterType="java.lang.Long" resultType="kr.co.bestiansoft.ebillservicekg.myPage.message.vo.MsgVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.myPage.message.repository.MsgMapper.selectMsg */
         select
               em.msg_id --메세지아이디
             , em.cnc_dt --취소일시

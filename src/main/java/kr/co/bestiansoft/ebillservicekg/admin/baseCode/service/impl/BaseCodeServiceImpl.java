@@ -24,7 +24,7 @@ public class BaseCodeServiceImpl implements BaseCodeService {
 
     @Override
     public List<BaseCodeVo> getBaseCodeList(HashMap<String, Object> param) {
-        return baseCodeMapper.getBaseCodeList(param);
+        return baseCodeMapper.selectListBaseCode(param);
     }
 
 
@@ -48,6 +48,6 @@ public class BaseCodeServiceImpl implements BaseCodeService {
 
     @Override
     public BaseCodeVo getBaseCodeById(Long baseCode) {
-        return baseCodeMapper.getBaseCodeById(baseCode);
+        return baseCodeMapper.selectBaseCode(baseCode);
     }
 }

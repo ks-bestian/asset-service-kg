@@ -21,7 +21,7 @@ public class LngCodeServiceImpl implements LngCodeService {
 
     @Override
     public List<LngCodeVo> getLngCodeList(HashMap<String, Object> param) {
-        return lngCodeMapper.getLngCodeList(param);
+        return lngCodeMapper.selectListLngCode(param);
     }
 
     @Override
@@ -45,6 +45,6 @@ public class LngCodeServiceImpl implements LngCodeService {
 
     @Override
     public LngCodeVo getLngCodeById(Long lngId) {
-        return lngCodeMapper.getLngCodeById(lngId);
+        return lngCodeMapper.selectLngCode(lngId);
     }
 }

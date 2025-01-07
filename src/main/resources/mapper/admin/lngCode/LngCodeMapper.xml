@@ -3,9 +3,9 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.admin.lngCode.repository.LngCodeMapper">
 
-    <select id="getLngCodeList" parameterType="java.util.HashMap"
+    <select id="selectListLngCode" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.admin.lngCode.vo.LngCodeVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.lngCode.repository.LngCodeMapper.getLngCodeList */
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.lngCode.repository.LngCodeMapper.selectListLngCode */
         select
               row_number() over(order by reg_dt desc) as num
             , lng_id --언어아이디
@@ -79,8 +79,8 @@
         where lng_id = #{lngId}
     </delete>
 
-    <select id="getLngCodeById" parameterType="java.lang.Long">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.lngCode.repository.LngCodeMapper.getLngCodeById */
+    <select id="selectLngCode" parameterType="java.lang.Long">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.lngCode.repository.LngCodeMapper.selectLngCode */
         select
               row_number() over(order by reg_dt desc) as num
             , lng_id
