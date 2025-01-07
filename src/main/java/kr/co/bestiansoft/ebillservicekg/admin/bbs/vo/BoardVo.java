@@ -3,6 +3,8 @@ package kr.co.bestiansoft.ebillservicekg.admin.bbs.vo;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
 
@@ -25,5 +27,6 @@ public class BoardVo extends ComDefaultVO {
     private Long num;
 
     private List<BoardVo> delList;
+    private MultipartFile[] files;
     
 }

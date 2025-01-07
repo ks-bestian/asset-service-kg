@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.bestiansoft.ebillservicekg.myPage.message.repository.MsgMapper">
+    <select id="selectListRcv" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.myPage.message.vo.MsgVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.myPage.message.repository.MsgMapper.selectListRcv */
+        select
+              em.msg_id --메세지아이디
+            , em.cnc_dt --취소일시
+            , em.msg_cn --메세지내용
+            , em.msg_sj --메세지제목
+            , em.rcv_dt --수신일시
+            , em.rcv_id --수신자아이디
+            , em.send_dt --발신일시
+            , em.send_id --발신자아이디
+            , em.file_group_id --파일그룹아이디
+            , em.msg_div --발송구분 발송(S) 수신(R)
+            , em.msg_group_id --메세지그룹아이디
+            , em.reg_id
+            , em.reg_dt
+            , em.mod_id
+            , em.mod_dt
+            , vum.user_nm_kg as send_nm
+<!--            , (case when #{lang} = 'lng_type1' then vum.user_nm_kg-->
+<!--                    when #{lang} = 'lng_type1' then vum.user_nm_ru-->
+<!--                end) as send_nm-->
+        from ebs_msg em
+        inner join view_user_member vum on vum.user_id = em.send_id
+        where em.msg_div = 'R'
+            and em.rcv_id = #{rcvId}
+        <if test="msgSj != null and msgSj != ''">
+            and em.msg_sj like concat('%', #{msgSj}, '%')
+        </if>
+        <if test="sendNm != null and sendNm != ''">
+            <choose>
+                <when test="lang == 'lng_typ2'">
+                    and vum.user_nm_ru like ('%', #{sendNm}, '%')
+                </when>
+                <otherwise>
+                    and vum.user_nm_kg like ('%', #{sendNm}, '%')
+                </otherwise>
+            </choose>
+        </if>
+        order by em.send_dt desc
+    </select>
+
+    <select id="selectListSend" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.myPage.message.vo.MsgVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.myPage.message.repository.MsgMapper.selectListSend */
+        select
+              em.msg_id --메세지아이디
+            , em.cnc_dt --취소일시
+            , em.msg_cn --메세지내용
+            , em.msg_sj --메세지제목
+            , em.rcv_dt --수신일시
+            , em.rcv_id --수신자아이디
+            , em.send_dt --발신일시
+            , em.send_id --발신자아이디
+            , em.file_group_id --파일그룹아이디
+            , em.msg_div --발송구분 발송(S) 수신(R)
+            , em.msg_group_id --메세지그룹아이디
+            , em.reg_id
+            , em.reg_dt
+            , em.mod_id
+            , em.mod_dt
+            , vum.user_nm_kg as rcv_nm
+            <!--            , (case when #{lang} = 'lng_type1' then vum.user_nm_kg-->
+            <!--                    when #{lang} = 'lng_type1' then vum.user_nm_ru-->
+            <!--                end) as rcv_nm-->
+        from ebs_msg em
+        inner join view_user_member vum on vum.user_id = em.rcv_id
+        where msg_div = 'S'
+            and send_id = #{sendId} --todo 로그인아이디로 수정
+        <if test="msgSj != null and msgSj != ''">
+            and msg_sj like concat('%', #{msgSj}, '%')
+        </if>
+        <if test="rcvNm != null and rcvNm != ''">
+            <choose>
+                <when test="lang == 'lng_typ2'">
+                    and vum.user_nm_ru like ('%', #{rcvNm}, '%')
+                </when>
+                <otherwise>
+                    and vum.user_nm_kg like ('%', #{rcvNm}, '%')
+                </otherwise>
+            </choose>
+        </if>
+        order by send_dt desc
+    </select>
+
+
+    <select id="selectMsg" parameterType="java.lang.Long" resultType="kr.co.bestiansoft.ebillservicekg.myPage.message.vo.MsgVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.myPage.message.repository.MsgMapper.selectMsg */
+        select
+              em.msg_id --메세지아이디
+            , em.cnc_dt --취소일시
+            , em.msg_cn --메세지내용
+            , em.msg_sj --메세지제목
+            , em.rcv_dt --수신일시
+            , em.rcv_id --수신자아이디
+            , em.send_dt --발신일시
+            , em.send_id --발신자아이디
+            , em.file_group_id --파일그룹아이디
+            , em.msg_div --발송구분 발송(S) 수신(R)
+            , em.msg_group_id --메세지그룹아이디
+            , em.reg_id
+            , em.reg_dt
+            , em.mod_id
+            , em.mod_dt
+            , mRcv.user_nm_kg as rcv_nm
+            , mSend.user_nm_kg as send_nm
+            <!--            , (case when #{lang} = 'lng_type1' then vum.user_nm_kg-->
+            <!--                    when #{lang} = 'lng_type1' then vum.user_nm_ru-->
+            <!--                end) as user_nm-->
+        from ebs_msg em
+        inner join view_user_member mRcv on mRcv.user_id = em.rcv_id
+        inner join view_user_member mSend on vum.user_id = em.send_id
+        where msg_id = #{msgId}
+    </select>
+
+    <insert id="insertMsg" parameterType="kr.co.bestiansoft.ebillservicekg.myPage.message.vo.MsgRequest">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.myPage.message.repository.MsgMapper.insertMsg */
+        insert into ebs_msg (
+              msg_cn
+            , msg_sj
+            , rcv_dt
+            , rcv_id
+            , send_dt
+            , send_id
+            , file_group_id
+            , msg_div
+            , msg_group_id
+            , reg_id
+            , reg_dt
+            , mod_id
+            , mod_dt
+        )
+        values (
+              #{msgCn}
+            , #{msgSj}
+            , null
+            , #{rcvId}
+            , now()
+            , #{sendId}
+            , #{fileGroupId}
+            , #{msgDiv}
+            , #{msgGroupId}
+            , #{regId}
+            , now()
+            , null
+            , null
+        )
+    </insert>
+
+    <delete id="deleteMsg" parameterType="java.lang.Long">
+        delete from ebs_msg
+        where msg_id = #{msgId}
+    </delete>
+</mapper>

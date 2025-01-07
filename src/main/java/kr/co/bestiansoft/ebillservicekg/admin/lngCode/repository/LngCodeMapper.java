@@ -9,10 +9,10 @@ import java.util.List;
 @Mapper
 public interface LngCodeMapper {
 
-    List<LngCodeVo> getLngCodeList(HashMap<String, Object> param);
+    List<LngCodeVo> selectListLngCode(HashMap<String, Object> param);
     int insertLngCode(LngCodeVo lngCodeVo);
     int updateLngCode(LngCodeVo lngCodeVo);
     void deleteLngCode(Long lngId);
-    LngCodeVo getLngCodeById(Long lngId);
+    LngCodeVo selectLngCode(Long lngId);
 
 }

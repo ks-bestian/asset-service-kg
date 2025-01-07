@@ -20,12 +20,12 @@ public class DeptServiceImpl implements DeptService {
 
     @Override
     public List<DeptVo> getComDeptList(HashMap<String, Object> param) {
-        return deptMapper.getComDeptList(param);
+        return deptMapper.selectListDept(param);
     }
 
     @Override
     public DeptVo getComDeptById(String deptCd) {
-        return deptMapper.getComDeptById(deptCd);
+        return deptMapper.selectDept(deptCd);
     }
 
 

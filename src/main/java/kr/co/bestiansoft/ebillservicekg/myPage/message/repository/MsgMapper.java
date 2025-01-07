@@ -1,0 +1,17 @@
+package kr.co.bestiansoft.ebillservicekg.myPage.message.repository;
+
+import kr.co.bestiansoft.ebillservicekg.myPage.message.vo.MsgRequest;
+import kr.co.bestiansoft.ebillservicekg.myPage.message.vo.MsgVo;
+import org.apache.ibatis.annotations.Mapper;
+
+import java.util.HashMap;
+import java.util.List;
+
+@Mapper
+public interface MsgMapper {
+    List<MsgVo> selectListRcv(HashMap<String, Object> param);
+    List<MsgVo> selectListSend(HashMap<String, Object> param);
+    MsgVo selectMsg(Long msgId);
+    int insertMsg(MsgRequest msgRequest);
+    void deleteMsg(Long msgId);
+}

@@ -20,12 +20,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public List<AuthVo> getAuthList(HashMap<String, Object> param) {
-        return authMapper.getAuthList(param);
+        return authMapper.selectListAuth(param);
     }
 
     @Override
     public AuthVo getAuthDetail(Long authId) {
-        return authMapper.getAuthDetail(authId);
+        return authMapper.selectAuth(authId);
     }
 
     @Override

@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.admin.auth.repository.AuthMapper">
-    <select id="getAuthList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.auth.vo.AuthVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.auth.repository.AuthMapper.getAuthList */
+    <select id="selectListAuth" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.auth.vo.AuthVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.auth.repository.AuthMapper.selectListAuth */
         select
               auth_id --권한아이디
             , auth_nm1 --권한명(키르키즈어)
@@ -29,8 +29,8 @@
         order by reg_dt desc
     </select>
 
-    <select id="getAuthDetail" parameterType="java.lang.Long" resultType="kr.co.bestiansoft.ebillservicekg.admin.auth.vo.AuthVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.auth.repository.AuthMapper.getAuthDetail */
+    <select id="selectAuth" parameterType="java.lang.Long" resultType="kr.co.bestiansoft.ebillservicekg.admin.auth.vo.AuthVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.auth.repository.AuthMapper.selectAuth */
         select
               auth_id
             , auth_nm1

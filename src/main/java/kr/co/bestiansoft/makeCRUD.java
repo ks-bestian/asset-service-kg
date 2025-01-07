@@ -13,6 +13,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class makeCRUD {
 
 
@@ -71,6 +72,10 @@ public class makeCRUD {
 			//ResultSet rsTables = dmd.getTables(conn.getCatalog(), null, "%", null);
 
 			ArrayList<String> tableList = new ArrayList<String>();
+			tableList.add("ebs_bp_define");
+			tableList.add("ebs_bp_instance");
+			tableList.add("ebs_bp_service");
+			tableList.add("ebs_bp_step");
 			tableList.add("ebs_bp_tasks");
 
 
@@ -103,10 +108,12 @@ public class makeCRUD {
 					arrColumns.add(columnName);
 				}
 
-				System.out.println(getSelectQuery(tableList.get(i),arrColumns));
-				System.out.println(getInsertQuery(tableList.get(i),arrColumns,"uid"));
-				System.out.println(getUpdateQuery(tableList.get(i),arrColumns,arrPkColumns));
-				System.out.println(getDeleteQuery(tableList.get(i),arrColumns,arrPkColumns));
+
+				//makeVo(arrColumns);
+				//System.out.println(getSelectQuery(tableList.get(i),arrColumns));
+				//System.out.println(getInsertQuery(tableList.get(i),arrColumns,"uid"));
+				//System.out.println(getUpdateQuery(tableList.get(i),arrColumns,arrPkColumns));
+				//System.out.println(getDeleteQuery(tableList.get(i),arrColumns,arrPkColumns));
 
 			}
 
@@ -385,5 +392,35 @@ public class makeCRUD {
 	}
 
 
+//	private String makeVo(ArrayList<String> columns)
+//	{
+//		StringBuffer sb = new StringBuffer();
+//		StringBuffer sb1 = new StringBuffer();
+//		String privateStr = "\nprivate String ";//private String fileId;
+//		for (String columnName : columns)
+//		{
+//			privateStr+=toCamelCase(columnName)+";";
+//
+//
+//			sb.append(privateStr);
+//			privateStr = "\nprivate String ";
+//		}
+//		System.out.println(sb.toString());
+//		return sb.toString();
+//	}
+//
+//	@SuppressWarnings("deprecation")
+//	public static String toCamelCase(String input) {
+//        if (input == null || input.isEmpty()) {
+//            return input; // 입력이 비어있으면 그대로 반환
+//        }
+//
+//        // 공백, 밑줄, 대시로 단어를 나눈 뒤 첫 글자를 대문자로 변환
+//        String capitalized = WordUtils.capitalizeFully(input, ' ', '_', '-');
+//
+//        // 공백, 밑줄, 대시 제거 후 첫 글자를 소문자로 변환
+//        String camelCase = capitalized.replaceAll("[\\s_\\-]", "");
+//        return camelCase.substring(0, 1).toLowerCase() + camelCase.substring(1);
+//    }
 
 }

@@ -6,6 +6,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import kr.co.bestiansoft.ebillservicekg.admin.acsHist.service.AcsHistService;
 import kr.co.bestiansoft.ebillservicekg.config.web.interceptor.LogInterceptor;
 import lombok.RequiredArgsConstructor;
 
@@ -13,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-//    private final LogService logService;
+	private final AcsHistService acsHistService;
 //    private final TokenProvider tokenProvider;
 
     @Value("${security.allow.context-url}")
@@ -21,7 +22,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LogInterceptor());
+        registry.addInterceptor(new LogInterceptor(acsHistService));
 //        registry.addInterceptor(new JwtFilteringInterceptor(tokenProvider));
     }
 

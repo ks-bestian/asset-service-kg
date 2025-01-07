@@ -8,9 +8,9 @@ import java.util.List;
 
 @Mapper
 public interface BaseCodeMapper {
-    List<BaseCodeVo> getBaseCodeList(HashMap<String, Object> param);
+    List<BaseCodeVo> selectListBaseCode(HashMap<String, Object> param);
     int insertBaseCode(BaseCodeVo baseCodeVo);
     int updateBaseCode(BaseCodeVo baseCodeVo);
     void deleteBaseCode(Long ids);
-    BaseCodeVo getBaseCodeById(Long seq);
+    BaseCodeVo selectBaseCode(Long seq);
 }

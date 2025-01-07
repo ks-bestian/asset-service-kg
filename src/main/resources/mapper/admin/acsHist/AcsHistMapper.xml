@@ -13,21 +13,39 @@
             , req_method --접속요청메소드
             , reg_id --접속자아이디
             , reg_dt --접속요청시간
-            ,vcm.member_nm as userNm --접속자명
+            ,vum.member_nm as memberNm --접속자명
         from com_acs_hist ca
-        left join view_com_members vcm on vcm.member_id = ca.reg_id
+        left join view_user_member vum on vum.member_id = ca.reg_id
         where 1=1
         <if test="memberNm != null and memberNm != ''">
-            and vcm.member_nm like concat('%', #{memberNm}, '%'}
+            and vum.member_nm like concat('%', #{memberNm}, '%'}
         </if>
         <if test="reqUrl != null and reqUrl != ''">
             and req_url like concat('%', #{reqUrl}, '%')
         </if>
-        <if test="stDt != null and stDt != ''" >-- stDt 날짜 형식 yyyy-mm-dd
+        <if test="stDt != null and stDt != ''" > -- stDt 날짜 형식 yyyy-mm-dd
             and reg_dt &gt;= concat(#{stDt}, '00:00:00')
         </if>
         <if test="edDt != null and edDt != ''">
             and reg_dt &lt;= concat(#{edDt}, '23:59:59')
         </if>
     </select>
+    
+	<insert id="createAcsHist" parameterType="kr.co.bestiansoft.ebillservicekg.admin.acsHist.vo.AcsHistVo">
+        insert into kgst.com_acs_hist (
+			  acs_ip
+			, req_url
+			, req_method
+			, reg_id
+			, reg_dt
+		)
+		values (
+			  #{acsIp}
+			, #{reqUrl}
+			, #{reqMethod}
+			, #{regId}
+			, now()
+		)
+    </insert>    
+    
 </mapper>

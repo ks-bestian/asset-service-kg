@@ -5,6 +5,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import kr.co.bestiansoft.ebillservicekg.admin.acsHist.service.AcsHistService;
+import kr.co.bestiansoft.ebillservicekg.admin.acsHist.vo.AcsHistVo;
+import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -12,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class LogInterceptor implements HandlerInterceptor {
 
-//    private final LogService logService;
+    private final AcsHistService acsHistService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -34,12 +37,11 @@ public class LogInterceptor implements HandlerInterceptor {
                 &&!reqServletPath.contains("/api/lngCode")
                 &&!reqServletPath.contains("/api/menus/menuBreadcrumbs")
         ) {//로그조회는 제외
-//            if(!reqServletPath.contains("/api/authenticate")) {
-//                userId = new SecurityInfoUtil().getAccountId();
-//            }
+            if(!reqServletPath.contains("/login")) {
+                userId = new SecurityInfoUtil().getAccountId();
+            }
 
-            //reqMethod
-//            logService.createLog(new LogCreate(userId, accessIp, reqURL, reqMethod));
+            acsHistService.createAcsHist(new AcsHistVo(userId, accessIp, reqURL, reqMethod));
         }
 
         return true;
