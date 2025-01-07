@@ -10,5 +10,5 @@ import java.util.List;
 @Data
 public class AuthMenuCreate {
     private Long authId;
-    private List<AuthMenuVo> authMenuVoList;
+    private List<AuthMenuVo> authMenuVos;
 }

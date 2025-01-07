@@ -3,6 +3,7 @@ package kr.co.bestiansoft.ebillservicekg.admin.authMenu.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import kr.co.bestiansoft.ebillservicekg.admin.authMenu.service.AuthMenuService;
+import kr.co.bestiansoft.ebillservicekg.admin.authMenu.vo.AuthMenuCreate;
 import kr.co.bestiansoft.ebillservicekg.admin.authMenu.vo.AuthMenuVo;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +30,9 @@ public class AuthMenuController {
 
     @ApiOperation(value = "권한별 메뉴, 권한 저장", notes = "Auth Menu Create")
     @PostMapping(value = "/admin/authMenu")
-    public ResponseEntity<CommonResponse> createAuthMenu(@RequestBody AuthMenuVo authMenuVo) {
-        return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "AuthCode created successfully.", authMenuService.saveAuthMenu(authMenuVo)), HttpStatus.CREATED);
+    public ResponseEntity<CommonResponse> createAuthMenu(@RequestBody AuthMenuCreate authMenuCreate) {
+        return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "AuthCode created successfully.", authMenuService.saveAuthMenu(authMenuCreate)), HttpStatus.CREATED);
     }
+
 
 }

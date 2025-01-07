@@ -4,6 +4,8 @@ import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class AuthMenuVo extends ComDefaultVO {
@@ -15,4 +17,5 @@ public class AuthMenuVo extends ComDefaultVO {
     private LocalDateTime regDt;
     private String modId;
     private LocalDateTime modDt;
+    private List<AuthMenuVo> chlidren = new ArrayList<>();
 }
