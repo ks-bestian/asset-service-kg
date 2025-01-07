@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.admin.ccof.repository.CcofMapper">
-    <select id="getCcofList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.ccof.vo.CcofVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.ccof.repository.CcofMapper.getCcofList */
+    <select id="selectListCcof" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.ccof.vo.CcofVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.ccof.repository.CcofMapper.selectListCcof */
         select
               cc.user_id --사용자아이디
             , cc.dept_cd --부서코드

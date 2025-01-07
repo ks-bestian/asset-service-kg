@@ -23,17 +23,17 @@ public class MsgServiceImpl implements MsgService {
 
     @Override
     public List<MsgVo> getRcvList(HashMap<String, Object> param) {
-        return msgMapper.getRcvList(param);
+        return msgMapper.selectListRcv(param);
     }
 
     @Override
     public List<MsgVo> getSendList(HashMap<String, Object> param) {
-        return msgMapper.getSendList(param);
+        return msgMapper.selectListSend(param);
     }
 
     @Override
     public MsgVo getMsgDetail(Long msgId) {
-        return msgMapper.getMsgDetail(msgId);
+        return msgMapper.selectMsg(msgId);
     }
 
     @Override

@@ -19,13 +19,11 @@ import java.util.List;
 @Transactional
 public class AuthUserServiceImpl implements AuthUserService {
 
-    private static final Logger logger = LoggerFactory.getLogger(AuthMenuServiceImpl.class);
-
 
     private final AuthUserMapper authUserMapper;
     @Override
     public List<AuthUserVo> getAuthUserList(Long authId) {
-        return authUserMapper.getAuthUserList(authId);
+        return authUserMapper.selectListAuthUser(authId);
     }
 
     @Override
@@ -34,12 +32,7 @@ public class AuthUserServiceImpl implements AuthUserService {
         Long authId = authUserVo.getAuthId();
 
         for(String userId : userIds) {
-            if(!authUserMapper.existsByAuthIdAndUserId(authId, userId)){
                 authUserMapper.createAuthUser(AuthUserVo.builder().authId(authId).userId(userId).build());
-            } else {
-                logger.info("ComAuthUserEntity already exists, skipping save: authId:"+authId+" userId:"+userId);
-
-            }
         }
         authUserMapper.createAuthUser(authUserVo);
         return authUserVo;

@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.admin.comCode.repository.ComCodeMapper">
-    <select id="getGrpCodeList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.comCode.repository.ComCodeMapper.getGrpCodeList */
+    <select id="selectListGrpCode" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.comCode.repository.ComCodeMapper.selectListGrpCode */
         select
               grp_code --그룹코드
             , grp_code_nm1 --그룹명(키르키즈어)
@@ -26,8 +26,8 @@
         order by reg_dt desc
     </select>
 
-    <select id="getComCodeList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeDetailVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.comCode.repository.ComCodeMapper.getComCodeList */
+    <select id="selectListComCode" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeDetailVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.comCode.repository.ComCodeMapper.selectListComCode */
         select
               code_id
             , code_nm1
@@ -49,8 +49,8 @@
         order by reg_dt desc
     </select>
 
-    <select id="getGrpCodeById" parameterType="java.lang.Integer" resultType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.comCode.repository.ComCodeMapper.getGrpCodeById */
+    <select id="selectGrpCode" parameterType="java.lang.Integer" resultType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.comCode.repository.ComCodeMapper.selectGrpCode */
         select
               grp_code
             , grp_code_nm1
@@ -66,8 +66,8 @@
         where grp_code = #{grpCode}
     </select>
 
-    <select id="getComCodeById" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeDetailVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.comCode.repository.ComCodeMapper.getComCodeById */
+    <select id="selectComCode" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeDetailVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.comCode.repository.ComCodeMapper.selectComCode */
         select
               code_id
             , code_nm1

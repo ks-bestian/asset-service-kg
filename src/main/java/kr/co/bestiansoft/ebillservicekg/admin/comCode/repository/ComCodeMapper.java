@@ -10,10 +10,10 @@ import java.util.List;
 @Mapper
 public interface ComCodeMapper {
 
-    List<ComCodeVo> getGrpCodeList(HashMap<String, Object> param);
-    List<ComCodeVo> getComCodeList(HashMap<String, Object> param);
-    ComCodeVo getGrpCodeById(Integer grpCode);
-    ComCodeDetailVo getComCodeById(String codeId);
+    List<ComCodeVo> selectListGrpCode(HashMap<String, Object> param);
+    List<ComCodeVo> selectListComCode(HashMap<String, Object> param);
+    ComCodeVo selectGrpCode(Integer grpCode);
+    ComCodeDetailVo selectComCode(String codeId);
     int insertGrpCode(ComCodeVo comCodeVo);
     int insertComCode(ComCodeDetailVo comCodeDetailVo);
     int updateGrpCode(ComCodeVo comCodeVo);

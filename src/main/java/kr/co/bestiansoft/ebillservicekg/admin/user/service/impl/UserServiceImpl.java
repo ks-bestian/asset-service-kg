@@ -20,12 +20,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserVo> getUserList(HashMap<String, Object> param) {
-        return userMapper.getUserList(param);
+        return userMapper.selectListUser(param);
     }
 
     @Override
     public UserVo getUserDetail(Long seq) {
-        return userMapper.getUserDetail(seq);
+        return userMapper.selectUser(seq);
     }
 
     @Override

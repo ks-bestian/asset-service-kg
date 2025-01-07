@@ -9,9 +9,9 @@ import java.util.List;
 
 @Mapper
 public interface MsgMapper {
-    List<MsgVo> getRcvList(HashMap<String, Object> param);
-    List<MsgVo> getSendList(HashMap<String, Object> param);
-    MsgVo getMsgDetail(Long msgId);
+    List<MsgVo> selectListRcv(HashMap<String, Object> param);
+    List<MsgVo> selectListSend(HashMap<String, Object> param);
+    MsgVo selectMsg(Long msgId);
     int insertMsg(MsgRequest msgRequest);
     void deleteMsg(Long msgId);
 }

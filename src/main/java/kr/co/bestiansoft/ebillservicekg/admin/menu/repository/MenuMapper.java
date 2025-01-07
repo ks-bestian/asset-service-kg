@@ -10,13 +10,13 @@ import java.util.List;
 @Mapper
 public interface MenuMapper {
 
-    List<MenuVo> getMenuList(HashMap<String, Object> param);
-    MenuVo getMenuDetail(Long menuId);
+    List<MenuVo> selectListMenu(HashMap<String, Object> param);
+    MenuVo selectMenu(Long menuId);
     int insertMenu(MenuVo menuVo);
     int updateMenu(MenuVo menuVo);
     void deleteMenu(Long id);
 
-    List<QuickMenuVo> getQuickMenuList(HashMap<String, Object> param);
+    List<QuickMenuVo> selectListQuickMenu(HashMap<String, Object> param);
     int insertQuickMenu(QuickMenuVo quickMenuVo);
     void deleteQuickMenu(Long menuId, String userId);
 

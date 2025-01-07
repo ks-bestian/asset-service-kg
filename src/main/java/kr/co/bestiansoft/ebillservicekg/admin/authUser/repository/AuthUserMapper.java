@@ -8,8 +8,7 @@ import java.util.List;
 
 @Mapper
 public interface AuthUserMapper {
-    List<AuthUserVo> getAuthUserList(Long authId);
+    List<AuthUserVo> selectListAuthUser(Long authId);
     int createAuthUser(AuthUserVo authUserVo);
     void deleteAuthMenu(AuthUserVo authUserVo);
-    boolean existsByAuthIdAndUserId(Long authId, String userId);
 }
