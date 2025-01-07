@@ -30,6 +30,7 @@ public class LogInterceptor implements HandlerInterceptor {
         String reqURL = request.getRequestURI();
         String reqMethod = request.getMethod();
         String reqServletPath = request.getServletPath();
+        AcsHistVo ahVo = new AcsHistVo();
 
         //getCurrentUserId
         if(       !reqServletPath.contains("/api/accessHist")
@@ -41,7 +42,11 @@ public class LogInterceptor implements HandlerInterceptor {
                 userId = new SecurityInfoUtil().getAccountId();
             }
 
-            acsHistService.createAcsHist(new AcsHistVo(userId, accessIp, reqURL, reqMethod));
+            ahVo = new AcsHistVo();
+            ahVo.setRegId(userId);
+            ahVo.setReqUrl(reqURL);
+            ahVo.setReqMethod(reqMethod);
+            acsHistService.createAcsHist(ahVo);
         }
 
         return true;
