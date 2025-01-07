@@ -28,14 +28,14 @@ public class AcsHistController {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "ok", acsHistService.getAcsHistList(param)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "접속이력 저장", notes = "접속이력 저장한다.")
-    @PostMapping("/api/admin/acsHist")
-    public void createAcsHist(@RequestBody AcsHistVo acsHistVo, HttpServletRequest request) {
-        acsHistService.createAcsHist(AcsHistVo.builder()
-                .regId(acsHistVo.getRegId())
-                .acsIp(request.getRemoteAddr())
-                .reqUrl(request.getRequestURI())
-                .reqMethod(request.getMethod())
-                .build());
-    }
+//    @ApiOperation(value = "접속이력 저장", notes = "접속이력 저장한다.")
+//    @PostMapping("/api/admin/acsHist")
+//    public void createAcsHist(@RequestBody AcsHistVo acsHistVo, HttpServletRequest request) {
+//        acsHistService.createAcsHist(AcsHistVo.builder()
+//                .regId(acsHistVo.getRegId())
+//                .acsIp(request.getRemoteAddr())
+//                .reqUrl(request.getRequestURI())
+//                .reqMethod(request.getMethod())
+//                .build());
+//    }
 }

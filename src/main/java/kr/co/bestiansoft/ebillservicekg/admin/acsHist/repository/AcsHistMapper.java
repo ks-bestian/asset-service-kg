@@ -9,5 +9,5 @@ import java.util.List;
 @Mapper
 public interface AcsHistMapper {
     List<AcsHistVo> getAcsHistList(HashMap<String, Object> param);
-    void insertAcsHist(AcsHistVo acsHistVo);
+    void createAcsHist(AcsHistVo acsHistVo);
 }
