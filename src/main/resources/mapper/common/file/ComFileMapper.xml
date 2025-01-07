@@ -67,5 +67,15 @@
 		where 1=1
 		and file_id = #{fileId} 
 	</select>
+	
+	<select id="batchGetDeleteFileList" resultType="kr.co.bestiansoft.ebillservicekg.common.file.vo.ComFileVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.common.file.repository.FileMapper.batchGetDeleteFileList */
+		select * from com_file where delete_yn = 'Y'
+	</select>
+	
+	<delete id="deleteServerFile">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.common.file.repository.FileMapper.deleteServerFile */
+		delete from com_file where file_id = #{fileId} 
+	</delete>
     
 </mapper>
