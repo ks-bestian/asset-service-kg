@@ -7,8 +7,14 @@ import lombok.Data;
 @Data
 public class BillMngResponse {
 
-    private List<BillMngVo> boardList;
-    private List<BillMngVo> boardList2;
-    private BillMngVo boardVo;
+	private List<ProposerVo> proposerList;
+    private List<BillMngVo> cmtList;
+    private BillMngVo billMngVo;
+    
+    public BillMngResponse(BillMngVo billMngVo, List<ProposerVo> proposerList, List<BillMngVo> cmtList) {
+        this.billMngVo = billMngVo;
+        this.proposerList = proposerList;
+        this.cmtList = cmtList;
+	}
     
 }

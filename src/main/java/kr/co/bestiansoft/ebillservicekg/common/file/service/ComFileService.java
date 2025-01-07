@@ -13,4 +13,5 @@ public interface ComFileService {
 	String saveFile(MultipartFile[] files);
 	List<ComFileVo> getFileList(String fileGroupId);
 	ComFileVo getFile(String fileId);
+	void batchFileDelete();
 }

@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -25,6 +26,8 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
+import kr.co.bestiansoft.ebillservicekg.admin.auth.vo.AuthVo;
+import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
 import kr.co.bestiansoft.ebillservicekg.login.service.CustomUserDetailsService;
 import kr.co.bestiansoft.ebillservicekg.login.vo.Account;
 import kr.co.bestiansoft.ebillservicekg.login.vo.LoginUserVo;
@@ -84,12 +87,23 @@ public class TokenProvider implements InitializingBean {
         
         String userId = claims.getSubject();
         String deptCd = Objects.toString(claims.get("deptCd"), null);
+        String authorities = Objects.toString(claims.get(AUTHORITIES_KEY), null);
         
-        LoginUserVo vo = new LoginUserVo();
-        vo.setUserId(userId);
-        vo.setDeptCd(deptCd);
+        LoginUserVo user = new LoginUserVo();
+        user.setUserId(userId);
+        user.setDeptCd(deptCd);
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        Account accont = new Account(vo, grantedAuthorities);
+
+        if(!StringUtil.isNullOrEmpty(authorities)) {
+        	String[] authList = authorities.split(",");
+			for(String auth : authList) {
+				if(!StringUtil.isNullOrEmpty(auth)) {
+					grantedAuthorities.add(new SimpleGrantedAuthority(auth));	
+				}
+			}
+        }
+        
+        Account accont = new Account(user, grantedAuthorities);
         
 //        User principal = new User(claims.getSubject(), "", new ArrayList<>());
 //		UserDetails userDetails = customUserDetailsService.loadUserByUsername(claims.getSubject());

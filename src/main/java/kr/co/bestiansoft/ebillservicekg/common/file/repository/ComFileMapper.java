@@ -11,4 +11,6 @@ public interface ComFileMapper {
 	int insertFile(ComFileVo vo);
 	List<ComFileVo> findByFileGroupId(String fileGroupId);
 	ComFileVo findByFileId(String fileId);
+	List<ComFileVo> batchGetDeleteFileList();
+	void deleteServerFile(String fileId);
 }
