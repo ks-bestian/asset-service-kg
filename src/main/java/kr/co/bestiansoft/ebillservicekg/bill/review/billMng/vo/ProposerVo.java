@@ -40,5 +40,8 @@ public class ProposerVo extends ComDefaultVO {
     
     // 목록 검색용 : 넘버링
     private String num; 
+    
+    //서명여부
+    private String agreeYn;
 
 }
