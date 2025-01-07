@@ -31,7 +31,7 @@
         </if>
     </select>
     
-	<insert id="insertAcsHist" parameterType="kr.co.bestiansoft.ebillservicekg.admin.acsHist.vo.AcsHistVo">
+	<insert id="createAcsHist" parameterType="kr.co.bestiansoft.ebillservicekg.admin.acsHist.vo.AcsHistVo">
         insert into kgst.com_acs_hist (
 			  acs_ip
 			, req_url
