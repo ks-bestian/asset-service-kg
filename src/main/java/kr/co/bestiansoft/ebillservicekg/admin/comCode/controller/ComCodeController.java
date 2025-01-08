@@ -58,11 +58,7 @@ public class ComCodeController {
     @ApiOperation(value = "코드 생성", notes = "코드를 생성한다.")
     @PostMapping(value = "/admin/comCode")
     public ResponseEntity<CommonResponse> createComCode(@RequestBody ComCodeDetailVo comCodeDetailVo) {
-        try {
             return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), " code created successfully", comCodeService.createComCode(comCodeDetailVo)), HttpStatus.CREATED);
-        } catch (DuplicateKeyException e) {
-            return new ResponseEntity<>(new CommonResponse(HttpStatus.BAD_REQUEST.value(), "bad", e.getMessage()), HttpStatus.BAD_REQUEST);
-        }
     }
 
     @ApiOperation(value = "그룹코드 수정", notes = "그룹코드를 수정한다.")
@@ -74,20 +70,22 @@ public class ComCodeController {
     @ApiOperation(value = "코드 수정", notes = "코드를 수정한다.")
     @PutMapping(value = "/admin/comCode")
     public ResponseEntity<CommonResponse> updateComCode(@RequestBody ComCodeDetailVo comCodeDetailVo) {
+        System.out.println("!2");
+        System.out.println(comCodeDetailVo.getCodeId());
         return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "code updated successfully", comCodeService.updateComCode(comCodeDetailVo)), HttpStatus.CREATED);
     }
 
-    @ApiOperation(value = "그룹코드 삭제", notes = "그룹코드를 정보를 삭제한다.") //그룹코드의 경우 하위코드 존재하면 삭제불가
+    @ApiOperation(value = "그룹코드 삭제", notes = "그룹코드를 정보를 삭제한다.")
     @DeleteMapping("/admin/grpCode")
-    public ResponseEntity<CommonResponse> deleteGrpCode(@RequestBody Integer grpCode) {
-        comCodeService.deleteGrpCode(grpCode);
+    public ResponseEntity<CommonResponse> deleteGrpCode(@RequestBody List<Long> grpCodes) {
+        comCodeService.deleteGrpCode(grpCodes);
         return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "ok", "group code deleted successfully"), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "하위코드 삭제", notes = "하위코드를 정보를 삭제한다.") //그룹코드의 경우 하위코드 존재하면 삭제불가
+    @ApiOperation(value = "하위코드 삭제", notes = "하위코드를 정보를 삭제한다.")
     @DeleteMapping("/admin/comCode")
-    public ResponseEntity<CommonResponse> deleteGrpCode(@RequestBody String codeId) {
-        comCodeService.deleteComCode(codeId);
+    public ResponseEntity<CommonResponse> deleteComCode(@RequestBody List<String> codeIds) {
+        comCodeService.deleteComCode(codeIds);
         return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "OK", "code deleted successfully"), HttpStatus.OK);
     }
 }

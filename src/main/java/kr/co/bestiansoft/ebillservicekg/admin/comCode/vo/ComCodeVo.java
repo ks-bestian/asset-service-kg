@@ -11,6 +11,7 @@ public class ComCodeVo extends ComDefaultVO{
     private String grpCodeNm1;
     private String grpCodeNm2;
     private String grpCodeNm3;
+    private String grpCodeNm;
     private String useYn;
     private String rmk;
     private LocalDateTime regDt;

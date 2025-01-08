@@ -12,6 +12,7 @@ public class ComCodeDetailVo extends ComDefaultVO {
     private String codeNm1;
     private String codeNm2;
     private String codeNm3;
+    private String codeNm;
     private Integer grpCode;
     private String useYn;
     private Integer ord;

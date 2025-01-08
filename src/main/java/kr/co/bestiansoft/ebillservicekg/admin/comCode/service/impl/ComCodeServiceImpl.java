@@ -64,15 +64,16 @@ public class ComCodeServiceImpl implements ComCodeService {
     }
 
     @Override
-    public void deleteGrpCode(Integer grpCode) {
-        boolean existCodeId = comCodeMapper.existCodeIdInGrp(grpCode);
-        if (!existCodeId) {
+    public void deleteGrpCode(List<Long> grpCodes) {
+        for(Long grpCode : grpCodes) {
             comCodeMapper.deleteGrpCode(grpCode);
         }
     }
 
     @Override
-    public void deleteComCode(String codeId) {
-        comCodeMapper.deleteComCode(codeId);
+    public void deleteComCode(List<String> codeIds) {
+        for(String codeId : codeIds) {
+            comCodeMapper.deleteComCode(codeId);
+        }
     }
 }

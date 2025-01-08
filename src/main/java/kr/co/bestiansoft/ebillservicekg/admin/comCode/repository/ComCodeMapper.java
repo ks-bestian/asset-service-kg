@@ -18,7 +18,6 @@ public interface ComCodeMapper {
     int insertComCode(ComCodeDetailVo comCodeDetailVo);
     int updateGrpCode(ComCodeVo comCodeVo);
     int updateComCode(ComCodeDetailVo comCodeDetailVo);
-    void deleteGrpCode(Integer codeId);
+    void deleteGrpCode(Long codeId);
     void deleteComCode(String codeId);
-    boolean existCodeIdInGrp(Integer id);
 }

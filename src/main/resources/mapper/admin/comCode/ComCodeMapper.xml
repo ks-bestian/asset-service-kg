@@ -9,6 +9,10 @@
             , grp_code_nm1 --그룹명(키르키즈어)
             , grp_code_nm2 --그룹명(러시아어)
             , grp_code_nm3 --그룹명(한국어)
+            , (case
+                when #{lang} = 'lng_type2' then grp_code_nm2
+                else grp_code_nm1
+              end) as grp_code_nm
             , use_yn --사용여부
             , rmk --비고
             , reg_dt --등록자
@@ -20,10 +24,17 @@
         <if test="grpCode != null and grpCode != ''">
             and grp_code::text like concat('%', #{grpCode}, '%')
         </if>
-        <if test="grpCodeNm1">
-            and grp_code_nm1 like concat('%', #{grpCodeNm1}, '%')
+        <if test="grpCodeNm != null and grpCodeNm != ''">
+            <choose>
+                <when test="lang == 'lng_type1'">
+                    and grp_code_nm1 like concat('%', #{grpCodeNm}, '%')
+                </when>
+                <when test="lang == 'lng_type2'">
+                    and grp_code_nm2 like concat('%', #{grpCodeNm}, '%')
+                </when>
+            </choose>
         </if>
-        order by reg_dt desc
+        order by grp_code desc
     </select>
 
     <select id="selectListComCode" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeDetailVo">
@@ -33,6 +44,9 @@
             , code_nm1
             , code_nm2
             , code_nm3
+            , (case when #{lang} = 'lng_type2' then code_nm2
+                     else code_nm1
+              end) code_nm
             , grp_code
             , use_yn
             , ord
@@ -46,7 +60,17 @@
         <if test="codeId != null and codeId != ''">
             and code_id like concat('%', #{codeId}, '%')
         </if>
-        order by reg_dt desc
+        <if test="codeNm != null and codeNm != ''">
+            <choose>
+                <when test="lang == 'lng_type1'">
+                    and code_nm1 like concat('%', #{codeNm}, '%')
+                </when>
+                <when test="lang == 'lng_type2'">
+                    and code_nm2 like concat('%', #{codeNm}, '%')
+                </when>
+            </choose>
+        </if>
+        order by reg_dt desc, ord asc
     </select>
 
     <select id="selectGrpCode" parameterType="java.lang.Integer" resultType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeVo">
@@ -166,7 +190,7 @@
         /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.comCode.repository.ComCodeMapper.updateComCode */
         update com_code_detail
         set
-            code_nm1 = #{codeNm1}
+              code_nm1 = #{codeNm1}
             , code_nm2 = #{codeNm2}
             , code_nm3 = #{codeNm3}
             , grp_code = #{grpCode}
@@ -178,7 +202,7 @@
         WHERE code_id = #{codeId}
     </update>
 
-    <delete id="deleteGrpCode" parameterType="java.lang.Integer">
+    <delete id="deleteGrpCode" parameterType="java.lang.Long">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.comCode.repository.ComCodeMapper.deleteGrpCode */
         delete from com_code
         where grp_code = #{grpCode}
@@ -190,11 +214,4 @@
         where code_id = #{codeId}
     </delete>
 
-    <select id="existCodeIdInGrp" parameterType="java.lang.Integer" resultType="boolean">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.comCode.repository.ComCodeMapper.existCodeIdInGrp */
-        select exists (
-            select 1 from com_code_detail
-            where grp_code = #{id}
-        )
-    </select>
 </mapper>

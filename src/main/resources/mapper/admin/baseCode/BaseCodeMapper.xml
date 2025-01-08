@@ -44,7 +44,7 @@
         )
         values (
               #{codeId}
-            , #{codeKind}
+            , 'age' -- 대별코드 code_kind?
             , #{codeNm}
             , #{bgDt}
             , #{edDt}

@@ -28,13 +28,9 @@ public class AuthUserServiceImpl implements AuthUserService {
 
     @Override
     public AuthUserVo createAuthUser(AuthUserVo authUserVo) {
-        String[] userIds = authUserVo.getUserIds();
-        Long authId = authUserVo.getAuthId();
 
-        for(String userId : userIds) {
-                authUserMapper.createAuthUser(AuthUserVo.builder().authId(authId).userId(userId).build());
-        }
         authUserMapper.createAuthUser(authUserVo);
+
         return authUserVo;
     }
 
