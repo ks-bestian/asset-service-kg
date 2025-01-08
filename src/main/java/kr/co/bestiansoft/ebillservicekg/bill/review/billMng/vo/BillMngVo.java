@@ -2,7 +2,9 @@ package kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
+import kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo;
 import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
 
@@ -52,8 +54,19 @@ public class BillMngVo extends ComDefaultVO {
     private String billTy;
     // 법률아이디
     private Long lawId;
-    // 철회 사유
-    private String wtCn;
+    // 철회 사유-키르
+    private String wtCnKg;
+    // 철회 사유-러시아
+    private String wtCnRu;
+    
+    // 비고
+    private String etcKg;
+    private String etcRu;
+    
+    //사회토론접수번호
+    private String sclDscRcpNmb;
+    //정부제출전자문서번호
+    private String gvrnSbmsElctDcmnNmbr;
     
     // 목록 검색용 : 넘버링
     private String num; 
@@ -65,12 +78,7 @@ public class BillMngVo extends ComDefaultVO {
     // 위원회 심사 차수
     private String cmtCnt;
     
-    
-
-    
+    private List<ProposerVo> proposerList;
 
 
-
-
-    
 }

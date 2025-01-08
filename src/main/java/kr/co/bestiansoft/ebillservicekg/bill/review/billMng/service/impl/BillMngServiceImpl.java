@@ -11,7 +11,10 @@ import kr.co.bestiansoft.ebillservicekg.bill.review.billAll.service.BillAllServi
 import kr.co.bestiansoft.ebillservicekg.bill.review.billAll.vo.BillAllVo;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.service.BillMngService;
+import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngResponse;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo;
+import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.ProcessVo;
+import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.ProposerVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,15 +34,41 @@ public class BillMngServiceImpl implements BillMngService {
     }
 
     @Override
-    public BillMngVo getBillById(String billId) {
-    	BillMngVo dto = billMngMapper.getBillById(billId);
-        return dto;
+    public BillMngResponse getBillById(HashMap<String, Object> param) {
+    	
+    	BillMngVo dto = billMngMapper.getBillById(param);
+    	List<ProposerVo> proposerList = billMngMapper.selectProposerMemberList(param);
+    	List<BillMngVo> cmtList = billMngMapper.selectCmtList(param);
+    	
+    	BillMngResponse billMngResponse = new BillMngResponse(dto, proposerList, cmtList);
+    	
+        return billMngResponse;
     }
 
     @Transactional
 	@Override
 	public BillMngVo createBill(BillMngVo billMngVo) {
     	billMngMapper.insertBill(billMngVo);
+        for (ProposerVo proposerVo : billMngVo.getProposerList()) {
+        	billMngMapper.insertProposers(proposerVo);
+        }
+        
+        //=========================================================
+        /*
+        ProcessVo processVo = new ProcessVo();
+        processVo.setBillId(billMngVo.getBillId());
+        processVo.setProcId(billMngVo.getBillId()); 
+        
+        processVo.setReqUsrId("admin");
+        processVo.setReqAuthId(0L);
+        processVo.setReqDeptId("");
+        processVo.setProcKindCd("");
+        billMngMapper.insertProcess(processVo);
+        */
+        //=========================================================
+        
+        
+        
     	return billMngVo;
 	}
 }
