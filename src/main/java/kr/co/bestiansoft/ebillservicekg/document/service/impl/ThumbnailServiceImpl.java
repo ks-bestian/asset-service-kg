@@ -32,7 +32,7 @@ import kr.co.bestiansoft.ebillservicekg.common.file.service.impl.EDVHelper;
 import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
 import kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper;
 import kr.co.bestiansoft.ebillservicekg.document.service.ThumbnailService;
-import kr.co.bestiansoft.ebillservicekg.document.vo.DeptFileVo;
+import kr.co.bestiansoft.ebillservicekg.document.vo.FileVo;
 
 @Service
 public class ThumbnailServiceImpl implements ThumbnailService {
@@ -182,7 +182,7 @@ public class ThumbnailServiceImpl implements ThumbnailService {
 				}
 				is.close();
 				
-				DeptFileVo vo = new DeptFileVo();
+				FileVo vo = new FileVo();
 				vo.setFileId(fileId);
 				vo.setThumbnail(thumbnailFileId);
 				fileMapper.updateThumbnail(vo);

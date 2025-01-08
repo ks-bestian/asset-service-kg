@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import kr.co.bestiansoft.ebillservicekg.admin.bbs.service.BoardService;
 import kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
-import kr.co.bestiansoft.ebillservicekg.document.vo.DeptFileVo;
+import kr.co.bestiansoft.ebillservicekg.document.vo.FileVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

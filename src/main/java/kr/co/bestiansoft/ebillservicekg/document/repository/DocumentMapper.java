@@ -4,29 +4,27 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import kr.co.bestiansoft.ebillservicekg.document.vo.DeptFileVo;
-import kr.co.bestiansoft.ebillservicekg.document.vo.DeptFolderVo;
+import kr.co.bestiansoft.ebillservicekg.document.vo.FileVo;
+import kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo;
 
 @Mapper
 public interface DocumentMapper {
-    int insertDeptFolder(DeptFolderVo vo);
-    int updateDeptFolder(DeptFolderVo vo);
-    void deleteDeptFolder(Long folderId);
-    List<DeptFolderVo> selectDeptFolderListAll(DeptFolderVo vo);
-    List<DeptFolderVo> selectDeptFolderList(DeptFolderVo vo);
+    int insertFolder(FolderVo vo);
+    int updateFolder(FolderVo vo);
+    void deleteFolder(Long folderId);
+    List<FolderVo> selectDeptFolderListAll(FolderVo vo);
+    List<FolderVo> selectDeptFolderList(FolderVo vo);
 
-    int insertDeptFile(DeptFileVo vo);
-    int insertFileGroup(DeptFileVo vo);
-    int updateFileGroup(DeptFileVo vo);
-    int updateThumbnail(DeptFileVo vo);
-    int updateDeptFileByFileId(DeptFileVo vo);
-    int updateDeptFileByFileGroupId(DeptFileVo vo);
-    void deleteDeptFile(String fileId);
-    List<DeptFileVo> selectDeptFileList(DeptFileVo vo);
-    List<DeptFileVo> selectDeptFileGroup(DeptFileVo vo);
-    DeptFileVo selectDeptFile(String fileId);
+    int insertFile(FileVo vo);
+    int updateThumbnail(FileVo vo);
+    int updateFileByFileId(FileVo vo);
+    int updateFileByFileGroupId(FileVo vo);
+    void deleteFile(String fileId);
+    List<FileVo> selectDeptFileList(FileVo vo);
+    List<FileVo> selectFileGroup(FileVo vo);
+    FileVo selectFile(String fileId);
     
-    int insertFavorite(DeptFileVo vo);
-    int updateFavorite(DeptFileVo vo);
-    int saveFavorite(DeptFileVo vo);
+    int insertFavorite(FileVo vo);
+    int updateFavorite(FileVo vo);
+    int saveFavorite(FileVo vo);
 }

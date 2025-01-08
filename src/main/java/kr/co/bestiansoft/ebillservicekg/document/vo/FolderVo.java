@@ -4,7 +4,7 @@ import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
 
 @Data
-public class DeptFolderVo extends ComDefaultVO {
+public class FolderVo extends ComDefaultVO {
 
 	private Long folderId;
     private String folderNm;
@@ -14,5 +14,8 @@ public class DeptFolderVo extends ComDefaultVO {
     private String delYn;
     
     private String title;
-    private String regNm;    
+    private String regNm;
+    
+    private String deptFolderYn;
+    private String userId;
 }
