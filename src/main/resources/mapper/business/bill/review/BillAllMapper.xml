@@ -35,16 +35,14 @@
 		    , em.gvrn_trsf_dt           -- 정부 이송일
 		    , em.prmg_dt                -- 공포일자
 		    , em.prmg_no                -- 공포 번호
-		    , em.smr_cn                 -- 요약 내용
-		    , em.bill_ty                -- 제개정 타입
-		    , em.law_id                 -- 법률 아이디
-		    , em.wt_cn                  -- 철회 사유
 		    , em.reg_id                 -- 등록자 아이디
 		    , em.reg_dt                 -- 등록 일자
 		    , em.mod_id                 -- 수정자 아이디
 		    , em.mod_dt                 -- 수정 일자
+		    , em.etc_kg                 -- 비고 - kg
+		    , em.etc_ru                 -- 비고 - ru
 		FROM ebs_master em        
-		LEFT OUTER JOIN com_code cc ON (em.stat_cd = cc.code_id and cc.grp_code = 'STGRP')
+		LEFT OUTER JOIN com_code_detail cc ON (em.stat_cd = cc.code_id)
 		WHERE 1=1     -- 내/외부, 접수 구분 뭔지 물어보고 추가해야함.
 	    <if test="searchBillName != null and searchBillName != ''">
 	    	AND (em.bill_name_kg like CONCAT('%', #{searchBillName}, '%') OR em.bill_name_ru like CONCAT('%', #{searchBillName}, '%'))   -- 의안명 검색,키르어,러시아어 별로 검색 규틱 어찌할지.일단 prefix로 search 붙일 예정. 
@@ -86,7 +84,8 @@
 		    , gvrn_trsf_dt           -- 정부 이송일
 		    , prmg_dt                -- 공포일자
 		    , prmg_no                -- 공포 번호
-		    , smr_cn                 -- 요약 내용
+		    , etc_kg                 -- 비고 - kg
+		    , etc_ru                 -- 비고 - ru
 		    , bill_ty                -- 제개정 타입
 		    , law_id                 -- 법률 아이디
 		    , wt_cn                  -- 철회 사유

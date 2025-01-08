@@ -2,7 +2,11 @@ package kr.co.bestiansoft.ebillservicekg.common.file.service.impl;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,8 +24,11 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Service
 public class ComFileServiceImpl implements ComFileService {
+	
+	private static final Logger logger = LoggerFactory.getLogger(ComFileServiceImpl.class);
     private final EDVHelper edv;
     private final ComFileMapper fileMapper;
+	private final ExecutorService executorService;
 
 	@Override
 	public String saveFile(MultipartFile[] files) {
@@ -63,5 +70,39 @@ public class ComFileServiceImpl implements ComFileService {
 	public ComFileVo getFile(String fileId) {
 		return fileMapper.findByFileId(fileId);
 	}
+	
+	@Override
+	public void batchFileDelete() {
+		List<ComFileVo> fileList = fileMapper.batchGetDeleteFileList();
+		for(ComFileVo file : fileList) {
+			executorService.submit(new FileDeleteTask(file.getFileId()));
+		}
+	}
+
+
+	private class FileDeleteTask implements Callable<String> {
+
+        private String fileId;
+
+        public FileDeleteTask(String fileId) {
+            this.fileId = fileId;
+        }
+
+        @Override
+        public String call() {
+
+    		try {
+            	edv.delete(this.fileId);
+            	
+            	fileMapper.deleteServerFile(this.fileId);
+            	logger.info("Success to delete file edv: {}", this.fileId);
+                return "SUCCESS";
+            } catch (Exception e) {
+            	logger.error("Failed to delete file edv: {}", this.fileId , e);
+            	return "FAIL";
+            }
+        }
+
+    }
     
 }
