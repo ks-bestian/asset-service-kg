@@ -14,4 +14,5 @@ public interface MemberMapper {
     int insertMember(MemberVo memberVo);
     int updateMember(MemberVo memberVo);
     void deleteMember(String memberId);
+	List<MemberVo> selectListMemberByPoly(HashMap<String, Object> param);
 }

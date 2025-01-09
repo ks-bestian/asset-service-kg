@@ -47,4 +47,9 @@ public class MemberServiceImpl implements MemberService {
     public void deleteMember(String memberId) {
         memberMapper.deleteMember(memberId);
     }
+
+	@Override
+	public List<MemberVo> getMemberByPoly(HashMap<String, Object> param) {
+		return memberMapper.selectListMemberByPoly(param);
+	}
 }

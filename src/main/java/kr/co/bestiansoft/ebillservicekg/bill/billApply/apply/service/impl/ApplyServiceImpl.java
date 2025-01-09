@@ -63,7 +63,7 @@ public class ApplyServiceImpl implements ApplyService {
 	@Override
 	public List<ApplyVo> getApplyList(HashMap<String, Object> param) {
 		// TODO :: 대수 검색조건 설정 필요(현재 14로 하드코딩)
-		return applyMapper.getApplyList(param);
+		return applyMapper.selectListApply(param);
 	}
 
 	@Transactional

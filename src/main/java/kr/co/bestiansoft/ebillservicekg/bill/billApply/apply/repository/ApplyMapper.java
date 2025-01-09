@@ -12,7 +12,7 @@ public interface ApplyMapper {
 
 	int insertApplyBill(ApplyVo applyVo);
 
-	List<ApplyVo> getApplyList(HashMap<String, Object> param);
+	List<ApplyVo> selectListApply(HashMap<String, Object> param);
 
 	int updateApplyByBillId(ApplyVo applyVo);
 
