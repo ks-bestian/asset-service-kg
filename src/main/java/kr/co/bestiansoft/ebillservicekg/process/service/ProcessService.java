@@ -5,10 +5,9 @@ import kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo;
 public interface ProcessService {
 
 
-	ProcessVo makeProcessEbs(ProcessVo vo);
 
 
-	void testProcess() throws Exception;
+	ProcessVo testProcess(ProcessVo argVo) throws Exception;
 
 
 }

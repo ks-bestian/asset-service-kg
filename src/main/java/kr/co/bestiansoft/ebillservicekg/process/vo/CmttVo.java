@@ -7,7 +7,7 @@ import lombok.Data;
 public class CmttVo extends ComDefaultVO {
 
 	private String billId;
-	private String cmttId;
-	private String cmttType;
+	private String cmtId;
+	private String cmtType;
 
 }

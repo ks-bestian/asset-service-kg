@@ -122,7 +122,7 @@
             <version>0.11.5</version>
             <scope>runtime</scope>
         </dependency>
-        
+
         <!-- jcr -->
         <dependency>
             <groupId>javax.jcr</groupId>
@@ -140,7 +140,7 @@
             <artifactId>jackrabbit-jcr-rmi</artifactId>
             <version>2.21.14</version>
         </dependency>
-        
+
         <!-- thumbnail -->
         <dependency>
 		    <groupId>org.apache.pdfbox</groupId>
@@ -153,7 +153,7 @@
 			<artifactId>imgscalr-lib</artifactId>
 			<version>4.2</version>
 		</dependency>
-		
+
 		<dependency>
             <groupId>com.aspose</groupId>
             <artifactId>aspose-words</artifactId>
@@ -161,7 +161,7 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/aspose-words-22.10.jar</systemPath>
         </dependency>
-        
+
         <dependency>
             <groupId>com.aspose</groupId>
             <artifactId>aspose-slides</artifactId>
@@ -169,7 +169,7 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/aspose-slides-22.9.jar</systemPath>
         </dependency>
-        
+
         <dependency>
             <groupId>com.aspose</groupId>
             <artifactId>aspose-cells</artifactId>
@@ -177,13 +177,20 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/aspose-cells-22.10.jar</systemPath>
         </dependency>
-        
+
         <!-- https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc -->
 		<dependency>
 		    <groupId>com.microsoft.sqlserver</groupId>
 		    <artifactId>mssql-jdbc</artifactId>
 		    <version>9.4.1.jre8</version>
 		</dependency>
+
+<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+<dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-lang3</artifactId>
+    <version>3.0</version>
+</dependency>
 
 
     </dependencies>

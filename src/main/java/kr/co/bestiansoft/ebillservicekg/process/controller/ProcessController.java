@@ -27,23 +27,12 @@ public class ProcessController {
 
 	private final ProcessService rocessService;
 
-    @ApiOperation(value = "process test", notes = "process test")
-    @PostMapping("/process/exe")
-    public ResponseEntity<CommonResponse> makeProcessEbs(@RequestBody ProcessVo vo) {
-
-    	ProcessVo returnVo = rocessService.makeProcessEbs(vo);
-
-    	return new ResponseEntity<>(new CommonResponse(200, "OK", returnVo), HttpStatus.OK);
-    }
-
 
     @ApiOperation(value = "process test", notes = "process test")
     @PostMapping("/testprocess/exe")
     public ResponseEntity<CommonResponse> testProcess(@RequestBody ProcessVo vo) throws Exception {
 
-    	ProcessVo returnVo = new ProcessVo();
-
-    	rocessService.testProcess();
+    	ProcessVo returnVo = rocessService.testProcess(vo);
 
     	return new ResponseEntity<>(new CommonResponse(200, "OK", returnVo), HttpStatus.OK);
     }

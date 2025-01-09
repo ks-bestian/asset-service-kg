@@ -9,34 +9,48 @@ import kr.co.bestiansoft.ebillservicekg.process.vo.AuthConstants;
 import kr.co.bestiansoft.ebillservicekg.process.vo.CmttVo;
 import kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Component
 @RequiredArgsConstructor
 public class ProcessHandler {
 
 	private final ProcessMapper processMapper;
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(ProcessController.class);
 
 	public ProcessVo createProcess(ProcessVo processVo) throws Exception {
 
-		processVo.setBpDfId("1");//일단은 하나로 설정 여러개라면 안건유형에 따라서
-		processVo.setStatus("P");//진행중
-		processVo.setCurrentStepId("0");
-		
-		processMapper.insertBpInstance(processVo);
+		if("0".equals(processVo.getStepId())) {
 
-		List<ProcessVo> steps = processMapper.selectListBpStep(processVo);//전체 스텝가져오기
-		ProcessVo pStepVo = null;
-		for(ProcessVo vo: steps) {
+			processVo.setBpDfId("1");//일단은 하나로 설정 여러개라면 안건유형에 따라서
+			processVo.setStatus("P");//진행중
+			processVo.setCurrentStepId("0");
+			processMapper.insertBpInstance(processVo);
 
-			if(vo.getStepId().equals(processVo.getStepId())) {
-				pStepVo = vo;
-			}
 		}
-		pStepVo.setBpInstanceId(processVo.getBpInstanceId());
-		executeServiceTasks(pStepVo);
 
-		return processVo;
+//		List<ProcessVo> steps = processMapper.selectListBpStep(processVo);//전체 스텝가져오기 by billId
+//		ProcessVo pStepVo = null;
+//		for(ProcessVo vo: steps) {
+//			if(vo.getStepId().equals(processVo.getStepId())) {
+//				pStepVo = vo;
+//				break;
+//			}
+//		}
+
+		ProcessVo stepVo = processMapper.selectBpStep(processVo);
+
+		stepVo.setBpInstanceId(stepVo.getBpInstanceId());
+		stepVo.setBillId(stepVo.getBillId());
+		executeServiceTasks(stepVo);
+
+		ProcessVo currentStepVo = new ProcessVo();
+		currentStepVo.setBpInstanceId(stepVo.getBpInstanceId());
+		currentStepVo.setCurrentStepId(stepVo.getStepId());
+		processMapper.updateBpInstanceCurrentStep(currentStepVo);
+
+		return stepVo;
     }
 
 	public void executeServiceTasks(ProcessVo argVo) throws Exception {
@@ -67,8 +81,85 @@ public class ProcessHandler {
 	        	executeService_1400(argVo);
 	            break;
 
+	        case "1500":
+	        	executeService_1500(argVo);
+	            break;
 
+	        case "1600":
+	        	executeService_1600(argVo);
+	            break;
 
+	        case "1700":
+	        	executeService_1700(argVo);
+	            break;
+
+	        case "1800":
+	        	executeService_1800(argVo);
+	            break;
+
+	        case "1900":
+	        	executeService_1900(argVo);
+	            break;
+
+	        case "2000":
+	        	executeService_2000(argVo);
+	            break;
+
+	        case "2100":
+	        	executeService_2100(argVo);
+	            break;
+
+	        case "2200":
+	        	executeService_2200(argVo);
+	            break;
+
+	        case "2300":
+	        	executeService_2300(argVo);
+	            break;
+
+	        case "2400":
+	        	executeService_2400(argVo);
+	            break;
+
+	        case "2500":
+	        	executeService_2500(argVo);
+	            break;
+
+	        case "2600":
+	        	executeService_2600(argVo);
+	            break;
+
+	        case "2700":
+	        	executeService_2700(argVo);
+	            break;
+
+	        case "2800":
+	        	executeService_2800(argVo);
+	            break;
+
+	        case "2900":
+	        	executeService_2900(argVo);
+	            break;
+
+	        case "3000":
+	        	executeService_3000(argVo);
+	            break;
+
+	        case "3100":
+	        	executeService_3100(argVo);
+	            break;
+
+	        case "3200":
+	        	executeService_3200(argVo);
+	            break;
+
+	        case "3300":
+	        	executeService_3300(argVo);
+	            break;
+
+	        case "9999"://종단점
+	        	executeService_9999(argVo);
+	            break;
 
 	        default:
 	            System.out.println("Unknown stepId.");
@@ -130,6 +221,11 @@ public class ProcessHandler {
 
 			processMapper.insertBpTask(taskVo);
 
+			ProcessVo cpltVo = new ProcessVo();
+			cpltVo.setTaskId(argVo.getTaskId());
+			cpltVo.setStatus("C");
+			processMapper.updateBpTask(cpltVo);
+
 		}
 
 		/*의장접수(결재)*/
@@ -178,7 +274,7 @@ public class ProcessHandler {
 			taskVo.setStepId(argVo.getStepId());
 			taskVo.setTaskNm("1차위원회 회의결과등록");
 			taskVo.setStatus("P");
-			taskVo.setAssignedTo(cmttVo.getCmttId());//위원회 할당
+			taskVo.setAssignedTo(cmttVo.getCmtId());//위원회 할당
 			processMapper.insertBpTask(taskVo);
 
 		}
@@ -195,7 +291,7 @@ public class ProcessHandler {
 			taskVo.setStepId(argVo.getStepId());
 			taskVo.setTaskNm("1차위원회 회의심사보고");
 			taskVo.setStatus("P");
-			taskVo.setAssignedTo(cmttVo.getCmttId());//위원회 할당
+			taskVo.setAssignedTo(cmttVo.getCmtId());//위원회 할당
 			processMapper.insertBpTask(taskVo);
 
 		}
@@ -210,7 +306,7 @@ public class ProcessHandler {
 			taskVo.setStepId(argVo.getStepId());
 			taskVo.setTaskNm("1차본회의 심사요청");
 			taskVo.setStatus("C");
-			taskVo.setAssignedTo(cmttVo.getCmttId());//위원회 할당
+			taskVo.setAssignedTo(cmttVo.getCmtId());//위원회 할당
 			processMapper.insertBpTask(taskVo);
 
 		}
@@ -227,7 +323,7 @@ public class ProcessHandler {
 			taskVo.setStepId(argVo.getStepId());
 			taskVo.setTaskNm("본회의 심사요청");
 			taskVo.setStatus("P");
-			taskVo.setAssignedTo(cmttVo.getCmttId());//위원회 할당
+			taskVo.setAssignedTo(cmttVo.getCmtId());//위원회 할당
 			processMapper.insertBpTask(taskVo);
 
 		}
@@ -263,7 +359,7 @@ public class ProcessHandler {
 
 			taskVo.setTaskNm("소관위 심사보고서");
 			taskVo.setStatus("P");
-			taskVo.setAssignedTo(cmttVo.getCmttId());//위원회 할당
+			taskVo.setAssignedTo(cmttVo.getCmtId());//위원회 할당
 			processMapper.insertBpTask(taskVo);
 
 			taskVo.setTaskNm("의장검토");
