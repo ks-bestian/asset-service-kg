@@ -2,6 +2,8 @@ package kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
 
@@ -56,7 +58,9 @@ public class ApplyVo extends ComDefaultVO {
 	private String regDate;
 	//아이디
 	private String memberId;
-	
+
+	//파일
+    private MultipartFile[] files;
 	
 	
 }
