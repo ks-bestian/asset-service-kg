@@ -52,4 +52,10 @@ public class MemberController {
         return new ResponseEntity<>(new CommonResponse(200, "ok", "Member code deleted successfully."), HttpStatus.OK);
 
     }
+    
+    @ApiOperation(value = "정당 의원 조회", notes = "정당별 의원을 조회한다.")
+    @GetMapping("admin/poly/member")
+    public ResponseEntity<CommonResponse> getMemberByPoly(@RequestParam HashMap<String, Object> param) {
+        return new ResponseEntity<>(new CommonResponse(200, "ok", memberService.getMemberByPoly(param)), HttpStatus.OK);
+    }
 }
