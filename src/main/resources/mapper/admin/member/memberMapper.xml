@@ -141,4 +141,20 @@
         where member_id = #{memberId}
     </delete>
 
+	<select id="selectListMemberByPoly" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.admin.member.vo.MemberVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.member.repository.MemberMapper.selectListMemberByPoly */
+        select
+              member_id 	-- 국회의원아이디
+            , member_nm_kg 	-- 이름(키르키즈어)
+            , member_nm_ru 	-- 이름(러시아어)
+            , poly_cd		-- 정당코드
+            , poly_nm		-- 정당이름
+        from com_member
+        where 1=1
+        	<if test="polyCd != null and polyCd != ''"> 
+		    	and poly_cd = #{polyCd}
+       		</if>
+        order by member_nm_kg
+    </select>
 </mapper>
