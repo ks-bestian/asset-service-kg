@@ -3,15 +3,14 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper">
 
-	<insert id="insertFolder" useGeneratedKeys="true" keyProperty="folderId" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo">
-		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.FileMapper.insertFolder */
+	<insert id="insertDeptFolder" useGeneratedKeys="true" keyProperty="folderId" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.insertFolder */
 		INSERT INTO kgst.bs_folder_info (
 			  folder_nm
 			, upper_folder_id
 			, dept_cd
 			, del_yn
 			, dept_folder_yn
-			, user_id
 			, reg_dt
 			, reg_id 
 		)
@@ -20,15 +19,14 @@
 			, #{upperFolderId}
 			, #{deptCd}
 			, 'N'
-			, #{deptFolderYn}
-			, #{userId}
+			, 'Y'
 			, now()
 			, #{regId}
 		)
     </insert>
     
     <update id="updateFolder" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo">
-		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.FileMapper.updateFolder */
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.updateFolder */
 		UPDATE kgst.bs_folder_info
 		SET mod_dt = now()
 		  , mod_id = #{modId}
@@ -42,13 +40,13 @@
     </update>
     
     <delete id="deleteFolder">
-		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.FileMapper.deleteFolder */
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.deleteFolder */
 		DELETE FROM kgst.bs_folder_info
 		WHERE folder_id = #{folderId}
     </delete>
     
     <delete id="deleteFile">
-		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.FileMapper.deleteFile */
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.deleteFile */
 		DELETE FROM kgst.bs_file_info
 		WHERE file_id = #{fileId}
     </delete>
@@ -82,7 +80,7 @@
     </sql>
     
 	<select id="selectDeptFolderListAll" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo">
-		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.FileMapper.selectDeptFolderListAll */
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectDeptFolderListAll */
 		<include refid="selectFolder" />
 		where 1=1
 			and c.dept_folder_yn = 'Y'
@@ -90,7 +88,7 @@
 	</select>
 	
 	<select id="selectDeptFolderList" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo">
-		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.FileMapper.selectFolderList */
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectFolderList */
 		<include refid="selectFolder" />
 		where 1=1
 			and c.dept_folder_yn = 'Y'
@@ -105,7 +103,7 @@
 	</select>
     
     <insert id="insertFile" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo">
-		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.FileMapper.insertFile */
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.insertFile */
 		INSERT INTO kgst.bs_file_info (
 			  file_id
 			, folder_id
@@ -183,7 +181,7 @@
     </update>
     
     <select id="selectDeptFileList" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo">
-		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.FileMapper.selectFileList */
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectFileList */
 		select * from (
 			select 
 				  b.*
@@ -225,7 +223,7 @@
 	</select>
 	
 	<insert id="insertFavorite" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo">
-	/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.FileMapper.insertFavorite */		
+	/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.insertFavorite */		
     	INSERT INTO kgst.bs_favorite (
 			  file_group_id
 			, user_id
@@ -243,7 +241,7 @@
     </insert>
     
     <update id="updateFavorite" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo">
-    /* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.FileMapper.updateFavorite */
+    /* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.updateFavorite */
     	UPDATE kgst.bs_favorite
 		SET mod_dt = now()
 		  , mod_id = #{modId}
@@ -253,7 +251,7 @@
     </update>
     
     <update id="saveFavorite" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo">
-    /* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.FileMapper.saveFavorite */
+    /* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.saveFavorite */
     	INSERT INTO kgst.bs_favorite (
 			  file_group_id
 			, user_id
@@ -298,7 +296,7 @@
     </sql>
     
     <select id="selectFile" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo">
-    	/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.FileMapper.selectFile */
+    	/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectFile */
 		select 
 			<include refid="fileColumns"></include>
 		from kgst.bs_file_info a
@@ -306,7 +304,7 @@
     </select>
     
     <select id="selectFileGroup" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo">
-		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.FileMapper.selectFileGroup */
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectFileGroup */
 		select 
 			  <include refid="fileColumns"></include>
 			, b.file_group_nm

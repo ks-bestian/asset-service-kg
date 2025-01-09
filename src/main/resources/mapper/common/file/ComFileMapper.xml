@@ -77,5 +77,55 @@
 		/* QueryID : kr.co.bestiansoft.ebillservicekg.common.file.repository.FileMapper.deleteServerFile */
 		delete from com_file where file_id = #{fileId} 
 	</delete>
+	
+	<insert id="insertFileEbs" parameterType="kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.common.file.repository.FileMapper.insertFileEbs */
+		insert into kgst.ebs_file (
+			  bill_id
+			, file_kind_cd
+			, org_file_id
+			, org_file_nm
+			, pdf_file_id
+			, pdf_file_nm
+			, rmk
+			, opb_yn
+			, delete_yn
+			, file_size
+			, reg_id
+			, reg_dt
+		)
+		values (
+			  #{billId}
+			, #{fileKindCd}
+			, #{orgFileId}
+			, #{orgFileNm}
+			, #{pdfFileId}
+			, #{pdfFileNm}
+			, #{rmk}
+			, #{opbYn}
+			, 'N'
+			, #{fileSize}
+			, #{regId}
+			, now()
+		)
+    </insert>
+    
+    <update id="updateFileEbs" parameterType="kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.common.file.repository.FileMapper.updateFileEbs */
+		update kgst.ebs_file
+		SET mod_dt = now()
+		  , mod_id = #{modId}
+		  <if test="billId != null"> , bill_id = #{billId} </if>
+		  <if test="fileKindCd != null"> , file_kind_cd = #{fileKindCd} </if>
+		  <if test="orgFileNm != null"> , org_file_nm = #{orgFileNm} </if>
+		  <if test="pdfFileId != null"> , pdf_file_id = #{pdfFileId} </if>
+		  <if test="pdfFileNm != null"> , pdf_file_nm = #{pdfFileNm} </if>
+		  <if test="rmk != null"> , rmk = #{rmk} </if>
+		  <if test="opbYn != null"> , opb_yn = #{opbYn} </if>
+		  <if test="deleteYn != null"> , delete_yn = #{deleteYn} </if>
+		  <if test="fileSize != null"> , file_size = #{fileSize} </if>
+		where
+			org_file_id = #{orgFileId};
+    </update>
     
 </mapper>

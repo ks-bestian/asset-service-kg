@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import kr.co.bestiansoft.ebillservicekg.common.file.repository.ComFileMapper;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.ComFileVo;
+import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -59,6 +60,35 @@ public class ComFileServiceImpl implements ComFileService {
 			fileMapper.insertFile(fileVo);
 		}
 		return fileGroupId;
+	}
+	
+	@Override
+	public void saveFileEbs(MultipartFile[] files, String billId) {
+
+		for(MultipartFile file:files) {
+
+			String orgFileId = StringUtil.getUUUID();
+    		String orgFileNm = file.getOriginalFilename();
+
+    		////////////////////////
+			try (InputStream edvIs = file.getInputStream()){
+				edv.save(orgFileId, edvIs);
+			} catch (Exception edvEx) {
+				throw new RuntimeException("EDV_NOT_WORK", edvEx);
+			}
+    		////////////////////////
+    		//executorService.submit(new FileUploadTask(file,fileEntity));
+
+			EbsFileVo fileVo = new EbsFileVo();
+			fileVo.setBillId(billId);
+			
+			fileVo.setOrgFileId(orgFileId);
+			fileVo.setOrgFileNm(orgFileNm);
+			fileVo.setFileSize(file.getSize());
+			fileVo.setDeleteYn("N");
+			
+			fileMapper.insertFileEbs(fileVo);
+		}
 	}
 
 	@Override
