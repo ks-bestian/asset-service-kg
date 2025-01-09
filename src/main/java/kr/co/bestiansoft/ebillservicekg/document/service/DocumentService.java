@@ -7,7 +7,7 @@ import kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo;
 
 public interface DocumentService {
 
-	int insertFolder(FolderVo vo);
+	int insertDeptFolder(FolderVo vo);
 	int updateFolder(FolderVo vo);
 	int deleteFolders(List<Long> folderIds);
 	int deleteFiles(List<String> fileIds);

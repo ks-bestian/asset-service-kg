@@ -46,8 +46,8 @@ public class DocumentController {
 
     @ApiOperation(value = "부서 폴더 등록", notes = "부서 폴더 등록")
     @PostMapping("/document/dept/folders")
-    public ResponseEntity<CommonResponse> insertFolder(@RequestBody FolderVo vo) {
-    	return new ResponseEntity<>(new CommonResponse(200, "OK", fileService.insertFolder(vo)), HttpStatus.OK);
+    public ResponseEntity<CommonResponse> insertDeptFolder(@RequestBody FolderVo vo) {
+    	return new ResponseEntity<>(new CommonResponse(200, "OK", fileService.insertDeptFolder(vo)), HttpStatus.OK);
     }
     
     @ApiOperation(value = "부서 폴더 수정", notes = "부서 폴더 수정")

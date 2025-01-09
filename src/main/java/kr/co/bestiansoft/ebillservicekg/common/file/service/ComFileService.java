@@ -11,4 +11,6 @@ public interface ComFileService {
 	List<ComFileVo> getFileList(String fileGroupId);
 	ComFileVo getFile(String fileId);
 	void batchFileDelete();
+	
+	void saveFileEbs(MultipartFile[] files, String billId);
 }

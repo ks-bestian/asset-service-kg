@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import kr.co.bestiansoft.ebillservicekg.common.file.service.impl.EDVHelper;
+import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
 import kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper;
 import kr.co.bestiansoft.ebillservicekg.document.service.DocumentService;
@@ -30,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Service
 public class DocumentServiceImpl implements DocumentService {
-    private final DocumentMapper fileMapper;
+    private final DocumentMapper documentMapper;
     private final EDVHelper edv;
     private final ThumbnailService thumbnailService;
     
@@ -39,29 +40,33 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public List<FolderVo> selectDeptFolderListAll(FolderVo vo) {
-    	vo.setDeptCd(tmpDeptCd);
-        return fileMapper.selectDeptFolderListAll(vo);
+    	String deptCd = new SecurityInfoUtil().getDeptCd();
+    	vo.setDeptCd(deptCd);
+        return documentMapper.selectDeptFolderListAll(vo);
     }
     
     @Override
     public List<FolderVo> selectDeptFolderList(FolderVo vo) {
-        return fileMapper.selectDeptFolderList(vo);
+        return documentMapper.selectDeptFolderList(vo);
     }
 
     @Transactional
     @Override
-    public int insertFolder(FolderVo vo) {
+    public int insertDeptFolder(FolderVo vo) {
     	
-    	vo.setRegId(tmpUserId);
-    	vo.setDeptCd(tmpDeptCd);
-    	return fileMapper.insertFolder(vo);
+    	String userId = new SecurityInfoUtil().getAccountId();
+    	String deptCd = new SecurityInfoUtil().getDeptCd();
+    	
+    	vo.setRegId(userId);
+    	vo.setDeptCd(deptCd);
+    	return documentMapper.insertDeptFolder(vo);
     }
     
     @Transactional
     @Override
     public int updateFolder(FolderVo vo) {
     	vo.setModId(tmpUserId);
-    	return fileMapper.updateFolder(vo);
+    	return documentMapper.updateFolder(vo);
     }
     
     @Transactional
@@ -81,7 +86,7 @@ public class DocumentServiceImpl implements DocumentService {
         	vo.setFolderId(folderId);
         	vo.setDelYn("Y");
         	vo.setModId(tmpUserId);
-        	ret += fileMapper.updateFolder(vo);
+        	ret += documentMapper.updateFolder(vo);
     	}
     	return ret;
     }
@@ -95,7 +100,7 @@ public class DocumentServiceImpl implements DocumentService {
     		vo.setFileGroupId(fileGroupId);
     		vo.setDelYn("Y");
     		vo.setModId(tmpUserId);
-    		ret += fileMapper.updateFileByFileGroupId(vo);
+    		ret += documentMapper.updateFileByFileGroupId(vo);
     	}
     	return ret;
     }
@@ -117,7 +122,7 @@ public class DocumentServiceImpl implements DocumentService {
         	vo.setFolderId(folderId);
         	vo.setUpperFolderId(toFolderId);
         	vo.setModId(tmpUserId);
-        	ret += fileMapper.updateFolder(vo);
+        	ret += documentMapper.updateFolder(vo);
     	}
     	return ret;
     }
@@ -131,7 +136,7 @@ public class DocumentServiceImpl implements DocumentService {
     		vo.setFileGroupId(fileGroupId);
     		vo.setFolderId(toFolderId);
     		vo.setModId(tmpUserId);
-    		ret += fileMapper.updateFileByFileGroupId(vo);
+    		ret += documentMapper.updateFileByFileGroupId(vo);
     	}
     	return ret;
     }
@@ -140,7 +145,7 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     public void removeFiles(List<String> fileIds) throws Exception {
     	for(String fileId : fileIds) {
-    		fileMapper.deleteFile(fileId);
+    		documentMapper.deleteFile(fileId);
     		edv.delete(fileId);
     	}
     }
@@ -208,7 +213,7 @@ public class DocumentServiceImpl implements DocumentService {
 //    		}
 //    		vo.setThumbnail(thumbnailFileId);
 //    	}
-//    	fileMapper.insertFileGroup(vo);
+//    	documentMapper.insertFileGroup(vo);
 //    	
 //    	int ret = uploadFile(vo);
 //    	
@@ -216,7 +221,7 @@ public class DocumentServiceImpl implements DocumentService {
 //		String favoriteYn = vo.getFavoriteYn();
 //		if("Y".equals(favoriteYn)) {
 //			vo.setUserId(tmpUserId);
-//			fileMapper.saveFavorite(vo);	
+//			documentMapper.saveFavorite(vo);	
 //		}
 //		
 //		return ret;
@@ -237,8 +242,8 @@ public class DocumentServiceImpl implements DocumentService {
 			upperFolderId = createFolder(pre_path, map);
 		}
 		String folderNm = path.substring(idx + 1);
-		String userId = tmpUserId;
-		String deptCd = "1234";
+		String userId = new SecurityInfoUtil().getAccountId();
+    	String deptCd = new SecurityInfoUtil().getDeptCd();
 		
 		FolderVo folderVo = new FolderVo();
 		folderVo.setFolderNm(folderNm);
@@ -246,7 +251,7 @@ public class DocumentServiceImpl implements DocumentService {
 		folderVo.setDeptCd(deptCd);
 		folderVo.setUpperFolderId(upperFolderId);
 		
-		insertFolder(folderVo);
+		insertDeptFolder(folderVo);
 		
 		map.put(path, folderVo.getFolderId());
 		return folderVo.getFolderId();
@@ -321,7 +326,7 @@ public class DocumentServiceImpl implements DocumentService {
 		fileVo.setFolderId(folderId);
 		fileVo.setDeptCd(deptCd);
 		
-		int ret = fileMapper.insertFile(fileVo);
+		int ret = documentMapper.insertFile(fileVo);
 		
 		//중요여부 저장(묶음업로드 아닌경우)
 		if("N".equals(groupYn)) {
@@ -329,7 +334,7 @@ public class DocumentServiceImpl implements DocumentService {
 			if("Y".equals(favoriteYn)) {
 				fileVo.setUserId(tmpUserId);
 				fileVo.setFavoriteYn(favoriteYn);
-				fileMapper.saveFavorite(fileVo);	
+				documentMapper.saveFavorite(fileVo);	
 			}	
 		}
 		
@@ -339,27 +344,27 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     public List<FileVo> selectDeptFileList(FileVo vo) {
     	vo.setUserId(tmpUserId);
-    	return fileMapper.selectDeptFileList(vo);
+    	return documentMapper.selectDeptFileList(vo);
     }
     
     @Override
     public List<FileVo> selectFileGroup(FileVo vo) {
     	vo.setUserId(tmpUserId);
-    	return fileMapper.selectFileGroup(vo);
+    	return documentMapper.selectFileGroup(vo);
     }
     
     @Transactional
     @Override
     public int updateFile(FileVo vo) {
     	vo.setModId(tmpUserId);
-    	int ret = fileMapper.updateFileByFileId(vo);
+    	int ret = documentMapper.updateFileByFileId(vo);
     	
-    	String fileGroupId = fileMapper.selectFile(vo.getFileId()).getFileGroupId();
+    	String fileGroupId = documentMapper.selectFile(vo.getFileId()).getFileGroupId();
     	vo.setFileGroupId(fileGroupId);
     	vo.setUserId(tmpUserId);
     	vo.setRegId(tmpUserId);
     	vo.setModId(tmpUserId);
-    	fileMapper.saveFavorite(vo);
+    	documentMapper.saveFavorite(vo);
     	return ret;
     }
     
@@ -384,7 +389,7 @@ public class DocumentServiceImpl implements DocumentService {
 //    	}
 //    	
 //    	// update file group name
-//    	int ret = fileMapper.updateFileGroup(vo);
+//    	int ret = documentMapper.updateFileGroup(vo);
 //    	
 //    	// remove files from file group
 //    	removeFiles(vo.getDelFileIds());
@@ -392,7 +397,7 @@ public class DocumentServiceImpl implements DocumentService {
 //    	// add files to file group
 //    	MultipartFile[] files = vo.getAddFiles();
 //    	if(files != null) {
-//    		List<FileVo> groupFiles = fileMapper.selectFileGroup(vo);
+//    		List<FileVo> groupFiles = documentMapper.selectFileGroup(vo);
 //        	assert(!groupFiles.isEmpty());
 //        	Long folderId = groupFiles.get(0).getFolderId();
 //        	vo.setFolderId(folderId);
@@ -405,7 +410,7 @@ public class DocumentServiceImpl implements DocumentService {
 //    	
 //    	// save favoriteYn
 //		vo.setUserId(tmpUserId);
-//    	fileMapper.saveFavorite(vo);
+//    	documentMapper.saveFavorite(vo);
 //    	
 //    	return ret;
 //    }

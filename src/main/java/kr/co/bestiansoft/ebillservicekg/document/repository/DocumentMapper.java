@@ -9,7 +9,7 @@ import kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo;
 
 @Mapper
 public interface DocumentMapper {
-    int insertFolder(FolderVo vo);
+    int insertDeptFolder(FolderVo vo);
     int updateFolder(FolderVo vo);
     void deleteFolder(Long folderId);
     List<FolderVo> selectDeptFolderListAll(FolderVo vo);
