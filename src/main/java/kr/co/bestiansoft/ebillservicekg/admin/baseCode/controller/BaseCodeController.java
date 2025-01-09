@@ -42,12 +42,14 @@ public class BaseCodeController {
     @ApiOperation(value = "대별코드 수정", notes = "대별코드를 수정한다.")
     @PutMapping(value = "/admin/baseCode")
     public ResponseEntity<CommonResponse> updateBoard(@RequestBody BaseCodeVo baseCodeVo) {
+        System.out.println(baseCodeVo.getCodeNm());
+        System.out.println("!33");
         return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "BaseCode updated successfully", basecodeService.updateBaseCode(baseCodeVo)), HttpStatus.CREATED);
     }
 
     @ApiOperation(value = "대별코드 삭제", notes = "대별코드를 삭제한다.")
     @DeleteMapping("/admin/baseCode")
-    public ResponseEntity<CommonResponse> deleteBoard(@RequestBody List<Long> ids) {
+    public ResponseEntity<CommonResponse> deleteBoard(@RequestBody List<String> ids) {
         basecodeService.deleteBaseCode(ids);
         return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "OK", "BaseCode deleted successfully"), HttpStatus.OK);
     }

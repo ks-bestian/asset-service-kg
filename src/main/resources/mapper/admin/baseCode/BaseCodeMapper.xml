@@ -72,13 +72,13 @@
             , use_yn = #{useYn}
             , curr_yn = #{currYn}
             , mod_id = #{modId}
-            , mod_dt = #{modDt}
+            , mod_dt = now()
         where seq = #{seq}
     </update>
 
-    <delete id="deleteBaseCode" parameterType="java.lang.Long">
+    <delete id="deleteBaseCode" parameterType="java.lang.String">
         delete from ebs_base_code
-        where seq = #{seq}
+        where code_id = #{codeId}
     </delete>
 
     <select id="selectBaseCode" parameterType="java.lang.Long" resultType="kr.co.bestiansoft.ebillservicekg.admin.baseCode.vo.BaseCodeVo">

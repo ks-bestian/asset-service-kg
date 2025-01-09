@@ -40,8 +40,8 @@ public class BaseCodeServiceImpl implements BaseCodeService {
     }
 
     @Override
-    public void deleteBaseCode(List<Long> ids) {
-        for (Long id : ids) {
+    public void deleteBaseCode(List<String> ids) {
+        for (String id : ids) {
             baseCodeMapper.deleteBaseCode(id);
         }
     }

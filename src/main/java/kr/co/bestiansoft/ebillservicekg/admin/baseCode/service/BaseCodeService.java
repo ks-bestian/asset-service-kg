@@ -10,6 +10,6 @@ public interface BaseCodeService {
     List<BaseCodeVo> getBaseCodeList(HashMap<String, Object> param);
     BaseCodeVo createBaseCode(BaseCodeVo baseCodeVo);
     int updateBaseCode(BaseCodeVo baseCodeVo);
-    void deleteBaseCode(List<Long> ids);
+    void deleteBaseCode(List<String> ids);
     BaseCodeVo getBaseCodeById(Long baseCode);
 }

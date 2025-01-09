@@ -70,8 +70,6 @@ public class ComCodeController {
     @ApiOperation(value = "코드 수정", notes = "코드를 수정한다.")
     @PutMapping(value = "/admin/comCode")
     public ResponseEntity<CommonResponse> updateComCode(@RequestBody ComCodeDetailVo comCodeDetailVo) {
-        System.out.println("!2");
-        System.out.println(comCodeDetailVo.getCodeId());
         return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "code updated successfully", comCodeService.updateComCode(comCodeDetailVo)), HttpStatus.CREATED);
     }
 

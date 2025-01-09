@@ -21,4 +21,7 @@ public class BaseCodeVo extends ComDefaultVO {
     private LocalDateTime regDt;
     private String modId;
     private LocalDateTime modDt;
+
+    private String regNm;
+    private String modNm;
 }

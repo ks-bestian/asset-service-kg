@@ -11,6 +11,6 @@ public interface BaseCodeMapper {
     List<BaseCodeVo> selectListBaseCode(HashMap<String, Object> param);
     int insertBaseCode(BaseCodeVo baseCodeVo);
     int updateBaseCode(BaseCodeVo baseCodeVo);
-    void deleteBaseCode(Long ids);
+    void deleteBaseCode(String codeId);
     BaseCodeVo selectBaseCode(Long seq);
 }
