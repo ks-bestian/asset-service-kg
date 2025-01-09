@@ -1,0 +1,36 @@
+package kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.vo;
+
+import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
+import lombok.Data;
+
+@Data
+public class AgreeVo extends ComDefaultVO {
+	
+	//등록번호(사회토론번호?)
+	private String sclDscRcpNmb;
+	//안건아이디
+	private String billId;
+	//안건이름kg
+    private String billNameKg;
+    //안건이름ru
+    private String billNameRu;
+    //제안자
+    private String ppsrNm;
+    //제안자 아이디
+    private String ppsrId;
+    //등록일
+    private String regDate;
+    //상태
+    private String statCd;
+    //동의날짜
+    private String signDate;
+    //동의여부
+    private String agreeYn;
+    //비고kg
+    private String etcKg;
+    //비고ru
+    private String etcRu;
+    //제안자 대상
+    private String proposerId;
+    
+}

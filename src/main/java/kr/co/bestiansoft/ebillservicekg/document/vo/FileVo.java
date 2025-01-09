@@ -9,7 +9,7 @@ import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
 
 @Data
-public class DeptFileVo extends ComDefaultVO {
+public class FileVo extends ComDefaultVO {
 
 	private String fileId;
 	private Long folderId;
@@ -45,4 +45,6 @@ public class DeptFileVo extends ComDefaultVO {
 	private List<String> fileGroupIds;
 	
 	private Long toFolderId;
+	
+	private String deptFileYn;
 }

@@ -3,13 +3,14 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper">
 
-	<insert id="insertDeptFolder" useGeneratedKeys="true" keyProperty="folderId" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.DeptFolderVo">
-		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.FileMapper.insertDeptFolder */
-		INSERT INTO kgst.bs_dept_folder (
+	<insert id="insertDeptFolder" useGeneratedKeys="true" keyProperty="folderId" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.insertFolder */
+		INSERT INTO kgst.bs_folder_info (
 			  folder_nm
 			, upper_folder_id
 			, dept_cd
 			, del_yn
+			, dept_folder_yn
 			, reg_dt
 			, reg_id 
 		)
@@ -18,85 +19,92 @@
 			, #{upperFolderId}
 			, #{deptCd}
 			, 'N'
+			, 'Y'
 			, now()
 			, #{regId}
 		)
     </insert>
     
-    <update id="updateDeptFolder" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.DeptFolderVo">
-		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.FileMapper.updateDeptFolder */
-		UPDATE kgst.bs_dept_folder
+    <update id="updateFolder" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.updateFolder */
+		UPDATE kgst.bs_folder_info
 		SET mod_dt = now()
 		  , mod_id = #{modId}
 		<if test="folderNm != null"> , folder_nm = #{folderNm} </if>
 		<if test="upperFolderId != null"> , upper_folder_id = #{upperFolderId} </if>
 		<if test="deptCd != null"> , dept_cd = #{deptCd} </if>
 		<if test="delYn != null"> , del_yn = #{delYn} </if>
+		<if test="deptFolderYn != null"> , dept_folder_yn = #{deptFolderYn} </if>
+		<if test="userId != null"> , user_id = #{userId} </if>
 		WHERE folder_id = #{folderId}
     </update>
     
-    <delete id="deleteDeptFolder">
-		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.FileMapper.deleteDeptFolder */
-		DELETE FROM kgst.bs_dept_folder
+    <delete id="deleteFolder">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.deleteFolder */
+		DELETE FROM kgst.bs_folder_info
 		WHERE folder_id = #{folderId}
     </delete>
     
-    <delete id="deleteDeptFile">
-		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.FileMapper.deleteDeptFile */
-		DELETE FROM kgst.bs_dept_file
+    <delete id="deleteFile">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.deleteFile */
+		DELETE FROM kgst.bs_file_info
 		WHERE file_id = #{fileId}
     </delete>
     
-    <sql id="selectDeptFolder">
+    <sql id="selectFolder">
     	select * from (
 	    	select
-				a.folder_id,
-				a.folder_nm,
-				a.upper_folder_id,
-				a.dept_cd,
-				a.del_yn,
-				a.reg_dt,
-				a.reg_id,
-				a.mod_dt,
-				a.mod_id,
-				b.folder_nm as upper_folder_nm
-	--			, (select user_nm 
-	--			from sndb.view_com_members vcm
-	--			where vcm.user_id = a.reg_id) as reg_nm
-	--			, (select user_nm 
-	--			from sndb.view_com_members vcm
-	--			where vcm.user_id = a.mod_id) as mod_nm
+				  a.folder_id
+				, a.folder_nm
+				, a.upper_folder_id
+				, a.dept_cd
+				, a.del_yn
+				, a.reg_dt
+				, a.reg_id
+				, a.mod_dt
+				, a.mod_id
+				, a.dept_folder_yn
+				, a.user_id
+				, b.folder_nm as upper_folder_nm
+				, (select user_nm_kg 
+				from kgst.view_user_member vcm
+				where vcm.user_id = a.reg_id) as reg_nm
+				, (select user_nm_kg 
+				from kgst.view_user_member vcm
+				where vcm.user_id = a.mod_id) as mod_nm
 			from
-				kgst.bs_dept_folder a
-			left outer join kgst.bs_dept_folder b
+				kgst.bs_folder_info a
+			left outer join kgst.bs_folder_info b
 				on a.upper_folder_id = b.folder_id
 		) c
     </sql>
     
-	<select id="selectDeptFolderListAll" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.DeptFolderVo">
-		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.FileMapper.selectDeptFolderListAll */
-		<include refid="selectDeptFolder" />
+	<select id="selectDeptFolderListAll" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectDeptFolderListAll */
+		<include refid="selectFolder" />
 		where 1=1
+			and c.dept_folder_yn = 'Y'
 			and c.dept_cd = #{deptCd}
 	</select>
 	
-	<select id="selectDeptFolderList" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.DeptFolderVo">
-		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.FileMapper.selectDeptFolderList */
-		<include refid="selectDeptFolder" />
+	<select id="selectDeptFolderList" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectFolderList */
+		<include refid="selectFolder" />
 		where 1=1
+			and c.dept_folder_yn = 'Y'
 			and c.dept_cd = #{deptCd}
 			and c.upper_folder_id = #{upperFolderId}
 			<if test="title != null and title != ''">
 			and c.folder_nm like '%' || #{title} || '%'
 			</if>
-<!--			<if test="regNm != null and regNm != ''">-->
-<!--			and c.reg_nm like '%' || #{regNm} || '%'-->
-<!--			</if>-->
+			<if test="regNm != null and regNm != ''">
+			and c.reg_nm like '%' || #{regNm} || '%'
+			</if>
 	</select>
     
-    <insert id="insertDeptFile" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.DeptFileVo">
-		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.FileMapper.insertDeptFile */
-		INSERT INTO kgst.bs_dept_file (
+    <insert id="insertFile" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.insertFile */
+		INSERT INTO kgst.bs_file_info (
 			  file_id
 			, folder_id
 			, file_title
@@ -110,6 +118,8 @@
 			, group_yn
 			, edv_hash_str
 			, edv_path
+			, dept_file_yn
+			, user_id
 			, reg_dt
 			, reg_id
 		)
@@ -127,40 +137,15 @@
 			, #{groupYn}
 			, #{edvHashStr}
 			, #{edvPath}
+			, #{deptFileYn}
+			, #{userId}
 			, now()
 			, #{regId}
 		)
     </insert>
     
-    <insert id="insertFileGroup" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.DeptFileVo">
-    	/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.FileMapper.insertFileGroup */
-    	INSERT INTO kgst.bs_file_group (
-			  file_group_id
-			, file_group_nm
-			, thumbnail
-			, reg_id
-			, reg_dt
-		)
-		VALUES (
-			  #{fileGroupId}
-			, #{fileGroupNm}
-			, #{thumbnail}
-			, #{regId}
-			, now()
-		)
-    </insert>
-    
-    <update id="updateFileGroup" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.DeptFileVo">
-    	UPDATE kgst.bs_file_group
-    	SET mod_dt = now()
-		  , mod_id = #{modId}
-		  <if test="fileGroupNm != null"> , file_group_nm = #{fileGroupNm} </if>
-		  <if test="thumbnail != null"> , thumbnail = #{thumbnail} </if>
-		WHERE file_group_id = #{fileGroupId}
-    </update>
-    
-    <sql id="updateDeptFile">
-    	UPDATE kgst.bs_dept_file
+    <sql id="updateFile">
+    	UPDATE kgst.bs_file_info
     	SET mod_dt = now()
 		  , mod_id = #{modId}
     	  <if test="folderId != null"> , folder_id = #{folderId} </if>
@@ -175,74 +160,70 @@
     	  <if test="groupYn != null"> , group_yn = #{groupYn} </if>
     	  <if test="edvHashStr != null"> , edv_hash_str = #{edvHashStr} </if>
     	  <if test="edvPath != null"> , edv_path = #{edvPath} </if>
+    	  <if test="deptFileYn != null"> , dept_file_yn = #{deptFileYn} </if>
+    	  <if test="userId != null"> , user_id = #{userId} </if>
     </sql>
     
-    <update id="updateThumbnail" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.DeptFileVo">
-    	UPDATE kgst.bs_dept_file
+    <update id="updateThumbnail" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo">
+    	UPDATE kgst.bs_file_info
     	SET thumbnail = #{thumbnail}
     	WHERE file_id = #{fileId}
     </update>
     
-    <update id="updateDeptFileByFileId" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.DeptFileVo">
-    	<include refid="updateDeptFile" />
+    <update id="updateFileByFileId" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo">
+    	<include refid="updateFile" />
 		WHERE file_id = #{fileId}
     </update>
     
-    <update id="updateDeptFileByFileGroupId" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.DeptFileVo">
-    	<include refid="updateDeptFile" />
+    <update id="updateFileByFileGroupId" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo">
+    	<include refid="updateFile" />
 		WHERE file_group_id = #{fileGroupId}
     </update>
     
-    <select id="selectDeptFileList" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.DeptFileVo" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.DeptFileVo">
-		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.FileMapper.selectDeptFileList */
+    <select id="selectDeptFileList" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectFileList */
 		select * from (
 			select 
-				  a.*
-				, (case when a.group_yn = 'Y' then b.file_group_nm else a.file_title end) as title
+				  b.*
+				, b.file_title as title
 				, coalesce(c.favorite_yn, 'N') as favorite_yn
 				, d.folder_nm as folder_nm
+				, (select user_nm_kg 
+				from kgst.view_user_member vcm
+				where vcm.user_id = b.reg_id) as reg_nm
+				, (select user_nm_kg 
+				from kgst.view_user_member vcm
+				where vcm.user_id = b.mod_id) as mod_nm
 			from (
-				select 
-					  file_group_id
-				    , max(folder_id) as folder_id
-				    , max(file_id) as file_id
-				    , max(file_nm) as file_nm
-					, max(file_title) as file_title
-					, sum(file_size) as file_size
-					, lower (string_agg(file_type, ',')) as file_type
-					, max(dept_cd) as dept_cd
-					, max(reg_id) as reg_id
-					, count(*) as file_group_cnt
-				    , max(group_yn) as group_yn
-				    , min(reg_dt) as reg_dt
-				    , max(mod_dt) as mod_dt
-				    , max(mod_id) as mod_id
-				from kgst.bs_dept_file
+				select
+					<include refid="fileColumns"></include>
+				from kgst.bs_file_info a
 				where 1=1
-					and del_yn = 'N'
-			    	and dept_cd = #{deptCd}
-					and folder_id = #{folderId}
-				group by file_group_id
-			) a
-			left outer join kgst.bs_file_group b
-				on a.file_group_id = b.file_group_id
+					and a.del_yn = 'N'
+			    	and (case when a.dept_file_yn = 'Y' then a.dept_cd = #{deptCd}
+						 else a.user_id = #{userId}
+						 end)
+					and a.folder_id = #{folderId}
+			) b
 			left outer join kgst.bs_favorite c
-				on a.file_group_id = c.file_group_id
+				on b.file_group_id = c.file_group_id
 				and c.user_id = #{userId}
-			left outer join kgst.bs_dept_folder d
-				on d.folder_id = a.folder_id
+			left outer join kgst.bs_folder_info d
+				on d.folder_id = b.folder_id
 		) x
 		where 1=1
+			and x.dept_file_yn = 'Y'
+			and x.dept_cd = #{deptCd}
 			<if test="title != null and title != ''">
 			and x.title like '%' || #{title} || '%'
 			</if>
-<!--			<if test="regNm != null and regNm != ''">-->
-<!--			and x.reg_nm like '%' || #{regNm} || '%'-->
-<!--			</if>-->
+			<if test="regNm != null and regNm != ''">
+			and x.reg_nm like '%' || #{regNm} || '%'
+			</if>
 	</select>
 	
-	<insert id="insertFavorite" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.DeptFileVo">
-	/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.FileMapper.insertFavorite */		
+	<insert id="insertFavorite" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo">
+	/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.insertFavorite */		
     	INSERT INTO kgst.bs_favorite (
 			  file_group_id
 			, user_id
@@ -259,8 +240,8 @@
 		)
     </insert>
     
-    <update id="updateFavorite" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.DeptFileVo">
-    /* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.FileMapper.updateFavorite */
+    <update id="updateFavorite" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo">
+    /* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.updateFavorite */
     	UPDATE kgst.bs_favorite
 		SET mod_dt = now()
 		  , mod_id = #{modId}
@@ -269,8 +250,8 @@
 		AND file_group_id = #{fileGroupId}
     </update>
     
-    <update id="saveFavorite" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.DeptFileVo">
-    /* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.FileMapper.saveFavorite */
+    <update id="saveFavorite" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo">
+    /* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.saveFavorite */
     	INSERT INTO kgst.bs_favorite (
 			  file_group_id
 			, user_id
@@ -292,7 +273,7 @@
 			, favorite_yn = #{favoriteYn}
     </update>
     
-    <sql id="deptFileColumns">
+    <sql id="fileColumns">
     	  a.file_id
 		, a.folder_id
 		, a.file_title
@@ -310,27 +291,27 @@
 		, a.reg_id
 		, a.mod_dt
 		, a.mod_id
+		, a.dept_file_yn
+		, a.user_id
     </sql>
     
-    <select id="selectDeptFile" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.DeptFileVo" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.DeptFileVo">
-    	/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.FileMapper.selectDeptFile */
+    <select id="selectFile" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo">
+    	/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectFile */
 		select 
-			<include refid="deptFileColumns"></include>
-		from kgst.bs_dept_file a
+			<include refid="fileColumns"></include>
+		from kgst.bs_file_info a
 		where a.file_id = #{fileId}
     </select>
     
-    <select id="selectDeptFileGroup" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.DeptFileVo" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.DeptFileVo">
-		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.FileMapper.selectDeptFileGroup */
+    <select id="selectFileGroup" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectFileGroup */
 		select 
-			  <include refid="deptFileColumns"></include>
+			  <include refid="fileColumns"></include>
 			, b.file_group_nm
 			, c.folder_nm 
 			, coalesce(d.favorite_yn, 'N') as favorite_yn
-		from kgst.bs_dept_file a
-		inner join kgst.bs_file_group b 
-			on a.file_group_id = b.file_group_id
-		left outer join kgst.bs_dept_folder c
+		from kgst.bs_file_info a
+		left outer join kgst.bs_folder_info c
 			on a.folder_id = c.folder_id
 		left outer join kgst.bs_favorite d
 			on a.file_group_id = d.file_group_id
