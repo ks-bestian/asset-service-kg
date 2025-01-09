@@ -20,12 +20,11 @@ import java.util.List;
 public class AuthMenuServiceImpl implements AuthMenuService {
 
     private final AuthMenuMapper authMenuMapper;
-    private final MenuMapper menuMapper;
     @Override
     public List<AuthMenuVo> getAuthMenuList(Long authId) {
         authMenuMapper.deleteAuthMenu(authId);
 
-        return authMenuMapper.getAuthMenuList(authId);
+        return authMenuMapper.selectListAuthMenu(authId);
     }
 
     @Override

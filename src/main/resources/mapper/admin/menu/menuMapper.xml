@@ -17,8 +17,8 @@
     </select>
 -->
 
-    <select id="getMenuList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.menu.vo.MenuVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.menu.repository.MenuMapper.getMenuList */
+    <select id="selectListMenu" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.menu.vo.MenuVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.menu.repository.MenuMapper.selectListMenu */
         select
               menu_id --메뉴아이디
             , menu_nm1 --메뉴명(키르기스어)
@@ -37,8 +37,8 @@
         order by ord
     </select>
     
-    <select id="getMenuDetail" parameterType="java.lang.Long" resultType="kr.co.bestiansoft.ebillservicekg.admin.menu.vo.MenuVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.menu.repository.MenuMapper.geMenuDetail */
+    <select id="selectMenu" parameterType="java.lang.Long" resultType="kr.co.bestiansoft.ebillservicekg.admin.menu.vo.MenuVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.menu.repository.MenuMapper.selectMenu */
         select
               menu_id
             , menu_nm1
@@ -112,8 +112,8 @@
         where menu_id = #{menuId}
     </delete>
 
-    <select id="getQuickMenuList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.menu.vo.QuickMenuVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.menu.repository.MenuMapper.getQuickMenuList */
+    <select id="selectListQuickMenu" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.menu.vo.QuickMenuVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.menu.repository.MenuMapper.selectListQuickMenu */
         select
               cq.seq
             , cq.user_id

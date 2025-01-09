@@ -2,9 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.admin.member.repository.MemberMapper">
-    <select id="getMemberList" parameterType="java.util.HashMap"
+    <select id="selectListMember" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.admin.member.vo.MemberVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.member.repository.MemberMapper.getMemberList */
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.member.repository.MemberMapper.selectListMember */
         select
               member_id --국회의원아이디
             , member_nm_kg --이름(키르키즈어)
@@ -33,8 +33,8 @@
         order by reg_dt
     </select>
 
-    <select id="getMemberDetail" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.admin.member.vo.MemberVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.member.repository.MemberMapper.getMemberDetail */
+    <select id="selectMember" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.admin.member.vo.MemberVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.member.repository.MemberMapper.selectMember */
         select
               cm.member_id --국회의원아이디
             , cm.member_nm_kg --이름(키르키즈어)
@@ -141,4 +141,20 @@
         where member_id = #{memberId}
     </delete>
 
+	<select id="selectListMemberByPoly" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.admin.member.vo.MemberVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.member.repository.MemberMapper.selectListMemberByPoly */
+        select
+              member_id 	-- 국회의원아이디
+            , member_nm_kg 	-- 이름(키르키즈어)
+            , member_nm_ru 	-- 이름(러시아어)
+            , poly_cd		-- 정당코드
+            , poly_nm		-- 정당이름
+        from com_member
+        where 1=1
+        	<if test="polyCd != null and polyCd != ''"> 
+		    	and poly_cd = #{polyCd}
+       		</if>
+        order by member_nm_kg
+    </select>
 </mapper>

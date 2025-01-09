@@ -24,12 +24,12 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public List<MemberVo> getMemberList(HashMap<String, Object> param) {
-        return memberMapper.getMemberList(param);
+        return memberMapper.selectListMember(param);
     }
 
     @Override
     public MemberVo getMemberDetail(String memberId) {
-        return memberMapper.getMemberDetail(memberId);
+        return memberMapper.selectMember(memberId);
     }
 
     @Override
@@ -47,4 +47,9 @@ public class MemberServiceImpl implements MemberService {
     public void deleteMember(String memberId) {
         memberMapper.deleteMember(memberId);
     }
+
+	@Override
+	public List<MemberVo> getMemberByPoly(HashMap<String, Object> param) {
+		return memberMapper.selectListMemberByPoly(param);
+	}
 }

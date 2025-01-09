@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.admin.dept.repository.DeptMapper">
-    <select id="getComDeptList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.dept.vo.DeptVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.dept.repository.DeptMapper.getComDeptList */
+    <select id="selectListDept" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.dept.vo.DeptVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.dept.repository.DeptMapper.selectListDept */
         select
               dept_cd --부서코드
             , dept_nm1 --부서명(키르키즈어)
@@ -33,8 +33,8 @@
         order by ord
     </select>
 
-    <select id="getComDeptById" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.admin.dept.vo.DeptVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.dept.repository.DeptMapper.getComDeptById */
+    <select id="selectDept" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.admin.dept.vo.DeptVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.dept.repository.DeptMapper.selectDept */
         select
               dept_cd --부서코드
             , dept_nm1 --부서명1

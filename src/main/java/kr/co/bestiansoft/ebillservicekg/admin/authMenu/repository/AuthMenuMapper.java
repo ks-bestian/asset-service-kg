@@ -7,7 +7,7 @@ import java.util.List;
 
 @Mapper
 public interface AuthMenuMapper {
-    List<AuthMenuVo> getAuthMenuList(Long authId);
+    List<AuthMenuVo> selectListAuthMenu(Long authId);
     int insertAuthMenu(AuthMenuVo authMenuVo);
     void deleteAuthMenu(Long authId);
 }

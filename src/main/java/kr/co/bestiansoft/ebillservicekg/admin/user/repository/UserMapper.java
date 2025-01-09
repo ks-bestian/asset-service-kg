@@ -9,8 +9,8 @@ import java.util.List;
 
 @Mapper
 public interface UserMapper {
-    List<UserVo> getUserList(HashMap<String, Object> param);
-    UserVo getUserDetail(Long seq);
+    List<UserVo> selectListUser(HashMap<String, Object> param);
+    UserVo selectUser(Long seq);
     int insertUser(UserVo userVo);
     int updateUser(UserVo userVo);
     void deleteUser(Long seq);
