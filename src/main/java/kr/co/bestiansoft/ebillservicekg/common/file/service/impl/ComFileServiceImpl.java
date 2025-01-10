@@ -63,13 +63,16 @@ public class ComFileServiceImpl implements ComFileService {
 	}
 	
 	@Override
-	public void saveFileEbs(MultipartFile[] files, String billId) {
+	public void saveFileEbs(MultipartFile[] files, String[] fileKindCdList, String billId) {
 
+		String[] fileKindCds = fileKindCdList;
+		int idx = 0;
 		for(MultipartFile file:files) {
 
 			String orgFileId = StringUtil.getUUUID();
     		String orgFileNm = file.getOriginalFilename();
-
+    		String fileKindCd = fileKindCds[idx];		
+    		
     		////////////////////////
 			try (InputStream edvIs = file.getInputStream()){
 				edv.save(orgFileId, edvIs);
@@ -86,6 +89,10 @@ public class ComFileServiceImpl implements ComFileService {
 			fileVo.setOrgFileNm(orgFileNm);
 			fileVo.setFileSize(file.getSize());
 			fileVo.setDeleteYn("N");
+			fileVo.setOpbYn("N");
+			fileVo.setFileKindCd(fileKindCd);
+			
+			idx++;
 			
 			fileMapper.insertFileEbs(fileVo);
 		}

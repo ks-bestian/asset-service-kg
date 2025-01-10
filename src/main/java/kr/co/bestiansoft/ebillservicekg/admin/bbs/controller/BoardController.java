@@ -48,7 +48,7 @@ public class BoardController {
     @ApiOperation(value = "게시판 상세 조회", notes = "게시판 상세를 조회한다.")
     @GetMapping("/admin/board/detail/{brdId}")
     public ResponseEntity<CommonResponse> getBoardById(@PathVariable Long brdId) {
-        BoardVo response = boardService.getBoardById(brdId);
+//        BoardVo response = boardService.getBoardById(brdId);
         return new ResponseEntity<>(new CommonResponse(200, "OK", boardService.getBoardById(brdId)), HttpStatus.OK);
     }
 

@@ -14,7 +14,7 @@ public interface AgreeMapper {
 
 	AgreeVo getAgreeDetail(String billId, String userId);
 
-	List<AgreeVo> getAgreeProposerList(String billId);
+	List<AgreeVo> selectAgreeProposerList(String billId);
 
 	int setBillAgree(HashMap<String, Object> param);
 
