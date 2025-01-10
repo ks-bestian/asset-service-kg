@@ -22,7 +22,7 @@ public class AuthMenuServiceImpl implements AuthMenuService {
     private final AuthMenuMapper authMenuMapper;
     @Override
     public List<AuthMenuVo> getAuthMenuList(Long authId) {
-        authMenuMapper.deleteAuthMenu(authId);
+//        authMenuMapper.deleteAuthMenu(authId);
 
         return authMenuMapper.selectListAuthMenu(authId);
     }

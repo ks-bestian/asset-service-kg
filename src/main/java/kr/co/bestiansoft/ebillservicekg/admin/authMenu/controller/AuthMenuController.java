@@ -20,12 +20,10 @@ public class AuthMenuController {
 
     private final AuthMenuService authMenuService;
 
-    //1. com_auth권한리스트, 2.메뉴리스트 조회 (각각의 controller에서 호출), 3.com_auth_menu 테이블 매칭된 권한 종류
     @ApiOperation(value = "권한별 메뉴 조회", notes = "권한별 메뉴를 조회한다.")
     @GetMapping("/admin/authMenu/{authId}")
     public ResponseEntity<CommonResponse> getComAuthMenuList(@PathVariable Long authId) {
-        List<AuthMenuVo> list = authMenuService.getAuthMenuList(authId);
-        return new ResponseEntity<>(new CommonResponse(200, "ok", ResponseEntity.ok(list)), HttpStatus.OK);
+        return new ResponseEntity<>(new CommonResponse(200, "ok", authMenuService.getAuthMenuList(authId)), HttpStatus.OK);
     }
 
     @ApiOperation(value = "권한별 메뉴, 권한 저장", notes = "Auth Menu Create")
