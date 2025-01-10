@@ -3,6 +3,7 @@ package kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.controller;
 import java.util.HashMap;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,8 +31,8 @@ public class ApplyController {
     private final ApplyService applyService;
 
     @ApiOperation(value = "안건제출", notes = "안건을 생성한다")
-    @PostMapping("/bill/apply")
-    public ResponseEntity<CommonResponse> createBillApply(@RequestBody ApplyVo applyVo) {
+    @PostMapping(value = "/bill/apply", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<CommonResponse> createBillApply(ApplyVo applyVo) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "apply create successfully", applyService.createApply(applyVo)), HttpStatus.CREATED);
     }
     
