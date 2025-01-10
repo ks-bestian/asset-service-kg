@@ -14,6 +14,7 @@ import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMap
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.service.ApplyService;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyResponse;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo;
+import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
 import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,17 +28,27 @@ public class ApplyServiceImpl implements ApplyService {
 	
 	private final ApplyMapper applyMapper;
 	private final AgreeMapper agreeMapper;
+	private final ComFileService comFileService;
 	
 	@Transactional
 	@Override
 	public ApplyVo createApply(ApplyVo applyVo) {
 	//TODO :: 메세지 알람 적용해야함 
 	
+		//사회토론번호
+		applyMapper.insertHomeLaws(applyVo);
+		applyVo.setSclDscRcpNmb(String.valueOf(applyVo.getId()));
+
 		//안건등록
 		String billId = StringUtil.getEbillId();
 		applyVo.setBillId(billId);
 		applyMapper.insertApplyBill(applyVo);
 		
+		//파일등록
+		comFileService.saveFileEbs(applyVo.getFiles(), applyVo.getFileKindCds(), billId);
+		//파일 정보를 가지고 있어서 null처리
+		applyVo.setFiles(null);
+				
 		//발의자 요청
 		List<String> proposerList = applyVo.getProposerList();
 		String ppsrId = applyVo.getPpsrId();

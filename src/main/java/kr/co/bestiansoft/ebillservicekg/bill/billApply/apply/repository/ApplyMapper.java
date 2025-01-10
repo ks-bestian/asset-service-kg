@@ -40,4 +40,6 @@ public interface ApplyMapper {
 
 	void insertBillProcess(String billId, String procId, String procKndCd);
 
+	int insertHomeLaws(ApplyVo applyVo);
+
 }

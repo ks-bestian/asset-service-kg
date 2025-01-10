@@ -10,6 +10,8 @@ import lombok.Data;
 @Data
 public class ApplyVo extends ComDefaultVO {
 
+	//id
+	private int id;
 	//등록번호(사회토론번호?)
 	private String sclDscRcpNmb;
 	//안건아이디
@@ -20,6 +22,8 @@ public class ApplyVo extends ComDefaultVO {
 	private String billKind;
 	//대수
 	private String naTermCd;
+	//안건이름
+	private String billName;
 	//안건이름-kg
 	private String billNameKg;
 	//안건이름-ru
@@ -61,6 +65,6 @@ public class ApplyVo extends ComDefaultVO {
 
 	//파일
     private MultipartFile[] files;
-	
+	private String[] fileKindCds;
 	
 }
