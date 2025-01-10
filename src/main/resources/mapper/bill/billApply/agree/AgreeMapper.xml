@@ -62,16 +62,20 @@
 			and ep.proposer_id = #{userId}
     </select>
     
-    <select id="getAgreeProposerList" parameterType="java.lang.String"
+    <select id="selectAgreeProposerList" parameterType="java.lang.String"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.vo.AgreeVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.repository.AgreeMapper.getAgreeProposerList */
-  		select 
-			ep.proposer_id			--제안자 대상
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.repository.AgreeMapper.selectAgreeProposerList */
+		select 
+			ep.proposer_id					-- 제안자 대상
 			, case
 				when (ep.sign_dt is not null and ep.sign_cnc_dt is null) then 'Y'
 				else 'N'
-			 end as agreeYn 		--동의여부
+			 end as agreeYn 				-- 동의여부
+			, cm.member_nm_kg as member_nm	-- 의원이름
+			, cm.poly_nm  					-- 정당이름
+			, cm.poly_cd 					-- 정당코드
 		from ebs_proposer ep
+			left join com_member cm on cm.member_id = ep.proposer_id 
 		where 
 			ep.bill_id = #{billId}
     </select>

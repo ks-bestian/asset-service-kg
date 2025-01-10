@@ -38,7 +38,7 @@ public class AgreeServiceImpl implements AgreeService {
 		result.setAgreeDetail(agreeDetail);
 		
 		//동의서명 목록
-		List<AgreeVo> proposerList = agreeMapper.getAgreeProposerList(billId);
+		List<AgreeVo> proposerList = agreeMapper.selectAgreeProposerList(billId);
 		result.setProposerList(proposerList);
 		
 		

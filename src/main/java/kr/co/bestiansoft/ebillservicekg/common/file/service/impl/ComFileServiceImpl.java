@@ -89,6 +89,7 @@ public class ComFileServiceImpl implements ComFileService {
 			fileVo.setOrgFileNm(orgFileNm);
 			fileVo.setFileSize(file.getSize());
 			fileVo.setDeleteYn("N");
+			fileVo.setOpbYn("N");
 			fileVo.setFileKindCd(fileKindCd);
 			
 			idx++;

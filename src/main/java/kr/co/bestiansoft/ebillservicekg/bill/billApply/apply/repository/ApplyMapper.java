@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo;
+import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 
 @Mapper
 public interface ApplyMapper {
@@ -20,7 +21,7 @@ public interface ApplyMapper {
 
 	int insertProposerList(ApplyVo applyVo);
 
-	ApplyVo getApplyDetail(String billId);
+	ApplyVo selectApplyDetail(String billId);
 
 	void deleteProposerByBillId(String billId);
 
@@ -41,5 +42,7 @@ public interface ApplyMapper {
 	void insertBillProcess(String billId, String procId, String procKndCd);
 
 	int insertHomeLaws(ApplyVo applyVo);
+
+	List<EbsFileVo> selectApplyFileList(String billId);
 
 }

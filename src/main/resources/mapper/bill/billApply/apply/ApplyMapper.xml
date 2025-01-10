@@ -116,18 +116,19 @@
 		)
     </insert>
     
-    <select id="getApplyDetail" parameterType="java.lang.String"
+    <select id="selectApplyDetail" parameterType="java.lang.String"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.getApplyDetail */
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.selectApplyDetail */
 		select 
-			  bill_name_kg 	-- 안건이름kg
-			, bill_name_ru  -- 안건이름ru
-			, ppsr_nm 		-- 제안자 이름
-			, etc_kg 		-- 비고kg
-			, etc_ru 		-- 비고ru
-			, to_char(reg_dt, 'DD-MM-YYYY HH:mm') as regDate -- 등록일
-			, scl_dsc_rcp_nmb -- 사회토론번호
+			  bill_name_kg 					-- 안건이름kg
+			, bill_name_ru  				-- 안건이름ru
+			, cm.member_nm_kg as ppsr_nm  	-- 제안자 이름
+			, etc_kg 						-- 비고kg
+			, etc_ru 						-- 비고ru
+			, to_char(em.reg_dt, 'DD/MM/YYYY HH:mm') as regDate -- 등록일
+			, scl_dsc_rcp_nmb 				-- 사회토론번호
 		from ebs_master em
+			left join com_member cm on cm.member_id = em.ppsr_id 
 		where em.bill_id = #{billId}
     </select>
     
@@ -236,4 +237,20 @@
 			, #{billNameRu}
 		)
     </insert>
+    
+    <select id="selectApplyFileList" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.selectApplyFileList */
+		select 
+			ef.file_kind_cd 
+			, org_file_id 
+			, org_file_nm 
+			, pdf_file_id 
+			, pdf_file_nm 
+		from 
+			ebs_file ef
+		where 
+			ef.bill_id = #{billId}
+			and ef.delete_yn = 'N'
+		order by file_kind_cd asc, ef.reg_dt asc
+    </select>
 </mapper>

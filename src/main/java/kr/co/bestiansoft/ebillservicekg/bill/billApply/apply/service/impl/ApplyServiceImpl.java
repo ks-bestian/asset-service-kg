@@ -15,6 +15,7 @@ import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.service.ApplyServic
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyResponse;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
+import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -126,11 +127,15 @@ public class ApplyServiceImpl implements ApplyService {
 		ApplyResponse result = new ApplyResponse();
 		
 		//안건 상세
-		ApplyVo applyDetail = applyMapper.getApplyDetail(billId);
+		ApplyVo applyDetail = applyMapper.selectApplyDetail(billId);
 		result.setApplyDetail(applyDetail);
+
+		//파일 리스트
+		List<EbsFileVo> fileList = applyMapper.selectApplyFileList(billId);
+		result.setFileList(fileList);
 		
 		//발의자 대상
-		List<AgreeVo> proposerList = agreeMapper.getAgreeProposerList(billId);
+		List<AgreeVo> proposerList = agreeMapper.selectAgreeProposerList(billId);
 		result.setProposerList(proposerList);
 		
 		return result;
