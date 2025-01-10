@@ -39,4 +39,6 @@ public class AgreeVo extends ComDefaultVO {
     private String polyCd;
     //의원이름
     private String memberNm;
+    private String memberNmKg;
+    private String memberNmRu;
 }
