@@ -2,12 +2,16 @@ package kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
 
 @Data
 public class ApplyVo extends ComDefaultVO {
 
+	//id
+	private int id;
 	//등록번호(사회토론번호?)
 	private String sclDscRcpNmb;
 	//안건아이디
@@ -18,6 +22,8 @@ public class ApplyVo extends ComDefaultVO {
 	private String billKind;
 	//대수
 	private String naTermCd;
+	//안건이름
+	private String billName;
 	//안건이름-kg
 	private String billNameKg;
 	//안건이름-ru
@@ -56,7 +62,9 @@ public class ApplyVo extends ComDefaultVO {
 	private String regDate;
 	//아이디
 	private String memberId;
-	
-	
+
+	//파일
+    private MultipartFile[] files;
+	private String[] fileKindCds;
 	
 }

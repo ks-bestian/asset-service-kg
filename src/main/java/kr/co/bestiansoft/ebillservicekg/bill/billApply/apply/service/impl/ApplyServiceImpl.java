@@ -14,6 +14,8 @@ import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMap
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.service.ApplyService;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyResponse;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo;
+import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
+import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,17 +29,27 @@ public class ApplyServiceImpl implements ApplyService {
 	
 	private final ApplyMapper applyMapper;
 	private final AgreeMapper agreeMapper;
+	private final ComFileService comFileService;
 	
 	@Transactional
 	@Override
 	public ApplyVo createApply(ApplyVo applyVo) {
 	//TODO :: 메세지 알람 적용해야함 
 	
+		//사회토론번호
+		applyMapper.insertHomeLaws(applyVo);
+		applyVo.setSclDscRcpNmb(String.valueOf(applyVo.getId()));
+
 		//안건등록
 		String billId = StringUtil.getEbillId();
 		applyVo.setBillId(billId);
 		applyMapper.insertApplyBill(applyVo);
 		
+		//파일등록
+		comFileService.saveFileEbs(applyVo.getFiles(), applyVo.getFileKindCds(), billId);
+		//파일 정보를 가지고 있어서 null처리
+		applyVo.setFiles(null);
+				
 		//발의자 요청
 		List<String> proposerList = applyVo.getProposerList();
 		String ppsrId = applyVo.getPpsrId();
@@ -51,6 +63,7 @@ public class ApplyServiceImpl implements ApplyService {
 			applyVo.setPolyCd(member.getPolyCd());
 			applyVo.setPolyNm(member.getPolyNm());
 			applyVo.setPpsrId(member.getMemberId());
+			
 			if(member.getMemberId().equals(ppsrId)) {
 				applyVo.setSignDt("sign");
 			}
@@ -114,11 +127,15 @@ public class ApplyServiceImpl implements ApplyService {
 		ApplyResponse result = new ApplyResponse();
 		
 		//안건 상세
-		ApplyVo applyDetail = applyMapper.getApplyDetail(billId);
+		ApplyVo applyDetail = applyMapper.selectApplyDetail(billId);
 		result.setApplyDetail(applyDetail);
+
+		//파일 리스트
+		List<EbsFileVo> fileList = applyMapper.selectApplyFileList(billId);
+		result.setFileList(fileList);
 		
 		//발의자 대상
-		List<AgreeVo> proposerList = agreeMapper.getAgreeProposerList(billId);
+		List<AgreeVo> proposerList = agreeMapper.selectAgreeProposerList(billId);
 		result.setProposerList(proposerList);
 		
 		return result;

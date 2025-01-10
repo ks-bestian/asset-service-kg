@@ -33,4 +33,12 @@ public class AgreeVo extends ComDefaultVO {
     //제안자 대상
     private String proposerId;
     
+    //정당이름
+    private String polyNm;
+    //정당코드
+    private String polyCd;
+    //의원이름
+    private String memberNm;
+    private String memberNmKg;
+    private String memberNmRu;
 }
