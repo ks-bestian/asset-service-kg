@@ -25,27 +25,27 @@ public class ProcessController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProcessController.class);
 
-	private final ProcessService rocessService;
-
-    @ApiOperation(value = "process test", notes = "process test")
-    @PostMapping("/process/exe")
-    public ResponseEntity<CommonResponse> makeProcessEbs(@RequestBody ProcessVo vo) {
-
-    	ProcessVo returnVo = rocessService.makeProcessEbs(vo);
-
-    	return new ResponseEntity<>(new CommonResponse(200, "OK", returnVo), HttpStatus.OK);
-    }
+	private final ProcessService processService;
 
 
     @ApiOperation(value = "process test", notes = "process test")
     @PostMapping("/testprocess/exe")
     public ResponseEntity<CommonResponse> testProcess(@RequestBody ProcessVo vo) throws Exception {
 
-    	ProcessVo returnVo = new ProcessVo();
-
-    	rocessService.testProcess();
+    	ProcessVo returnVo = processService.testProcess(vo);
 
     	return new ResponseEntity<>(new CommonResponse(200, "OK", returnVo), HttpStatus.OK);
     }
+
+    @ApiOperation(value = "process test", notes = "process test")
+    @PostMapping("/testprocess/autoexe")
+    public ResponseEntity<CommonResponse> createProcessAuto(@RequestBody ProcessVo vo) throws Exception {
+
+    	ProcessVo returnVo = processService.createProcessAuto(vo);
+
+    	return new ResponseEntity<>(new CommonResponse(200, "OK", returnVo), HttpStatus.OK);
+    }
+
+
 
 }

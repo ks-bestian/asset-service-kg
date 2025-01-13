@@ -169,9 +169,15 @@ public class ApplyServiceImpl implements ApplyService {
 	@Transactional
 	@Override
 	public int updateBillStatus(String billId, ApplyVo applyVo) {
-		
 		applyVo.setBillId(billId);
 		return applyMapper.updateBillStatus(applyVo);
+	}
+
+	@Transactional
+	@Override
+	public ApplyVo saveBillAccept(String billId, ApplyVo applyVo) {
+		System.out.println("billId 안건 접수 :: " + billId);
+		return null;
 	}
 	
 }

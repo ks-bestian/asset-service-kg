@@ -24,4 +24,6 @@ public interface ApplyService {
 
 	int updateBillStatus(String billId, ApplyVo applyVo);
 
+	ApplyVo saveBillAccept(String billId, ApplyVo applyVo);
+
 }

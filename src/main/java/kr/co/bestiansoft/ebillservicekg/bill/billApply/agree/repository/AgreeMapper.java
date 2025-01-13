@@ -10,12 +10,12 @@ import kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.vo.AgreeVo;
 @Mapper
 public interface AgreeMapper {
 
-	List<AgreeVo> getAgreeList(HashMap<String, Object> param);
+	List<AgreeVo> selectAgreeList(HashMap<String, Object> param);
 
-	AgreeVo getAgreeDetail(String billId, String userId);
+	AgreeVo selectAgreeDetail(String billId, String userId, String lang);
 
 	List<AgreeVo> selectAgreeProposerList(String billId);
 
-	int setBillAgree(HashMap<String, Object> param);
+	int updateBillAgree(HashMap<String, Object> param);
 
 }

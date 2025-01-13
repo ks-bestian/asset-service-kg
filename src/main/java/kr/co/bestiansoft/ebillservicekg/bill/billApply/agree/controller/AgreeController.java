@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,14 +35,14 @@ public class AgreeController {
     
     @ApiOperation(value = "동의서명 상세", notes = "동의서명 상세를 조회")
     @GetMapping("/bill/agree/{billId}")
-    public ResponseEntity<CommonResponse> getApplyDetail(@PathVariable String billId, @RequestParam String userId) {
+    public ResponseEntity<CommonResponse> getApplyDetail(@PathVariable String billId, @RequestParam String lang) {
     	//todo :: 로그인 유저 아이디 가져오는걸로 변경 필요
-    	return new ResponseEntity<>(new CommonResponse(200, "OK", agreeService.getAgreeDetail(billId, userId)), HttpStatus.OK);
+    	return new ResponseEntity<>(new CommonResponse(200, "OK", agreeService.getAgreeDetail(billId, lang)), HttpStatus.OK);
     }
     
     @ApiOperation(value = "동의 서명", notes = "안건에 대해 동의 및 동의 취소")
     @PutMapping("/bill/agree/{billId}")
-    public ResponseEntity<CommonResponse> setBillAgree(@PathVariable String billId, @RequestParam HashMap<String, Object> param) {
+    public ResponseEntity<CommonResponse> setBillAgree(@PathVariable String billId, @RequestBody HashMap<String, Object> param) {
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill agree successfully", agreeService.setBillAgree(billId, param)), HttpStatus.OK);
     }
     

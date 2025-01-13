@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class AcsHistVo extends ComDefaultVO {
+
     private Long seq;
     private String acsIp;
     private String reqUrl;
@@ -16,11 +17,5 @@ public class AcsHistVo extends ComDefaultVO {
     private LocalDateTime regDt;
     private String memberNm;
 
-    @Builder
-    public AcsHistVo(String regId, String acsIp, String reqUrl, String reqMethod) {
-        this.regId = regId;
-        this.acsIp = acsIp;
-        this.reqUrl = reqUrl;
-        this.reqMethod = reqMethod;
-    }
+
 }
