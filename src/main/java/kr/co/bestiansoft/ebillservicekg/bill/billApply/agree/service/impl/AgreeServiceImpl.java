@@ -10,6 +10,10 @@ import kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.repository.AgreeMap
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.service.AgreeService;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.vo.AgreeResponse;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.vo.AgreeVo;
+import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper;
+import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
+import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
+import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,26 +25,31 @@ import lombok.extern.slf4j.Slf4j;
 public class AgreeServiceImpl implements AgreeService {
 	
 	private final AgreeMapper agreeMapper;
+	private final ApplyMapper applyMapper;
 	
 	@Override
 	public List<AgreeVo> getAgreeList(HashMap<String, Object> param) {
 		
-		return agreeMapper.getAgreeList(param);
+		param.put("loginId", new SecurityInfoUtil().getAccountId());
+		return agreeMapper.selectAgreeList(param);
 	}
 
 	@Override
-	public AgreeResponse getAgreeDetail(String billId, String userId) {
-		
+	public AgreeResponse getAgreeDetail(String billId, String lang) {
 		AgreeResponse result = new AgreeResponse();
 		
 		//동의 상세
-		AgreeVo agreeDetail = agreeMapper.getAgreeDetail(billId, userId);
+		String userId = new SecurityInfoUtil().getAccountId();
+		AgreeVo agreeDetail = agreeMapper.selectAgreeDetail(billId, userId, lang);
 		result.setAgreeDetail(agreeDetail);
 		
 		//동의서명 목록
 		List<AgreeVo> proposerList = agreeMapper.selectAgreeProposerList(billId);
 		result.setProposerList(proposerList);
 		
+		//파일목록
+		List<EbsFileVo> fileList = applyMapper.selectApplyFileList(billId);
+		result.setFileList(fileList);
 		
 		return result;
 	}
@@ -48,8 +57,12 @@ public class AgreeServiceImpl implements AgreeService {
 	@Transactional
 	@Override
 	public int setBillAgree(String billId, HashMap<String, Object> param) {
+		String userId = new SecurityInfoUtil().getAccountId();
+		param.put("userId", userId);
 		param.put("billId", billId);
-		return agreeMapper.setBillAgree(param);
+		
+		System.out.println("param.get(\"agreeYn\") :: " + param.get("agreeYn"));
+		return agreeMapper.updateBillAgree(param);
 	}
 
 }

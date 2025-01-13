@@ -63,10 +63,10 @@
 				and em.stat_cd = #{statCd}
 			</if>
 			<if test="ppslDt != null and ppslDt != ''">
-				and em.reg_dt::date = = #{ppslDt}
+				and em.reg_dt::date = #{ppslDt}
 			</if>
 			<if test="sclDscRcpNmb != null and sclDscRcpNmb != ''">
-				and em.scl_dsc_rcp_nmb = #{sclDscRcpNmb}
+				and em.scl_dsc_rcp_nmb like concat('%', #{sclDscRcpNmb}, '%')
 			</if>
 			
     </select>

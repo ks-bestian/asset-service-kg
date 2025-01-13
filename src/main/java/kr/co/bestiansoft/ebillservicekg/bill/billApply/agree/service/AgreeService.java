@@ -10,7 +10,7 @@ public interface AgreeService {
 
 	List<AgreeVo> getAgreeList(HashMap<String, Object> param);
 
-	AgreeResponse getAgreeDetail(String billId, String userId);
+	AgreeResponse getAgreeDetail(String billId, String lang);
 
 	int setBillAgree(String billId, HashMap<String, Object> param);
 
