@@ -61,11 +61,11 @@ public class ApplyController {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", applyService.getApplyDetail(billId)), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "안건접수", notes = "안건을 접수한다.")
-    @PutMapping("/bill/apply/update/{billId}")
-    public ResponseEntity<CommonResponse> applyBill(@PathVariable String billId) {
-    	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill apply successfully", applyService.applyBill(billId)), HttpStatus.OK);
-    }
+//    @ApiOperation(value = "안건접수", notes = "안건을 접수한다.")
+//    @PutMapping("/bill/apply/update/{billId}")
+//    public ResponseEntity<CommonResponse> applyBill(@PathVariable String billId) {
+//    	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill apply successfully", applyService.applyBill(billId)), HttpStatus.OK);
+//    }
     
     @ApiOperation(value = "안건철회", notes = "안건을 철회한다.")
     @PutMapping("/bill/apply/revoke/{billId}")
@@ -73,10 +73,16 @@ public class ApplyController {
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill apply successfully", applyService.revokeBill(billId, applyVo)), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "상태값 변경", notes = "안건의 상태값을 변경한다")
-    @PutMapping("/bill/apply/status/{billId}")
-    public ResponseEntity<CommonResponse> updateBillState(@PathVariable String billId, @RequestBody ApplyVo applyVo) {
-    	return new  ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill status update successfully", applyService.updateBillStatus(billId, applyVo)), HttpStatus.OK);
+//    @ApiOperation(value = "상태값 변경", notes = "안건의 상태값을 변경한다")
+//    @PutMapping("/bill/apply/status/{billId}")
+//    public ResponseEntity<CommonResponse> updateBillState(@PathVariable String billId, @RequestBody ApplyVo applyVo) {
+//    	return new  ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill status update successfully", applyService.updateBillStatus(billId, applyVo)), HttpStatus.OK);
+//    }
+    
+    @ApiOperation(value = "안건 접수", notes = "안건 접수")
+    @PostMapping("/bill/apply/accept/{billId}")
+    public ResponseEntity<CommonResponse> saveBillAccept(@PathVariable String billId, @RequestBody ApplyVo applyVo) {
+    	return new  ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill status update successfully", applyService.saveBillAccept(billId, applyVo)), HttpStatus.OK);
     }
 
 }
