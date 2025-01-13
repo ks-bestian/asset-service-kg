@@ -167,7 +167,7 @@ public class DocumentServiceImpl implements DocumentService {
 			ret += saveFile(vo, mpf, map);
 
 			// 묶음업로드 아닌경우 각 파일의 썸네일 생성
-			if("N".equals(vo.getGroupYn())) {
+			if(!"Y".equals(vo.getGroupYn())) {
 				try {
 					Map<String, Object> thumbnailJob = new HashMap<>();
 					File tmpFile = File.createTempFile("tmp", null);
@@ -291,18 +291,17 @@ public class DocumentServiceImpl implements DocumentService {
 		}
 		
 		long fileSize = mpf.getSize();
-		
 		String fileTitle = fileNm, fileType = "";
 		idx = fileNm.lastIndexOf('.');
 		if(idx != -1) {
 			fileTitle = fileNm.substring(0, idx);
 			fileType = fileNm.substring(idx + 1);
 		}
-		String regId = tmpUserId;
+		String userId = new SecurityInfoUtil().getAccountId();
+		String deptCd = new SecurityInfoUtil().getDeptCd();
 		String groupYn = vo.getGroupYn();
 		String fileGroupId = vo.getFileGroupId();
-		
-		String deptCd = tmpDeptCd;
+		String deptFileYn = vo.getDeptFileYn();
 		
 		String fileHash = null, filePath = null;
 		try (InputStream is = mpf.getInputStream()){
@@ -319,12 +318,14 @@ public class DocumentServiceImpl implements DocumentService {
 		fileVo.setFileTitle(fileTitle);
 		fileVo.setFileType(fileType);
 		fileVo.setGroupYn(groupYn);
-		fileVo.setRegId(regId);
+		fileVo.setRegId(userId);
 		fileVo.setFileGroupId("Y".equals(groupYn) ? fileGroupId : fileId);
 		fileVo.setEdvHashStr(fileHash);
 		fileVo.setEdvPath(filePath);
 		fileVo.setFolderId(folderId);
 		fileVo.setDeptCd(deptCd);
+		fileVo.setDeptFileYn(deptFileYn);
+		fileVo.setUserId(userId);
 		
 		int ret = documentMapper.insertFile(fileVo);
 		
@@ -332,7 +333,7 @@ public class DocumentServiceImpl implements DocumentService {
 		if("N".equals(groupYn)) {
 			String favoriteYn = vo.getFavoriteYn();
 			if("Y".equals(favoriteYn)) {
-				fileVo.setUserId(tmpUserId);
+				fileVo.setUserId(userId);
 				fileVo.setFavoriteYn(favoriteYn);
 				documentMapper.saveFavorite(fileVo);	
 			}	
@@ -343,7 +344,8 @@ public class DocumentServiceImpl implements DocumentService {
     
     @Override
     public List<FileVo> selectDeptFileList(FileVo vo) {
-    	vo.setUserId(tmpUserId);
+    	vo.setUserId(new SecurityInfoUtil().getAccountId());
+    	vo.setDeptCd(new SecurityInfoUtil().getDeptCd());
     	return documentMapper.selectDeptFileList(vo);
     }
     

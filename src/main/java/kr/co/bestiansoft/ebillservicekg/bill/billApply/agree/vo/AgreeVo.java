@@ -10,6 +10,8 @@ public class AgreeVo extends ComDefaultVO {
 	private String sclDscRcpNmb;
 	//안건아이디
 	private String billId;
+	//안건이름
+	private String billName;
 	//안건이름kg
     private String billNameKg;
     //안건이름ru
@@ -26,6 +28,8 @@ public class AgreeVo extends ComDefaultVO {
     private String signDate;
     //동의여부
     private String agreeYn;
+    //비고
+    private String etc;
     //비고kg
     private String etcKg;
     //비고ru

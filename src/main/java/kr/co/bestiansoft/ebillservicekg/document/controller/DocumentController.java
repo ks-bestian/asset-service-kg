@@ -76,7 +76,8 @@ public class DocumentController {
     
     @ApiOperation(value = "부서 파일 업로드", notes = "부서 파일 업로드")
     @PostMapping(value = "/document/dept/files", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<CommonResponse> uploadFile(FileVo vo) {
+    public ResponseEntity<CommonResponse> uploadDeptFile(FileVo vo) {
+    	vo.setDeptFileYn("Y");
     	return new ResponseEntity<>(new CommonResponse(200, "OK", fileService.uploadFile(vo)), HttpStatus.OK);
     }
     
@@ -94,7 +95,7 @@ public class DocumentController {
     
     @ApiOperation(value = "부서 파일 목록 조회", notes = "부서 파일 목록 조회")
     @GetMapping("/document/dept/files")
-    public ResponseEntity<CommonResponse> selectFileList(FileVo vo) {
+    public ResponseEntity<CommonResponse> selectDeptFileList(FileVo vo) {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", fileService.selectDeptFileList(vo)), HttpStatus.OK);
     }
     

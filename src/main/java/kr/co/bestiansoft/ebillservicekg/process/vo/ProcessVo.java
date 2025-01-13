@@ -9,7 +9,7 @@ public class ProcessVo extends ComDefaultVO {
 	private String bpDfId;
 	private String bpDfNm;
 	private String rmk;
-	private String bpInstanceId;
+	private Long bpInstanceId;
 	private String billId;
 	private String startDt;
 	private String endDt;
@@ -21,15 +21,14 @@ public class ProcessVo extends ComDefaultVO {
 	private String stepType;
 	private String reqAuthId;
 	private String stepOrd;
-	private String taskId;
+	private Long taskId;
 	private String taskNm;
 	private String assignedTo;
 	private String dueDt;
 	private String completedDt;
 	private String billAprvNo;
 
-	private ProcessVo prevStepVo;
-	private ProcessVo nextStepVo;
+
 
 
 }

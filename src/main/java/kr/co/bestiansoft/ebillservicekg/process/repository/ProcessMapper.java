@@ -14,14 +14,16 @@ public interface ProcessMapper {
 
 
 	List<ProcessVo> selectListBpStep(ProcessVo vo);
+	ProcessVo selectBpStep(ProcessVo vo);
+	List<ProcessVo> selectBpStepList(ProcessVo vo);
 
 	void insertBpInstance(ProcessVo vo);
+	void updateBpInstanceCurrentStep(ProcessVo vo);
 	void updateBpInstance(ProcessVo vo);
-
 
 	void insertBpTask(ProcessVo vo);
 
 	CmttVo selectOneCmtt(ProcessVo vo);
-
+	void updateBpTask(ProcessVo vo);
 
 }

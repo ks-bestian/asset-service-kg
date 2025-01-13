@@ -24,9 +24,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeDetailVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.config.web.JwtFilter;
 import kr.co.bestiansoft.ebillservicekg.config.web.TokenProvider;
+import kr.co.bestiansoft.ebillservicekg.login.repository.LoginMapper;
 import kr.co.bestiansoft.ebillservicekg.login.vo.Account;
 import kr.co.bestiansoft.ebillservicekg.login.vo.LoginRequest;
 import kr.co.bestiansoft.ebillservicekg.login.vo.LoginResponse;
@@ -46,6 +48,8 @@ public class LoginController {
 	private HttpSessionSecurityContextRepository securityContextRepository;
 	
 	private final TokenProvider tokenProvider;
+	
+	private final LoginMapper loginMapper;
 	
 	@PostMapping("/login")
 	public ResponseEntity<LoginResponse> authenticate(@RequestBody @Valid LoginRequest loginRead, HttpServletRequest req, HttpServletResponse res) {
@@ -83,7 +87,8 @@ public class LoginController {
 	        msg = "login success";
 	        result = true;
 	        Account account = new SecurityInfoUtil().getAccount();
-	        return new ResponseEntity<>(LoginResponse.from(result, msg, token, account), httpHeaders, HttpStatus.OK);
+	        List<ComCodeDetailVo> comCodes = loginMapper.selectListComCodeAll();
+	        return new ResponseEntity<>(LoginResponse.from(result, msg, token, account, comCodes), httpHeaders, HttpStatus.OK);
 
         } catch (BadCredentialsException e) {
             msg = "LOGIN_FAIL";

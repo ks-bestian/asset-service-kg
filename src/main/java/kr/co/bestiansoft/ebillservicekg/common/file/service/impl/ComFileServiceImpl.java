@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Service
 public class ComFileServiceImpl implements ComFileService {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(ComFileServiceImpl.class);
     private final EDVHelper edv;
     private final ComFileMapper fileMapper;
@@ -47,7 +47,6 @@ public class ComFileServiceImpl implements ComFileService {
 				throw new RuntimeException("EDV_NOT_WORK", edvEx);
 			}
     		////////////////////////
-    		//executorService.submit(new FileUploadTask(file,fileEntity));
 
 			ComFileVo fileVo = new ComFileVo();
 			fileVo.setFileGroupId(fileGroupId);
@@ -56,12 +55,12 @@ public class ComFileServiceImpl implements ComFileService {
 			fileVo.setFileSize(file.getSize());
 			fileVo.setUploadYn("Y");
 			fileVo.setDeleteYn("N");
-			
+
 			fileMapper.insertFile(fileVo);
 		}
 		return fileGroupId;
 	}
-	
+
 	@Override
 	public void saveFileEbs(MultipartFile[] files, String[] fileKindCdList, String billId) {
 
@@ -71,8 +70,8 @@ public class ComFileServiceImpl implements ComFileService {
 
 			String orgFileId = StringUtil.getUUUID();
     		String orgFileNm = file.getOriginalFilename();
-    		String fileKindCd = fileKindCds[idx];		
-    		
+    		String fileKindCd = fileKindCds[idx];
+
     		////////////////////////
 			try (InputStream edvIs = file.getInputStream()){
 				edv.save(orgFileId, edvIs);
@@ -80,20 +79,17 @@ public class ComFileServiceImpl implements ComFileService {
 				throw new RuntimeException("EDV_NOT_WORK", edvEx);
 			}
     		////////////////////////
-    		//executorService.submit(new FileUploadTask(file,fileEntity));
 
 			EbsFileVo fileVo = new EbsFileVo();
 			fileVo.setBillId(billId);
-			
+
 			fileVo.setOrgFileId(orgFileId);
 			fileVo.setOrgFileNm(orgFileNm);
 			fileVo.setFileSize(file.getSize());
 			fileVo.setDeleteYn("N");
 			fileVo.setOpbYn("N");
 			fileVo.setFileKindCd(fileKindCd);
-			
 			idx++;
-			
 			fileMapper.insertFileEbs(fileVo);
 		}
 	}
@@ -107,7 +103,7 @@ public class ComFileServiceImpl implements ComFileService {
 	public ComFileVo getFile(String fileId) {
 		return fileMapper.findByFileId(fileId);
 	}
-	
+
 	@Override
 	public void batchFileDelete() {
 		List<ComFileVo> fileList = fileMapper.batchGetDeleteFileList();
@@ -130,7 +126,7 @@ public class ComFileServiceImpl implements ComFileService {
 
     		try {
             	edv.delete(this.fileId);
-            	
+
             	fileMapper.deleteServerFile(this.fileId);
             	logger.info("Success to delete file edv: {}", this.fileId);
                 return "SUCCESS";
@@ -141,5 +137,5 @@ public class ComFileServiceImpl implements ComFileService {
         }
 
     }
-    
+
 }

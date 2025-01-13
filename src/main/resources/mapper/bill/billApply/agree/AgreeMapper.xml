@@ -3,53 +3,60 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.repository.AgreeMapper">
 
-    <select id="getAgreeList" parameterType="java.util.HashMap"
+    <select id="selectAgreeList" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.vo.AgreeVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.repository.AgreeMapper.getAgreeList */
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.repository.AgreeMapper.selectAgreeList */
         select 
-			em.bill_id 				--안건아이디
-			, em.bill_name_kg 		--안건이름kg
-			, em.bill_name_ru 		--안건이름ru
-			, em.ppsr_nm 			--제안자
-			, em.stat_cd 			--상태
+			em.bill_id 				-- 안건아이디
 			, case
-				when (ep.sign_dt is not null and ep.sign_cnc_dt is null) then to_char(ep.sign_dt, 'DD-MM-YYYY')	
+				when #{lang} = 'langTy1' then em.bill_name_kg 
+				when #{lang} = 'langTy2' then em.bill_name_ru 
+				else em.bill_name_kg 
+			end as bill_name		-- 안건이름
+			, cm.member_nm_kg as ppsrNm	-- 제안자
+			, case
+				when (ep.sign_dt is not null and ep.sign_cnc_dt is null) then to_char(ep.sign_dt, 'DD/MM/YYYY')	
 				else null
-			 end as signDate 		--동의날짜
-		    , scl_dsc_rcp_nmb 		--사회토론번호
+			 end as signDate 		-- 동의날짜
+		    , scl_dsc_rcp_nmb 		-- 사회토론번호
+		    , to_char(em.reg_dt, 'DD/MM/YYYY') as regDate
 		from ebs_proposer ep
-		left join ebs_master em on em.bill_id = ep.bill_id 
-		where ep.proposer_id = #{userId}
+			left join ebs_master em on em.bill_id = ep.bill_id 
+			left join com_member cm on cm.member_id = ep.proposer_id 
+		where em.ppsr_id != ep.proposer_id 
+			and ep.proposer_id = #{loginId}
 			and em.na_term_cd = '14'
-			and em.stat_cd in ('ST010', 'ST020', 'ST030', 'ST040')
 		<if test="billName != null and billName != ''">
-			and (em.bill_name_ru like concat('%', #{billName}, '%') or em.bill_name_kg like concat('%', #{billName}, '%'))
-		</if>
-		<if test="statCd != null and statCd != ''">
-			and em.stat_cd = #{statCd}
+			and case
+		        when #{lang} = 'langTy1' then em.bill_name_kg
+		        when #{lang} = 'langTy2' then em.bill_name_ru
+		        else em.bill_name_kg
+		    end like concat('%', #{billName}, '%')
 		</if>
 		<if test="ppslDt != null and ppslDt != ''">
-			and em.ppsl_dt <![CDATA[>=]]> #{ppslDt}
+			and em.reg_dt::date = #{ppslDt}
 		</if>
-		<!-- <if test="startDt != null and startDt != ''">
-			and em.ppsl_dt <![CDATA[>=]]> #{startDt}
+		<if test="sclDscRcpNmb != null and sclDscRcpNmb != ''">
+			and em.scl_dsc_rcp_nmb like concat('%', #{sclDscRcpNmb}, '%')
 		</if>
-		<if test="endDt != null and endDt != ''">
-			and em.ppsl_dt <![CDATA[<=]]> #{endDt}
-		</if> -->
     </select>
     
-    <select id="getAgreeDetail" parameterType="java.util.HashMap"
+    <select id="selectAgreeDetail" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.vo.AgreeVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.repository.AgreeMapper.getAgreeDetail */
-   		select 
-			em.bill_name_kg 		--안건이름kg
-			, em.bill_name_ru 		--안건이름ru
-			, em.etc_kg 			--비고kg
-			, em.etc_ru 			--비고ru
-			, em.ppsr_id 			--제안자
-			, em.stat_cd 		 	--상태
-			, to_char(em.reg_dt, 'DD-MM-YYYY') as regDate
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.repository.AgreeMapper.selectAgreeDetail */
+		select 
+			case
+				when #{lang} = 'langTy1' then em.bill_name_kg 
+				when #{lang} = 'langTy2' then em.bill_name_ru 
+				else em.bill_name_kg 
+			end as bill_name		--안건이름
+			, case					
+				when #{lang} = 'langTy1' then em.etc_kg 
+				when #{lang} = 'langTy2' then em.etc_ru 
+				else em.etc_kg 
+			end as etc				--비고
+			, cm.member_nm_kg 		--제안자
+			, to_char(em.reg_dt, 'DD/MM/YYYY HH:MM') as regDate
 			, case
 				when (ep.sign_dt is not null and ep.sign_cnc_dt is null) then 'Y'
 				else 'N'
@@ -57,12 +64,13 @@
 			, scl_dsc_rcp_nmb 		--사회토론번호
 		from ebs_proposer ep
 			left join ebs_master em on em.bill_id = ep.bill_id 
+			left join com_member cm on cm.member_id = em.ppsr_id 
 		where 
 			em.bill_id = #{billId}
 			and ep.proposer_id = #{userId}
     </select>
     
-    <select id="selectAgreeProposerList" parameterType="java.lang.String"
+    <select id="selectAgreeProposerList" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.vo.AgreeVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.repository.AgreeMapper.selectAgreeProposerList */
 		select 
@@ -80,8 +88,8 @@
 			ep.bill_id = #{billId}
     </select>
     
-    <update id="setBillAgree" parameterType="java.util.HashMap">
-    	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.setBillAgree */
+    <update id="updateBillAgree" parameterType="java.util.HashMap">
+    	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.updateBillAgree */
 		update ebs_proposer 
 		set 
 			mod_id = #{modId} 			-- 수정자 아이디
