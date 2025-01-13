@@ -20,9 +20,9 @@
 			 end as signDate 		-- 동의날짜
 		    , scl_dsc_rcp_nmb 		-- 사회토론번호
 		    , to_char(em.reg_dt, 'DD/MM/YYYY') as regDate
-		from ebs_proposer ep
-			left join ebs_master em on em.bill_id = ep.bill_id 
-			left join com_member cm on cm.member_id = ep.proposer_id 
+		from kgst.ebs_proposer ep
+			left join kgst.ebs_master em on em.bill_id = ep.bill_id 
+			left join kgst.com_member cm on cm.member_id = ep.proposer_id 
 		where em.ppsr_id != ep.proposer_id 
 			and ep.proposer_id = #{loginId}
 			and em.na_term_cd = '14'
@@ -79,18 +79,22 @@
 				when (ep.sign_dt is not null and ep.sign_cnc_dt is null) then 'Y'
 				else 'N'
 			 end as agreeYn 				-- 동의여부
-			, cm.member_nm_kg				-- 의원이름
-			, cm.poly_nm  					-- 정당이름
-			, cm.poly_cd 					-- 정당코드
+			, case
+				when #{lang} = 'langTy1' then view.member_nm_kg 
+				when #{lang} = 'langTy2' then view.member_nm_ru 
+				else view.member_nm_kg 
+			end as member_nm					-- 의원이름
+			, view.poly_nm  					-- 정당이름
+			, view.poly_cd 					-- 정당코드
 		from ebs_proposer ep
-			left join com_member cm on cm.member_id = ep.proposer_id 
+			left join kgst.view_user_member view on view.member_id = ep.proposer_id
 		where 
 			ep.bill_id = #{billId}
     </select>
     
     <update id="updateBillAgree" parameterType="java.util.HashMap">
     	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.updateBillAgree */
-		update ebs_proposer 
+		update kgst.ebs_proposer 
 		set 
 			mod_id = #{modId} 			-- 수정자 아이디
 			, mod_dt = now()			-- 수정날짜

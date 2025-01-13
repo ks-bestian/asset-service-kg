@@ -3,37 +3,40 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.repository.RevokeMapper">
 
-	<select id="getRevokeList" parameterType="java.util.HashMap"
+	<select id="selectRevokeList" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.vo.RevokeVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.repository.RevokeMapper.getRevokeList */
-        select 
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.repository.RevokeMapper.selectRevokeList */
+		select 
 			em.bill_id 				--안건아이디
 			, em.scl_dsc_rcp_nmb 	--사회토론번호
-			, em.bill_name_kg 		--안건이름kg
-			, em.bill_name_ru 		--안건이름ru
-			, em.ppsr_nm 			--제안자
-			, to_char(em.reg_dt, 'DD-MM-YYYY') as regDate
-			, em.stat_cd 
-		from ebs_master em 
-		where 
-			em.stat_cd in ('ST030','ST031')
+			, case 
+				when #{lang} = 'langTy1' then em.bill_name_kg 
+				when #{lang} = 'langTy2' then em.bill_name_ru 
+				else em.bill_name_kg 
+			end as billName
+			, cm.member_nm_kg		--제안자
+			, to_char(em.reg_dt, 'DD/MM/YYYY') as regDate
+		from kgst.ebs_master em 
+			left join kgst.com_member cm on cm.member_id = em.ppsr_id 
+		where 1=1
 			and em.ppsr_id = #{userId}
 			and em.na_term_cd = '14'
 		<if test="billName != null and billName != ''">
-			and (em.bill_name_ru like concat('%', #{billName}, '%') or em.bill_name_kg like concat('%', #{billName}, '%'))
+			and case
+		        when #{lang} = 'langTy1' then em.bill_name_kg
+		        when #{lang} = 'langTy2' then em.bill_name_ru
+		        else em.bill_name_kg
+		    end like concat('%', #{billName}, '%')
 		</if>
 		<if test="statCd != null and statCd != ''">
 			and em.stat_cd = #{statCd}
 		</if>
 		<if test="ppslDt != null and ppslDt != ''">
-			and em.ppsl_dt <![CDATA[>=]]> #{ppslDt}
+			and em.reg_dt::date = #{ppslDt}
 		</if>
-		<!-- <if test="startDt != null and startDt != ''">
-			and em.ppsl_dt <![CDATA[>=]]> #{startDt}
+		<if test="sclDscRcpNmb != null and sclDscRcpNmb != ''">
+			and em.scl_dsc_rcp_nmb like concat('%', #{sclDscRcpNmb}, '%')
 		</if>
-		<if test="endDt != null and endDt != ''">
-			and em.ppsl_dt <![CDATA[<=]]> #{endDt}
-		</if> -->
     </select>
     
     <select id="getRevokeDetail" parameterType="java.util.HashMap"
@@ -53,7 +56,7 @@
 				when (ep.wt_dt is not null and ep.wt_cnc_dt is null) then 'Y'
 				else 'N'
 			 end as agreeYn
-		from ebs_master em 
+		from kgst.ebs_master em 
 		where em.bill_id = #{billId}
     </select>
     
@@ -66,7 +69,7 @@
 				when (ep.wt_dt is not null and ep.wt_cnc_dt is null) then 'Y'
 				else 'N'
 			 end as agreeYn 		--동의여부
-		from ebs_proposer ep
+		from kgst.ebs_proposer ep
 		where 
 			ep.bill_id = #{billId}
 			and (sign_dt is not null and sign_cnc_dt is null)
@@ -74,7 +77,7 @@
     
 	<update id="updateRevokeRequset" parameterType="java.util.HashMap">
     	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.repository.RevokeMapper.updateRevokeRequset */
-		update ebs_master 
+		update kgst.ebs_master 
 		set 
 			mod_id = #{modId} 			-- 수정자 아이디
 			, mod_dt = now()			-- 수정날짜
@@ -85,7 +88,7 @@
     
 	<update id="updateRevokeCancle" parameterType="java.util.HashMap">
     	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.repository.RevokeMapper.updateRevokeCancle */
-		update ebs_master 
+		update kgst.ebs_master 
 		set 
 			mod_id = #{modId} 			-- 수정자 아이디
 			, mod_dt = now()			-- 수정날짜
@@ -96,7 +99,7 @@
     
     <update id="updateRevoke" parameterType="kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.vo.RevokeVo">
     	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.repository.RevokeMapper.updateRevoke */
-		update ebs_master 
+		update kgst.ebs_master 
 		set 
 			mod_id = #{modId} 			-- 수정자 아이디
 			, mod_dt = now()			-- 수정날짜

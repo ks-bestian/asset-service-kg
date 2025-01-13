@@ -28,6 +28,8 @@ public class ApplyVo extends ComDefaultVO {
 	private String billNameKg;
 	//안건이름-ru
 	private String billNameRu;
+	//비고
+	private String etc;
 	//비고-kg
 	private String etcKg;
 	//비고-ru
@@ -36,6 +38,7 @@ public class ApplyVo extends ComDefaultVO {
 	private String ppslKndCd;
 	//제안자 이름
 	private String ppsrNm;
+	private String memberNm;
 	//제안자 아이디
 	private String ppsrId;
 	//안건 상태
@@ -46,6 +49,7 @@ public class ApplyVo extends ComDefaultVO {
 	private String wtCnRu;
 	//제출날짜
 	private String ppslDt;
+	
 	
 	//제안자 목록
 	private List<String> proposerList;

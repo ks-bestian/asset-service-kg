@@ -10,6 +10,7 @@ import kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.repository.RevokeM
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.service.RevokeService;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.vo.RevokeResponse;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.vo.RevokeVo;
+import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,8 +24,10 @@ public class RevokeServiceImpl implements RevokeService {
 
 	@Override
 	public List<RevokeVo> getRevokeList(HashMap<String, Object> param) {
-		// TODO :: 로그인한 계정 아이디 필요, 철회 코드정의 필요, 대수 검색조건 설정 필요(현재 14로 하드코딩)
-		return revokeMapper.getRevokeList(param);
+		// TODO :: 철회 코드정의 필요, 대수 검색조건 설정 필요(현재 14로 하드코딩)
+		String userId = new SecurityInfoUtil().getAccountId();
+		param.put("userId", userId); 
+		return revokeMapper.selectRevokeList(param);
 	}
 
 	@Override
