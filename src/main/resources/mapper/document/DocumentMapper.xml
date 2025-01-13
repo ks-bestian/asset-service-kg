@@ -88,7 +88,7 @@
 	</select>
 	
 	<select id="selectDeptFolderList" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo">
-		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectFolderList */
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectDeptFolderList */
 		<include refid="selectFolder" />
 		where 1=1
 			and c.dept_folder_yn = 'Y'

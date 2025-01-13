@@ -21,6 +21,9 @@
         /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.menu.repository.MenuMapper.selectListMenu */
         select
               menu_id --메뉴아이디
+            , (case when #{lang} = 'lny_type2' then menu_nm2
+                else menu_nm1
+                end) as menu_nm
             , menu_nm1 --메뉴명(키르기스어)
             , menu_nm2 --메뉴명(러시아어)
             , menu_nm3 --메뉴명(한국어)
@@ -34,7 +37,7 @@
             , mod_dt
             , mod_id
         from com_menu
-        order by ord
+        order by upr_menu_id, ord
     </select>
     
     <select id="selectMenu" parameterType="java.lang.Long" resultType="kr.co.bestiansoft.ebillservicekg.admin.menu.vo.MenuVo">
@@ -83,7 +86,7 @@
             , #{useYn}
             , #{rmk}
             , now()
-            , #{regId}
+            , 'admin'
             , null
             , null
         )

@@ -6,6 +6,9 @@
         /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.auth.repository.AuthMapper.selectListAuth */
         select
               auth_id --권한아이디
+            , (case when #{lang} = 'lng_type2' then auth_nm2
+                else auth_nm1
+              end) as auth_nm
             , auth_nm1 --권한명(키르키즈어)
             , auth_nm2 --권한명(러시아어)
             , auth_nm3 --권한명(한국어)
@@ -16,7 +19,7 @@
             , mod_id
             , mod_dt
         from kgst.com_auth
-        where 1=1
+        where use_yn = 'Y'
         <if test="authNm1 != null and authNm1 != ''">
             and auth_nm1 like concat('%', #{authNm1}, '%')
         </if>

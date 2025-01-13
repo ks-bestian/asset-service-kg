@@ -1,5 +1,7 @@
 package kr.co.bestiansoft.ebillservicekg.admin.menu.service.impl;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import kr.co.bestiansoft.ebillservicekg.admin.menu.domain.MenuHierarchy;
 import kr.co.bestiansoft.ebillservicekg.admin.menu.repository.MenuMapper;
 import kr.co.bestiansoft.ebillservicekg.admin.menu.service.MenuService;
 import kr.co.bestiansoft.ebillservicekg.admin.menu.vo.MenuVo;
@@ -22,8 +24,15 @@ public class MenuServiceImpl implements MenuService {
     private final MenuMapper menuMapper;
 
     @Override
-    public List<MenuVo> getMenuList(HashMap<String, Object> param) {
-        return menuMapper.selectListMenu(param);
+    public ArrayNode getMenuList(HashMap<String, Object> param) {
+        String lang = (String) param.get("lang");
+        String type = (String) param.get("type");
+
+        List<MenuVo> list = menuMapper.selectListMenu(param);
+        MenuHierarchy mh = new MenuHierarchy();
+        mh.buildMenuHierarchy(list, lang);
+        ArrayNode rootNode = mh.getMenuJson(type);
+        return rootNode;
     }
 
     @Override
@@ -43,8 +52,10 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public void deleteMenu(Long menuId) {
-        menuMapper.deleteMenu(menuId);
+    public void deleteMenu(List<Long> menuIds) {
+        for(Long menuId : menuIds) {
+            menuMapper.deleteMenu(menuId);
+        }
     }
 
     @Override

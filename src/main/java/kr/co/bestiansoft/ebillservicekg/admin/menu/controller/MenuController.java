@@ -48,8 +48,8 @@ public class MenuController {
 
     @ApiOperation(value = "메뉴 삭제", notes = "메뉴 삭제한다.")
     @DeleteMapping("admin/menu")
-    public ResponseEntity<CommonResponse> deleteMenu(@RequestBody Long menuId) {
-        menuService.deleteMenu(menuId);
+    public ResponseEntity<CommonResponse> deleteMenu(@RequestBody List<Long> menuIds) {
+        menuService.deleteMenu(menuIds);
         return new ResponseEntity<>(new CommonResponse(200, "ok", "Menu code deleted successfully."), HttpStatus.OK);
     }
 

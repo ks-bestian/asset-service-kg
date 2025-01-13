@@ -19,14 +19,15 @@
             , mod_dt
         from com_lng_code
         where 1=1
-        <if test="lng_ty1 != null and lng_ty1 != ''">
-            and lng_ty1 like concat('%', #{lngTy1}, '%')
-        </if>
-        <if test="lng_ty2 != null and lng_ty2 != ''">
-            and lng_ty2 like concat('%', #{lngTy2}, '%')
-        </if>
-        <if test="lng_ty3 != null and lng_ty3 != ''">
-            and lng_ty3 like concat('%', #{lngTy3}, '%')
+        <if test="search != null and search != ''">
+            <choose>
+                <when test="lang = 'lng_type1'">
+                    and lng_ty1 like concat('%', #{search}, '%')
+                </when>
+                <when test="lang = 'lng_type2'">
+                    and lng_ty2 like concat('%', #{search}, '%')
+                </when>
+            </choose>
         </if>
         order by reg_dt desc
     </select>
@@ -69,7 +70,7 @@
             , lng_ty3 = #{lngTy3}
             , rmk = #{rmk}
             , mod_id = #{modId}
-            , mod_dt = #{modDt}
+            , mod_dt = now()
         where lng_id = #{lngId}
     </update>
 

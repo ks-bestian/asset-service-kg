@@ -14,13 +14,4 @@ public class AuthUserVo extends ComDefaultVO {
     private LocalDateTime regDt;
     private String modId;
     private LocalDateTime modDt;
-    private String[] userIds;
-
-
-    @Builder
-    public AuthUserVo (Long authId, String userId) {
-        this.authId = authId;
-        this.userId = userId;
-    }
-
 }
