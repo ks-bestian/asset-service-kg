@@ -8,6 +8,10 @@ public interface ProcessService {
 
 
 	ProcessVo testProcess(ProcessVo argVo) throws Exception;
+	ProcessVo createProcessAuto(ProcessVo argVo) throws Exception;
 
+
+
+	ProcessVo handleProcess(ProcessVo argVo);
 
 }

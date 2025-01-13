@@ -19,6 +19,33 @@ public class ProcessHandler {
 	private final ProcessMapper processMapper;
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProcessController.class);
 
+	public ProcessVo createProcessAuto(ProcessVo processVo) throws Exception {
+
+		if("0".equals(processVo.getStepId())) {
+
+			processVo.setBpDfId("1");//일단은 하나로 설정 여러개라면 안건유형에 따라서
+			processVo.setStatus("P");//진행중
+			processVo.setCurrentStepId("0");
+			processMapper.insertBpInstance(processVo);
+
+		} else if("1000".equals(processVo.getStepId())) {
+
+			processVo.setBpDfId("1");//일단은 하나로 설정 여러개라면 안건유형에 따라서
+			processMapper.updateBpInstance(processVo);
+
+		}
+
+		List<ProcessVo> steps = processMapper.selectBpStepList(processVo);//전체 스텝가져오기 by billId
+		ProcessVo pStepVo = null;
+		for(ProcessVo vo: steps) {
+			executeServiceTasks(vo);
+			pStepVo = vo;
+		}
+
+
+		return pStepVo;
+    }
+
 	public ProcessVo createProcess(ProcessVo processVo) throws Exception {
 
 		if("0".equals(processVo.getStepId())) {
@@ -27,6 +54,11 @@ public class ProcessHandler {
 			processVo.setStatus("P");//진행중
 			processVo.setCurrentStepId("0");
 			processMapper.insertBpInstance(processVo);
+
+		} else if("1000".equals(processVo.getStepId())) {
+
+			processVo.setBpDfId("1");//일단은 하나로 설정 여러개라면 안건유형에 따라서
+			processMapper.updateBpInstance(processVo);
 
 		}
 

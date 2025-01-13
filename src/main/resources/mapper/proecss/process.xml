@@ -133,6 +133,16 @@
 	 WHERE BP_INSTANCE_ID = #{bpInstanceId}
     </update>
 
+    <update id="updateBpInstance" parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
+	/* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.updateBpInstance */
+	UPDATE EBS_BP_INSTANCE
+	   SET
+	       BP_DF_ID = #{bpDfId}
+	     , MOD_ID = #{modId}
+	     , MOD_DT = now()
+	 WHERE BILL_ID = #{billId}
+    </update>
+
     <delete id="deleteBpInstance" parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
 	/* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.deleteBpInstance */
 	DELETE FROM EBS_BP_INSTANCE
@@ -252,17 +262,36 @@
    resultType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
    /* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.selectBpStep */
 	SELECT
-            A.STEP_ID
-	     ,  A.BP_DF_ID
-	     ,  A.STEP_NM
-	     ,  A.NEXT_STEP_ID
-	     ,  A.RMK
-	     ,  A.REQ_AUTH_ID
-	     ,  A.STEP_ORD
-	     ,  B.bp_instance_id
+           A.STEP_ID
+	     , A.BP_DF_ID
+	     , A.STEP_NM
+	     , A.NEXT_STEP_ID
+	     , A.RMK
+	     , A.REQ_AUTH_ID
+	     , A.STEP_ORD
+	     , B.bp_instance_id
+	     , B.bill_id
 	FROM EBS_BP_STEP A, ebs_bp_instance B
 	WHERE A.BP_DF_ID = B.BP_DF_ID
 		and A.STEP_ID = #{stepId}
+		and B.bill_id = #{billId}
+	</select>
+
+   <select id="selectBpStepList"  parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo"
+   resultType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
+   /* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.selectBpStepList */
+	SELECT
+           A.STEP_ID
+	     , A.BP_DF_ID
+	     , A.STEP_NM
+	     , A.NEXT_STEP_ID
+	     , A.RMK
+	     , A.REQ_AUTH_ID
+	     , A.STEP_ORD
+	     , B.bp_instance_id
+	     , B.bill_id
+	FROM EBS_BP_STEP A, ebs_bp_instance B
+	WHERE A.BP_DF_ID = B.BP_DF_ID
 		and B.bill_id = #{billId}
 	</select>
 

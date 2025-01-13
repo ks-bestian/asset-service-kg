@@ -7,6 +7,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
@@ -54,7 +56,7 @@ public class EDVHelper {
 
     @Value("${edv.property-name}")
     private String edvName;
-    
+
     @Value("${edv.datastore-path}")
     private String datastorePath;
 
@@ -129,7 +131,7 @@ public class EDVHelper {
 
             Binary binary = session.getValueFactory().createBinary(is);
             is.close();
-            
+
             Calendar created = Calendar.getInstance();
             Node resourcenode = filenode.addNode(JcrConstants.JCR_CONTENT, JcrConstants.NT_RESOURCE);
             resourcenode.setProperty(JcrConstants.JCR_MIMETYPE, "application/octest-stream");
@@ -146,7 +148,7 @@ public class EDVHelper {
         }
         return fileId;
     }
-	
+
 	public InputStream download(String fileId) throws Exception {
 
         InputStream is = null;
@@ -156,9 +158,9 @@ public class EDVHelper {
         	Node root = session.getRootNode();
             Node fileNode = root.getNode(fileId);
             Node resourcenode = fileNode.getNode(JcrConstants.JCR_CONTENT);
-            
+
             Binary binary = JcrUtils.getBinaryProperty(resourcenode, JcrConstants.JCR_DATA, null);
-            
+
             is = binary.getStream();
             session.logout();
         } catch (RepositoryException e) {
@@ -225,13 +227,13 @@ public class EDVHelper {
 	    	  LOGGER.error(e.getMessage());
 	      }
 	   }
-	
-	
-	
+
+
+
 	private final int STREAM_BUFFER_LENGTH = 1024;
 	private final char[] HEX = "0123456789abcdef".toCharArray();
 	private final String DIGEST = "SHA-256";
-	
+
 	private byte[] digestStream(MessageDigest digest, InputStream is) throws IOException {
         byte[] buffer = new byte[STREAM_BUFFER_LENGTH];
         int read = is.read(buffer, 0, STREAM_BUFFER_LENGTH);
@@ -244,7 +246,7 @@ public class EDVHelper {
 
         return digest.digest();
     }
-	
+
 	private String encodeHexString(byte[] value) {
         char[] buffer = new char[value.length * 2];
         for (int i = 0; i < value.length; i++) {
@@ -253,14 +255,14 @@ public class EDVHelper {
         }
         return new String(buffer);
     }
-	
+
 	public String getHash(InputStream is) throws Exception {
 		MessageDigest digest = MessageDigest.getInstance(DIGEST);
 		byte[] b = digestStream(digest, is);
-		
+
 		return encodeHexString(b);
 	}
-	
+
 	public String getFilePath(String hash) throws Exception {
 		String ret = datastorePath;
 		ret = ret + "/" + hash.substring(0, 2);
@@ -269,6 +271,6 @@ public class EDVHelper {
 		ret = ret + "/" + edvRoot + "_" + hash;
 		return ret;
 	}
-	
+
 
 }
