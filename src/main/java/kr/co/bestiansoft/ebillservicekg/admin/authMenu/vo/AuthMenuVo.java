@@ -17,5 +17,6 @@ public class AuthMenuVo extends ComDefaultVO {
     private LocalDateTime regDt;
     private String modId;
     private LocalDateTime modDt;
+    private boolean menuChecked;
     private List<AuthMenuVo> chlidren = new ArrayList<>();
 }
