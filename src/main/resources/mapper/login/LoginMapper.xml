@@ -4,6 +4,7 @@
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.login.repository.LoginMapper">
 
 	<select id="selectUser" resultType="kr.co.bestiansoft.ebillservicekg.login.vo.LoginUserVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.login.repository.LoginMapper.selectUser */
 		SELECT 
 			  user_id
 			, user_nm_kg
@@ -30,6 +31,7 @@
 	</select>
 	
 	<select id="selectUserAuth" resultType="kr.co.bestiansoft.ebillservicekg.admin.auth.vo.AuthVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.login.repository.LoginMapper.selectUserAuth */
 		select
 			  auth_id
 			, user_id
@@ -42,5 +44,26 @@
 		where 1=1
 		and user_id = #{userId}
 	</select>
+	
+	<select id="selectListComCodeAll" resultType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeDetailVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.login.repository.LoginMapper.selectListComCodeAll */
+        select
+              code_id
+            , code_nm1
+            , code_nm2
+            , code_nm3
+            , grp_code
+            , use_yn
+            , ord
+            , rmk
+            , reg_dt
+            , reg_id
+            , mod_dt
+            , mod_id
+        from com_code_detail
+        where 1=1
+        	and use_yn = 'Y'
+        order by reg_dt desc, ord asc
+    </select>
     
 </mapper>
