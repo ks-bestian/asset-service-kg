@@ -16,6 +16,7 @@ import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyResponse;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
+import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
 import kr.co.bestiansoft.ebillservicekg.process.service.ProcessService;
 import kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo;
@@ -46,6 +47,8 @@ public class ApplyServiceImpl implements ApplyService {
 		//안건등록
 		String billId = StringUtil.getEbillId();
 		applyVo.setBillId(billId);
+		String ppsrId = new SecurityInfoUtil().getAccountId();
+		applyVo.setPpsrId(ppsrId);
 		applyMapper.insertApplyBill(applyVo);
 
 		//파일등록
@@ -55,9 +58,8 @@ public class ApplyServiceImpl implements ApplyService {
 
 		//발의자 요청
 		List<String> proposerList = applyVo.getProposerList();
-		String ppsrId = applyVo.getPpsrId();
-	    proposerList.add(ppsrId);
-
+	    proposerList.add(applyVo.getPpsrId());
+		
 		int ord = proposerList.size();
 		for(String memberId : proposerList) {
 			ApplyVo member = applyMapper.getProposerInfo(memberId);
@@ -85,6 +87,8 @@ public class ApplyServiceImpl implements ApplyService {
 	@Override
 	public List<ApplyVo> getApplyList(HashMap<String, Object> param) {
 		// TODO :: 대수 검색조건 설정 필요(현재 14로 하드코딩)
+		String loginId = new SecurityInfoUtil().getAccountId();
+		param.put("loginId", loginId);
 		return applyMapper.selectListApply(param);
 	}
 
@@ -132,11 +136,11 @@ public class ApplyServiceImpl implements ApplyService {
 	}
 
 	@Override
-	public ApplyResponse getApplyDetail(String billId) {
+	public ApplyResponse getApplyDetail(String billId, String lang) {
 		ApplyResponse result = new ApplyResponse();
 
 		//안건 상세
-		ApplyVo applyDetail = applyMapper.selectApplyDetail(billId);
+		ApplyVo applyDetail = applyMapper.selectApplyDetail(billId, lang);
 		result.setApplyDetail(applyDetail);
 
 		//파일 리스트

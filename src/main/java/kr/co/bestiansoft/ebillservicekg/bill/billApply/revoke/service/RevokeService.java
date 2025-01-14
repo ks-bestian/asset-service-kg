@@ -10,7 +10,7 @@ public interface RevokeService {
 
 	List<RevokeVo> getRevokeList(HashMap<String, Object> param);
 
-	RevokeResponse getRevokeDetail(String billId);
+	RevokeResponse getRevokeDetail(String billId, String lang);
 
 	int billRevokeRequest(String billId, HashMap<String, Object> param);
 
