@@ -22,7 +22,7 @@
 		    , to_char(em.reg_dt, 'DD/MM/YYYY') as regDate
 		from kgst.ebs_proposer ep
 			left join kgst.ebs_master em on em.bill_id = ep.bill_id 
-			left join kgst.com_member cm on cm.member_id = ep.proposer_id 
+			left join kgst.view_user_member view on view.member_id = ep.proposer_id
 		where em.ppsr_id != ep.proposer_id 
 			and ep.proposer_id = #{loginId}
 			and em.na_term_cd = '14'
