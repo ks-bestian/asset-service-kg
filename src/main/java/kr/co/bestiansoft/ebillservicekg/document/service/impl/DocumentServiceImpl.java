@@ -47,6 +47,8 @@ public class DocumentServiceImpl implements DocumentService {
     
     @Override
     public List<FolderVo> selectDeptFolderList(FolderVo vo) {
+    	String deptCd = new SecurityInfoUtil().getDeptCd();
+    	vo.setDeptCd(deptCd);
         return documentMapper.selectDeptFolderList(vo);
     }
 

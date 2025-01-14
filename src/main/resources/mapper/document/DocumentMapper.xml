@@ -56,6 +56,7 @@
 	    	select
 				  a.folder_id
 				, a.folder_nm
+				, a.folder_nm as title
 				, a.upper_folder_id
 				, a.dept_cd
 				, a.del_yn
