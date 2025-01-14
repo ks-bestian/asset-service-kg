@@ -24,10 +24,14 @@ public class RevokeAgreeVo extends ComDefaultVO {
 	private String statCd;
 	//안건종류
 	private String billKind;
+	//비고
+	private String etc;
 	//비고kg
 	private String etcKg;
 	//비고ru
 	private String etcRu;
+	//철회사유
+	private String wtCn;
 	//철회사유kg
 	private String wtCnKg;
 	//철회사유ru

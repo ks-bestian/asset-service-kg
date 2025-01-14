@@ -10,7 +10,7 @@ import kr.co.bestiansoft.ebillservicekg.bill.billApply.revokeAgree.vo.RevokeAgre
 @Mapper
 public interface RevokeAgreeMapper {
 
-	List<RevokeAgreeVo> getRevokeAgreeList(HashMap<String, Object> param);
+	List<RevokeAgreeVo> selectRevokeAgreeList(HashMap<String, Object> param);
 
 	RevokeAgreeVo getRevokeAgreeDetail(HashMap<String, Object> param);
 
