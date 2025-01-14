@@ -41,7 +41,7 @@ public class DocumentController {
 
     private final DocumentService fileService;
     private final EDVHelper edv;
-    private final DocumentMapper fileMapper;
+    private final DocumentMapper documentMapper;
     
 
     @ApiOperation(value = "부서 폴더 등록", notes = "부서 폴더 등록")
@@ -51,7 +51,7 @@ public class DocumentController {
     }
     
     @ApiOperation(value = "부서 폴더 수정", notes = "부서 폴더 수정")
-    @PutMapping("/document/dept/folders")
+    @PutMapping("/document/folders")
     public ResponseEntity<CommonResponse> updateFolder(@RequestBody FolderVo vo) {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", fileService.updateFolder(vo)), HttpStatus.OK);
     }
@@ -68,8 +68,8 @@ public class DocumentController {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", fileService.selectDeptFolderList(vo)), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "부서 폴더/파일 삭제", notes = "부서 폴더/파일 삭제")
-    @DeleteMapping("/document/dept/files")
+    @ApiOperation(value = "폴더/파일 삭제", notes = "부서 폴더/파일 삭제")
+    @DeleteMapping("/document/files")
     public ResponseEntity<CommonResponse> deleteFoldersAndFiles(@RequestBody FileVo vo) {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", fileService.deleteFoldersAndFiles(vo.getFolderIds(), vo.getFileGroupIds())), HttpStatus.OK);
     }
@@ -107,10 +107,10 @@ public class DocumentController {
     
     
     @ApiOperation(value = "파일다운로드", notes = "파일을 다운로드한다.")
-    @GetMapping("/document/dept/files/download")
+    @GetMapping("/document/files/download")
     public ResponseEntity<?> fileDownLoad(@RequestParam String fileId, HttpServletResponse response, HttpServletRequest request) throws Exception{
     	
-    	FileVo fileVo = fileMapper.selectFile(fileId);
+    	FileVo fileVo = documentMapper.selectFile(fileId);
     	String filename = fileVo.getFileTitle();
     	String filetype = fileVo.getFileType();
     	if(!StringUtil.isNullOrEmpty(filetype)) {
@@ -129,8 +129,8 @@ public class DocumentController {
     					.body(resource);
     }
     
-    @ApiOperation(value = "부서 파일 수정", notes = "부서 파일 수정")
-    @PutMapping("/document/dept/files")
+    @ApiOperation(value = "파일 수정", notes = "파일 수정")
+    @PutMapping("/document/files")
     public ResponseEntity<CommonResponse> updateFile(@RequestBody FileVo vo) {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", fileService.updateFile(vo)), HttpStatus.OK);
     }
