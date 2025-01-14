@@ -181,7 +181,7 @@
     </update>
     
     <select id="selectDeptFileList" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo">
-		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectFileList */
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectDeptFileList */
 		select * from (
 			select 
 				  b.*
@@ -200,9 +200,8 @@
 				from kgst.bs_file_info a
 				where 1=1
 					and a.del_yn = 'N'
-			    	and (case when a.dept_file_yn = 'Y' then a.dept_cd = #{deptCd}
-						 else a.user_id = #{userId}
-						 end)
+					and a.dept_file_yn = 'Y'
+					and a.dept_cd = #{deptCd}
 					and a.folder_id = #{folderId}
 			) b
 			left outer join kgst.bs_favorite c
@@ -212,8 +211,6 @@
 				on d.folder_id = b.folder_id
 		) x
 		where 1=1
-			and x.dept_file_yn = 'Y'
-			and x.dept_cd = #{deptCd}
 			<if test="title != null and title != ''">
 			and x.title like '%' || #{title} || '%'
 			</if>

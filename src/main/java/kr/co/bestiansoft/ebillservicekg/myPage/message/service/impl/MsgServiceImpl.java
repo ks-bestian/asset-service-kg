@@ -1,5 +1,8 @@
 package kr.co.bestiansoft.ebillservicekg.myPage.message.service.impl;
 
+import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo;
+import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
+import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
 import kr.co.bestiansoft.ebillservicekg.myPage.message.repository.MsgMapper;
 import kr.co.bestiansoft.ebillservicekg.myPage.message.service.MsgService;
@@ -20,14 +23,18 @@ import java.util.List;
 public class MsgServiceImpl implements MsgService {
 
     private final MsgMapper msgMapper;
+    private final ComFileService comFileService;
 
     @Override
     public List<MsgVo> getRcvList(HashMap<String, Object> param) {
+        param.put("rcvId", new SecurityInfoUtil().getAccountId());
         return msgMapper.selectListRcv(param);
     }
 
     @Override
     public List<MsgVo> getSendList(HashMap<String, Object> param) {
+        param.put("sendId", new SecurityInfoUtil().getAccountId());
+
         return msgMapper.selectListSend(param);
     }
 
@@ -38,6 +45,15 @@ public class MsgServiceImpl implements MsgService {
 
     @Override
     public MsgRequest sendMsg(MsgRequest msgRequest) {
+        msgRequest.setSendId(new SecurityInfoUtil().getAccountId());
+        String fileGroupId = null;
+
+        if(msgRequest.getFiles() != null) {
+            fileGroupId = comFileService.saveFile(msgRequest.getFiles());
+        }
+
+        msgRequest.setFileGroupId(fileGroupId);
+
         List<String> rcvIds = msgRequest.getRcvIds();
         msgRequest.setMsgGroupId(StringUtil.getUUUID());
 
@@ -52,13 +68,22 @@ public class MsgServiceImpl implements MsgService {
             msgRequest.setMsgDiv("S");
             msgMapper.insertMsg(msgRequest);
         }
+        fileGroupId = null;
         return msgRequest;
     }
 
     @Override
     public void deleteMsg(List<Long> msgIds) {
+        System.out.println("!2");
         for (Long id : msgIds) {
             msgMapper.deleteMsg(id);
+            System.out.println(id);
+
         }
+    }
+
+    @Override
+    public List<UserMemberVo> getUserMember(HashMap<String, Object> param) {
+        return msgMapper.selectUserMember(param);
     }
 }

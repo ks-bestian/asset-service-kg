@@ -11,7 +11,7 @@
             , em.msg_sj --메세지제목
             , em.rcv_dt --수신일시
             , em.rcv_id --수신자아이디
-            , em.send_dt --발신일시
+            , to_char(em.send_dt, 'DD/MM/YYYY HH24:MI') as send_date--발신일시
             , em.send_id --발신자아이디
             , em.file_group_id --파일그룹아이디
             , em.msg_div --발송구분 발송(S) 수신(R)
@@ -20,10 +20,9 @@
             , em.reg_dt
             , em.mod_id
             , em.mod_dt
-            , vum.user_nm_kg as send_nm
-<!--            , (case when #{lang} = 'lng_type1' then vum.user_nm_kg-->
-<!--                    when #{lang} = 'lng_type1' then vum.user_nm_ru-->
-<!--                end) as send_nm-->
+            , (case when #{lang} = 'lng_type2' then vum.user_nm_ru
+                    else vum.user_nm_kg
+                end) as send_nm
         from ebs_msg em
         inner join view_user_member vum on vum.user_id = em.send_id
         where em.msg_div = 'R'
@@ -33,12 +32,12 @@
         </if>
         <if test="sendNm != null and sendNm != ''">
             <choose>
-                <when test="lang == 'lng_typ2'">
-                    and vum.user_nm_ru like ('%', #{sendNm}, '%')
+                <when test="lang == 'lng_type2'">
+                    and vum.user_nm_ru like concat('%', #{sendNm}, '%')
                 </when>
-                <otherwise>
-                    and vum.user_nm_kg like ('%', #{sendNm}, '%')
-                </otherwise>
+                <when test="lang == 'lng_type1'">
+                    and vum.user_nm_kg like concat('%', #{sendNm}, '%')
+                </when>
             </choose>
         </if>
         order by em.send_dt desc
@@ -53,7 +52,7 @@
             , em.msg_sj --메세지제목
             , em.rcv_dt --수신일시
             , em.rcv_id --수신자아이디
-            , em.send_dt --발신일시
+            , to_char(em.send_dt, 'DD/MM/YYYY HH24:MI') as send_date --발신일시
             , em.send_id --발신자아이디
             , em.file_group_id --파일그룹아이디
             , em.msg_div --발송구분 발송(S) 수신(R)
@@ -62,24 +61,23 @@
             , em.reg_dt
             , em.mod_id
             , em.mod_dt
-            , vum.user_nm_kg as rcv_nm
-            <!--            , (case when #{lang} = 'lng_type1' then vum.user_nm_kg-->
-            <!--                    when #{lang} = 'lng_type1' then vum.user_nm_ru-->
-            <!--                end) as rcv_nm-->
+            , (case when #{lang} = 'lng_type2' then vum.user_nm_ru
+               else vum.user_nm_kg
+               end) as rcv_nm
         from ebs_msg em
-        inner join view_user_member vum on vum.user_id = em.rcv_id
+        left join view_user_member vum on vum.user_id = em.rcv_id
         where msg_div = 'S'
-            and send_id = #{sendId} --todo 로그인아이디로 수정
+            and send_id = #{sendId}
         <if test="msgSj != null and msgSj != ''">
             and msg_sj like concat('%', #{msgSj}, '%')
         </if>
         <if test="rcvNm != null and rcvNm != ''">
             <choose>
                 <when test="lang == 'lng_typ2'">
-                    and vum.user_nm_ru like ('%', #{rcvNm}, '%')
+                    and vum.user_nm_ru like concat('%', #{rcvNm}, '%')
                 </when>
                 <otherwise>
-                    and vum.user_nm_kg like ('%', #{rcvNm}, '%')
+                    and vum.user_nm_kg like concat('%', #{rcvNm}, '%')
                 </otherwise>
             </choose>
         </if>
@@ -143,12 +141,63 @@
             , #{fileGroupId}
             , #{msgDiv}
             , #{msgGroupId}
-            , #{regId}
+            , 'admin'
             , now()
             , null
             , null
         )
     </insert>
+
+    <select id="selectUserMember" parameterType="kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo">
+        select
+              um.user_id
+            , (case when #{lang} = 'lng_type2' then um.user_nm_ru
+                else um.user_nm_kg
+                end) as user_nm
+            , um.user_nm_kg
+            , um.user_nm_ru
+            , um.member_id
+            , um.member_nm_kg
+            , um.member_nm_ru
+            , um.dept_cd
+            , um.email
+            , um.gen_cd
+            , um.profile_img_path
+            , um.msg_rcv_yn
+            , um.doc_mgr_yn
+            , um.dept_head_yn
+            , um.job_cd
+            , (case when #{lang} = 'lng_type2' then cc.code_nm2
+                else cc.code_nm1
+                end) as job_nm
+            , um.pos_cd
+            , um.age_cd
+            , um.cmit_cd
+            , (case when #{lang} = 'lng_type2' then dept_cmit.dept_nm2
+            else dept_cmit.dept_nm1
+            end) as cmit_nm
+            , um.poly_cd
+            , (case when #{lang} = 'lng_type2' then dept_poly.dept_nm2
+            else dept_poly.dept_nm1
+            end) as poly_nm
+            , um.rsdn_rgst_nmbr
+            , (case when um.user_id in (select cu.user_id from com_user cu) then 'user'
+                    when um.member_id in (select cm.member_id from com_member cm) then 'member'
+              end) as type
+        from view_user_member um
+        left join com_dept dept_poly on dept_poly.dept_cd = um.poly_cd
+        left join com_dept dept_cmit on dept_cmit.dept_cd = um.cmit_cd
+        left join com_code_detail cc on cc.code_id = um.job_cd
+        where 1=1
+        <choose>
+            <when test="lang == 'lng_type1'">
+                and um.user_nm_kg like concat('%', #{searchNm}, '%')
+            </when>
+            <when test="lang == 'lng_type2'">
+                and um.user_nm_ru like concat ('%', #{searchNm}, '%')
+            </when>
+        </choose>
+    </select>
 
     <delete id="deleteMsg" parameterType="java.lang.Long">
         delete from ebs_msg

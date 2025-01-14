@@ -4,6 +4,7 @@ import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class MsgVo extends ComDefaultVO {
@@ -14,6 +15,7 @@ public class MsgVo extends ComDefaultVO {
     private LocalDateTime rcvDt;
     private String rcvId;
     private LocalDateTime sendDt;
+    private String sendDate;
     private String sendId;
     private String fileGroupId;
     private String msgDiv;
@@ -24,4 +26,6 @@ public class MsgVo extends ComDefaultVO {
     private LocalDateTime modDt;
     private String rcvNm;
     private String sendNm;
+
+    private List<String> rcvIds;
 }
