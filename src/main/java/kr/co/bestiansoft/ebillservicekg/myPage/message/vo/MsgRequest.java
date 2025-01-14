@@ -3,6 +3,7 @@ package kr.co.bestiansoft.ebillservicekg.myPage.message.vo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,4 +23,5 @@ public class MsgRequest {
     private String msgDiv;
     private String msgGroupId;
     private String rcvId;
+    private MultipartFile[] files;
 }
