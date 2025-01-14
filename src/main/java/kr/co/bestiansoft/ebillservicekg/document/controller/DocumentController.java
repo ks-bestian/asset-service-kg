@@ -58,13 +58,13 @@ public class DocumentController {
     
     @ApiOperation(value = "부서 폴더 전체목록 조회", notes = "부서 폴더 전체목록 조회")
     @GetMapping("/document/dept/folders/all")
-    public ResponseEntity<CommonResponse> selectFolderListAll(FolderVo vo) {
+    public ResponseEntity<CommonResponse> selectDeptFolderListAll(FolderVo vo) {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", fileService.selectDeptFolderListAll(vo)), HttpStatus.OK);
     }
     
     @ApiOperation(value = "부서 폴더 목록 조회", notes = "부서 폴더 목록 조회")
     @GetMapping("/document/dept/folders")
-    public ResponseEntity<CommonResponse> selectFolderList(FolderVo vo) {
+    public ResponseEntity<CommonResponse> selectDeptFolderList(FolderVo vo) {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", fileService.selectDeptFolderList(vo)), HttpStatus.OK);
     }
     

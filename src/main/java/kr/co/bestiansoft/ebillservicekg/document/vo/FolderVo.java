@@ -18,4 +18,6 @@ public class FolderVo extends ComDefaultVO {
     
     private String deptFolderYn;
     private String userId;
+    
+    private String folderYn = "Y";
 }
