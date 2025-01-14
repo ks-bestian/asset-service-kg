@@ -17,6 +17,8 @@ import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
+import kr.co.bestiansoft.ebillservicekg.process.service.ProcessService;
+import kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,16 +28,17 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Service
 public class ApplyServiceImpl implements ApplyService {
-	
+
 	private final ApplyMapper applyMapper;
 	private final AgreeMapper agreeMapper;
 	private final ComFileService comFileService;
-	
+	private final ProcessService processService;
+
 	@Transactional
 	@Override
 	public ApplyVo createApply(ApplyVo applyVo) {
-	//TODO :: 메세지 알람 적용해야함 
-	
+	//TODO :: 메세지 알람 적용해야함
+
 		//사회토론번호
 		applyMapper.insertHomeLaws(applyVo);
 		applyVo.setSclDscRcpNmb(String.valueOf(applyVo.getId()));
@@ -44,32 +47,38 @@ public class ApplyServiceImpl implements ApplyService {
 		String billId = StringUtil.getEbillId();
 		applyVo.setBillId(billId);
 		applyMapper.insertApplyBill(applyVo);
-		
+
 		//파일등록
 		comFileService.saveFileEbs(applyVo.getFiles(), applyVo.getFileKindCds(), billId);
 		//파일 정보를 가지고 있어서 null처리
 		applyVo.setFiles(null);
-				
+
 		//발의자 요청
 		List<String> proposerList = applyVo.getProposerList();
 		String ppsrId = applyVo.getPpsrId();
 	    proposerList.add(ppsrId);
-		
+
 		int ord = proposerList.size();
 		for(String memberId : proposerList) {
 			ApplyVo member = applyMapper.getProposerInfo(memberId);
-			
+
 			applyVo.setOrd(++ord);
 			applyVo.setPolyCd(member.getPolyCd());
 			applyVo.setPolyNm(member.getPolyNm());
 			applyVo.setPpsrId(member.getMemberId());
-			
+
 			if(member.getMemberId().equals(ppsrId)) {
 				applyVo.setSignDt("sign");
 			}
 			applyMapper.insertProposerList(applyVo);
 		}
-		
+
+
+		ProcessVo pVo = new ProcessVo();
+		pVo.setBillId(billId);
+		pVo.setStepId("0");//안건생성 프로세스시작
+		processService.handleProcess(pVo);
+
 		return applyVo;
 	}
 
@@ -82,17 +91,17 @@ public class ApplyServiceImpl implements ApplyService {
 	@Transactional
 	@Override
 	public int updateApply(ApplyVo applyVo, String billId) {
-		//TODO :: 
+		//TODO ::
 		//1. 수정이 가능 또는 불가능한 항목 정의 필요!
 		//2. 메세지 알림 기능 적용
-		
+
 		applyVo.setBillId(billId);
-		
+
 		List<String> newProposerList = applyVo.getProposerList();
 		List<String> proposerList = applyMapper.getProposerList(billId);
-		
+
 		int ord = proposerList.size();
-		
+
 		Set<String> allMembers = new HashSet<>(proposerList); // 기존 멤버들
 		allMembers.addAll(newProposerList); // 모든 멤버를 합침
 
@@ -103,7 +112,7 @@ public class ApplyServiceImpl implements ApplyService {
 		    } else if (!proposerList.contains(ppsrId) && newProposerList.contains(ppsrId)) {
 		        // 추가: 새로운 리스트에만 있는 경우
 		    	ApplyVo member = applyMapper.getProposerInfo(ppsrId);
-		    	
+
 		        applyVo.setOrd(++ord);
 				applyVo.setPolyCd(member.getPolyCd());
 				applyVo.setPolyNm(member.getPolyNm());
@@ -111,7 +120,7 @@ public class ApplyServiceImpl implements ApplyService {
 				applyMapper.insertProposerList(applyVo);
 		    }
 		}
-		
+
 		return applyMapper.updateApplyByBillId(applyVo);
 	}
 
@@ -125,7 +134,7 @@ public class ApplyServiceImpl implements ApplyService {
 	@Override
 	public ApplyResponse getApplyDetail(String billId) {
 		ApplyResponse result = new ApplyResponse();
-		
+
 		//안건 상세
 		ApplyVo applyDetail = applyMapper.selectApplyDetail(billId);
 		result.setApplyDetail(applyDetail);
@@ -133,39 +142,39 @@ public class ApplyServiceImpl implements ApplyService {
 		//파일 리스트
 		List<EbsFileVo> fileList = applyMapper.selectApplyFileList(billId);
 		result.setFileList(fileList);
-		
+
 		//발의자 대상
 		List<AgreeVo> proposerList = agreeMapper.selectAgreeProposerList(billId);
 		result.setProposerList(proposerList);
-		
+
 		return result;
 	}
 
 	@Transactional
 	@Override
 	public int applyBill(String billId) {
-		
+
 		String statCd = "ST010";
 		String procId = StringUtil.getEbillProcId();
-		String procKndCd = "PC010"; 
-				
+		String procKndCd = "PC010";
+
 		applyMapper.insertBillProcess(billId, procId, procKndCd);
-		
+
 		return applyMapper.updateApplyBill(billId, statCd);
 	}
-	
+
 	@Transactional
 	@Override
 	public int revokeBill(String billId, ApplyVo applyVo) {
-		
+
 		String statCd = "ST310";
 		applyVo.setStatCd(statCd);
 		applyVo.setBillId(billId);
 		applyMapper.updateBillPpsrRevoke(applyVo);
-		
+
 		return applyMapper.updateRevokeBill(applyVo);
 	}
-	
+
 	@Transactional
 	@Override
 	public int updateBillStatus(String billId, ApplyVo applyVo) {
@@ -176,8 +185,13 @@ public class ApplyServiceImpl implements ApplyService {
 	@Transactional
 	@Override
 	public ApplyVo saveBillAccept(String billId, ApplyVo applyVo) {
-		System.out.println("billId 안건 접수 :: " + billId);
-		return null;
+
+		ProcessVo pVo = new ProcessVo();
+		pVo.setBillId(billId);
+		pVo.setStepId("1000");//안건접수관리
+		processService.handleProcess(pVo);
+
+		return applyVo;
 	}
-	
+
 }
