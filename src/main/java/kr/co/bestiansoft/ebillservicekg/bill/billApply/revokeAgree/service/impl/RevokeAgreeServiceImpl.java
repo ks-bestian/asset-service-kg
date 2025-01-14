@@ -10,6 +10,7 @@ import kr.co.bestiansoft.ebillservicekg.bill.billApply.revokeAgree.repository.Re
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.revokeAgree.service.RevokeAgreeService;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.revokeAgree.vo.RevokeAgreeResponse;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.revokeAgree.vo.RevokeAgreeVo;
+import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -42,6 +43,8 @@ public class RevokeAgreeServiceImpl implements RevokeAgreeService {
 
 	@Override
 	public int updateRevokeAgree(String billId, HashMap<String, Object> param) {
+		String userId = new SecurityInfoUtil().getAccountId();
+		param.put("userId", userId);
 		param.put("billId", billId);
 		return revokeAgreeMapper.updateRevokeAgree(param);
 	}

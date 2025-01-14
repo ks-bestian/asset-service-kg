@@ -10,6 +10,8 @@ public class RevokeAgreeVo extends ComDefaultVO {
 	private String billId;
     //등록번호(사회토론번호?)
 	private String sclDscRcpNmb;
+	//안건이름
+	private String billName;
 	//안건이름kg
 	private String billNameKg;
 	//안건이름ru
@@ -34,4 +36,6 @@ public class RevokeAgreeVo extends ComDefaultVO {
 	private String proposerId;
 	//동의여부
 	private String agreeYn;
+	
+	private String memberNm;
 }

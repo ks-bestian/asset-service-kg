@@ -21,7 +21,7 @@ public interface ApplyMapper {
 
 	int insertProposerList(ApplyVo applyVo);
 
-	ApplyVo selectApplyDetail(String billId);
+	ApplyVo selectApplyDetail(String billId, String lang);
 
 	void deleteProposerByBillId(String billId);
 

@@ -12,9 +12,9 @@ public interface RevokeMapper {
 
 	List<RevokeVo> selectRevokeList(HashMap<String, Object> param);
 
-	RevokeVo getRevokeDetail(String billId);
+	RevokeVo selectRevokeDetail(HashMap<String, Object> param);
 
-	List<RevokeVo> getProposerList(String billId);
+	List<RevokeVo> selectProposerList(HashMap<String, Object> param);
 
 	int updateRevokeRequset(HashMap<String, Object> param);
 

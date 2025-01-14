@@ -127,11 +127,11 @@ public class ApplyServiceImpl implements ApplyService {
 	}
 
 	@Override
-	public ApplyResponse getApplyDetail(String billId) {
+	public ApplyResponse getApplyDetail(String billId, String lang) {
 		ApplyResponse result = new ApplyResponse();
 		
 		//안건 상세
-		ApplyVo applyDetail = applyMapper.selectApplyDetail(billId);
+		ApplyVo applyDetail = applyMapper.selectApplyDetail(billId, lang);
 		result.setApplyDetail(applyDetail);
 
 		//파일 리스트
