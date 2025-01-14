@@ -35,8 +35,8 @@ public class RevokeController {
     
     @ApiOperation(value = "철회상세", notes = "철회상세를 조회한다")
     @GetMapping("/bill/revoke/{billId}")
-    public ResponseEntity<CommonResponse> getRevokeDetail(@PathVariable String billId) {
-    	return new ResponseEntity<>(new CommonResponse(200, "OK", revokeService.getRevokeDetail(billId)), HttpStatus.OK);
+    public ResponseEntity<CommonResponse> getRevokeDetail(@PathVariable String billId, @RequestParam String lang) {
+    	return new ResponseEntity<>(new CommonResponse(200, "OK", revokeService.getRevokeDetail(billId, lang)), HttpStatus.OK);
     }
     
     @ApiOperation(value = "철회접수요청", notes = "철회접수를 요청한다")

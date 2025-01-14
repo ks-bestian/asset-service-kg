@@ -57,8 +57,8 @@ public class ApplyController {
     
     @ApiOperation(value = "안건 상세 조회", notes = "안건의 상세를 조회한다")
     @GetMapping("/bill/apply/{billId}")
-    public ResponseEntity<CommonResponse> getBillDetail(@PathVariable String billId) {
-    	return new ResponseEntity<>(new CommonResponse(200, "OK", applyService.getApplyDetail(billId)), HttpStatus.OK);
+    public ResponseEntity<CommonResponse> getBillDetail(@PathVariable String billId, @RequestParam String lang) {
+    	return new ResponseEntity<>(new CommonResponse(200, "OK", applyService.getApplyDetail(billId, lang)), HttpStatus.OK);
     }
     
 //    @ApiOperation(value = "안건접수", notes = "안건을 접수한다.")

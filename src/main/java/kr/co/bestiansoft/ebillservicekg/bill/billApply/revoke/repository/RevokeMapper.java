@@ -10,11 +10,11 @@ import kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.vo.RevokeVo;
 @Mapper
 public interface RevokeMapper {
 
-	List<RevokeVo> getRevokeList(HashMap<String, Object> param);
+	List<RevokeVo> selectRevokeList(HashMap<String, Object> param);
 
-	RevokeVo getRevokeDetail(String billId);
+	RevokeVo selectRevokeDetail(HashMap<String, Object> param);
 
-	List<RevokeVo> getProposerList(String billId);
+	List<RevokeVo> selectProposerList(HashMap<String, Object> param);
 
 	int updateRevokeRequset(HashMap<String, Object> param);
 
