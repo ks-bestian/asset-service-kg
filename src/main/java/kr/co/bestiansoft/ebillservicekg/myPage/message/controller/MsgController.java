@@ -8,6 +8,7 @@ import kr.co.bestiansoft.ebillservicekg.myPage.message.service.MsgService;
 import kr.co.bestiansoft.ebillservicekg.myPage.message.vo.MsgRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,9 +41,15 @@ public class MsgController {
     }
 
     @ApiOperation(value = "메세지 전송", notes = "메세지를 전송한다.")
-    @PostMapping("/myPage/msg")
-    public ResponseEntity<CommonResponse> sendMsg(@RequestBody MsgRequest msgRequest) {
+    @PostMapping(value = "/myPage/msg", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<CommonResponse> sendMsg(MsgRequest msgRequest) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Msg sent successfully.", msgService.sendMsg(msgRequest)), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "사용자 전체 조회", notes = "전체 사용자를 조회한다.")
+    @GetMapping(value = "/myPage/msg/user")
+    public ResponseEntity<CommonResponse> getUserMember(@RequestParam  HashMap<String, Object> param) {
+        return new ResponseEntity<>(new CommonResponse(200, "ok", msgService.getUserMember(param)), HttpStatus.OK);
     }
 
     @ApiOperation(value = "메세지 삭제", notes = "메세지를 삭제한다.")
@@ -51,4 +58,5 @@ public class MsgController {
         msgService.deleteMsg(msgIds);
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Msg deleted successfully.", "deleted"), HttpStatus.OK);
     }
+
 }

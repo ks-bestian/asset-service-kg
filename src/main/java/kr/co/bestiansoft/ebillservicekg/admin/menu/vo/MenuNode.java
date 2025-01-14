@@ -38,7 +38,7 @@ public class MenuNode {
     private List<MenuNode> children = new ArrayList<>();
 
     @Builder
-    public MenuNode(Long menuId, Long ord, String menuNm, String menuNm1, String menuNm2, String menuNm3, String menuPath, Long uprMenuId, LocalDateTime regDt, String regId, LocalDateTime modDt, String modId, String rmk, String useYn) {
+    public MenuNode(Long menuId, Long ord, String menuNm, String menuNm1, String menuNm2, String menuNm3, String menuPath, Long uprMenuId, LocalDateTime regDt, String regId, LocalDateTime modDt, String modId, String rmk, String useYn, int menuAuth) {
         this.menuId = menuId;
         this.ord = ord;
         this.menuNm = menuNm;
@@ -53,6 +53,7 @@ public class MenuNode {
         this.modId = modId;
         this.rmk = rmk;
         this.useYn = useYn;
+        this.menuAuth = menuAuth;
     }
 
 

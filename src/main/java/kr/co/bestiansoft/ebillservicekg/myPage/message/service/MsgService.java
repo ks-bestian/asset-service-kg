@@ -1,5 +1,6 @@
 package kr.co.bestiansoft.ebillservicekg.myPage.message.service;
 
+import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo;
 import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserVo;
 import kr.co.bestiansoft.ebillservicekg.myPage.message.vo.MsgRequest;
 import kr.co.bestiansoft.ebillservicekg.myPage.message.vo.MsgVo;
@@ -13,4 +14,5 @@ public interface MsgService {
     MsgVo getMsgDetail(Long msgId);
     MsgRequest sendMsg(MsgRequest msgRequest);
     void deleteMsg(List<Long> msgIds);
+    List<UserMemberVo> getUserMember(HashMap<String, Object> param);
 }

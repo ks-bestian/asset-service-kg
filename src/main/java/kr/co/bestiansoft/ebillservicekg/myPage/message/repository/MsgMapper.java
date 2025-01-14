@@ -1,5 +1,6 @@
 package kr.co.bestiansoft.ebillservicekg.myPage.message.repository;
 
+import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo;
 import kr.co.bestiansoft.ebillservicekg.myPage.message.vo.MsgRequest;
 import kr.co.bestiansoft.ebillservicekg.myPage.message.vo.MsgVo;
 import org.apache.ibatis.annotations.Mapper;
@@ -14,4 +15,5 @@ public interface MsgMapper {
     MsgVo selectMsg(Long msgId);
     int insertMsg(MsgRequest msgRequest);
     void deleteMsg(Long msgId);
+    List<UserMemberVo> selectUserMember(HashMap<String, Object> param);
 }
