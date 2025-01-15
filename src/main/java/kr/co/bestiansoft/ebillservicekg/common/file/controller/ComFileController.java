@@ -38,17 +38,17 @@ public class ComFileController {
 	@GetMapping("/com/file/down")
 	public ResponseEntity<?> fileDownload(@RequestParam String fileId,HttpServletResponse response, HttpServletRequest request) throws Exception {
 
-    	ComFileVo fileVo = comFileService.getFile(fileId);
-		String orgFileNm = URLEncoder.encode(fileVo.getOrgFileNm(),"UTF-8") ;
+//    	ComFileVo fileVo = comFileService.getFile(fileId);
+//		String orgFileNm = URLEncoder.encode(fileVo.getOrgFileNm(),"UTF-8") ;
 
-		InputStream ins = edv.download(fileVo.getFileId());
+		InputStream ins = edv.download(fileId);
 		Resource resource = new InputStreamResource(ins);
 
 		if (resource == null) return ResponseEntity.notFound().build();
 
 		return ResponseEntity.ok()
 				.contentType(MediaType.APPLICATION_OCTET_STREAM)
-				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + orgFileNm + "\"")
+//				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + orgFileNm + "\"")
 				.body(resource);
 	}
 
