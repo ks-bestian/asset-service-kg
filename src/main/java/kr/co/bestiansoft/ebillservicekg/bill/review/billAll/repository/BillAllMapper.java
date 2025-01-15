@@ -9,6 +9,6 @@ import kr.co.bestiansoft.ebillservicekg.bill.review.billAll.vo.BillAllVo;
 
 @Mapper
 public interface BillAllMapper {
-    List<BillAllVo> getBillList (HashMap<String, Object> param);
+    List<BillAllVo> selectBillList (HashMap<String, Object> param);
     BillAllVo getBillById(String id);
 }

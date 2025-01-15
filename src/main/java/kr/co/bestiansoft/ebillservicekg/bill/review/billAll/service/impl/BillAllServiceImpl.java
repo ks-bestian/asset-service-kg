@@ -23,7 +23,7 @@ public class BillAllServiceImpl implements BillAllService {
     @Override
     public List<BillAllVo> getBillList(HashMap<String, Object> param) {
 
-        List<BillAllVo> result = billAllMapper.getBillList(param);
+        List<BillAllVo> result = billAllMapper.selectBillList(param);
         return result;
     }
 

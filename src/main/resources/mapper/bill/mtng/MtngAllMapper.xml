@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+selectListBbs  
+selectCountBbs 
+selectBbs       
+insertBbs
+updateBbs
+deleteBbs
+ -->        
+<mapper namespace="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.repository.MtngAllMapper">
+
+    <select id="selectListMtngAll" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.vo.MtngAllVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.repository.MtngAllMapper.selectListMtngAll */
+		SELECT MTNG_ID
+		     ,  MTNG_TYPE_CD
+		     ,  CMT_ID
+		     ,  CMT_NM
+		     ,  DGR_CD
+		     ,  OPEN_DTM
+		     ,  CLOSE_DTM
+		     ,  MTNG_PLC
+		     ,  AGE_CD
+		     ,  RMK
+		     ,  STAT_CD
+		     ,  REG_ID
+		     ,  REG_DT
+		     ,  MOD_ID
+		     ,  MOD_DT
+		     ,  DUE_DTM
+		 FROM EBS_MTNG
+		 WHERE 1=1
+    </select>
+
+    <select id="selectMtngAll" parameterType="java.lang.String"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.vo.MtngAllVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.repository.MtngAllMapper.selectMtngAll */    
+		SELECT MTNG_ID
+		     ,  MTNG_TYPE_CD
+		     ,  CMT_ID
+		     ,  CMT_NM
+		     ,  DGR_CD
+		     ,  OPEN_DTM
+		     ,  CLOSE_DTM
+		     ,  MTNG_PLC
+		     ,  AGE_CD
+		     ,  RMK
+		     ,  STAT_CD
+		     ,  REG_ID
+		     ,  REG_DT
+		     ,  MOD_ID
+		     ,  MOD_DT
+		     ,  DUE_DTM
+		 FROM EBS_MTNG
+		 WHERE MTNG_ID = #{mtngId}
+    </select>
+
+
+	
+</mapper>
