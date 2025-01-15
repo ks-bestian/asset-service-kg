@@ -76,12 +76,11 @@
     	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.updateApplyByBillId */
         update kgst.ebs_master 
 		set
-		  bill_kind = #{billKind}		-- 안건 종류
-		, bill_name_kg = #{billNameKg}	-- 안건이름kg
+		  bill_name_kg = #{billNameKg}	-- 안건이름kg
 		, bill_name_ru = #{billNameRu}  -- 안건이름ru
-		<if test="etcKg != null"> , etc_kg = #{etcKg} </if> -- 비고kg
-		<if test="etcRu != null"> , etc_ru  = #{etcRu}</if> -- 비고ru
-		, mod_id = #{modId}				-- 등록자
+		, etc_kg = #{etcKg} 			-- 비고kg
+		, etc_ru  = #{etcRu} 			-- 비고ru
+		, mod_id = #{loginId}			-- 등록자
 		, mod_dt = now()				-- 등록 날짜
 		WHERE bill_id = #{billId}
     </update>
@@ -127,10 +126,8 @@
 				when #{lang} = 'lng_type_1' then view.member_nm_kg 
 				else view.member_nm_ru 
 			end as member_nm				-- 제안자 이름
-			, case
-				when #{lang} = 'lng_type_1' then em.etc_kg 
-				else em.etc_ru 
-			end as etc		 				-- 비고
+			, em.etc_kg						-- 비고kg
+			, em.etc_ru						-- 비고ru
 			, to_char(em.reg_dt, 'DD/MM/YYYY HH:mm') as regDate -- 등록일
 			, scl_dsc_rcp_nmb 				-- 사회토론번호
 		from kgst.ebs_master em

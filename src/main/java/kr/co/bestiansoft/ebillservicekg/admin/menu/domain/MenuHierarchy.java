@@ -109,7 +109,9 @@ public class MenuHierarchy {
         ObjectNode dataNode = mapper.createObjectNode();
 
         dataNode.put("label", comMenu.getMenuNm());
+        dataNode.put("menuAuth", comMenu.getMenuAuth());
         jsonNode.put("key", comMenu.getMenuId());
+        jsonNode.put("menuChecked", comMenu.isMenuChecked());
         jsonNode.set("data", dataNode);
 
         ArrayNode childrenNode = mapper.createArrayNode();

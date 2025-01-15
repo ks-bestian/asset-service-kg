@@ -40,8 +40,12 @@ public class RevokeVo extends ComDefaultVO {
 	private String proposerId;
 	//동의여부
 	private String agreeYn;
-	
+	//의원이름
 	private String memberNm;
+	//의원이름kg
+	private String memberNmKg;
+	//의원이름ru
+	private String memberNmRu;
 	
 	private String polyCd;
 	private String polyNm;

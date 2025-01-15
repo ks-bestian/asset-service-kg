@@ -11,5 +11,6 @@ public interface UserService {
     UserVo getUserDetail(Long seq);
     UserVo createUser(UserVo userVo);
     int updateUser(UserVo userVo);
-    void deleteUser(List<Long> seq);
+    void deleteUser(List<String> seq);
+    List<UserVo> getUserByDept(HashMap<String, Object> param);
 }

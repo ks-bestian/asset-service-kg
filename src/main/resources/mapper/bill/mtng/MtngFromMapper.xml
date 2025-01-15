@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<!-- 
-selectListBbs  
-selectCountBbs 
-selectBbs       
-insertBbs
-updateBbs
-deleteBbs
- -->        
+      
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.repository.MtngFromMapper">
 
     <select id="selectListMtngFrom" parameterType="java.util.HashMap"
@@ -45,6 +38,15 @@ deleteBbs
 		 FROM EBS_MTNG em
 		 WHERE 1=1
 		 AND em.stat_cd = '1'
+		 <if test="searchAgeCd != null and searchAgeCd != ''">
+	    	AND (em.age_cd = #{searchAgeCd})
+	    </if>
+	    <if test="searchFromDate != null and searchFromDate != ''">
+	    	AND TO_TIMESTAMP(em.due_dtm, 'YYYYMMDDHH24MI') &gt;= TO_TIMESTAMP(concat(#{searchFromDate}, ' 00:00:00'), 'YYYY-MM-DD HH24:MI:SS')
+	    </if>
+	    <if test="searchToDate != null and searchToDate != ''">
+	    	AND TO_TIMESTAMP(em.due_dtm, 'YYYYMMDDHH24MI') &lt;= TO_TIMESTAMP(concat(#{searchToDate}, ' 23:59:59'), 'YYYY-MM-DD HH24:MI:SS')
+	    </if>
     </select>
 
     <select id="selectMtngFrom" parameterType="java.util.HashMap"

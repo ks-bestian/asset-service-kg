@@ -6,25 +6,76 @@
             resultType="kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.user.repository.UserMapper.selectListUser */
         select
-              seq
-            , dept_cd --부서코드
-            , email --이메일
-            , gen_cd --성별(M,F)
-            , profile_img_path --프로필이미지경로
-            , job_Cd --직급코드
-            , msg_rcv_yn --메세지수신여부
-            , pos_cd
-            , user_id --직원아이디
-            , user_nm_kg --이름(키르키즈어)
-            , user_nm_ru --이름(러시아어)
-            , dept_head_yn --부서장여부
-            , doc_mgr_yn --문서관리자여부
-            , reg_id
-            , reg_dt
-            , mod_id
-            , mod_dt
-        from com_user
+              cu.dept_cd --부서코드
+            , cu.email --이메일
+            , cu.gen_cd --성별(M,F)
+            , cu.profile_img_path --프로필이미지경로
+            , cu.job_cd --직급코드
+            , cu.msg_rcv_yn --메세지수신여부
+            , cu.pos_cd
+            , cu.user_id --직원아이디
+            , (case when #{lang} = 'lng_type_1' then cu.user_nm_kg
+                else cu.user_nm_ru
+                end) as user_nm
+            , cu.user_nm_kg --이름(키르키즈어)
+            , cu.user_nm_ru --이름(러시아어)
+            , cu.dept_head_yn --부서장여부
+            , cu.doc_mgr_yn --문서관리자여부
+            , cu.reg_id
+            , cu.reg_dt
+            , cu.mod_id
+            , cu.mod_dt
+            , (case when #{lang} = 'lng_type_1' then cd.dept_nm1
+                else cd.dept_nm2
+                end) as dept_nm
+            , (case when #{lang} = 'lng_type_1' then cc.code_nm1
+                else cc.code_nm2
+                end) as job_nm
+        from com_user cu
+        left join com_dept cd on cd.dept_cd = cu.dept_cd
+        left join com_code_detail cc on cc.code_id = cu.job_cd
+        where 1=1
+        <if test="userNm != null and userNm !=''">
+            <choose>
+                <when test="lang == 'lng_type_1'">
+                    and cu.user_nm_kg like concat('%', #{userNm}, '%')
+                </when>
+                <when test="lang == 'lng_type_2'">
+                    and cu.user_nm_ru like concat('%', #{userNm}, '%')
+                </when>
+            </choose>
+        </if>
         order by reg_dt desc
+    </select>
+
+    <select id="selectListUserByDept" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.user.repository.UserMapper.selectListUserByDept */
+        select
+            user_id
+            , (case when #{lang} = 'lng_type_1' then user_nm_kg
+                else user_nm_ru
+                end) as user_nm
+            , dept_cd
+            , (case when #{lang} = 'lng_type_1' then dept_nm_kg
+                else dept_nm_ru
+                end) as dept_nm
+            , email
+            , gen_cd
+            , job_cd
+            , pos_cd
+            , age_cd
+            , cmit_cd
+            , (case when #{lang} = 'lng_type_1' then cmit_nm_kg
+                else cmit_nm_ru
+                end) as cmit_nm
+            , poly_cd
+            , poly_nm
+        from kgst.view_user_member
+        where 1=1
+        <if test="deptCd != null and deptCd != ''">
+            dept_cd = #{deptCd}
+        </if>
     </select>
 
     <select id="selectUser" parameterType="java.lang.Long" resultType="kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserVo">
@@ -115,13 +166,13 @@
             , doc_mgr_yn = #{docMgrYn}
             , mod_id = #{modId}
             , mod_dt = #{modDt}
-        where seq = #{seq}
+        where user_id = #{userId}
     </update>
 
-    <delete id="deleteUser" parameterType="java.lang.Long">
+    <delete id="deleteUser" parameterType="java.lang.String">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.user.repository.UserMapper.deleteUser */
         delete from com_user
-        where seq = #{seq}
+        where user_id = #{userId}
     </delete>
 
 </mapper>

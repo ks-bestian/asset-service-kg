@@ -12,6 +12,6 @@ public interface MemberService {
     MemberVo getMemberDetail(String memberId);
     MemberVo createMember(MemberVo memberVo);
     int updateMember(MemberVo memberVo);
-    void deleteMember(String memberId);
+    void deleteMember(List<String> memberId);
     List<MemberVo> getMemberByPoly(HashMap<String, Object> param);
 }

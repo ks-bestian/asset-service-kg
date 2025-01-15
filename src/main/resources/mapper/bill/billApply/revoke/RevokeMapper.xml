@@ -77,11 +77,9 @@
 				when (ep.sign_dt is not null and ep.sign_cnc_dt is null) then 'Y'
 				else 'N'
 			 end as agreeYn 				-- 동의여부
-			, case
-				when #{lang} = 'lng_type_1' then view.member_nm_kg 
-				else view.member_nm_ru 
-			end as member_nm					-- 의원이름
-			, view.poly_nm  					-- 정당이름
+			, view.member_nm_kg				-- 의원이름kg
+			, view.member_nm_ru				-- 의원이름ru
+			, view.poly_nm  				-- 정당이름
 			, view.poly_cd 					-- 정당코드
 		from ebs_proposer ep
 			left join kgst.view_user_member view on view.member_id = ep.proposer_id

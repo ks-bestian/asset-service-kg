@@ -32,10 +32,10 @@
         </if>
         <if test="sendNm != null and sendNm != ''">
             <choose>
-                <when test="lang == 'lng_type2'">
+                <when test="lang == 'lng_type_2'">
                     and vum.user_nm_ru like concat('%', #{sendNm}, '%')
                 </when>
-                <when test="lang == 'lng_type1'">
+                <when test="lang == 'lng_type_1'">
                     and vum.user_nm_kg like concat('%', #{sendNm}, '%')
                 </when>
             </choose>
@@ -73,7 +73,7 @@
         </if>
         <if test="rcvNm != null and rcvNm != ''">
             <choose>
-                <when test="lang == 'lng_typ2'">
+                <when test="lang == 'lng_typ_2'">
                     and vum.user_nm_ru like concat('%', #{rcvNm}, '%')
                 </when>
                 <otherwise>
@@ -126,10 +126,6 @@
             , file_group_id
             , msg_div
             , msg_group_id
-            , reg_id
-            , reg_dt
-            , mod_id
-            , mod_dt
         )
         values (
               #{msgCn}
@@ -141,10 +137,6 @@
             , #{fileGroupId}
             , #{msgDiv}
             , #{msgGroupId}
-            , 'admin'
-            , now()
-            , null
-            , null
         )
     </insert>
 
@@ -190,10 +182,10 @@
         left join com_code_detail cc on cc.code_id = um.job_cd
         where 1=1
         <choose>
-            <when test="lang == 'lng_type1'">
+            <when test="lang == 'lng_type_1'">
                 and um.user_nm_kg like concat('%', #{searchNm}, '%')
             </when>
-            <when test="lang == 'lng_type2'">
+            <when test="lang == 'lng_type_2'">
                 and um.user_nm_ru like concat ('%', #{searchNm}, '%')
             </when>
         </choose>

@@ -95,4 +95,16 @@ public class MtngFromServiceImpl implements MtngFromService {
 	public List<MemberVo> getMemberList(HashMap<String, Object> param) {
 		return mtngFromMapper.selectListMember(param);
 	}
+
+	@Override
+	public void deleteMtng(List<Long> mtngIds) {
+		// TODO 회의 취소 - 알림발송 구현 해야함
+		
+        for (Long mtngId : mtngIds) {
+    		mtngFromMapper.deleteMtngFromAgenda(mtngId);
+    		mtngFromMapper.deleteMtngFromAttendant(mtngId);
+    		mtngFromMapper.deleteMtngFrom(mtngId);
+        }
+        
+	}
 }

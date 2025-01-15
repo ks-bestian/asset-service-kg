@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 @Data
 public class MemberVo extends ComDefaultVO {
     private String memberId;
+    private String memberNm;
     private String memberNmKg;
     private String memberNmRu;
     private String ageCd;

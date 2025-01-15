@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -22,8 +23,8 @@ public class AuthUserServiceImpl implements AuthUserService {
 
     private final AuthUserMapper authUserMapper;
     @Override
-    public List<AuthUserVo> getAuthUserList(Long authId) {
-        return authUserMapper.selectListAuthUser(authId);
+    public List<AuthUserVo> getAuthUserList(HashMap<String, Object> param) {
+        return authUserMapper.selectListAuthUser(param);
     }
 
     @Override

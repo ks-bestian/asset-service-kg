@@ -29,6 +29,7 @@ public class MenuNode {
 
     int level;
     int menuAuth;
+    boolean menuChecked;
 
     String lngId;
     String lngTy1;
