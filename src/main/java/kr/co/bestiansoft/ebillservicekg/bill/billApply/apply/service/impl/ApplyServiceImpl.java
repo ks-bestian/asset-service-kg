@@ -1,5 +1,6 @@
 package kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -95,34 +96,40 @@ public class ApplyServiceImpl implements ApplyService {
 	@Transactional
 	@Override
 	public int updateApply(ApplyVo applyVo, String billId) {
-		//TODO :: 1. 메세지 알림 기능 적용
+		//TODO :: 1. 메세지 알림 기능 적용 필요
 		String loginId = new SecurityInfoUtil().getAccountId();
 
-		//공동발의자 변경
+		//발의자 변경
 		applyVo.setBillId(billId);
 
 		List<String> newProposerList = applyVo.getProposerList();
-		List<String> proposerList = applyMapper.getProposerList(billId);
+	    List<String> oldProposerList = applyMapper.getProposerList(billId);
+	    
+		if (!newProposerList.contains(loginId)) {
+	        newProposerList.add(loginId);
+	    }
 
-		int ord = proposerList.size();
+		// 발의자 삭제
+		List<String> proposerToRemove = new ArrayList<>(oldProposerList);
+		proposerToRemove.removeAll(newProposerList);
+		
+		for(String ppsrId : proposerToRemove) {
+			applyMapper.deleteProposerByPpsrId(ppsrId);
+		}
+				
+		// 발의자 추가
+		List<String> proposerToAdd = new ArrayList<>(newProposerList);
+		proposerToAdd.removeAll(oldProposerList);
+		
+		int ord = oldProposerList.size();
+		for(String ppsrId : proposerToAdd) {
+	    	ApplyVo member = applyMapper.getProposerInfo(ppsrId);
 
-		Set<String> allMembers = new HashSet<>(proposerList); // 기존 멤버들
-		allMembers.addAll(newProposerList); // 모든 멤버를 합침
-
-		for (String ppsrIds : allMembers) {
-		    if (proposerList.contains(ppsrIds) && !newProposerList.contains(ppsrIds)) {
-		        // 삭제: 기존에 있었지만 새로운 리스트에 없는 경우
-		        applyMapper.deleteProposerByPpsrId(ppsrIds);
-		    } else if (!proposerList.contains(ppsrIds) && newProposerList.contains(ppsrIds)) {
-		        // 추가: 새로운 리스트에만 있는 경우
-		    	ApplyVo member = applyMapper.getProposerInfo(ppsrIds);
-
-		        applyVo.setOrd(++ord);
-				applyVo.setPolyCd(member.getPolyCd());
-				applyVo.setPolyNm(member.getPolyNm());
-				applyVo.setPpsrId(member.getMemberId());
-				applyMapper.insertProposerList(applyVo);
-		    }
+	        applyVo.setOrd(++ord);
+			applyVo.setPolyCd(member.getPolyCd());
+			applyVo.setPolyNm(member.getPolyNm());
+			applyVo.setPpsrId(member.getMemberId());
+			applyMapper.insertProposerList(applyVo);
 		}
 		
 		//파일변경
@@ -131,6 +138,7 @@ public class ApplyServiceImpl implements ApplyService {
 			applyVo.setFiles(null);
 		}
 		
+		//bill update
 		applyVo.setLoginId(loginId);
 		return applyMapper.updateApplyByBillId(applyVo);
 	}
