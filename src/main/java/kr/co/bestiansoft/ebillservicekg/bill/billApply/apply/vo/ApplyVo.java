@@ -71,4 +71,7 @@ public class ApplyVo extends ComDefaultVO {
     private MultipartFile[] files;
 	private String[] fileKindCds;
 	
+	//로그인아이디
+	private String loginId;
+	
 }

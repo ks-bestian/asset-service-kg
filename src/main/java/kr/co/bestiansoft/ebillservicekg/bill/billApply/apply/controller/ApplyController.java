@@ -44,8 +44,8 @@ public class ApplyController {
     }
     
     @ApiOperation(value = "안건 수정", notes = "안건을 수정한다")
-    @PutMapping("/bill/apply/{billId}")
-    public ResponseEntity<CommonResponse> updateBillUpdate(@RequestBody ApplyVo applyVo, @PathVariable String billId) {
+    @PutMapping(value = "/bill/apply/{billId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<CommonResponse> updateBillUpdate(ApplyVo applyVo, @PathVariable String billId) {
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "apply updated successfully", applyService.updateApply(applyVo, billId)), HttpStatus.OK);
     }
     

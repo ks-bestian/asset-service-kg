@@ -95,10 +95,10 @@ public class ApplyServiceImpl implements ApplyService {
 	@Transactional
 	@Override
 	public int updateApply(ApplyVo applyVo, String billId) {
-		//TODO ::
-		//1. 수정이 가능 또는 불가능한 항목 정의 필요!
-		//2. 메세지 알림 기능 적용
+		//TODO :: 1. 메세지 알림 기능 적용
+		String loginId = new SecurityInfoUtil().getAccountId();
 
+		//공동발의자 변경
 		applyVo.setBillId(billId);
 
 		List<String> newProposerList = applyVo.getProposerList();
@@ -109,13 +109,13 @@ public class ApplyServiceImpl implements ApplyService {
 		Set<String> allMembers = new HashSet<>(proposerList); // 기존 멤버들
 		allMembers.addAll(newProposerList); // 모든 멤버를 합침
 
-		for (String ppsrId : allMembers) {
-		    if (proposerList.contains(ppsrId) && !newProposerList.contains(ppsrId)) {
+		for (String ppsrIds : allMembers) {
+		    if (proposerList.contains(ppsrIds) && !newProposerList.contains(ppsrIds)) {
 		        // 삭제: 기존에 있었지만 새로운 리스트에 없는 경우
-		        applyMapper.deleteProposerByPpsrId(ppsrId);
-		    } else if (!proposerList.contains(ppsrId) && newProposerList.contains(ppsrId)) {
+		        applyMapper.deleteProposerByPpsrId(ppsrIds);
+		    } else if (!proposerList.contains(ppsrIds) && newProposerList.contains(ppsrIds)) {
 		        // 추가: 새로운 리스트에만 있는 경우
-		    	ApplyVo member = applyMapper.getProposerInfo(ppsrId);
+		    	ApplyVo member = applyMapper.getProposerInfo(ppsrIds);
 
 		        applyVo.setOrd(++ord);
 				applyVo.setPolyCd(member.getPolyCd());
@@ -124,7 +124,14 @@ public class ApplyServiceImpl implements ApplyService {
 				applyMapper.insertProposerList(applyVo);
 		    }
 		}
-
+		
+		//파일변경
+		if (applyVo.getFiles() != null) {
+			comFileService.saveFileEbs(applyVo.getFiles(), applyVo.getFileKindCds(), billId);
+			applyVo.setFiles(null);
+		}
+		
+		applyVo.setLoginId(loginId);
 		return applyMapper.updateApplyByBillId(applyVo);
 	}
 
