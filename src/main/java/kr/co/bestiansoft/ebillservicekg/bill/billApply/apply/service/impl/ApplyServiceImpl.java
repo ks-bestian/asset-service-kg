@@ -129,6 +129,9 @@ public class ApplyServiceImpl implements ApplyService {
 			applyVo.setPolyCd(member.getPolyCd());
 			applyVo.setPolyNm(member.getPolyNm());
 			applyVo.setPpsrId(member.getMemberId());
+			if(member.getMemberId().equals(loginId)) {
+				applyVo.setSignDt("sign");
+			}
 			applyMapper.insertProposerList(applyVo);
 		}
 		
