@@ -351,7 +351,7 @@ public class DocumentServiceImpl implements DocumentService {
 		int ret = documentMapper.insertFile(fileVo);
 		
 		//중요여부 저장(묶음업로드 아닌경우)
-		if("N".equals(groupYn)) {
+		if(!"Y".equals(groupYn)) {
 			String favoriteYn = vo.getFavoriteYn();
 			if("Y".equals(favoriteYn)) {
 				fileVo.setUserId(userId);
