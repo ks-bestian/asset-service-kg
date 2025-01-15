@@ -10,8 +10,9 @@
             , grp_code_nm2 --그룹명(러시아어)
             , grp_code_nm3 --그룹명(한국어)
             , (case
+                when #{lang} = 'lng_type1' then grp_code_nm1
                 when #{lang} = 'lng_type2' then grp_code_nm2
-                else grp_code_nm1
+                else grp_code_nm3
               end) as grp_code_nm
             , use_yn --사용여부
             , rmk --비고
@@ -44,8 +45,10 @@
             , code_nm1
             , code_nm2
             , code_nm3
-            , (case when #{lang} = 'lng_type2' then code_nm2
-                     else code_nm1
+            , (case
+            	when #{lang} = 'lng_type1' then code_nm1
+            	when #{lang} = 'lng_type2' then code_nm2
+                     else code_nm3
               end) code_nm
             , grp_code
             , use_yn
