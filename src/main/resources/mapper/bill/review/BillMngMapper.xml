@@ -251,14 +251,14 @@
     	/* 안건관리 상세 화면에서 소관위 / 관련위 보여줄때 사용.*/
     	
 		SELECT
-		row_number() over(order by ep.ord asc) as num
-		, ep.proc_kind_cd
-		, ep.proc_dept_id
-		, CASE 
-		  WHEN #{lang} = 'lng_type_1' then cd.dept_nm1
-		  WHEN #{lang} = 'lng_type_2' then cd.dept_nm2
-		  ELSE cd.dept_nm3 
-		  END AS procDeptNm
+			row_number() over(order by ep.ord asc) as num
+			, ep.proc_kind_cd
+			, ep.proc_dept_id
+			, CASE 
+			  WHEN #{lang} = 'lng_type_1' then cd.dept_nm1
+			  WHEN #{lang} = 'lng_type_2' then cd.dept_nm2
+			  ELSE cd.dept_nm3 
+			  END AS procDeptNm
 		FROM 
 		ebs_process ep
 		LEFT JOIN com_dept cd ON (ep.proc_dept_id = cd.dept_cd)

@@ -19,4 +19,7 @@ public interface MtngFromMapper {
     List<MemberVo> selectListMember(HashMap<String, Object> param);
     void insertEbsMtngAttendant(MemberVo memberVo);
     void insertEbsMtngAgenda(AgendaVo agendaVo);
+    void deleteMtngFrom(Long mtngId);
+    void deleteMtngFromAttendant(Long mtngId);
+    void deleteMtngFromAgenda(Long mtngId);
 }

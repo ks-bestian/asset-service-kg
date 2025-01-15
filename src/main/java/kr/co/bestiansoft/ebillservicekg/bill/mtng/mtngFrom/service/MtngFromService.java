@@ -11,4 +11,6 @@ public interface MtngFromService {
     MtngFromVo getMtngFromById(Long mtngId, HashMap<String, Object> param);
     MtngFromVo createMtngFrom(MtngFromVo mtngFromVo);
     List<MemberVo> getMemberList(HashMap<String, Object> param);
+    void deleteMtng(List<Long> mtngIds);
+    
 }
