@@ -1,6 +1,8 @@
 package kr.co.bestiansoft.ebillservicekg.login.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,6 +26,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.co.bestiansoft.ebillservicekg.admin.baseCode.service.BaseCodeService;
+import kr.co.bestiansoft.ebillservicekg.admin.baseCode.vo.BaseCodeVo;
 import kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeDetailVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.config.web.JwtFilter;
@@ -50,6 +54,8 @@ public class LoginController {
 	private final TokenProvider tokenProvider;
 	
 	private final LoginMapper loginMapper;
+	
+	private final BaseCodeService basecodeService;
 	
 	@PostMapping("/login")
 	public ResponseEntity<LoginResponse> authenticate(@RequestBody @Valid LoginRequest loginRead, HttpServletRequest req, HttpServletResponse res) {
@@ -88,7 +94,8 @@ public class LoginController {
 	        result = true;
 	        Account account = new SecurityInfoUtil().getAccount();
 	        List<ComCodeDetailVo> comCodes = loginMapper.selectListComCodeAll();
-	        return new ResponseEntity<>(LoginResponse.from(result, msg, token, account, comCodes), httpHeaders, HttpStatus.OK);
+	        List<BaseCodeVo> baseCodes = basecodeService.getBaseCodeList(new HashMap<>());
+	        return new ResponseEntity<>(LoginResponse.from(result, msg, token, account, comCodes, baseCodes), httpHeaders, HttpStatus.OK);
 
         } catch (BadCredentialsException e) {
             msg = "LOGIN_FAIL";

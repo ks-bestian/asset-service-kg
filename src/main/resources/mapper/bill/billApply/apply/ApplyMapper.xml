@@ -7,7 +7,7 @@
      		parameterType="kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.insertApplyBill */    
         
-       insert into ebs_master (
+       insert into kgst.ebs_master (
 			  bill_id 		-- 안건아이디
 			, scl_dsc_rcp_nmb	-- 사회토론번호
 			, na_term_cd	-- 대수
@@ -30,33 +30,34 @@
 			, #{ppsrId}
 			<if test="etcKg != null">, #{etcKg} </if>
 			<if test="etcRu != null">, #{etcRu} </if>
-			, #{regId}
+			, #{ppsrId}
 			, now()
 		)
     </insert>
-    
+
     <select id="selectListApply" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.selectListApply */
-        select 
+        select
 			  em.bill_id 						-- 안건아이디
 			, case
-				when #{lang} = 'langTy1' then em.bill_name_kg 
-				when #{lang} = 'langTy2' then em.bill_name_ru 
-				else em.bill_name_kg 
+				when #{lang} = 'lng_type_1' then em.bill_name_kg 
+				else em.bill_name_ru 
 			end as bill_name					-- 안건 이름
-			, cm.member_nm_kg as ppsr_nm 		-- 제안자 이름
+			, case
+				when #{lang} = 'lng_type_1' then view.member_nm_kg 
+				else view.member_nm_ru 
+			end as member_nm					-- 제안자 이름
 			, em.scl_dsc_rcp_nmb 				-- 사회토론번호
 			, to_char(em.reg_dt, 'DD/MM/YYYY') as ppslDt	-- 등록일
-		from ebs_master em
-			left join com_member cm on cm.member_id = em.ppsr_id 
+		from kgst.ebs_master em
+			left join kgst.view_user_member view on view.member_id = em.ppsr_id 
 		where 1=1
 			and em.na_term_cd = '14' and em.ppsr_id = #{loginId}
 			<if test="billName != null and billName != ''">
 				and case
-			        when #{lang} = 'langTy1' then em.bill_name_kg
-			        when #{lang} = 'langTy2' then em.bill_name_ru
-			        else em.bill_name_kg
+			        when #{lang} = 'lng_type_1' then em.bill_name_kg
+			        else em.bill_name_ru
 			    end like concat('%', #{billName}, '%')
 			</if>
 			<if test="statCd != null and statCd != ''">
@@ -68,33 +69,32 @@
 			<if test="sclDscRcpNmb != null and sclDscRcpNmb != ''">
 				and em.scl_dsc_rcp_nmb like concat('%', #{sclDscRcpNmb}, '%')
 			</if>
-			
+
     </select>
-    
+
     <update id="updateApplyByBillId" parameterType="kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo">
     	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.updateApplyByBillId */
-        update ebs_master 
+        update kgst.ebs_master 
 		set
-		  bill_kind = #{billKind}		-- 안건 종류
-		, bill_name_kg = #{billNameKg}	-- 안건이름kg
+		  bill_name_kg = #{billNameKg}	-- 안건이름kg
 		, bill_name_ru = #{billNameRu}  -- 안건이름ru
-		<if test="etcKg != null"> , etc_kg = #{etcKg} </if> -- 비고kg
-		<if test="etcRu != null"> , etc_ru  = #{etcRu}</if> -- 비고ru
-		, mod_id = #{modId}				-- 등록자
+		, etc_kg = #{etcKg} 			-- 비고kg
+		, etc_ru  = #{etcRu} 			-- 비고ru
+		, mod_id = #{loginId}			-- 등록자
 		, mod_dt = now()				-- 등록 날짜
 		WHERE bill_id = #{billId}
     </update>
-    
+
     <delete id="deleteApplyByBillId" parameterType="java.lang.String">
     	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.deleteApplyByBillId */
-    	delete from ebs_master
+    	delete from kgst.ebs_master
         where bill_id = #{billId}
     </delete>
-    
+
     <insert id="insertProposerList" parameterType="kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.insertProposerList */    
         
-       insert into ebs_proposer (
+       insert into kgst.ebs_proposer (
 			  bill_id 		-- 안건아이디
 			, proposer_id	-- 제안자 아이디
 			, ord			-- 순서
@@ -110,84 +110,87 @@
 			, #{ord}
 			, #{polyCd}
 			, #{polyNm}
-			, #{regId}
+			, #{ppsrId}
 			, now()
 			<if test="signDt != null"> , now() </if>
 		)
     </insert>
     
-    <select id="selectApplyDetail" parameterType="java.lang.String"
+    <select id="selectApplyDetail" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.selectApplyDetail */
-		select 
+		select
 			  bill_name_kg 					-- 안건이름kg
 			, bill_name_ru  				-- 안건이름ru
-			, cm.member_nm_kg as ppsr_nm  	-- 제안자 이름
-			, etc_kg 						-- 비고kg
-			, etc_ru 						-- 비고ru
+			, case
+				when #{lang} = 'lng_type_1' then view.member_nm_kg 
+				else view.member_nm_ru 
+			end as member_nm				-- 제안자 이름
+			, em.etc_kg						-- 비고kg
+			, em.etc_ru						-- 비고ru
 			, to_char(em.reg_dt, 'DD/MM/YYYY HH:mm') as regDate -- 등록일
 			, scl_dsc_rcp_nmb 				-- 사회토론번호
-		from ebs_master em
-			left join com_member cm on cm.member_id = em.ppsr_id 
+		from kgst.ebs_master em
+			left join kgst.view_user_member view on view.member_id = em.ppsr_id
 		where em.bill_id = #{billId}
     </select>
-    
+
     <delete id="deleteProposerByBillId" parameterType="java.lang.String">
     	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.deleteProposerByBillId */
-    	delete from ebs_proposer
+    	delete from kgst.ebs_proposer
         where bill_id = #{billId}
     </delete>
-    
+
     <update id="updateApplyBill" parameterType="java.lang.String">
     	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.updateApplyBill */
-        update ebs_master 
+        update kgst.ebs_master 
 		set
 		  stat_cd = #{statCd}		-- 상태 코드
 		WHERE bill_id = #{billId}
     </update>
-    
+
     <update id="updateRevokeBill" parameterType="kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo">
     	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.updateRevokeBill */
-        update ebs_master 
+        update kgst.ebs_master 
 		set
 		  stat_cd = #{statCd}		-- 상태 코드
 		  , wt_cn_kg = #{wtCnKg}	-- 철회 사유kg
 		  , wt_cn_ru = #{wtCnRu}	-- 철회 사유ru
 		WHERE bill_id = #{billId}
     </update>
-    
+
     <update id="updateBillPpsrRevoke" parameterType="kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo">
     	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.updateBillPpsrRevoke */
-        update ebs_proposer 
+        update kgst.ebs_proposer 
 		set
 		  wt_cn = now()
 		WHERE bill_id = #{billId}
 			and proposer_id = #{ppsrId}
     </update>
-    
+
     <update id="updateBillStatus" parameterType="kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo">
     	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.updateBillStatus */
-        update ebs_master 
+        update kgst.ebs_master 
 		set
 		  stat_cd = #{statCd}		-- 상태 코드
 		  <if test="wtCn != null and wtCn != ''"> , wt_cn = #{wtCn} </if> -- 철회 사유
 		WHERE bill_id = #{billId}
     </update>
-    
+
     <select id="getProposerList" parameterType="java.lang.String" resultType="java.lang.String">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.getProposerList */
-        select 
+        select
 			  proposer_id -- 제안자 아이디
-		from ebs_proposer ep
+		from kgst.ebs_proposer ep
 		where ep.bill_id = #{billId}
     </select>
-    
+
     <delete id="deleteProposerByPpsrId" parameterType="java.lang.String">
     	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.deleteProposerByBillId */
     	delete from ebs_proposer
         where proposer_id = #{ppsrId}
     </delete>
-    
+
     <select id="getProposerInfo" parameterType="java.lang.String"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.getProposerInfo */
@@ -195,14 +198,14 @@
 			member_id 
 			, poly_cd 
 			, poly_nm 
-		from com_member
+		from kgst.com_member
 		where member_id = #{memberId}
     </select>
-    
+
     <insert id="insertBillProcess" parameterType="java.util.HashMap">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.insertBillProcess */    
         
-       insert into ebs_process (
+       insert into kgst.ebs_process (
 			  bill_id 		-- 안건아이디
 			, proc_id		-- 프로세스 아이디
 			, ord			-- 순서
@@ -223,12 +226,12 @@
 			<if test="signDt != null"> , now() </if>
 		)
     </insert>
-    
+
     <insert id="insertHomeLaws" useGeneratedKeys="true" keyProperty="id"
     	parameterType="kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.insertHomeLaws */    
         
-       insert into home_laws (
+       insert into kgst.home_laws (
 			  title_kg 		-- 안건명 키르
 			, title_ru		-- 안건명 러시아
 		)
@@ -237,7 +240,7 @@
 			, #{billNameRu}
 		)
     </insert>
-    
+
     <select id="selectApplyFileList" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo">
 		/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.selectApplyFileList */
 		select 
@@ -247,7 +250,7 @@
 			, pdf_file_id 
 			, pdf_file_nm 
 		from 
-			ebs_file ef
+			kgst.ebs_file ef
 		where 
 			ef.bill_id = #{billId}
 			and ef.delete_yn = 'N'

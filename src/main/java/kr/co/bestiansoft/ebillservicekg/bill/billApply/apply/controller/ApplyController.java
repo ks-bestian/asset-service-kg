@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -44,8 +45,8 @@ public class ApplyController {
     }
     
     @ApiOperation(value = "안건 수정", notes = "안건을 수정한다")
-    @PutMapping("/bill/apply/{billId}")
-    public ResponseEntity<CommonResponse> updateBillUpdate(@RequestBody ApplyVo applyVo, @PathVariable String billId) {
+    @PostMapping(value = "/bill/apply/update/{billId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<CommonResponse> updateBillUpdate(@ModelAttribute ApplyVo applyVo, @PathVariable String billId) {
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "apply updated successfully", applyService.updateApply(applyVo, billId)), HttpStatus.OK);
     }
     
@@ -57,8 +58,8 @@ public class ApplyController {
     
     @ApiOperation(value = "안건 상세 조회", notes = "안건의 상세를 조회한다")
     @GetMapping("/bill/apply/{billId}")
-    public ResponseEntity<CommonResponse> getBillDetail(@PathVariable String billId) {
-    	return new ResponseEntity<>(new CommonResponse(200, "OK", applyService.getApplyDetail(billId)), HttpStatus.OK);
+    public ResponseEntity<CommonResponse> getBillDetail(@PathVariable String billId, @RequestParam String lang) {
+    	return new ResponseEntity<>(new CommonResponse(200, "OK", applyService.getApplyDetail(billId, lang)), HttpStatus.OK);
     }
     
 //    @ApiOperation(value = "안건접수", notes = "안건을 접수한다.")

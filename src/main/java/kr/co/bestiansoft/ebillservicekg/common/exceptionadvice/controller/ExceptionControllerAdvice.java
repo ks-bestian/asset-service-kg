@@ -2,6 +2,7 @@ package kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller;
 
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.exception.AlreadyExistsException;
+import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.exception.ForbiddenException;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.exception.ResourceNotFoundException;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.exception.UnauthorizedException;
 import lombok.extern.slf4j.Slf4j;
@@ -87,6 +88,20 @@ public class ExceptionControllerAdvice {
                                                 .build();
         log.error(e.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value())
+                             .body(response);
+    }
+    
+    
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler({ForbiddenException.class})
+    public ResponseEntity<CommonResponse> forbiddenException(ForbiddenException e) {
+
+        CommonResponse response = CommonResponse.builder()
+                                                .code(HttpStatus.FORBIDDEN.value())
+                                                .message(e.getMessage())
+                                                .build();
+        log.error(e.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN.value())
                              .body(response);
     }
 

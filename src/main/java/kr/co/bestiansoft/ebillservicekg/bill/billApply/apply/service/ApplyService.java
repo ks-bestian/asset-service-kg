@@ -16,7 +16,7 @@ public interface ApplyService {
 
 	int deleteApply(String billId);
 
-	ApplyResponse getApplyDetail(String billId);
+	ApplyResponse getApplyDetail(String billId, String lang);
 
 	int applyBill(String billId);
 

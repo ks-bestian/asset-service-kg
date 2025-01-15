@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,7 +40,7 @@ public class RevokeAgreeController {
     
     @ApiOperation(value = "철회 동의", notes = "철회 요청에 대한 동의 및 동의취소를 한다")
     @PutMapping("/bill/revokeAgree/{billId}")
-    public ResponseEntity<CommonResponse> updateRevokeAgree(@PathVariable String billId, @RequestParam HashMap<String, Object> param) {
+    public ResponseEntity<CommonResponse> updateRevokeAgree(@PathVariable String billId, @RequestBody HashMap<String, Object> param) {
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "revoke agree successfully", revokeAgreeService.updateRevokeAgree(billId, param)), HttpStatus.OK);
     }
     

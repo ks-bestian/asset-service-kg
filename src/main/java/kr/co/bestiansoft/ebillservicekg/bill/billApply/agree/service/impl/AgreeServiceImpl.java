@@ -29,7 +29,6 @@ public class AgreeServiceImpl implements AgreeService {
 	
 	@Override
 	public List<AgreeVo> getAgreeList(HashMap<String, Object> param) {
-		
 		param.put("loginId", new SecurityInfoUtil().getAccountId());
 		return agreeMapper.selectAgreeList(param);
 	}

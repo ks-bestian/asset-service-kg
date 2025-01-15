@@ -6,10 +6,13 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.repository.RevokeMapper;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.service.RevokeService;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.vo.RevokeResponse;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.vo.RevokeVo;
+import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
+import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,22 +23,35 @@ import lombok.extern.slf4j.Slf4j;
 public class RevokeServiceImpl implements RevokeService {
 	
 	private final RevokeMapper revokeMapper;
+	private final ApplyMapper applyMapper;
 
 	@Override
 	public List<RevokeVo> getRevokeList(HashMap<String, Object> param) {
-		// TODO :: 로그인한 계정 아이디 필요, 철회 코드정의 필요, 대수 검색조건 설정 필요(현재 14로 하드코딩)
-		return revokeMapper.getRevokeList(param);
+		// TODO :: 철회 코드정의 필요, 대수 검색조건 설정 필요(현재 14로 하드코딩)
+		String userId = new SecurityInfoUtil().getAccountId();
+		param.put("userId", userId); 
+		return revokeMapper.selectRevokeList(param);
 	}
 
 	@Override
-	public RevokeResponse getRevokeDetail(String billId) {
+	public RevokeResponse getRevokeDetail(String billId, String lang) {
 		RevokeResponse result = new RevokeResponse();
+		HashMap<String, Object> param = new HashMap<>(); 
 		
-		RevokeVo revokeDetail = revokeMapper.getRevokeDetail(billId);
+		String userId = new SecurityInfoUtil().getAccountId();
+		param.put("userId", userId);
+		param.put("billId", billId);
+		param.put("lang", lang);
+		
+		RevokeVo revokeDetail = revokeMapper.selectRevokeDetail(param);
 		result.setRevokeDetail(revokeDetail);
 		
-		List<RevokeVo> proposerList = revokeMapper.getProposerList(billId);
+		List<RevokeVo> proposerList = revokeMapper.selectProposerList(param);
 		result.setProposerList(proposerList);
+		
+		//파일목록
+		List<EbsFileVo> fileList = applyMapper.selectApplyFileList(billId);
+		result.setFileList(fileList);
 		
 		return result;
 	}

@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
@@ -34,8 +35,8 @@ public class ComFileController {
     private final ComFileService comFileService;
 
     @ApiOperation(value = "파일다운로드", notes = "파일을 다운로드한다.")
-	@GetMapping("/com/file/down/{fileId}")
-	public ResponseEntity<?> fileDownload(@PathVariable String fileId,HttpServletResponse response, HttpServletRequest request) throws Exception {
+	@GetMapping("/com/file/down")
+	public ResponseEntity<?> fileDownload(@RequestParam String fileId,HttpServletResponse response, HttpServletRequest request) throws Exception {
 
     	ComFileVo fileVo = comFileService.getFile(fileId);
 		String orgFileNm = URLEncoder.encode(fileVo.getOrgFileNm(),"UTF-8") ;

@@ -56,6 +56,7 @@
 	    	select
 				  a.folder_id
 				, a.folder_nm
+				, a.folder_nm as title
 				, a.upper_folder_id
 				, a.dept_cd
 				, a.del_yn
@@ -83,6 +84,7 @@
 		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectDeptFolderListAll */
 		<include refid="selectFolder" />
 		where 1=1
+			and c.del_yn = 'N'
 			and c.dept_folder_yn = 'Y'
 			and c.dept_cd = #{deptCd}
 	</select>
@@ -91,6 +93,7 @@
 		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectDeptFolderList */
 		<include refid="selectFolder" />
 		where 1=1
+			and c.del_yn = 'N'
 			and c.dept_folder_yn = 'Y'
 			and c.dept_cd = #{deptCd}
 			and c.upper_folder_id = #{upperFolderId}
@@ -298,6 +301,7 @@
 			<include refid="fileColumns"></include>
 		from kgst.bs_file_info a
 		where a.file_id = #{fileId}
+			and a.del_yn = 'N'
     </select>
     
     <select id="selectFileGroup" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo">
@@ -314,6 +318,14 @@
 			on a.file_group_id = d.file_group_id
 			and d.user_id = #{userId} 
 		where a.file_group_id = #{fileGroupId}
+			and a.del_yn = 'N'
 	</select>
+	
+	<select id="selectFolderByFolderId" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo">
+    	/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectFolder */
+		<include refid="selectFolder"></include>
+		where c.del_yn = 'N'
+			and c.folder_id = #{folderId}
+    </select>
     
 </mapper>

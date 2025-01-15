@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.exception.ForbiddenException;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.impl.EDVHelper;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
@@ -47,6 +48,8 @@ public class DocumentServiceImpl implements DocumentService {
     
     @Override
     public List<FolderVo> selectDeptFolderList(FolderVo vo) {
+    	String deptCd = new SecurityInfoUtil().getDeptCd();
+    	vo.setDeptCd(deptCd);
         return documentMapper.selectDeptFolderList(vo);
     }
 
@@ -80,13 +83,20 @@ public class DocumentServiceImpl implements DocumentService {
     @Transactional
     @Override
     public int deleteFolders(List<Long> folderIds) {
+    	String userId = new SecurityInfoUtil().getAccountId();
     	int ret = 0;
-    	for(Long folderId : folderIds) {
-    		FolderVo vo = new FolderVo();
-        	vo.setFolderId(folderId);
-        	vo.setDelYn("Y");
-        	vo.setModId(tmpUserId);
-        	ret += documentMapper.updateFolder(vo);
+    	if(folderIds != null) {
+    		for(Long folderId : folderIds) {
+    			FolderVo folder = documentMapper.selectFolderByFolderId(folderId);
+    			if(folder != null && !folder.getRegId().equals(userId)) {
+    				throw new ForbiddenException("forbidden");
+    			}
+        		FolderVo vo = new FolderVo();
+            	vo.setFolderId(folderId);
+            	vo.setDelYn("Y");
+            	vo.setModId(userId);
+            	ret += documentMapper.updateFolder(vo);
+        	}	
     	}
     	return ret;
     }
@@ -94,13 +104,20 @@ public class DocumentServiceImpl implements DocumentService {
     @Transactional
     @Override
     public int deleteFiles(List<String> fileGroupIds) {
+    	String userId = new SecurityInfoUtil().getAccountId();
     	int ret = 0;
-    	for(String fileGroupId : fileGroupIds) {
-    		FileVo vo = new FileVo();
-    		vo.setFileGroupId(fileGroupId);
-    		vo.setDelYn("Y");
-    		vo.setModId(tmpUserId);
-    		ret += documentMapper.updateFileByFileGroupId(vo);
+    	if(fileGroupIds != null) {
+    		for(String fileGroupId : fileGroupIds) {
+    			FileVo file = documentMapper.selectFile(fileGroupId);
+    			if(file != null && !file.getRegId().equals(userId)) {
+    				throw new ForbiddenException("forbidden");
+    			}
+        		FileVo vo = new FileVo();
+        		vo.setFileGroupId(fileGroupId);
+        		vo.setDelYn("Y");
+        		vo.setModId(userId);
+        		ret += documentMapper.updateFileByFileGroupId(vo);
+        	}	
     	}
     	return ret;
     }
@@ -117,12 +134,14 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     public int moveFolders(List<Long> folderIds, Long toFolderId) {
     	int ret = 0;
-    	for(Long folderId : folderIds) {
-    		FolderVo vo = new FolderVo();
-        	vo.setFolderId(folderId);
-        	vo.setUpperFolderId(toFolderId);
-        	vo.setModId(tmpUserId);
-        	ret += documentMapper.updateFolder(vo);
+    	if(folderIds != null) {
+    		for(Long folderId : folderIds) {
+        		FolderVo vo = new FolderVo();
+            	vo.setFolderId(folderId);
+            	vo.setUpperFolderId(toFolderId);
+            	vo.setModId(tmpUserId);
+            	ret += documentMapper.updateFolder(vo);
+        	}	
     	}
     	return ret;
     }
@@ -131,12 +150,14 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     public int moveFiles(List<String> fileGroupIds, Long toFolderId) {
     	int ret = 0;
-    	for(String fileGroupId : fileGroupIds) {
-    		FileVo vo = new FileVo();
-    		vo.setFileGroupId(fileGroupId);
-    		vo.setFolderId(toFolderId);
-    		vo.setModId(tmpUserId);
-    		ret += documentMapper.updateFileByFileGroupId(vo);
+    	if(fileGroupIds != null) {
+    		for(String fileGroupId : fileGroupIds) {
+        		FileVo vo = new FileVo();
+        		vo.setFileGroupId(fileGroupId);
+        		vo.setFolderId(toFolderId);
+        		vo.setModId(tmpUserId);
+        		ret += documentMapper.updateFileByFileGroupId(vo);
+        	}	
     	}
     	return ret;
     }
@@ -330,7 +351,7 @@ public class DocumentServiceImpl implements DocumentService {
 		int ret = documentMapper.insertFile(fileVo);
 		
 		//중요여부 저장(묶음업로드 아닌경우)
-		if("N".equals(groupYn)) {
+		if(!"Y".equals(groupYn)) {
 			String favoriteYn = vo.getFavoriteYn();
 			if("Y".equals(favoriteYn)) {
 				fileVo.setUserId(userId);
@@ -358,14 +379,15 @@ public class DocumentServiceImpl implements DocumentService {
     @Transactional
     @Override
     public int updateFile(FileVo vo) {
-    	vo.setModId(tmpUserId);
+    	String userId = new SecurityInfoUtil().getAccountId();
+    	vo.setModId(userId);
     	int ret = documentMapper.updateFileByFileId(vo);
     	
     	String fileGroupId = documentMapper.selectFile(vo.getFileId()).getFileGroupId();
     	vo.setFileGroupId(fileGroupId);
-    	vo.setUserId(tmpUserId);
-    	vo.setRegId(tmpUserId);
-    	vo.setModId(tmpUserId);
+    	vo.setUserId(userId);
+    	vo.setRegId(userId);
+    	vo.setModId(userId);
     	documentMapper.saveFavorite(vo);
     	return ret;
     }

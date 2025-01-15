@@ -64,6 +64,8 @@ public class ComFileServiceImpl implements ComFileService {
 	@Override
 	public void saveFileEbs(MultipartFile[] files, String[] fileKindCdList, String billId) {
 
+		if(files == null) return;
+
 		String[] fileKindCds = fileKindCdList;
 		int idx = 0;
 		for(MultipartFile file:files) {

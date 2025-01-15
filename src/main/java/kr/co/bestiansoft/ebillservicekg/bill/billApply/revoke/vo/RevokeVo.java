@@ -10,6 +10,8 @@ public class RevokeVo extends ComDefaultVO {
 	private String billId;
     //등록번호(사회토론번호?)
 	private String sclDscRcpNmb;
+	//안건이름
+	private String billName;
 	//안건이름kg
 	private String billNameKg;
 	//안건이름ru
@@ -22,10 +24,14 @@ public class RevokeVo extends ComDefaultVO {
 	private String statCd;
 	//안건종류
 	private String billKind;
+	//비고
+	private String etc;
 	//비고kg
 	private String etcKg;
 	//비고ru
 	private String etcRu;
+	//철회사유 
+	private String wtCn;
 	//철회사유kg
 	private String wtCnKg;
 	//철회사유ru
@@ -34,4 +40,15 @@ public class RevokeVo extends ComDefaultVO {
 	private String proposerId;
 	//동의여부
 	private String agreeYn;
+	//의원이름
+	private String memberNm;
+	//의원이름kg
+	private String memberNmKg;
+	//의원이름ru
+	private String memberNmRu;
+	
+	private String polyCd;
+	private String polyNm;
+	
+	//
 }
