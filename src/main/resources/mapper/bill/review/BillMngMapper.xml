@@ -193,38 +193,6 @@
             now()
 		)
 	</insert>
-	<insert id="insertProcess" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.ProcessVo">
-		INSERT INTO kgst.ebs_process 
-		(
-			bill_id,      -- bill 아이디
-			proc_id,      -- 처리아이디
-			ord,          -- 처리순번 bill의 max
-			req_usr_id,   -- 요청자아이디
-			req_auth_id,  -- 요청자권한아이디
-			req_dept_id,  -- 요청자부서아이디
-			req_dt,       -- 요청일시
-			rcp_auth_id,  -- 접수자권한아이디
-			rcp_dept_id,  -- 접수자부서
-			proc_kind_cd, -- 처리종류
-			proc_yn,      -- 처리완료여부
-			reg_id,       -- 등록자
-			reg_dt        -- 등록일자
-		) VALUES (
-			#{billId},
-			#{procId},
-			(SELECT COALESCE(MAX(ord), 0) + 1 FROM kgst.ebs_process ep WHERE bill_id = #{billId}),
-			#{reqUsrId},
-			#{reqAuthId},
-			#{reqDeptId},
-			now(),
-			#{rcpAuthId},
-			#{rcpDeptId},
-			#{procKindCd},
-			'N',
-			#{regId},
-			#{regDt}
-		)
-	</insert>
 	<update id="updateProcess" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.ProposerVo">
 		/* 프로세스 처리 - 접수자가 업무 처리 했을때. (단순 수정 아님.)*/
 		UPDATE
