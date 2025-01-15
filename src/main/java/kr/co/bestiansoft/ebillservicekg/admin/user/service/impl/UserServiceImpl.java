@@ -40,9 +40,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(List<Long> seq) {
-        for (Long id : seq) {
+    public void deleteUser(List<String> seq) {
+        for (String id : seq) {
             userMapper.deleteUser(id);
         }
+    }
+
+    @Override
+    public List<UserVo> getUserByDept(HashMap<String, Object> param) {
+        return userMapper.selectListUserByDept(param);
     }
 }

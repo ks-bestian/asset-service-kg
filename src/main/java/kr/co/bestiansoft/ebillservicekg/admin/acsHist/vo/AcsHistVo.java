@@ -15,6 +15,7 @@ public class AcsHistVo extends ComDefaultVO {
     private String reqMethod;
     private String regId;
     private LocalDateTime regDt;
+    private String regDate;
     private String memberNm;
 
 

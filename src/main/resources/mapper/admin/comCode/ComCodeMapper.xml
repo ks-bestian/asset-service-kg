@@ -26,10 +26,10 @@
         </if>
         <if test="grpCodeNm != null and grpCodeNm != ''">
             <choose>
-                <when test="lang == 'lng_type1'">
+                <when test="lang == 'lng_type_1'">
                     and grp_code_nm1 like concat('%', #{grpCodeNm}, '%')
                 </when>
-                <when test="lang == 'lng_type2'">
+                <when test="lang == 'lng_type_2'">
                     and grp_code_nm2 like concat('%', #{grpCodeNm}, '%')
                 </when>
             </choose>
@@ -62,15 +62,15 @@
         </if>
         <if test="codeNm != null and codeNm != ''">
             <choose>
-                <when test="lang == 'lng_type1'">
+                <when test="lang == 'lng_type_1'">
                     and code_nm1 like concat('%', #{codeNm}, '%')
                 </when>
-                <when test="lang == 'lng_type2'">
+                <when test="lang == 'lng_type_2'">
                     and code_nm2 like concat('%', #{codeNm}, '%')
                 </when>
             </choose>
         </if>
-        order by reg_dt desc, ord asc
+        order by ord asc, reg_dt desc
     </select>
 
     <select id="selectGrpCode" parameterType="java.lang.Integer" resultType="kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeVo">

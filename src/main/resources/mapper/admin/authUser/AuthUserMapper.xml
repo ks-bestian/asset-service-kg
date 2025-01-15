@@ -2,17 +2,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.admin.authUser.repository.AuthUserMapper">
-    <select id="selectListAuthUser" parameterType="java.lang.Long" resultType="kr.co.bestiansoft.ebillservicekg.admin.authUser.vo.AuthUserVo">
+    <select id="selectListAuthUser" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.authUser.vo.AuthUserVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.authUser.repository.AuthUserMapper.selectListAuthUser */
         select
-              auth_id --권한아이디
-            , user_id --사용자아이디
-            , reg_id
-            , reg_dt
-            , mod_id
-            , mod_dt
-        from kgst.com_auth_menu
-        where auth_id = #{authId}
+              ca.auth_id --권한아이디
+            , ca.user_id --사용자아이디
+            , ca.reg_id
+            , ca.reg_dt
+            , ca.mod_id
+            , ca.mod_dt
+            , (case when #{lang} = 'lng_type_1' then vu.user_nm_kg
+                else vu.user_nm_ru
+                end) as user_nm
+            , (case when #{lang} = 'lng_type_1' then cd.dept_nm1
+                else cd.dept_nm2
+                end) as dept_nm
+        from kgst.com_auth_user ca
+        inner join view_user_member vu on vu.user_id = ca.user_id
+        left join com_dept cd on cd.dept_cd = vu.dept_cd
+        where ca.auth_id = #{authId}
     </select>
 
 

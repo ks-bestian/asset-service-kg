@@ -26,8 +26,9 @@ public class AuthUserController {
 
     @ApiOperation(value = "권한별 사용자 목록 조회", notes = "권한별 사용자 목록을 조회한다.")
     @GetMapping("/admin/authUser/{authId}")
-    public ResponseEntity<CommonResponse> getComAuthList(@PathVariable Long authId) {
-        return new ResponseEntity<>(new CommonResponse(200, "ok", ResponseEntity.ok(authUserService.getAuthUserList(authId))), HttpStatus.OK);
+    public ResponseEntity<CommonResponse> getComAuthList(@PathVariable Long authId, @RequestParam HashMap<String, Object> param) {
+        param.put("authId", authId);
+        return new ResponseEntity<>(new CommonResponse(200, "ok", authUserService.getAuthUserList(param)), HttpStatus.OK);
     }
 
     @ApiOperation(value = "권한별 사용자 생성", notes = "권한별 사용자를 생성한다.")

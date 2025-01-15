@@ -10,8 +10,9 @@ import java.util.List;
 @Mapper
 public interface UserMapper {
     List<UserVo> selectListUser(HashMap<String, Object> param);
+    List<UserVo> selectListUserByDept(HashMap<String, Object> param);
     UserVo selectUser(Long seq);
     int insertUser(UserVo userVo);
     int updateUser(UserVo userVo);
-    void deleteUser(Long seq);
+    void deleteUser(String userId);
 }

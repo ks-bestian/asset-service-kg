@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -47,7 +48,7 @@ public class MemberController {
 
     @ApiOperation(value = "의원 삭제", notes = "의원을 삭제한다.")
     @DeleteMapping("admin/member")
-    public ResponseEntity<CommonResponse> deleteMember(@RequestBody String memberId) {
+    public ResponseEntity<CommonResponse> deleteMember(@RequestBody List<String> memberId) {
         memberService.deleteMember(memberId);
         return new ResponseEntity<>(new CommonResponse(200, "ok", "Member code deleted successfully."), HttpStatus.OK);
 

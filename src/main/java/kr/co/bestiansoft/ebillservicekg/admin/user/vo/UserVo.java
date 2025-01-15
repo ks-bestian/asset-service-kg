@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 @Data
 public class UserVo {
 
-    private Long seq;
     private String deptCd;
     private String email;
     private String genCd;
@@ -16,6 +15,7 @@ public class UserVo {
     private String msgRcvYn;
     private String posCd;
     private String userId;
+    private String userNm;
     private String userNmKg;
     private String userNmRu;
     private String deptHeadYn;
@@ -25,4 +25,5 @@ public class UserVo {
     private String modId;
     private LocalDateTime modDt;
     private String deptNm;
+    private String jobNm;
 }

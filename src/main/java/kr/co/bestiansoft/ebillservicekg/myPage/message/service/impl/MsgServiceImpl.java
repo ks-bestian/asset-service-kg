@@ -74,11 +74,8 @@ public class MsgServiceImpl implements MsgService {
 
     @Override
     public void deleteMsg(List<Long> msgIds) {
-        System.out.println("!2");
         for (Long id : msgIds) {
             msgMapper.deleteMsg(id);
-            System.out.println(id);
-
         }
     }
 

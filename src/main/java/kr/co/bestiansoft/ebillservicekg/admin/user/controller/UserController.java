@@ -48,9 +48,15 @@ public class UserController {
 
     @ApiOperation(value = "직원 삭제", notes = "직원을 삭제한다.")
     @DeleteMapping("admin/user")
-    public ResponseEntity<CommonResponse> deleteUser(@RequestBody List<Long> seq) {
-        userService.deleteUser(seq);
+    public ResponseEntity<CommonResponse> deleteUser(@RequestBody List<String> ids) {
+        userService.deleteUser(ids);
         return new ResponseEntity<>(new CommonResponse(200, "ok", "User code deleted successfully."), HttpStatus.OK);
+    }
 
+    //부서별 사용자 조회
+    @ApiOperation(value = "부서별 사용자 조회", notes = "부서별사용자를 조회한다.")
+    @GetMapping("user/dept")
+    public ResponseEntity<CommonResponse> getUserByDept(@RequestParam HashMap<String, Object> param) {
+        return new ResponseEntity<>(new CommonResponse(200, "ok", userService.getUserByDept(param)), HttpStatus.OK);
     }
 }
