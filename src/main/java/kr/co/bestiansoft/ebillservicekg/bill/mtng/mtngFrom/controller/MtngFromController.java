@@ -1,10 +1,12 @@
 package kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.controller;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,6 +51,13 @@ public class MtngFromController {
     @GetMapping("/bill/mtng/from/member")
     public ResponseEntity<CommonResponse> getMemberList(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "ok", mtngFromService.getMemberList(param)), HttpStatus.OK);
+    }
+    
+    @ApiOperation(value = "회의 예정 - 회의 취소", notes = "회의 취소")
+    @DeleteMapping("/bill/mtng/from")
+    public ResponseEntity<CommonResponse> deleteMtngFrom(@RequestBody List<Long> mtngIds) {
+    	mtngFromService.deleteMtng(mtngIds);
+        return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "OK", "meeting deleted successfully"), HttpStatus.OK);
     }
 
 }
