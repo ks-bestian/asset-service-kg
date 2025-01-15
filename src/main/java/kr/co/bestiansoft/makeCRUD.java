@@ -77,7 +77,9 @@ public class makeCRUD {
 			tableList.add("ebs_bp_service");
 			tableList.add("ebs_bp_step");
 			tableList.add("ebs_bp_tasks");
-
+			tableList.add("ebs_mtng");
+			tableList.add("ebs_mtng_attendant");
+			tableList.add("ebs_mtng_agenda");
 
 			for(int i=0;i<tableList.size();i++) {
 
@@ -110,10 +112,10 @@ public class makeCRUD {
 
 
 				//makeVo(arrColumns);
-				//System.out.println(getSelectQuery(tableList.get(i),arrColumns));
-				//System.out.println(getInsertQuery(tableList.get(i),arrColumns,"uid"));
-				//System.out.println(getUpdateQuery(tableList.get(i),arrColumns,arrPkColumns));
-				//System.out.println(getDeleteQuery(tableList.get(i),arrColumns,arrPkColumns));
+				System.out.println(getSelectQuery(tableList.get(i),arrColumns));
+				System.out.println(getInsertQuery(tableList.get(i),arrColumns,"uid"));
+				System.out.println(getUpdateQuery(tableList.get(i),arrColumns,arrPkColumns));
+				System.out.println(getDeleteQuery(tableList.get(i),arrColumns,arrPkColumns));
 
 			}
 
