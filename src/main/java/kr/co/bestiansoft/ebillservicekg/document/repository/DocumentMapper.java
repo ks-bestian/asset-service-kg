@@ -24,6 +24,8 @@ public interface DocumentMapper {
     List<FileVo> selectFileGroup(FileVo vo);
     FileVo selectFile(String fileId);
     
+    FolderVo selectFolderByFolderId(Long folderId);
+    
     int insertFavorite(FileVo vo);
     int updateFavorite(FileVo vo);
     int saveFavorite(FileVo vo);
