@@ -82,6 +82,7 @@ public class makeCRUD {
 			tableList.add("ebs_mtng");
 			tableList.add("ebs_mtng_attendant");
 			tableList.add("ebs_mtng_agenda");
+			tableList.add("ebs_mtng_file");
 
 			for(int i=0;i<tableList.size();i++) {
 
