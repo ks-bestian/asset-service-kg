@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+      
+<mapper namespace="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.repository.MtngToMapper">
+
+    <select id="selectListMtngTo" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.vo.MtngToVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.repository.MtngToMapper.selectListMtngTo */
+		SELECT 
+				MTNG_ID
+		     ,  MTNG_TYPE_CD
+		     , (
+			     select 
+		           	CASE 
+					  	WHEN #{lang} = 'lng_type_1' then ccd.code_nm1
+					  	WHEN #{lang} = 'lng_type_2' then ccd.code_nm2
+				      	ELSE ccd.code_nm3
+			      		END AS mtngTypeNm
+			     from com_code_detail ccd 
+			     where ccd.code_id = em.mtng_type_cd 
+			     AND ccd.grp_code = 1014
+		     )
+		     ,  CMT_ID
+		     ,  CMT_NM
+		     ,  DGR_CD
+		     ,  OPEN_DTM
+		     ,  CLOSE_DTM
+		     ,  MTNG_PLC
+		     ,  AGE_CD
+		     ,  RMK
+		     ,  STAT_CD
+		     ,  REG_ID
+		     ,  REG_DT
+		     ,  MOD_ID
+		     ,  MOD_DT
+		     ,  DUE_DTM
+		 FROM EBS_MTNG em
+		 WHERE 1=1
+		 AND em.stat_cd = '1'
+		 <if test="searchAgeCd != null and searchAgeCd != ''">
+	    	AND (em.age_cd = #{searchAgeCd})
+	    </if>
+	    <if test="searchFromDate != null and searchFromDate != ''">
+	    	AND TO_TIMESTAMP(em.due_dtm, 'YYYYMMDDHH24MI') &gt;= TO_TIMESTAMP(concat(#{searchFromDate}, ' 00:00:00'), 'YYYY-MM-DD HH24:MI:SS')
+	    </if>
+	    <if test="searchToDate != null and searchToDate != ''">
+	    	AND TO_TIMESTAMP(em.due_dtm, 'YYYYMMDDHH24MI') &lt;= TO_TIMESTAMP(concat(#{searchToDate}, ' 23:59:59'), 'YYYY-MM-DD HH24:MI:SS')
+	    </if>
+    </select>
+
+    <select id="selectMtngTo" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.vo.MtngToVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.repository.MtngToMapper.selectMtngTo */    
+		SELECT MTNG_ID
+		     ,  MTNG_TYPE_CD
+		     , (
+			     select 
+		           	CASE 
+					  	WHEN #{lang} = 'lng_type_1' then ccd.code_nm1
+					  	WHEN #{lang} = 'lng_type_2' then ccd.code_nm2
+				      	ELSE ccd.code_nm3
+			      		END AS mtngTypeNm
+			     from com_code_detail ccd 
+			     where ccd.code_id = em.mtng_type_cd 
+			     AND ccd.grp_code = 1014
+		     )
+		     ,  CMT_ID
+		     ,  CMT_NM
+		     ,  DGR_CD
+		     ,  OPEN_DTM
+		     ,  CLOSE_DTM
+		     ,  MTNG_PLC
+		     ,  AGE_CD
+		     ,  RMK
+		     ,  STAT_CD
+		     ,  REG_ID
+		     ,  REG_DT
+		     ,  MOD_ID
+		     ,  MOD_DT
+		     ,  DUE_DTM
+		 FROM EBS_MTNG em
+		 WHERE MTNG_ID = #{mtngId}
+    </select>
+    <select id="selectListMtngAttendant" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MemberVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.repository.MtngToMapper.selectListMtngAttendant */    
+        SELECT
+              ema.atdt_user_id 
+           		, CASE 
+		  		WHEN #{lang} = 'lng_type_1' then cm.member_nm_kg 
+		  		WHEN #{lang} = 'lng_type_2' then cm.member_nm_ru 
+	      		ELSE cm.member_nm_kg
+	      		END AS atdtUserNm
+              , cm.poly_cd
+              , cm.poly_nm
+        FROM ebs_mtng_attendant ema
+        , com_member cm 
+        WHERE 1=1
+        AND ema.atdt_user_id = cm.member_id
+        AND ema.mtng_id = #{mtngId}
+        ORDER BY cm.poly_nm, atdtUserNm
+    </select>
+    <select id="selectListMtngAgenda" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.AgendaVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.repository.MtngToMapper.selectListMtngAgenda */    
+       	SELECT 
+			  ema.mtng_id  
+		    , em.bill_id                -- 안건 ID
+		    , em.bill_no                -- 안건 번호
+	        , CASE 
+		  		WHEN #{lang} = 'lng_type_1' then em.bill_name_kg 
+		  		WHEN #{lang} = 'lng_type_2' then em.bill_name_ru 
+	      		ELSE em.bill_name_kg
+	      		END AS billName
+      		, CASE 
+		  		WHEN #{lang} = 'lng_type_1' then cm.member_nm_kg 
+		  		WHEN #{lang} = 'lng_type_2' then cm.member_nm_ru 
+	      		ELSE cm.member_nm_kg
+	      		END AS ppsrNm
+		    , em.ppsr_id                -- 발의자 아이디
+		    , em.ppsl_dt                -- 제안일
+		    , ema.rslt_cd               -- 처리결과
+		    , ema.ord
+		 FROM EBS_MTNG_AGENDA ema 
+		 , kgst.EBS_MASTER em
+		 , com_member cm
+		 WHERE 1=1
+		 AND ema.bill_id = em.bill_id
+		 AND em.ppsr_id = cm.member_id
+		 AND ema.mtng_id = #{mtngId}
+		 order by ema.ord
+    </select>
+    
+    <insert id="insertEbsMtng" useGeneratedKeys="true" keyProperty="mtngId" parameterType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.vo.MtngToVo">
+		INSERT INTO EBS_MTNG
+		( 
+			  MTNG_TYPE_CD
+			, CMT_ID
+			, CMT_NM
+			, DGR_CD
+			, MTNG_PLC
+			, AGE_CD
+			, RMK
+			, STAT_CD
+			, REG_ID
+			, REG_DT
+			, DUE_DTM
+		) 
+		VALUES 
+		( 
+			   #{mtngTypeCd}
+			,  #{cmtId}
+			,  #{cmtNm}
+			,  #{dgrCd}
+			,  #{mtngPlc}
+			,  #{ageCd}
+			,  #{rmk}
+			,  #{statCd}
+			,  #{regId}
+			,  now()
+			,  #{dueDtm}
+		) RETURNING mtng_id 
+    </insert>
+    <select id="selectListMember" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MemberVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.repository.MtngToMapper.selectListMember */
+        SELECT
+              cm.member_id --국회의원아이디
+            , cm.member_nm_kg --이름(키르키즈어)
+            , cm.member_nm_ru --이름(러시아어)
+            , cm.age_cd --대수
+            , cm.cmit_cd --소속위원회코드
+           	, CASE 
+			  	WHEN #{lang} = 'lng_type_1' then cd.dept_nm1
+			  	WHEN #{lang} = 'lng_type_2' then cd.dept_nm2
+		      	ELSE cd.dept_nm3 
+		      	END AS cmitNm
+            , cm.dept_id --부서
+            , cm.poly_cd --정당코드
+            , cm.poly_nm --정당명
+            , cm.rsdn_rgst_nmbr --주민번호 본인을 구분하는 번호
+            , cm.email -- 이메일주소
+            , cm.gen_cd --성별(M,F)
+            , cm.profile_img_path --프로필이미지경로
+            , cm.mbl_no --이동전화번호
+            , cm.msg_rcv_yn --메세지수신여부
+            , cm.doc_mgr_yn --문서관리자여부
+            , cm.reg_id
+            , cm.reg_dt
+            , cm.mod_id
+            , cm.mod_dt
+        FROM com_member cm
+        , com_dept cd 
+        , ebs_base_code ebc
+        WHERE 1=1
+        AND cm.cmit_cd = cd.dept_cd 
+        AND (cm.age_cd = ebc.code_id AND ebc.curr_yn = 'Y')
+        <if test="memberNmKg != null and memberNmKg != ''">
+            AND cm.member_nm_kg LIKE CONCAT('%', #{memberNmKg}, '%')
+        </if>
+        ORDER BY cm.poly_nm, cm.member_nm_kg
+        
+    </select>
+    <insert id="insertEbsMtngAttendant" parameterType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MemberVo">
+		INSERT INTO EBS_MTNG_ATTENDANT
+		     ( 
+		       MTNG_ID
+		     , ATDT_USER_ID
+		     , ATDT_USER_NM
+		     , ATDT_KIND
+		     , REG_ID
+		     , REG_DT
+		     ) 
+		VALUES 
+		     ( 
+		       #{mtngId}
+		     ,  #{atdtUserId}
+		     ,  #{atdtUserNm}
+		     ,  #{atdtKind}
+		     ,  #{regId}
+		     ,  now()
+		    ) 
+    </insert> 
+    <insert id="insertEbsMtngAgenda" parameterType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.AgendaVo">
+		INSERT INTO EBS_MTNG_AGENDA
+		     ( 
+		       MTNG_ID
+		     , BILL_ID
+		     , ORD
+		     , REG_ID
+		     , REG_DT
+		     ) 
+		VALUES 
+		     ( 
+		       #{mtngId}
+		     ,  #{billId}
+		     ,  #{ord}
+		     ,  #{regId}
+		     ,  now()
+		    ) 
+    </insert>
+    <delete id="deleteMtngTo" parameterType="java.lang.Long">
+        delete from ebs_mtng
+        where mtng_id = #{mtngId}
+    </delete>
+    <delete id="deleteMtngToAttendant" parameterType="java.lang.Long">
+        delete from ebs_mtng_attendant
+        where mtng_id = #{mtngId}
+    </delete>
+    <delete id="deleteMtngToAgenda" parameterType="java.lang.Long">
+        delete from ebs_mtng_agenda
+        where mtng_id = #{mtngId}
+    </delete>
+
+</mapper>

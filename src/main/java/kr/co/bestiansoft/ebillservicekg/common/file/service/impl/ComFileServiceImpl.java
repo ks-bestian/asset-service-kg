@@ -140,4 +140,10 @@ public class ComFileServiceImpl implements ComFileService {
 
     }
 
+	@Override
+	public void saveFileEbsMtng(MultipartFile[] files, String[] fileKindCd, String billId) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
