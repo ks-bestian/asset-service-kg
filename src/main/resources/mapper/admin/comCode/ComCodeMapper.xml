@@ -10,8 +10,8 @@
             , grp_code_nm2 --그룹명(러시아어)
             , grp_code_nm3 --그룹명(한국어)
             , (case
-                when #{lang} = 'lng_type1' then grp_code_nm1
-                when #{lang} = 'lng_type2' then grp_code_nm2
+                when #{lang} = 'lng_type_1' then grp_code_nm1
+                when #{lang} = 'lng_type_2' then grp_code_nm2
                 else grp_code_nm3
               end) as grp_code_nm
             , use_yn --사용여부
@@ -46,8 +46,8 @@
             , code_nm2
             , code_nm3
             , (case
-            	when #{lang} = 'lng_type1' then code_nm1
-            	when #{lang} = 'lng_type2' then code_nm2
+            	when #{lang} = 'lng_type_1' then code_nm1
+            	when #{lang} = 'lng_type_2' then code_nm2
                      else code_nm3
               end) code_nm
             , grp_code
@@ -185,7 +185,7 @@
             , use_yn = #{useYn}
             , rmk = #{rmk}
             , mod_id = #{modId}
-            , mod_dt = #{modDt}
+            , mod_dt = now()
         WHERE grp_code = #{grpCode}
     </update>
 
@@ -201,7 +201,7 @@
             , ord = #{ord}
             , rmk = #{rmk}
             , mod_id = #{modId}
-            , mod_dt = #{modDt}
+            , mod_dt = now()
         WHERE code_id = #{codeId}
     </update>
 

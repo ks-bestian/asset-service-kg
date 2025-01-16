@@ -5,6 +5,7 @@ import kr.co.bestiansoft.ebillservicekg.admin.member.service.MemberService;
 import kr.co.bestiansoft.ebillservicekg.admin.member.vo.MemberVo;
 import kr.co.bestiansoft.ebillservicekg.admin.menu.repository.MenuMapper;
 import kr.co.bestiansoft.ebillservicekg.admin.menu.vo.MenuVo;
+import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,12 +35,14 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberVo createMember(MemberVo memberVo) {
+        memberVo.setRegId(new SecurityInfoUtil().getAccountId());
         memberMapper.insertMember(memberVo);
         return memberVo;
     }
 
     @Override
     public int updateMember(MemberVo memberVo) {
+        memberVo.setModId(new SecurityInfoUtil().getAccountId());
         return memberMapper.updateMember(memberVo);
     }
 

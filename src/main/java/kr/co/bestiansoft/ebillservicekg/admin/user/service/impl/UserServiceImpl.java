@@ -3,6 +3,7 @@ package kr.co.bestiansoft.ebillservicekg.admin.user.service.impl;
 import kr.co.bestiansoft.ebillservicekg.admin.user.repository.UserMapper;
 import kr.co.bestiansoft.ebillservicekg.admin.user.service.UserService;
 import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserVo;
+import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,12 +31,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserVo createUser(UserVo userVo) {
+        userVo.setRegId(new SecurityInfoUtil().getAccountId());
         userMapper.insertUser(userVo);
         return userVo;
     }
 
     @Override
     public int updateUser(UserVo userVo) {
+        userVo.setModId(new SecurityInfoUtil().getAccountId());
         return userMapper.updateUser(userVo);
     }
 

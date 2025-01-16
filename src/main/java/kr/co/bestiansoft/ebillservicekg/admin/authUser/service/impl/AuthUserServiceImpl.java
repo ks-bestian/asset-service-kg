@@ -4,6 +4,7 @@ import kr.co.bestiansoft.ebillservicekg.admin.authMenu.service.impl.AuthMenuServ
 import kr.co.bestiansoft.ebillservicekg.admin.authUser.repository.AuthUserMapper;
 import kr.co.bestiansoft.ebillservicekg.admin.authUser.service.AuthUserService;
 import kr.co.bestiansoft.ebillservicekg.admin.authUser.vo.AuthUserVo;
+import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -29,7 +30,7 @@ public class AuthUserServiceImpl implements AuthUserService {
 
     @Override
     public AuthUserVo createAuthUser(AuthUserVo authUserVo) {
-
+        authUserVo.setRegId(new SecurityInfoUtil().getAccountId());
         authUserMapper.createAuthUser(authUserVo);
 
         return authUserVo;

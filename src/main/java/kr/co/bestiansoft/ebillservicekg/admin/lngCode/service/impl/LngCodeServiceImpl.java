@@ -4,6 +4,7 @@ package kr.co.bestiansoft.ebillservicekg.admin.lngCode.service.impl;
 import kr.co.bestiansoft.ebillservicekg.admin.lngCode.repository.LngCodeMapper;
 import kr.co.bestiansoft.ebillservicekg.admin.lngCode.service.LngCodeService;
 import kr.co.bestiansoft.ebillservicekg.admin.lngCode.vo.LngCodeVo;
+import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ public class LngCodeServiceImpl implements LngCodeService {
 
     @Override
     public LngCodeVo createLngCode(LngCodeVo lngCodeVo) {
+        lngCodeVo.setRegId(new SecurityInfoUtil().getAccountId());
         lngCodeMapper.insertLngCode(lngCodeVo);
 
         return lngCodeVo;
@@ -33,6 +35,7 @@ public class LngCodeServiceImpl implements LngCodeService {
 
     @Override
     public int updateLngCode(LngCodeVo lngCodeVo) {
+        lngCodeVo.setModId(new SecurityInfoUtil().getAccountId());
         return lngCodeMapper.updateLngCode(lngCodeVo);
     }
 

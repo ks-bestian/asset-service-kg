@@ -20,7 +20,7 @@
             , em.reg_dt
             , em.mod_id
             , em.mod_dt
-            , (case when #{lang} = 'lng_type2' then vum.user_nm_ru
+            , (case when #{lang} = 'lng_type_2' then vum.user_nm_ru
                     else vum.user_nm_kg
                 end) as send_nm
         from ebs_msg em
@@ -61,7 +61,7 @@
             , em.reg_dt
             , em.mod_id
             , em.mod_dt
-            , (case when #{lang} = 'lng_type2' then vum.user_nm_ru
+            , (case when #{lang} = 'lng_type_2' then vum.user_nm_ru
                else vum.user_nm_kg
                end) as rcv_nm
         from ebs_msg em
@@ -103,14 +103,17 @@
             , em.reg_dt
             , em.mod_id
             , em.mod_dt
-            , mRcv.user_nm_kg as rcv_nm
-            , mSend.user_nm_kg as send_nm
-            <!--            , (case when #{lang} = 'lng_type1' then vum.user_nm_kg-->
-            <!--                    when #{lang} = 'lng_type1' then vum.user_nm_ru-->
-            <!--                end) as user_nm-->
+            , (case when #{lang} = 'lng_type_1' then mRcv.user_nm_kg
+                    else mRcv.user_nm_ru
+                end) as rcv_nm
+        , (case when #{lang} = 'lng_type_1' then mSend.user_nm_kg
+                else mSend.user_nm_ru
+                end) as send_nm
+<!--        , mRcv.user_nm_kg as rcv_nm-->
+<!--        , mSend.user_nm_kg as send_nm-->
         from ebs_msg em
         inner join view_user_member mRcv on mRcv.user_id = em.rcv_id
-        inner join view_user_member mSend on vum.user_id = em.send_id
+        inner join view_user_member mSend on mSend.user_id = em.send_id
         where msg_id = #{msgId}
     </select>
 
@@ -143,7 +146,7 @@
     <select id="selectUserMember" parameterType="kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo">
         select
               um.user_id
-            , (case when #{lang} = 'lng_type2' then um.user_nm_ru
+            , (case when #{lang} = 'lng_type_2' then um.user_nm_ru
                 else um.user_nm_kg
                 end) as user_nm
             , um.user_nm_kg
@@ -159,17 +162,17 @@
             , um.doc_mgr_yn
             , um.dept_head_yn
             , um.job_cd
-            , (case when #{lang} = 'lng_type2' then cc.code_nm2
+            , (case when #{lang} = 'lng_type_2' then cc.code_nm2
                 else cc.code_nm1
                 end) as job_nm
             , um.pos_cd
             , um.age_cd
             , um.cmit_cd
-            , (case when #{lang} = 'lng_type2' then dept_cmit.dept_nm2
+            , (case when #{lang} = 'lng_type_2' then dept_cmit.dept_nm2
             else dept_cmit.dept_nm1
             end) as cmit_nm
             , um.poly_cd
-            , (case when #{lang} = 'lng_type2' then dept_poly.dept_nm2
+            , (case when #{lang} = 'lng_type_2' then dept_poly.dept_nm2
             else dept_poly.dept_nm1
             end) as poly_nm
             , um.rsdn_rgst_nmbr

@@ -5,6 +5,7 @@ import kr.co.bestiansoft.ebillservicekg.admin.authMenu.service.AuthMenuService;
 import kr.co.bestiansoft.ebillservicekg.admin.authMenu.vo.AuthMenuCreate;
 import kr.co.bestiansoft.ebillservicekg.admin.authMenu.vo.AuthMenuVo;
 import kr.co.bestiansoft.ebillservicekg.admin.menu.repository.MenuMapper;
+import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,7 @@ public class AuthMenuServiceImpl implements AuthMenuService {
         authMenuMapper.deleteAuthMenu(authId);
 
         for(AuthMenuVo authMenuVo : authMenuVos) {
+            authMenuVo.setRegId(new SecurityInfoUtil().getAccountId());
             authMenuMapper.insertAuthMenu(authMenuVo);
         }
         return authMenuCreate;
