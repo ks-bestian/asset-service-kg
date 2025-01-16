@@ -69,7 +69,7 @@
 			<if test="sclDscRcpNmb != null and sclDscRcpNmb != ''">
 				and em.scl_dsc_rcp_nmb like concat('%', #{sclDscRcpNmb}, '%')
 			</if>
-
+		order by em.reg_dt desc nulls last
     </select>
 
     <update id="updateApplyByBillId" parameterType="kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo">
@@ -256,4 +256,14 @@
 			and ef.delete_yn = 'N'
 		order by file_kind_cd asc, ef.reg_dt asc
     </select>
+    
+    <update id="updateFileDelete" parameterType="java.util.HashMap">
+    	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.updateFileDelete */
+        update kgst.ebs_file 
+		set
+		  mod_id = #{userId}
+		  , mod_dt = now()
+		  , delete_yn = 'Y'
+		WHERE org_file_id = #{ebsFileVo.orgFileId}
+    </update>
 </mapper>

@@ -5,6 +5,7 @@ import java.util.List;
 
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyResponse;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo;
+import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 
 public interface ApplyService {
 
@@ -25,5 +26,7 @@ public interface ApplyService {
 	int updateBillStatus(String billId, ApplyVo applyVo);
 
 	ApplyVo saveBillAccept(String billId, ApplyVo applyVo);
+
+	int deleteBillFile(EbsFileVo ebsFileVo);
 
 }

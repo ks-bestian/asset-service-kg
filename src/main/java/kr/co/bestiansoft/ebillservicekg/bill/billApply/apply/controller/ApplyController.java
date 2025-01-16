@@ -21,6 +21,7 @@ import io.swagger.annotations.ApiOperation;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.service.ApplyService;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
+import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 import lombok.RequiredArgsConstructor;
 
 @Api(tags = "안건제출 API")
@@ -86,4 +87,10 @@ public class ApplyController {
     	return new  ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill status update successfully", applyService.saveBillAccept(billId, applyVo)), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "파일 삭제", notes = "안건 수정에서 파일을 삭제한다")
+    @PutMapping("/bill/file/delete")
+    public ResponseEntity<CommonResponse> deleteBillFile(@RequestBody EbsFileVo ebsFileVo){
+    	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill file delete successfully", applyService.deleteBillFile(ebsFileVo)), HttpStatus.OK);
+    }
+    
 }

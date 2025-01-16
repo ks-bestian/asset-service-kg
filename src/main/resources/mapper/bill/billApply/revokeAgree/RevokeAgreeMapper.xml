@@ -41,6 +41,7 @@
 		<if test="ppslDt != null and ppslDt != ''">
 			and em.reg_dt::date = #{ppslDt}
 		</if>
+		order by em.reg_dt desc nulls last
     </select>
     
     <select id="getRevokeAgreeDetail" parameterType="java.util.HashMap"

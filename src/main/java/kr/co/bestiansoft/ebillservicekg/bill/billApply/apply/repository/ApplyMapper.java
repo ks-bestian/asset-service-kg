@@ -45,4 +45,6 @@ public interface ApplyMapper {
 
 	List<EbsFileVo> selectApplyFileList(String billId);
 
+	int updateFileDelete(EbsFileVo ebsFileVo, String userId);
+
 }
