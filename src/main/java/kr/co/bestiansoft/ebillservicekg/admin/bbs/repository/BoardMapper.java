@@ -1,5 +1,6 @@
 package kr.co.bestiansoft.ebillservicekg.admin.bbs.repository;
 
+import java.util.HashMap;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -7,7 +8,7 @@ import kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo;
 
 @Mapper
 public interface BoardMapper {
-    List<BoardVo> getBoardList (String brdSj, String brdType);
+    List<BoardVo> getBoardList (HashMap<String, Object> param);
     BoardVo getBoardById(Long id);
     void deleteById(Long id);
     int updateById(BoardVo boardVo);
