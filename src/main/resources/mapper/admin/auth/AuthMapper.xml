@@ -6,7 +6,7 @@
         /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.auth.repository.AuthMapper.selectListAuth */
         select
               auth_id --권한아이디
-            , (case when #{lang} = 'lng_type2' then auth_nm2
+            , (case when #{lang} = 'lng_type_2' then auth_nm2
                 else auth_nm1
               end) as auth_nm
             , auth_nm1 --권한명(키르키즈어)

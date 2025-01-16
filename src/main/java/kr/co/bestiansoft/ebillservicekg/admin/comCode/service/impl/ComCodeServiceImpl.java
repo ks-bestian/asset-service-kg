@@ -4,6 +4,7 @@ import kr.co.bestiansoft.ebillservicekg.admin.comCode.repository.ComCodeMapper;
 import kr.co.bestiansoft.ebillservicekg.admin.comCode.service.ComCodeService;
 import kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeDetailVo;
 import kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeVo;
+import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
@@ -43,23 +44,27 @@ public class ComCodeServiceImpl implements ComCodeService {
 
     @Override
     public ComCodeVo createGrpCode(ComCodeVo comCodeVo) {
+        comCodeVo.setRegId(new SecurityInfoUtil().getAccountId());
         comCodeMapper.insertGrpCode(comCodeVo);
         return comCodeVo;
     }
 
     @Override
     public ComCodeDetailVo createComCode(ComCodeDetailVo comCodeDetailVo) {
+        comCodeDetailVo.setRegId(new SecurityInfoUtil().getAccountId());
         comCodeMapper.insertComCode(comCodeDetailVo);
         return comCodeDetailVo;
     }
 
     @Override
     public int updateGrpCode(ComCodeVo comCodeVo) {
+        comCodeVo.setModId(new SecurityInfoUtil().getAccountId());
         return comCodeMapper.updateGrpCode(comCodeVo);
     }
 
     @Override
     public int updateComCode(ComCodeDetailVo comCodeDetailVo) {
+        comCodeDetailVo.setModId(new SecurityInfoUtil().getAccountId());
         return comCodeMapper.updateComCode(comCodeDetailVo);
     }
 
