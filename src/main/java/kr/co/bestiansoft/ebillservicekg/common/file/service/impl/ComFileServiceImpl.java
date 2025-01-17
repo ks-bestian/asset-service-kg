@@ -15,6 +15,7 @@ import kr.co.bestiansoft.ebillservicekg.common.file.repository.ComFileMapper;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.ComFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
+import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -141,9 +142,42 @@ public class ComFileServiceImpl implements ComFileService {
     }
 
 	@Override
-	public void saveFileEbsMtng(MultipartFile[] files, String[] fileKindCd, String billId) {
-		// TODO Auto-generated method stub
+	public void saveFileEbsMtng(MultipartFile[] files, String[] fileKindCdList, Long mtngId) {
+		if(files == null) return;
+
+		String[] fileKindCds = fileKindCdList;
+		int idx = 0;
+		for(MultipartFile file:files) {
+
+			String orgFileId = StringUtil.getUUUID();
+    		String orgFileNm = file.getOriginalFilename();
+    		
+
+    		////////////////////////
+			try (InputStream edvIs = file.getInputStream()){
+				edv.save(orgFileId, edvIs);
+			} catch (Exception edvEx) {
+				throw new RuntimeException("EDV_NOT_WORK", edvEx);
+			}
+    		////////////////////////
+			String regId = new SecurityInfoUtil().getAccountId();
+			EbsFileVo fileVo = new EbsFileVo();
+			fileVo.setMtngId(mtngId);
+			fileVo.setRegId(regId);
+			fileVo.setOrgFileId(orgFileId);
+			fileVo.setOrgFileNm(orgFileNm);
+			fileVo.setFileSize(file.getSize());
+			fileVo.setDeleteYn("N");
+			if(fileKindCds!=null) {
+				String fileKindCd = fileKindCds[idx];
+				fileVo.setFileKindCd(fileKindCd);
+			}
+			
+			idx++;
+			fileMapper.insertFileEbsMtng(fileVo);
+		}
 		
 	}
+
 
 }

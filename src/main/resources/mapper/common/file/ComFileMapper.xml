@@ -127,5 +127,32 @@
 		where
 			org_file_id = #{orgFileId};
     </update>
+    <insert id="insertFileEbsMtng" parameterType="kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.common.file.repository.FileMapper.insertFileEbsMtng */
+		insert into kgst.ebs_mtng_file (
+			  mtng_id
+			, file_kind_cd
+			, org_file_id
+			, org_file_nm
+			, pdf_file_id
+			, pdf_file_nm
+			, delete_yn
+			, file_size
+			, reg_id
+			, reg_dt
+		)
+		values (
+			  #{mtngId}
+			, #{fileKindCd}
+			, #{orgFileId}
+			, #{orgFileNm}
+			, #{pdfFileId}
+			, #{pdfFileNm}
+			, 'N'
+			, #{fileSize}
+			, #{regId}
+			, now()
+		)
+    </insert>
     
 </mapper>

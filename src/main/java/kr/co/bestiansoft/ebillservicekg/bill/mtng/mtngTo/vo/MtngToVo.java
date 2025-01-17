@@ -26,8 +26,14 @@ public class MtngToVo extends ComDefaultVO {
 	private String statCd;
 	private String dueDtm;
 	
+	/* 참석자 관련 */
     private List<MemberVo> attendantList;
+    
+    /* 안건 관련 */
     private List<AgendaVo> agendaList;
+    
+    /* 파일 관련*/
     private MultipartFile[] files;
+    private String[] fileKindCds;
     
 }

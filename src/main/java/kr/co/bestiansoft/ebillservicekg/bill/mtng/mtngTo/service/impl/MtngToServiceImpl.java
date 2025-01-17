@@ -11,6 +11,8 @@ import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.service.MtngToService;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.AgendaVo;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MemberVo;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.vo.MtngToVo;
+import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
+import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class MtngToServiceImpl implements MtngToService {
     private final MtngToMapper mtngToMapper;
+    private final ComFileService comFileService;
 
     @Override
     public List<MtngToVo> getMtngToList(HashMap<String, Object> param) {
@@ -51,15 +54,35 @@ public class MtngToServiceImpl implements MtngToService {
 	@Override
 	public MtngToVo createMtngTo(MtngToVo mtngToVo) {
 		
+		/*      
+		 * 1. 결과 등록 메뉴에서 결과 등록을 하면 회의 예정에 대한 회의결과 를 '임시저장(수정)' 한다는 개념으로 가야할듯.
+		 * 		회의 결과 보고 처리가 최종.
+		 * 2. 등록(수정)처리 여러번 할 경우 기존 파일 deleteYn 'Y'처리하고 입력하면 되지 않을까
+		 * 3. 안건, 참석자의 경우 기존에 등록했던 행들은 결과만 업데이트 하고 신규 추가, 삭제된 내용은 바로바로 추가/삭제 할수 있게 해야할듯. 
+		 * 		기존 항목이었는지 구분 필요.
+		 * 
+		 * */
+		
 		/* 등록자 아이디 세팅 */
 		String regId = new SecurityInfoUtil().getAccountId();
 		mtngToVo.setRegId(regId);
-		
-		/*회의*/
-		mtngToMapper.insertEbsMtng(mtngToVo);
+		mtngToVo.setModId(regId);
+		/*회의 - ebs_mtng*/
+		mtngToMapper.updateMtngTo(mtngToVo);
 		log.info("mtngId2 : {}", mtngToVo.getMtngId());
 		
-		/*안건*/
+		/*회의결과 보고서 등록 - ebs_mtng_file*/
+		mtngToMapper.deleteMtngToFile(mtngToVo);
+		
+		comFileService.saveFileEbsMtng(mtngToVo.getFiles(), mtngToVo.getFileKindCds(), mtngToVo.getMtngId());
+		//파일 정보를 가지고 있어서 null처리
+		mtngToVo.setFiles(null);
+		
+		/*안건 ebs_mtng_agenda*/
+		
+		// 삭제 대상 추출 및 삭제
+		mtngToMapper.deleteMtngToAgenda(mtngToVo);
+		
 		List<AgendaVo> agendaList = mtngToVo.getAgendaList();
 		for(int i=0;i<agendaList.size();i++) {
 			log.info("billId : {}", agendaList.get(i).getBillId());
@@ -69,23 +92,30 @@ public class MtngToServiceImpl implements MtngToService {
 			agendaVo.setMtngId(mtngToVo.getMtngId());
 			agendaVo.setOrd(i+1);
 			agendaVo.setRegId(regId);
+			agendaVo.setRsltCd(agendaList.get(i).getRsltCd());
 			agendaList.set(i, agendaVo);
-			mtngToMapper.insertEbsMtngAgenda(agendaList.get(i));
+			//존재하는 행인 경우 업데이트. 아닌경우 인서트
+			mtngToMapper.updateMtngToAgenda(agendaList.get(i));
 		}
 		
-		/*참석자*/
+		/*참석자 ebs_mtng_attendant*/
+		
+		// 삭제 대상 추출 및 삭제
+		mtngToMapper.deleteMtngToAttendant(mtngToVo);
+		
 		List<MemberVo> attendantList = mtngToVo.getAttendantList();
 		for(int i=0;i<attendantList.size();i++) {
 			log.info("attendant : {}", attendantList.get(i));
-			//attendantList.get(i).setMtngId(mtngId);
 			MemberVo memberVo = new MemberVo();
 			memberVo.setMtngId(mtngToVo.getMtngId());
-			memberVo.setAtdtUserId(attendantList.get(i).getMemberId());
-			memberVo.setAtdtUserNm(attendantList.get(i).getMemberNmKg());
+			memberVo.setAtdtUserId(attendantList.get(i).getAtdtUserId());
+			memberVo.setAtdtUserNm(attendantList.get(i).getAtdtUserNm());
 			memberVo.setAtdtKind("ATT01");// 참석자 구분(의원)
 			memberVo.setRegId(regId);
+			memberVo.setAtdtDivCd(attendantList.get(i).getAtdtDivCd());
 			attendantList.set(i, memberVo);
-			mtngToMapper.insertEbsMtngAttendant(attendantList.get(i));
+			//존재하는 행인 경우 업데이트. 아닌경우 인서트
+			mtngToMapper.updateMtngToAttendant(attendantList.get(i));
 		}
 		
 		return mtngToVo;
