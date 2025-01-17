@@ -25,6 +25,28 @@
 		)
     </insert>
     
+    <insert id="insertMyFolder" useGeneratedKeys="true" keyProperty="folderId" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.insertFolder */
+		INSERT INTO kgst.bs_folder_info (
+			  folder_nm
+			, upper_folder_id
+			, user_id
+			, del_yn
+			, dept_folder_yn
+			, reg_dt
+			, reg_id 
+		)
+		VALUES (
+			  #{folderNm}
+			, #{upperFolderId}
+			, #{userId}
+			, 'N'
+			, 'N'
+			, now()
+			, #{regId}
+		)
+    </insert>
+    
     <update id="updateFolder" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo">
 		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.updateFolder */
 		UPDATE kgst.bs_folder_info
@@ -39,14 +61,14 @@
 		WHERE folder_id = #{folderId}
     </update>
     
-    <delete id="deleteFolder">
-		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.deleteFolder */
+    <delete id="removeFolder">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.removeFolder */
 		DELETE FROM kgst.bs_folder_info
 		WHERE folder_id = #{folderId}
     </delete>
     
-    <delete id="deleteFile">
-		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.deleteFile */
+    <delete id="removeFile">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.removeFile */
 		DELETE FROM kgst.bs_file_info
 		WHERE file_id = #{fileId}
     </delete>
@@ -89,6 +111,15 @@
 			and c.dept_cd = #{deptCd}
 	</select>
 	
+	<select id="selectMyFolderListAll" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectMyFolderListAll */
+		<include refid="selectFolder" />
+		where 1=1
+			and c.del_yn = 'N'
+			and c.dept_folder_yn = 'N'
+			and c.user_id = #{userId}
+	</select>
+	
 	<select id="selectDeptFolderList" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo">
 		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectDeptFolderList */
 		<include refid="selectFolder" />
@@ -103,6 +134,48 @@
 			<if test="regNm != null and regNm != ''">
 			and c.reg_nm like '%' || #{regNm} || '%'
 			</if>
+	</select>
+	
+	<select id="selectMyFolderList" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectMyFolderList */
+		<include refid="selectFolder" />
+		where 1=1
+			and c.del_yn = 'N'
+			and c.dept_folder_yn = 'N'
+			and c.user_id = #{userId}
+			and c.upper_folder_id = #{upperFolderId}
+			<if test="title != null and title != ''">
+			and c.folder_nm like '%' || #{title} || '%'
+			</if>
+			<if test="regNm != null and regNm != ''">
+			and c.reg_nm like '%' || #{regNm} || '%'
+			</if>
+	</select>
+	
+	<select id="selectDeleteFolderList" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectDeleteFolderList */
+		<include refid="selectFolder" />
+		where 1=1
+			and c.del_yn = 'Y'
+			and c.mod_id = #{userId}
+			<if test="title != null and title != ''">
+			and c.folder_nm like '%' || #{title} || '%'
+			</if>
+			<if test="regNm != null and regNm != ''">
+			and c.reg_nm like '%' || #{regNm} || '%'
+			</if>
+	</select>
+	
+	<select id="selectFolderIdsByUpperFolderId">
+		select folder_id
+		from kgst.bs_folder_info
+		where upper_folder_id = #{upperFolderId}
+	</select>
+	
+	<select id="selectFileIdsByFolderId">
+		select file_id
+		from kgst.bs_file_info
+		where folder_id = #{folderId}
 	</select>
     
     <insert id="insertFile" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo">
@@ -206,6 +279,119 @@
 					and a.dept_file_yn = 'Y'
 					and a.dept_cd = #{deptCd}
 					and a.folder_id = #{folderId}
+			) b
+			left outer join kgst.bs_favorite c
+				on b.file_group_id = c.file_group_id
+				and c.user_id = #{userId}
+			left outer join kgst.bs_folder_info d
+				on d.folder_id = b.folder_id
+		) x
+		where 1=1
+			<if test="title != null and title != ''">
+			and x.title like '%' || #{title} || '%'
+			</if>
+			<if test="regNm != null and regNm != ''">
+			and x.reg_nm like '%' || #{regNm} || '%'
+			</if>
+	</select>
+	
+	<select id="selectMyFileList" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectDeptFileList */
+		select * from (
+			select 
+				  b.*
+				, b.file_title as title
+				, coalesce(c.favorite_yn, 'N') as favorite_yn
+				, d.folder_nm as folder_nm
+				, (select user_nm_kg 
+				from kgst.view_user_member vcm
+				where vcm.user_id = b.reg_id) as reg_nm
+				, (select user_nm_kg 
+				from kgst.view_user_member vcm
+				where vcm.user_id = b.mod_id) as mod_nm
+			from (
+				select
+					<include refid="fileColumns"></include>
+				from kgst.bs_file_info a
+				where 1=1
+					and a.del_yn = 'N'
+					and a.dept_file_yn = 'N'
+					and a.user_id = #{userId}
+					and a.folder_id = #{folderId}
+			) b
+			left outer join kgst.bs_favorite c
+				on b.file_group_id = c.file_group_id
+				and c.user_id = #{userId}
+			left outer join kgst.bs_folder_info d
+				on d.folder_id = b.folder_id
+		) x
+		where 1=1
+			<if test="title != null and title != ''">
+			and x.title like '%' || #{title} || '%'
+			</if>
+			<if test="regNm != null and regNm != ''">
+			and x.reg_nm like '%' || #{regNm} || '%'
+			</if>
+	</select>
+	
+	<select id="selectStarFileList" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectStarFileList */
+		select * from (
+			select 
+				  b.*
+				, b.file_title as title
+				, coalesce(c.favorite_yn, 'N') as favorite_yn
+				, d.folder_nm as folder_nm
+				, (select user_nm_kg 
+				from kgst.view_user_member vcm
+				where vcm.user_id = b.reg_id) as reg_nm
+				, (select user_nm_kg 
+				from kgst.view_user_member vcm
+				where vcm.user_id = b.mod_id) as mod_nm
+			from (
+				select
+					<include refid="fileColumns"></include>
+				from kgst.bs_file_info a
+				where 1=1
+					and a.del_yn = 'N'
+			) b
+			inner join kgst.bs_favorite c
+				on b.file_group_id = c.file_group_id
+				and c.user_id = #{userId}
+				and c.favorite_yn = 'Y'
+			left outer join kgst.bs_folder_info d
+				on d.folder_id = b.folder_id
+		) x
+		where 1=1
+			<if test="title != null and title != ''">
+			and x.title like '%' || #{title} || '%'
+			</if>
+			<if test="regNm != null and regNm != ''">
+			and x.reg_nm like '%' || #{regNm} || '%'
+			</if>
+	</select>
+	
+	<select id="selectDeleteFileList" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectDeleteFileList */
+		select * from (
+			select 
+				  b.*
+				, b.file_title as title
+				, coalesce(c.favorite_yn, 'N') as favorite_yn
+				, d.folder_nm as folder_nm
+				, (select user_nm_kg 
+				from kgst.view_user_member vcm
+				where vcm.user_id = b.reg_id) as reg_nm
+				, (select user_nm_kg 
+				from kgst.view_user_member vcm
+				where vcm.user_id = b.mod_id) as mod_nm
+			from (
+				select
+					<include refid="fileColumns"></include>
+				from kgst.bs_file_info a
+				where 1=1
+					and a.del_yn = 'Y'
+					and a.mod_id = #{userId}
 			) b
 			left outer join kgst.bs_favorite c
 				on b.file_group_id = c.file_group_id
