@@ -3,6 +3,7 @@ package kr.co.bestiansoft.ebillservicekg.admin.bbs.service.impl;
 import java.util.HashMap;
 import java.util.List;
 
+import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,8 +26,9 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public List<BoardVo> getBoardList(HashMap<String, Object> param, String brdType) {
         String brdSj = String.valueOf(param.getOrDefault("brdSj", ""));
-
-        List<BoardVo> result = boardMapper.getBoardList(brdSj, brdType);
+        param.put("brdSj", brdSj);
+        param.put("brdType", brdType);
+        List<BoardVo> result = boardMapper.getBoardList(param);
         return result;
     }
 
@@ -34,7 +36,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public BoardVo createBoard(BoardVo boardVo, String brdType) {
     	boardVo.setBrdType(brdType);
-
+        boardVo.setRegId(new SecurityInfoUtil().getAccountId());
     	boardMapper.insertBoard(boardVo);
     	return boardVo;
     }
@@ -58,8 +60,8 @@ public class BoardServiceImpl implements BoardService {
 
     @Transactional
     @Override
-    public BoardVo getBoardById(Long brdId) {
-    	BoardVo dto = boardMapper.getBoardById(brdId);
+    public BoardVo getBoardById(Long brdId, String lang) {
+    	BoardVo dto = boardMapper.getBoardById(brdId, lang);
     	if(dto != null) {
     		dto.setNotiInqCnt(dto.getNotiInqCnt() + 1);
             boardMapper.updateNotiInqCnt(brdId, dto.getNotiInqCnt());

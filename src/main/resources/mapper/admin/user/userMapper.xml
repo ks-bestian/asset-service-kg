@@ -98,11 +98,10 @@
             , cu.reg_dt
             , cu.mod_id
             , cu.mod_dt
-            , cd.dept_nm1 as dept_nm
-<!--            , (case when #{lang} = 'lng_type1' then cd.dept_nm1-->
-<!--                    when #{lang} = 'lng_type2' then cd.dept_nm2-->
-<!--                    else cd.dept_nm3-->
-<!--              end) as dept_nm-->
+            , (case when #{lang} = 'lng_type_1' then cd.dept_nm1
+                    when #{lang} = 'lng_type_2' then cd.dept_nm2
+                    else cd.dept_nm3
+              end) as dept_nm
         from com_user cu
         inner join com_dept cd on cd.dept_cd = cu.dept_cd
         where seq = #{seq}
@@ -165,7 +164,7 @@
             , dept_head_yn = #{deptHeadYn}
             , doc_mgr_yn = #{docMgrYn}
             , mod_id = #{modId}
-            , mod_dt = #{modDt}
+            , mod_dt = now()
         where user_id = #{userId}
     </update>
 

@@ -21,7 +21,7 @@
         /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.menu.repository.MenuMapper.selectListMenu */
         select
               menu_id --메뉴아이디
-            , (case when #{lang} = 'lny_type2' then menu_nm2
+            , (case when #{lang} = 'lny_type_2' then menu_nm2
                 else menu_nm1
                 end) as menu_nm
             , menu_nm1 --메뉴명(키르기스어)
@@ -126,8 +126,8 @@
             , cq.mod_id
             , cq.mod_dt
             , cm.menu_nm1 as menu_nm
-<!--            , (case when #{lang} = 'lng_type1' then cm.menu_nm1 &#45;&#45;수정-->
-<!--                    when #{lang} = 'lng_type2' then cm.menu_nm2-->
+<!--            , (case when #{lang} = 'lng_type_1' then cm.menu_nm1 &#45;&#45;수정-->
+<!--                    when #{lang} = 'lng_type_2' then cm.menu_nm2-->
 <!--                    else cm.menu_nm3-->
 <!--              end) as menu_nm-->
         from com_quick_menu cq

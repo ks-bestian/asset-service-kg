@@ -38,6 +38,7 @@
 		<if test="sclDscRcpNmb != null and sclDscRcpNmb != ''">
 			and em.scl_dsc_rcp_nmb like concat('%', #{sclDscRcpNmb}, '%')
 		</if>
+		order by em.reg_dt desc nulls last
     </select>
     
     <select id="selectRevokeDetail" parameterType="java.util.HashMap"

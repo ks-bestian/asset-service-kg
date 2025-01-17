@@ -10,6 +10,6 @@ public interface BoardService {
     BoardVo createBoard(BoardVo boardVo, String brdType);
     int updateBoard(BoardVo boardVo, Long brdId);
     void deleteBoard(List<Long> boardIds);
-    BoardVo getBoardById(Long brdId);
+    BoardVo getBoardById(Long brdId, String lang);
     BoardVo createBoardFile(BoardVo boardVo, String brdType);
 }

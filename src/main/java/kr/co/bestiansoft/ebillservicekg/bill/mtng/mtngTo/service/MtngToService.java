@@ -1,0 +1,16 @@
+package kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.service;
+import java.util.HashMap;
+import java.util.List;
+
+import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MemberVo;
+import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.vo.MtngToVo;
+
+public interface MtngToService {
+
+    List<MtngToVo> getMtngToList(HashMap<String, Object> param);
+    MtngToVo getMtngToById(Long mtngId, HashMap<String, Object> param);
+    MtngToVo createMtngTo(MtngToVo mtngFromVo);
+    List<MemberVo> getMemberList(HashMap<String, Object> param);
+    void deleteMtng(List<Long> mtngIds);
+    
+}

@@ -104,37 +104,40 @@ public class ApplyServiceImpl implements ApplyService {
 
 		List<String> newProposerList = applyVo.getProposerList();
 	    List<String> oldProposerList = applyMapper.getProposerList(billId);
-	    
-		if (!newProposerList.contains(loginId)) {
-	        newProposerList.add(loginId);
+	    if (!newProposerList.contains(loginId)) {
+	    	newProposerList.add(loginId);
 	    }
-
-		// 발의자 삭제
-		List<String> proposerToRemove = new ArrayList<>(oldProposerList);
-		proposerToRemove.removeAll(newProposerList);
-		
-		for(String ppsrId : proposerToRemove) {
-			applyMapper.deleteProposerByPpsrId(ppsrId);
-		}
-				
-		// 발의자 추가
-		List<String> proposerToAdd = new ArrayList<>(newProposerList);
-		proposerToAdd.removeAll(oldProposerList);
-		
-		int ord = oldProposerList.size();
-		for(String ppsrId : proposerToAdd) {
-	    	ApplyVo member = applyMapper.getProposerInfo(ppsrId);
-
-	        applyVo.setOrd(++ord);
-			applyVo.setPolyCd(member.getPolyCd());
-			applyVo.setPolyNm(member.getPolyNm());
-			applyVo.setPpsrId(member.getMemberId());
-			if(member.getMemberId().equals(loginId)) {
-				applyVo.setSignDt("sign");
+	    
+	    //발의자 변경 여부 확인....순서 상관없이 내용만 비교
+	    if (!new HashSet<>(newProposerList).equals(new HashSet<>(oldProposerList))) {
+	    	
+			// 발의자 삭제
+			List<String> proposerToRemove = new ArrayList<>(oldProposerList);
+			proposerToRemove.removeAll(newProposerList);
+			
+			for(String ppsrId : proposerToRemove) {
+				applyMapper.deleteProposerByPpsrId(ppsrId);
 			}
-			applyMapper.insertProposerList(applyVo);
-		}
-		
+					
+			// 발의자 추가
+			List<String> proposerToAdd = new ArrayList<>(newProposerList);
+			proposerToAdd.removeAll(oldProposerList);
+			
+			int ord = oldProposerList.size();
+			for(String ppsrId : proposerToAdd) {
+		    	ApplyVo member = applyMapper.getProposerInfo(ppsrId);
+	
+		        applyVo.setOrd(++ord);
+				applyVo.setPolyCd(member.getPolyCd());
+				applyVo.setPolyNm(member.getPolyNm());
+				applyVo.setPpsrId(member.getMemberId());
+				if(member.getMemberId().equals(loginId)) {
+					applyVo.setSignDt("sign");
+				}
+				applyMapper.insertProposerList(applyVo);
+			}
+	    }
+	    
 		//파일변경
 		if (applyVo.getFiles() != null) {
 			comFileService.saveFileEbs(applyVo.getFiles(), applyVo.getFileKindCds(), billId);
@@ -214,6 +217,12 @@ public class ApplyServiceImpl implements ApplyService {
 		processService.handleProcess(pVo);
 
 		return applyVo;
+	}
+
+	@Override
+	public int deleteBillFile(EbsFileVo ebsFileVo) {
+		String userId = new SecurityInfoUtil().getAccountId();
+		return applyMapper.updateFileDelete(ebsFileVo, userId);
 	}
 
 }

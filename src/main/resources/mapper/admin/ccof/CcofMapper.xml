@@ -14,12 +14,12 @@
             , cc.mod_dt
             , cd.dept_nm1 as dept_nm
             , cd.shrt_nm1 as shrt_nm
-<!--            , (case when #{lang} = 'lng_type1' then cd.dept_nm1-->
-<!--                    when #{lang} = 'lng_type2' then cd.dept_nm2-->
+<!--            , (case when #{lang} = 'lng_type_1' then cd.dept_nm1-->
+<!--                    when #{lang} = 'lng_type_2' then cd.dept_nm2-->
 <!--                    else cd.dept_nm3-->
 <!--              end) as dept_nm-->
-<!--            , (case when #{lang} = 'lng_type1' then cd.shrt_nm1-->
-<!--                    when #{lang} = 'lng_type2' then cd.shrt_nm2-->
+<!--            , (case when #{lang} = 'lng_type_1' then cd.shrt_nm1-->
+<!--                    when #{lang} = 'lng_type_2' then cd.shrt_nm2-->
 <!--                    else cd.shrt_nm3-->
 <!--              end) as shrt_nm-->
         from com_ccof cc
