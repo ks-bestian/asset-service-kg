@@ -60,7 +60,7 @@ public class ApplyServiceImpl implements ApplyService {
 		//발의자 요청
 		List<String> proposerList = applyVo.getProposerList();
 	    proposerList.add(applyVo.getPpsrId());
-		
+
 		int ord = proposerList.size();
 		for(String memberId : proposerList) {
 			ApplyVo member = applyMapper.getProposerInfo(memberId);
@@ -87,7 +87,6 @@ public class ApplyServiceImpl implements ApplyService {
 
 	@Override
 	public List<ApplyVo> getApplyList(HashMap<String, Object> param) {
-		// TODO :: 대수 검색조건 설정 필요(현재 14로 하드코딩)
 		String loginId = new SecurityInfoUtil().getAccountId();
 		param.put("loginId", loginId);
 		return applyMapper.selectListApply(param);
@@ -107,26 +106,26 @@ public class ApplyServiceImpl implements ApplyService {
 	    if (!newProposerList.contains(loginId)) {
 	    	newProposerList.add(loginId);
 	    }
-	    
+
 	    //발의자 변경 여부 확인....순서 상관없이 내용만 비교
 	    if (!new HashSet<>(newProposerList).equals(new HashSet<>(oldProposerList))) {
-	    	
+
 			// 발의자 삭제
 			List<String> proposerToRemove = new ArrayList<>(oldProposerList);
 			proposerToRemove.removeAll(newProposerList);
-			
+
 			for(String ppsrId : proposerToRemove) {
 				applyMapper.deleteProposerByPpsrId(ppsrId);
 			}
-					
+
 			// 발의자 추가
 			List<String> proposerToAdd = new ArrayList<>(newProposerList);
 			proposerToAdd.removeAll(oldProposerList);
-			
+
 			int ord = oldProposerList.size();
 			for(String ppsrId : proposerToAdd) {
 		    	ApplyVo member = applyMapper.getProposerInfo(ppsrId);
-	
+
 		        applyVo.setOrd(++ord);
 				applyVo.setPolyCd(member.getPolyCd());
 				applyVo.setPolyNm(member.getPolyNm());
@@ -137,13 +136,13 @@ public class ApplyServiceImpl implements ApplyService {
 				applyMapper.insertProposerList(applyVo);
 			}
 	    }
-	    
+
 		//파일변경
 		if (applyVo.getFiles() != null) {
 			comFileService.saveFileEbs(applyVo.getFiles(), applyVo.getFileKindCds(), billId);
 			applyVo.setFiles(null);
 		}
-		
+
 		//bill update
 		applyVo.setLoginId(loginId);
 		return applyMapper.updateApplyByBillId(applyVo);

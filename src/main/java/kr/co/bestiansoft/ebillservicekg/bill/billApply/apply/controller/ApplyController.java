@@ -37,50 +37,49 @@ public class ApplyController {
     public ResponseEntity<CommonResponse> createBillApply(ApplyVo applyVo) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "apply create successfully", applyService.createApply(applyVo)), HttpStatus.CREATED);
     }
-    
+
     @ApiOperation(value = "목록 조회", notes = "안건제출 목록을 조회한다")
     @GetMapping("/bill/apply")
     public ResponseEntity<CommonResponse> getApplyList(@RequestParam HashMap<String, Object> param) {
-		// TODO :: 대수 검색조건 설정 필요(현재 14로 하드코딩)
         return new ResponseEntity<>(new CommonResponse(200, "OK", applyService.getApplyList(param)), HttpStatus.OK);
     }
-    
+
     @ApiOperation(value = "안건 수정", notes = "안건을 수정한다")
     @PostMapping(value = "/bill/apply/update/{billId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<CommonResponse> updateBillUpdate(@ModelAttribute ApplyVo applyVo, @PathVariable String billId) {
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "apply updated successfully", applyService.updateApply(applyVo, billId)), HttpStatus.OK);
     }
-    
+
     @ApiOperation(value = "안건 삭제", notes = "안건을 삭제한다")
     @DeleteMapping("/bill/apply/{billId}")
     public ResponseEntity<CommonResponse> deleteApply(@PathVariable String billId) {
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "apply delete successfully", applyService.deleteApply(billId)), HttpStatus.OK);
     }
-    
+
     @ApiOperation(value = "안건 상세 조회", notes = "안건의 상세를 조회한다")
     @GetMapping("/bill/apply/{billId}")
     public ResponseEntity<CommonResponse> getBillDetail(@PathVariable String billId, @RequestParam String lang) {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", applyService.getApplyDetail(billId, lang)), HttpStatus.OK);
     }
-    
+
 //    @ApiOperation(value = "안건접수", notes = "안건을 접수한다.")
 //    @PutMapping("/bill/apply/update/{billId}")
 //    public ResponseEntity<CommonResponse> applyBill(@PathVariable String billId) {
 //    	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill apply successfully", applyService.applyBill(billId)), HttpStatus.OK);
 //    }
-    
+
     @ApiOperation(value = "안건철회", notes = "안건을 철회한다.")
     @PutMapping("/bill/apply/revoke/{billId}")
     public ResponseEntity<CommonResponse> revokeBill(@PathVariable String billId, @RequestBody ApplyVo applyVo) {
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill apply successfully", applyService.revokeBill(billId, applyVo)), HttpStatus.OK);
     }
-    
+
 //    @ApiOperation(value = "상태값 변경", notes = "안건의 상태값을 변경한다")
 //    @PutMapping("/bill/apply/status/{billId}")
 //    public ResponseEntity<CommonResponse> updateBillState(@PathVariable String billId, @RequestBody ApplyVo applyVo) {
 //    	return new  ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill status update successfully", applyService.updateBillStatus(billId, applyVo)), HttpStatus.OK);
 //    }
-    
+
     @ApiOperation(value = "안건 접수", notes = "안건 접수")
     @PostMapping("/bill/apply/accept/{billId}")
     public ResponseEntity<CommonResponse> saveBillAccept(@PathVariable String billId, @RequestBody ApplyVo applyVo) {
@@ -92,5 +91,5 @@ public class ApplyController {
     public ResponseEntity<CommonResponse> deleteBillFile(@RequestBody EbsFileVo ebsFileVo){
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill file delete successfully", applyService.deleteBillFile(ebsFileVo)), HttpStatus.OK);
     }
-    
+
 }

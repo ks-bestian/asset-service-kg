@@ -10,6 +10,9 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -427,5 +430,9 @@ public class makeCRUD {
         String camelCase = capitalized.replaceAll("[\\s_\\-]", "");
         return camelCase.substring(0, 1).toLowerCase() + camelCase.substring(1);
     }
+
+
+
+
 
 }

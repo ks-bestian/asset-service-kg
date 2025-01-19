@@ -43,17 +43,20 @@ public class ApplyVo extends ComDefaultVO {
 	private String ppsrId;
 	//안건 상태
 	private String statCd;
+	//안건 상태명
+	private String statNm;
+
 	//철회사유kg
 	private String wtCnKg;
 	//철회사유ru
 	private String wtCnRu;
 	//제출날짜
 	private String ppslDt;
-	
-	
+
+
 	//제안자 목록
 	private List<String> proposerList;
-	
+
 	//순서
 	private int ord;
 	//정당 코드
@@ -70,8 +73,10 @@ public class ApplyVo extends ComDefaultVO {
 	//파일
     private MultipartFile[] files;
 	private String[] fileKindCds;
-	
+
 	//로그인아이디
 	private String loginId;
-	
+
+
+
 }
