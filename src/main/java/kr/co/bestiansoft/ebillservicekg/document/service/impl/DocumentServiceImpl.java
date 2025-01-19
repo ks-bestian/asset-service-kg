@@ -36,9 +36,6 @@ public class DocumentServiceImpl implements DocumentService {
     private final EDVHelper edv;
     private final ThumbnailService thumbnailService;
     
-    private final String tmpUserId = "admin";
-    private final String tmpDeptCd = "dept1";
-
     @Override
     public List<FolderVo> selectDeptFolderListAll(FolderVo vo) {
     	String deptCd = new SecurityInfoUtil().getDeptCd();
@@ -47,10 +44,31 @@ public class DocumentServiceImpl implements DocumentService {
     }
     
     @Override
+    public List<FolderVo> selectMyFolderListAll(FolderVo vo) {
+    	String userId = new SecurityInfoUtil().getAccountId();
+    	vo.setUserId(userId);
+        return documentMapper.selectMyFolderListAll(vo);
+    }
+    
+    @Override
     public List<FolderVo> selectDeptFolderList(FolderVo vo) {
     	String deptCd = new SecurityInfoUtil().getDeptCd();
     	vo.setDeptCd(deptCd);
         return documentMapper.selectDeptFolderList(vo);
+    }
+    
+    @Override
+    public List<FolderVo> selectMyFolderList(FolderVo vo) {
+    	String userId = new SecurityInfoUtil().getAccountId();
+    	vo.setUserId(userId);
+        return documentMapper.selectMyFolderList(vo);
+    }
+    
+    @Override
+    public List<FolderVo> selectDeleteFolderList(FolderVo vo) {
+    	String userId = new SecurityInfoUtil().getAccountId();
+    	vo.setUserId(userId);
+        return documentMapper.selectDeleteFolderList(vo);
     }
 
     @Transactional
@@ -67,8 +85,20 @@ public class DocumentServiceImpl implements DocumentService {
     
     @Transactional
     @Override
+    public int insertMyFolder(FolderVo vo) {
+    	
+    	String userId = new SecurityInfoUtil().getAccountId();
+    	
+    	vo.setRegId(userId);
+    	vo.setUserId(userId);
+    	return documentMapper.insertMyFolder(vo);
+    }
+    
+    @Transactional
+    @Override
     public int updateFolder(FolderVo vo) {
-    	vo.setModId(tmpUserId);
+    	String userId = new SecurityInfoUtil().getAccountId();
+    	vo.setModId(userId);
     	return documentMapper.updateFolder(vo);
     }
     
@@ -124,6 +154,48 @@ public class DocumentServiceImpl implements DocumentService {
     
     @Transactional
     @Override
+    public int restoreFoldersAndFiles(List<Long> folderIds, List<String> fileGroupIds) {
+    	int ret = restoreFolders(folderIds);
+    	ret += restoreFiles(fileGroupIds);
+    	return ret;
+    }
+    
+    @Transactional
+    @Override
+    public int restoreFolders(List<Long> folderIds) {
+    	String userId = new SecurityInfoUtil().getAccountId();
+    	int ret = 0;
+    	if(folderIds != null) {
+    		for(Long folderId : folderIds) {
+        		FolderVo vo = new FolderVo();
+            	vo.setFolderId(folderId);
+            	vo.setDelYn("N");
+            	vo.setModId(userId);
+            	ret += documentMapper.updateFolder(vo);
+        	}	
+    	}
+    	return ret;
+    }
+    
+    @Transactional
+    @Override
+    public int restoreFiles(List<String> fileGroupIds) {
+    	String userId = new SecurityInfoUtil().getAccountId();
+    	int ret = 0;
+    	if(fileGroupIds != null) {
+    		for(String fileGroupId : fileGroupIds) {
+        		FileVo vo = new FileVo();
+        		vo.setFileGroupId(fileGroupId);
+        		vo.setDelYn("N");
+        		vo.setModId(userId);
+        		ret += documentMapper.updateFileByFileGroupId(vo);
+        	}	
+    	}
+    	return ret;
+    }
+    
+    @Transactional
+    @Override
     public int moveFoldersAndFiles(List<Long> folderIds, List<String> fileGroupIds, Long toFolderId) {
     	int ret = moveFolders(folderIds, toFolderId);
     	ret += moveFiles(fileGroupIds, toFolderId);
@@ -139,7 +211,7 @@ public class DocumentServiceImpl implements DocumentService {
         		FolderVo vo = new FolderVo();
             	vo.setFolderId(folderId);
             	vo.setUpperFolderId(toFolderId);
-            	vo.setModId(tmpUserId);
+            	vo.setModId(new SecurityInfoUtil().getAccountId());
             	ret += documentMapper.updateFolder(vo);
         	}	
     	}
@@ -155,7 +227,7 @@ public class DocumentServiceImpl implements DocumentService {
         		FileVo vo = new FileVo();
         		vo.setFileGroupId(fileGroupId);
         		vo.setFolderId(toFolderId);
-        		vo.setModId(tmpUserId);
+        		vo.setModId(new SecurityInfoUtil().getAccountId());
         		ret += documentMapper.updateFileByFileGroupId(vo);
         	}	
     	}
@@ -164,11 +236,53 @@ public class DocumentServiceImpl implements DocumentService {
     
     @Transactional
     @Override
-    public void removeFiles(List<String> fileIds) throws Exception {
-    	for(String fileId : fileIds) {
-    		documentMapper.deleteFile(fileId);
-    		edv.delete(fileId);
+    public void removeFoldersAndFiles(List<Long> folderIds, List<String> fileIds) throws Exception {
+    	removeFolders(folderIds);
+    	removeFiles(fileIds);
+    }
+    
+    @Transactional
+    @Override
+    public void removeFolders(List<Long> folderIds) throws Exception {
+    	if(folderIds != null) {
+    		for(Long folderId : folderIds) {
+        		removeFolder(folderId);
+        	}	
     	}
+    }
+    
+    @Transactional
+    @Override
+    public void removeFiles(List<String> fileIds) throws Exception {
+    	if(fileIds != null) {
+    		for(String fileId : fileIds) {
+        		removeFile(fileId);
+        	}	
+    	}
+    }
+    
+    @Transactional
+    public void removeFolder(Long folderId) throws Exception {
+    	List<Long> folderIds = documentMapper.selectFolderIdsByUpperFolderId(folderId);
+    	List<String> fileIds = documentMapper.selectFileIdsByFolderId(folderId);
+    	
+    	documentMapper.removeFolder(folderId);
+    	if(fileIds != null) {
+    		for(String id : fileIds) {
+        		removeFile(id);
+        	}	
+    	}
+    	if(folderIds != null) {
+    		for(Long id : folderIds) {
+        		removeFolder(id);
+        	}	
+    	}
+    }
+    
+    @Transactional
+    public void removeFile(String fileId) throws Exception {
+    	documentMapper.removeFile(fileId);
+		edv.delete(fileId);
     }
     
     @Transactional
@@ -371,8 +485,26 @@ public class DocumentServiceImpl implements DocumentService {
     }
     
     @Override
+    public List<FileVo> selectMyFileList(FileVo vo) {
+    	vo.setUserId(new SecurityInfoUtil().getAccountId());
+    	return documentMapper.selectMyFileList(vo);
+    }
+    
+    @Override
+    public List<FileVo> selectStarFileList(FileVo vo) {
+    	vo.setUserId(new SecurityInfoUtil().getAccountId());
+    	return documentMapper.selectStarFileList(vo);
+    }
+    
+    @Override
+    public List<FileVo> selectDeleteFileList(FileVo vo) {
+    	vo.setUserId(new SecurityInfoUtil().getAccountId());
+    	return documentMapper.selectDeleteFileList(vo);
+    }
+    
+    @Override
     public List<FileVo> selectFileGroup(FileVo vo) {
-    	vo.setUserId(tmpUserId);
+    	vo.setUserId(new SecurityInfoUtil().getAccountId());
     	return documentMapper.selectFileGroup(vo);
     }
     

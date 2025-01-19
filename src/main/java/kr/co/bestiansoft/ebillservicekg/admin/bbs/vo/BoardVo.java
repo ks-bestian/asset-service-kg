@@ -27,6 +27,8 @@ public class BoardVo extends ComDefaultVO {
     private Long num;
     private String regNm;
     private String regDate;
+    private String importantYn;
+    private String hiddenYn;
 
     private List<BoardVo> delList;
     private MultipartFile[] files;

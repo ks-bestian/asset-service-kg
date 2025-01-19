@@ -17,4 +17,6 @@ public interface ComFileMapper {
 	
 	int insertFileEbs(EbsFileVo vo);
 	int updateFileEbs(EbsFileVo vo);
+	
+	int insertFileEbsMtng(EbsFileVo vo);
 }

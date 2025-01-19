@@ -92,6 +92,7 @@
 		  		WHEN #{lang} = 'lng_type_2' then cm.member_nm_ru 
 	      		ELSE cm.member_nm_kg
 	      		END AS atdtUserNm
+	      	  , ema.atdt_div_cd
               , cm.poly_cd
               , cm.poly_nm
         FROM ebs_mtng_attendant ema
@@ -132,36 +133,7 @@
 		 order by ema.ord
     </select>
     
-    <insert id="insertEbsMtng" useGeneratedKeys="true" keyProperty="mtngId" parameterType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.vo.MtngToVo">
-		INSERT INTO EBS_MTNG
-		( 
-			  MTNG_TYPE_CD
-			, CMT_ID
-			, CMT_NM
-			, DGR_CD
-			, MTNG_PLC
-			, AGE_CD
-			, RMK
-			, STAT_CD
-			, REG_ID
-			, REG_DT
-			, DUE_DTM
-		) 
-		VALUES 
-		( 
-			   #{mtngTypeCd}
-			,  #{cmtId}
-			,  #{cmtNm}
-			,  #{dgrCd}
-			,  #{mtngPlc}
-			,  #{ageCd}
-			,  #{rmk}
-			,  #{statCd}
-			,  #{regId}
-			,  now()
-			,  #{dueDtm}
-		) RETURNING mtng_id 
-    </insert>
+
     <select id="selectListMember" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MemberVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.repository.MtngToMapper.selectListMember */
@@ -240,17 +212,94 @@
 		     ,  now()
 		    ) 
     </insert>
-    <delete id="deleteMtngTo" parameterType="java.lang.Long">
-        delete from ebs_mtng
-        where mtng_id = #{mtngId}
-    </delete>
-    <delete id="deleteMtngToAttendant" parameterType="java.lang.Long">
-        delete from ebs_mtng_attendant
-        where mtng_id = #{mtngId}
-    </delete>
-    <delete id="deleteMtngToAgenda" parameterType="java.lang.Long">
-        delete from ebs_mtng_agenda
-        where mtng_id = #{mtngId}
-    </delete>
 
+    
+    <update id="updateMtngTo" parameterType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.vo.MtngToVo">
+		UPDATE EBS_MTNG
+		     SET OPEN_DTM = #{openDtm}
+		     , CLOSE_DTM = #{closeDtm}
+		     , MTNG_PLC = #{mtngPlc}
+		     , RMK = #{rmk}
+		     , MOD_ID = #{modId}
+		     , MOD_DT = now()
+		 WHERE MTNG_ID = #{mtngId}
+    </update>
+    
+    <update id="deleteMtngToFile" parameterType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.vo.MtngToVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.common.file.repository.FileMapper.updateFileEbs */
+		update kgst.ebs_mtng_file
+		SET mod_dt = now()
+		  , mod_id = #{modId}
+		  , delete_yn = 'Y'
+		where
+			mtng_id = #{mtngId};
+    </update>
+    
+    <delete id="deleteMtngToAgenda" parameterType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.vo.MtngToVo">
+	    DELETE FROM ebs_mtng_agenda
+	    WHERE mtng_id = #{mtngId}
+	      AND bill_id NOT IN
+	    <foreach collection="agendaList" item="agenda" index="index" open="(" separator="," close=")">
+	        #{agenda.billId}
+	    </foreach>
+	</delete>
+    <update id="updateMtngToAgenda" parameterType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.AgendaVo">
+		INSERT INTO EBS_MTNG_AGENDA
+		     ( 
+		       MTNG_ID
+		     , BILL_ID
+		     , ORD
+		     , RSLT_CD
+		     , REG_ID
+		     , REG_DT
+		     ) 
+		VALUES 
+		     ( 
+		       #{mtngId}
+		     ,  #{billId}
+		     ,  #{ord}
+		     ,  #{rsltCd}
+		     ,  #{regId}
+		     ,  now()
+		    ) 
+		ON CONFLICT (MTNG_ID, BILL_ID) DO UPDATE SET
+	    ORD = EXCLUDED.ORD,
+	    MOD_ID = EXCLUDED.REG_ID, -- 삽입 값 참조
+	    MOD_DT = now(),
+	    RSLT_CD = EXCLUDED.RSLT_CD
+    </update>
+    <delete id="deleteMtngToAttendant" parameterType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.vo.MtngToVo">
+	    DELETE FROM ebs_mtng_attendant
+	    WHERE mtng_id = #{mtngId}
+	      AND atdt_user_id NOT IN
+	    <foreach collection="attendantList" item="attendant" index="index" open="(" separator="," close=")">
+	        #{attendant.atdtUserId}
+	    </foreach>
+	</delete>
+    <update id="updateMtngToAttendant" parameterType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.AgendaVo">
+		INSERT INTO EBS_MTNG_ATTENDANT
+		     ( 
+		       MTNG_ID
+		     , ATDT_USER_ID
+		     , ATDT_USER_NM
+		     , ATDT_KIND
+		     , ATDT_DIV_CD
+		     , REG_ID
+		     , REG_DT
+		     ) 
+		VALUES 
+		     ( 
+		       #{mtngId}
+		     ,  #{atdtUserId}
+		     ,  #{atdtUserNm}
+		     ,  #{atdtKind}
+		     ,  #{atdtDivCd}
+		     ,  #{regId}
+		     ,  now()
+		    ) 
+		ON CONFLICT (MTNG_ID, ATDT_USER_ID) DO UPDATE SET
+	    MOD_ID = EXCLUDED.REG_ID, -- 삽입 값 참조
+	    MOD_DT = now(),
+	    ATDT_DIV_CD = EXCLUDED.ATDT_DIV_CD
+    </update>
 </mapper>

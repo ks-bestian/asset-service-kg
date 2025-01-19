@@ -20,10 +20,25 @@ public interface DocumentService {
 
     int uploadFile(FileVo vo);
 //    int uploadFileGroup(FileVo vo);
-    void removeFiles(List<String> fileIds) throws Exception;
     List<FileVo> selectDeptFileList(FileVo vo);
     List<FileVo> selectFileGroup(FileVo vo);
     
     int updateFile(FileVo vo);
 //    int updateFileGroup(FileVo vo) throws Exception;
+    
+    List<FolderVo> selectMyFolderListAll(FolderVo vo);
+    List<FolderVo> selectMyFolderList(FolderVo vo);
+    List<FileVo> selectMyFileList(FileVo vo);
+    int insertMyFolder(FolderVo vo);
+    
+    List<FileVo> selectStarFileList(FileVo vo);
+    List<FileVo> selectDeleteFileList(FileVo vo);
+    List<FolderVo> selectDeleteFolderList(FolderVo vo);
+    
+    int restoreFolders(List<Long> folderIds);
+	int restoreFiles(List<String> fileIds);
+    int restoreFoldersAndFiles(List<Long> folderIds, List<String> fileGroupIds);
+    void removeFolders(List<Long> folderIds) throws Exception;
+	void removeFiles(List<String> fileIds) throws Exception;
+    void removeFoldersAndFiles(List<Long> folderIds, List<String> fileGroupIds) throws Exception;
 }

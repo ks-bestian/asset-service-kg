@@ -11,7 +11,7 @@ import kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo;
 public interface DocumentMapper {
     int insertDeptFolder(FolderVo vo);
     int updateFolder(FolderVo vo);
-    void deleteFolder(Long folderId);
+    void removeFolder(Long folderId);
     List<FolderVo> selectDeptFolderListAll(FolderVo vo);
     List<FolderVo> selectDeptFolderList(FolderVo vo);
 
@@ -19,7 +19,7 @@ public interface DocumentMapper {
     int updateThumbnail(FileVo vo);
     int updateFileByFileId(FileVo vo);
     int updateFileByFileGroupId(FileVo vo);
-    void deleteFile(String fileId);
+    void removeFile(String fileId);
     List<FileVo> selectDeptFileList(FileVo vo);
     List<FileVo> selectFileGroup(FileVo vo);
     FileVo selectFile(String fileId);
@@ -29,4 +29,16 @@ public interface DocumentMapper {
     int insertFavorite(FileVo vo);
     int updateFavorite(FileVo vo);
     int saveFavorite(FileVo vo);
+    
+    List<FolderVo> selectMyFolderListAll(FolderVo vo);
+    List<FolderVo> selectMyFolderList(FolderVo vo);
+    List<FileVo> selectMyFileList(FileVo vo);
+    int insertMyFolder(FolderVo vo);
+    
+    List<FileVo> selectStarFileList(FileVo vo);
+    List<FolderVo> selectDeleteFolderList(FolderVo vo);
+    List<FileVo> selectDeleteFileList(FileVo vo);
+    
+    List<Long> selectFolderIdsByUpperFolderId(Long upperFolderId);
+    List<String> selectFileIdsByFolderId(Long folderId);
 }
