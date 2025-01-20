@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 
 
 @Api(tags = "부서 API")
@@ -26,6 +27,12 @@ public class DeptController {
     @GetMapping("admin/dept")
     public ResponseEntity<CommonResponse> getDeptList(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "ok", deptService.getComDeptList(param)), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "부서 트리 리스트 조회", notes = "부서 트리 리스트를 조회한다.")
+    @GetMapping("admin/dept/tree")
+    public ResponseEntity<CommonResponse> getDeptTree(@RequestParam HashMap<String, Object> param) {
+        return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "ok", deptService.getDeptTree(param)), HttpStatus.OK);
     }
 
     @ApiOperation(value = "부서 상세 조회", notes = "부서를 상세 조회한다.")
@@ -49,7 +56,7 @@ public class DeptController {
 
     @ApiOperation(value = "부서 삭제", notes = "부서를 삭제한다.")
     @DeleteMapping("admin/dept")
-    public ResponseEntity<CommonResponse> deletedept(@RequestBody String deptCd) {
+    public ResponseEntity<CommonResponse> deletedept(@RequestBody List<String> deptCd) {
         deptService.deleteDept(deptCd);
         return new ResponseEntity<>(new CommonResponse(200, "ok", "Department code deleted successfully."), HttpStatus.OK);
 

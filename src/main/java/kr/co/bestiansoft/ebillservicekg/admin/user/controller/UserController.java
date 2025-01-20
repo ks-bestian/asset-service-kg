@@ -53,7 +53,7 @@ public class UserController {
         return new ResponseEntity<>(new CommonResponse(200, "ok", "User code deleted successfully."), HttpStatus.OK);
     }
 
-    //부서별 사용자 조회
+    //부서별 사용자 조회(겸직, 위원회, 정당 포함) -- 부서관리, 권한별사용자관리
     @ApiOperation(value = "부서별 사용자 조회", notes = "부서별사용자를 조회한다.")
     @GetMapping("user/dept")
     public ResponseEntity<CommonResponse> getUserByDept(@RequestParam HashMap<String, Object> param) {

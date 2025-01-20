@@ -34,7 +34,7 @@ public class MenuHierarchy {
     //--메뉴관리 tree--
     public void buildMenuHierarchy(List<MenuVo> menuList, String lang)  {
 
-        List<MenuNode> comMenuList = new ArrayList<MenuNode>();
+        List<MenuNode> comMenuList = new ArrayList<>();
 
         for (MenuVo menu : menuList) {
             String menuNm = "";
