@@ -6,34 +6,36 @@ import lombok.Data;
 
 @Data
 public class ComDefaultVO {
-	
+
+	private String billId;
 	private String regId;
-	
 	private LocalDateTime regDt;
-	
+
 	private String modId;
-	
 	private LocalDateTime modDt;
-	
+
+	private String mdfrId;
+	private LocalDateTime mdfcnDt;
+
 	private String regNm;
-	
+
 	private String modNm;
-	
+
 	/** 검색조건 */
     private String searchCondition = "";
-    
+
     /** 검색Keyword */
     private String searchKeyword = "";
-    
+
     /** 검색사용여부 */
     private String searchUseYn = "";
-    
+
     /** 현재페이지 */
     private int pageIndex = 1;
-    
+
     /** 페이지갯수 */
     private int pageUnit = 10;
-    
+
     /** 페이지사이즈 */
     private int pageSize = 10;
 
@@ -45,11 +47,11 @@ public class ComDefaultVO {
 
     /** recordCountPerPage */
     private int recordCountPerPage = 10;
-    
+
     /** 검색KeywordFrom */
-    private String searchKeywordFrom = "";    
+    private String searchKeywordFrom = "";
 
 	/** 검색KeywordTo */
-    private String searchKeywordTo = "";  
-    
+    private String searchKeywordTo = "";
+
 }
