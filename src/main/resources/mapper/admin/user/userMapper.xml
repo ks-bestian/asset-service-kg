@@ -82,6 +82,41 @@
         </if>
     </select>
 
+
+    <select id="userDetail" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.user.repository.UserMapper.userDetail */
+        select
+              view.user_id
+            , view.user_nm_kg
+            , view.user_nm_ru
+            , view.dept_cd
+            , (case when #{lang} = 'lng_type_1' then view.dept_nm_kg
+                else view.dept_nm_ru
+                end) as dept_nm
+            , view.email
+            , view.gen_cd
+            , view.job_cd
+            , (case when #{lang} = 'lng_type_1' then cc.code_nm1
+                else cc.code_nm1
+                end) job_nm
+            , view.pos_cd
+            , view.age_cd
+            , view.cmit_cd
+            , (case when #{lang} = 'lng_type_1' then view.cmit_nm_kg
+                else view.cmit_nm_ru
+                end) as cmit_nm
+            , view.poly_cd
+            , view.poly_nm
+            , cm.mbl_no
+        from kgst.view_user_member view
+        left join com_code_detail cc on cc.code_id = view.job_cd
+        left join com_member cm on cm.member_id = view.user_id
+        where view.user_id = #{userId}
+    </select>
+
+
+
     <select id="selectUser" parameterType="java.lang.Long" resultType="kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.user.repository.UserMapper.selectUser */
         select

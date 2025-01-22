@@ -3,109 +3,148 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.repository.AgreeMapper">
 
+
     <select id="selectAgreeList" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.vo.AgreeVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.repository.AgreeMapper.selectAgreeList */
-        select 
-			em.bill_id 				-- 안건아이디
-			, case
-				when #{lang} = 'lng_type_1' then em.bill_name_kg 
-				else em.bill_name_ru 
-			end as bill_name		-- 안건이름
-			, case
-				when #{lang} = 'lng_type_1' then view.member_nm_kg 
-				else view.member_nm_ru 
-			end as ppsr_nm	-- 제안자
-			, case
-				when (ep.sign_dt is not null and ep.sign_cnc_dt is null) then to_char(ep.sign_dt, 'DD/MM/YYYY')	
-				else null
-			 end as signDate 		-- 동의날짜
-		    , scl_dsc_rcp_nmb 		-- 사회토론번호
-		    , to_char(em.reg_dt, 'DD/MM/YYYY') as regDate
-		from kgst.ebs_proposer ep
-			left join kgst.ebs_master em on em.bill_id = ep.bill_id 
-			left join kgst.view_user_member view on view.member_id = ep.proposer_id
-		where em.ppsr_id != ep.proposer_id 
-			and ep.proposer_id = #{loginId}
-			and em.na_term_cd = '14'
-		<if test="billName != null and billName != ''">
-			and case
-		        when #{lang} = 'lng_type_1' then em.bill_name_kg
-		        else em.bill_name_ru
-		    end like concat('%', #{billName}, '%')
-		</if>
-		<if test="ppslDt != null and ppslDt != ''">
-			and em.reg_dt::date = #{ppslDt}
-		</if>
-		<if test="sclDscRcpNmb != null and sclDscRcpNmb != ''">
-			and em.scl_dsc_rcp_nmb like concat('%', #{sclDscRcpNmb}, '%')
-		</if>
-		order by em.reg_dt desc nulls last
+
+	select
+	    AA.bill_id
+	  , kgst.fngetlangnm(AA.bill_name_kg,AA.bill_name_ru,AA.bill_name_kg,#{lang}) as bill_name -- 안건 이름
+	  , kgst.fngetlangnm(vum.member_nm_kg,vum.member_nm_ru,vum.member_nm_kg,#{lang}) as ppsr_nm -- 제안자 이름
+      , AA.scl_dsc_rcp_nmb
+      , AA.ppsl_dt
+      , AA.stat_nm
+      , AA.stat_cd
+      , AA.na_term_cd
+	  , case
+			when (ep.sign_dt is not null and ep.sign_cnc_dt is null) then
+				ep.sign_dt
+			else null
+		 end as sign_dt 		-- 동의날짜
+	from (
+		select
+		   pl.bill_id
+		 , max(pl.bill_name_kg) as bill_name_kg
+		 , max(pl.bill_name_ru) as bill_name_ru
+		 , max(pl.bp_instance_id) as bp_instance_id
+		 , max(pl.current_step_id) as current_step_id
+		 , max(pl.ppsr_id) as ppsr_id
+		 , max(pl.ppsl_dt) as ppsl_dt
+		 , max(pl.scl_dsc_rcp_nmb) as scl_dsc_rcp_nmb
+		 , max(pl.reg_dt) as reg_dt
+		 , max(pl.na_term_cd) as na_term_cd
+		 , max(ebs.stat_cd) as stat_cd
+		 , kgst.fngetcodenm('1010',max(ebs.stat_cd),#{lang}) as stat_nm
+		from kgst.view_bill_process_list pl
+		join kgst.ebs_bp_step ebs on (pl.bp_df_id = ebs.bp_df_id and pl.current_step_id = ebs.step_id)
+		group by bill_id
+	) AA
+	join kgst.view_user_member vum on (AA.ppsr_id = vum.user_id)
+	join kgst.ebs_proposer ep on (AA.bill_id = ep.bill_id)
+	where 1=1
+	  and AA.ppsr_id = ep.proposer_id
+	  and ep.proposer_id = #{loginId}
+	<if test="naTermCd != null and naTermCd != ''">
+		and AA.na_term_cd = #{naTermCd}
+	</if>
+	<if test="billName != null and billName != ''">
+	    <if test="lang == 'lng_type_1' or lang == 'lng_type_3'">
+	    	and AA.bill_name_kg like concat('%', #{billName}, '%')
+	    </if>
+	    <if test="lang == 'lng_type_2'">
+	    	and AA.bill_name_ru like concat('%', #{billName}, '%')
+	    </if>
+	</if>
+	<if test="sclDscRcpNmb != null and sclDscRcpNmb != ''">
+		and AA.scl_dsc_rcp_nmb like concat('%', #{sclDscRcpNmb}, '%')
+	</if>
+	<if test="statCd != null and statCd != ''">
+		and AA.stat_cd = #{statCd}
+	</if>
+	<if test="ppslDt != null and ppslDt != ''">
+		and AA.ppsl_dt = #{ppslDt}
+	</if>
+	order by AA.reg_dt desc
+
     </select>
-    
+
     <select id="selectAgreeDetail" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.vo.AgreeVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.repository.AgreeMapper.selectAgreeDetail */
-		select 
-			case
-				when #{lang} = 'lng_type_1' then em.bill_name_kg 
-				else em.bill_name_ru 
-			end as bill_name		--안건이름
-			, case					
-				when #{lang} = 'lng_type_1' then em.etc_kg 
-				else em.etc_ru 
-			end as etc				--비고
-			, view.member_nm_kg 		--제안자
-			, to_char(em.reg_dt, 'DD/MM/YYYY HH:MM') as regDate
-			, case
-				when (ep.sign_dt is not null and ep.sign_cnc_dt is null) then 'Y'
-				else 'N'
-			 end as agreeYn 		--동의여부
-			, scl_dsc_rcp_nmb 		--사회토론번호
-		from ebs_proposer ep
-			left join ebs_master em on em.bill_id = ep.bill_id
-			left join kgst.view_user_member view on view.member_id = em.ppsr_id
-		where 
-			em.bill_id = #{billId}
-			and ep.proposer_id = #{userId}
+	select
+	    AA.bill_id
+	  , AA.bill_no
+	  , kgst.fngetlangnm(AA.bill_name_kg,AA.bill_name_ru,AA.bill_name_kg,#{lang}) as bill_name -- 안건 이름
+	  , kgst.fngetlangnm(vum.member_nm_kg,vum.member_nm_ru,vum.member_nm_kg,#{lang}) as ppsr_nm -- 제안자 이름
+      , AA.scl_dsc_rcp_nmb
+      , AA.ppsl_dt
+      , AA.reg_dt
+      , AA.stat_nm
+      , AA.stat_cd
+      , AA.na_term_cd
+      , kgst.fngetlangnm(AA.etc_kg,AA.etc_ru,AA.etc_kg,#{lang}) as etc -- 안건 이름
+	from (
+		select
+		   pl.bill_id
+		 , max(pl.bill_no) as bill_no
+		 , max(pl.bill_name_kg) as bill_name_kg
+		 , max(pl.bill_name_ru) as bill_name_ru
+		 , max(pl.bp_instance_id) as bp_instance_id
+		 , max(pl.current_step_id) as current_step_id
+		 , max(pl.ppsr_id) as ppsr_id
+		 , max(pl.ppsl_dt) as ppsl_dt
+		 , max(pl.scl_dsc_rcp_nmb) as scl_dsc_rcp_nmb
+		 , max(pl.reg_dt) as reg_dt
+		 , max(pl.na_term_cd) as na_term_cd
+		 , max(pl.etc_kg) as etc_kg
+		 , max(pl.etc_ru) as etc_ru
+		 , max(ebs.stat_cd) as stat_cd
+		 , kgst.fngetcodenm('1010',max(ebs.stat_cd),#{lang}) as stat_nm
+		from kgst.view_bill_process_list pl
+		join kgst.ebs_bp_step ebs on (pl.bp_df_id = ebs.bp_df_id and pl.current_step_id = ebs.step_id)
+		group by bill_id
+	) AA
+	join kgst.view_user_member vum on (AA.ppsr_id = vum.user_id)
+	where AA.bill_id = #{billId}
+
     </select>
-    
+
     <select id="selectAgreeProposerList" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.vo.AgreeVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.repository.AgreeMapper.selectAgreeProposerList */
-		select 
-			ep.proposer_id					-- 제안자 대상
+		select
+			  ep.proposer_id					-- 제안자 대상
 			, case
 				when (ep.sign_dt is not null and ep.sign_cnc_dt is null) then 'Y'
 				else 'N'
-			 end as agreeYn 				-- 동의여부
+			  end as agreeYn 				-- 동의여부
 			, view.member_nm_kg					-- 의원이름kg
 			, view.member_nm_ru					-- 의원이름ru
+			, kgst.fngetlangnm(view.member_nm_kg,view.member_nm_ru,view.member_nm_kg,#{lang}) as member_nm -- 의원이름
 			, view.poly_nm  					-- 정당이름
 			, view.poly_cd 					-- 정당코드
 		from ebs_proposer ep
-			left join kgst.view_user_member view on view.member_id = ep.proposer_id
-		where 
-			ep.bill_id = #{billId}
+		left join kgst.view_user_member view on view.member_id = ep.proposer_id
+		where ep.bill_id = #{billId}
     </select>
-    
+
     <update id="updateBillAgree" parameterType="java.util.HashMap">
     	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.updateBillAgree */
-		update kgst.ebs_proposer 
-		set 
-			mod_id = #{modId} 			-- 수정자 아이디
+		update kgst.ebs_proposer
+		set
+			  mod_id = #{modId} 			-- 수정자 아이디
 			, mod_dt = now()			-- 수정날짜
 			<if test='agreeYn == "N"'> 	-- 서명 취소
 			, sign_cnc_dt = now()
 			</if>
-			<if test='agreeYn == "Y"'> 	-- 서명 동의 
+			<if test='agreeYn == "Y"'> 	-- 서명 동의
 			, sign_dt = now()
 			, sign_cnc_dt = null
 			</if>
-		where 
+		where
 			bill_id = #{billId}
 			and proposer_id = #{userId}
     </update>
 
-    
+
 </mapper>
