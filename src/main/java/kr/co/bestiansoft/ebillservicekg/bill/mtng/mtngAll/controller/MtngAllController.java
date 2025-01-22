@@ -33,8 +33,8 @@ public class MtngAllController {
 
     @ApiOperation(value = "회의 전체 상세 조회", notes = "상세를 조회한다.")
     @GetMapping("/bill/mtng/all/detail/{mtngId}")
-    public ResponseEntity<CommonResponse> getMtngById(@PathVariable String mtngId) {
-        return new ResponseEntity<>(new CommonResponse(200, "OK", mtngAllService.getMtngById(mtngId)), HttpStatus.OK);
+    public ResponseEntity<CommonResponse> getMtngById(@PathVariable Long mtngId, @RequestParam HashMap<String, Object> param) {
+        return new ResponseEntity<>(new CommonResponse(200, "OK", mtngAllService.getMtngById(mtngId, param)), HttpStatus.OK);
     }
 
 }

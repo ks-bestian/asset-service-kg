@@ -123,8 +123,9 @@
 		    , em.ppsl_dt                -- 제안일
 		    , ema.rslt_cd               -- 처리결과
 		    , ema.ord
-		 FROM EBS_MTNG_AGENDA ema 
-		 , kgst.EBS_MASTER em
+		 FROM
+		 kgst.EBS_MASTER em 
+		 , kgst.EBS_MTNG_AGENDA ema
 		 , com_member cm
 		 WHERE 1=1
 		 AND ema.bill_id = em.bill_id

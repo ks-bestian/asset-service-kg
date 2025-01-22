@@ -19,4 +19,6 @@ public class EbsFileVo extends ComDefaultVO {
 	private Long fileSize;
 	private Long mtngId;
 	
+	private String clsCd;
+	
 }

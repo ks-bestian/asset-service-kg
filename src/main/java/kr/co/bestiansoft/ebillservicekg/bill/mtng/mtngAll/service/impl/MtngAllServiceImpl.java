@@ -9,6 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.repository.MtngAllMapper;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.service.MtngAllService;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.vo.MtngAllVo;
+import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.AgendaVo;
+import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MemberVo;
+import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.vo.MtngFileVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,13 +25,30 @@ public class MtngAllServiceImpl implements MtngAllService {
 
     @Override
     public List<MtngAllVo> getMtngList(HashMap<String, Object> param) {
-        List<MtngAllVo> result = mtngAllMapper.getMtngList(param);
+        List<MtngAllVo> result = mtngAllMapper.selectListMtngAll(param);
         return result;
     }
 
     @Override
-    public MtngAllVo getMtngById(String mtngId) {
-    	MtngAllVo dto = mtngAllMapper.getMtngById(mtngId);
+    public MtngAllVo getMtngById(Long mtngId, HashMap<String, Object> param) {
+    	param.put("mtngId", mtngId);
+    	
+    	/* 회의 정보*/
+    	MtngAllVo dto = mtngAllMapper.selectMtngAll(param);
+    	
+    	/*회의 결과 문서*/
+    	
+    	List<MtngFileVo> reportList = mtngAllMapper.selectListMtngFile(param);
+    	dto.setReportList(reportList);
+    	
+    	/* 안건  */
+    	List<AgendaVo> agendaList = mtngAllMapper.selectListMtngAgenda(param);
+    	dto.setAgendaList(agendaList);
+    	
+    	/* 참석자 - selectListMtngAttendant */
+    	List<MemberVo> attendantList = mtngAllMapper.selectListMtngAttendant(param);
+    	dto.setAttendantList(attendantList);
+    	
         return dto;
     }
 }
