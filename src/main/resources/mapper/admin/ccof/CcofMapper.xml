@@ -52,6 +52,6 @@
 
     <delete id="deleteCcofInUser" parameterType="java.util.HashMap">
         delete from com_ccof
-        where user_id = #{userId} and dept_cd = #{deptCd}
+        where user_id = #{userId}
     </delete>
 </mapper>
