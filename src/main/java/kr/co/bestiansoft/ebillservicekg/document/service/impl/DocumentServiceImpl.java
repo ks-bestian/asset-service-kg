@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.exception.ForbiddenException;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.impl.EDVHelper;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
@@ -21,6 +22,7 @@ import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
 import kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper;
 import kr.co.bestiansoft.ebillservicekg.document.service.DocumentService;
 import kr.co.bestiansoft.ebillservicekg.document.service.ThumbnailService;
+import kr.co.bestiansoft.ebillservicekg.document.vo.FileShareVo;
 import kr.co.bestiansoft.ebillservicekg.document.vo.FileVo;
 import kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo;
 import lombok.RequiredArgsConstructor;
@@ -570,5 +572,52 @@ public class DocumentServiceImpl implements DocumentService {
 //    	
 //    	return ret;
 //    }
+    
+    
+    @Transactional
+    @Override
+    public void shareFile(FileShareVo vo) {
+    	String userId = new SecurityInfoUtil().getAccountId();
+    	
+    	if("Y".equals(vo.getFolderYn())) {
+    		FolderVo folder = documentMapper.selectFolderByFolderId(vo.getFolderId());
+    		if(folder != null && !folder.getRegId().equals(userId)) {
+    			throw new ForbiddenException("forbidden");
+    		}	
+    	}
+    	else {
+    		FileVo file = documentMapper.selectFile(vo.getFileId());
+			if(file != null && !file.getRegId().equals(userId)) {
+				throw new ForbiddenException("forbidden");
+			}   		
+    	}
+    	
+    	vo.setOwnerId(userId);
+    	vo.setRegId(userId);
+    	documentMapper.deleteShare(vo);
+    	
+    	if(vo.getTargetIds() != null) {
+    		for(String targetId : vo.getTargetIds()) {
+    			vo.setTargetId(targetId);
+    			documentMapper.insertShare(vo);
+    		}
+    	}
+    }
+    
+    @Transactional
+    @Override
+    public List<FileShareVo> selectShareTargetList(FileShareVo vo) {
+    	vo.setOwnerId(new SecurityInfoUtil().getAccountId());
+    	return documentMapper.selectShareTargetList(vo);
+    }
+    
+    @Transactional
+    @Override
+    public List<UserMemberVo> selectListUserMember(HashMap<String, Object> param) {
+    	return documentMapper.selectListUserMember(param);
+    }
+    
+    
+    
     
 }
