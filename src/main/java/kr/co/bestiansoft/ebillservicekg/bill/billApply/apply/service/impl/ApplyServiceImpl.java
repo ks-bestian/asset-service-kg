@@ -223,5 +223,10 @@ public class ApplyServiceImpl implements ApplyService {
 		String userId = new SecurityInfoUtil().getAccountId();
 		return applyMapper.updateFileDelete(ebsFileVo, userId);
 	}
+	
+	@Override
+	public List<ApplyVo> selectBillAll(HashMap<String, Object> param) {
+		return applyMapper.selectBillAll(param);
+	}
 
 }

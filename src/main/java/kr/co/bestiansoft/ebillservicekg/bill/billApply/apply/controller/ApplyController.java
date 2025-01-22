@@ -91,5 +91,12 @@ public class ApplyController {
     public ResponseEntity<CommonResponse> deleteBillFile(@RequestBody EbsFileVo ebsFileVo){
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill file delete successfully", applyService.deleteBillFile(ebsFileVo)), HttpStatus.OK);
     }
+    
+    @ApiOperation(value = "안건 전체 조회", notes = "안건전체를 조회한다")
+    @GetMapping("/bill/all")
+    public ResponseEntity<CommonResponse> selectBillAll(@RequestParam HashMap<String, Object> param) {
+        return new ResponseEntity<>(new CommonResponse(200, "OK", applyService.selectBillAll(param)), HttpStatus.OK);
+    }
+    
 
 }
