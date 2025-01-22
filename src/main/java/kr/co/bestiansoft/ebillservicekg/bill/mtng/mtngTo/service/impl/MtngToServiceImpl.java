@@ -1,15 +1,19 @@
 package kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.service.impl;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.repository.MtngToMapper;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.service.MtngToService;
+import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.repository.MtngAllMapper;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.AgendaVo;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MemberVo;
+import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.vo.MtngFileVo;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.vo.MtngToVo;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
@@ -24,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class MtngToServiceImpl implements MtngToService {
     private final MtngToMapper mtngToMapper;
+    private final MtngAllMapper mtngAllMapper;
     private final ComFileService comFileService;
 
     @Override
@@ -39,6 +44,11 @@ public class MtngToServiceImpl implements MtngToService {
     	
     	/* 회의 정보*/
     	MtngToVo dto = mtngToMapper.selectMtngTo(param);
+    	
+    	/*회의 결과 문서*/
+    	
+    	List<MtngFileVo> reportList = mtngAllMapper.selectListMtngFile(param);
+    	dto.setReportList(reportList);
     	
     	/* 안건  */
     	List<AgendaVo> agendaList = mtngToMapper.selectListMtngAgenda(param);
@@ -71,10 +81,28 @@ public class MtngToServiceImpl implements MtngToService {
 		mtngToMapper.updateMtngTo(mtngToVo);
 		log.info("mtngId2 : {}", mtngToVo.getMtngId());
 		
-		/*회의결과 보고서 등록 - ebs_mtng_file*/
-		mtngToMapper.deleteMtngToFile(mtngToVo);
 		
-		comFileService.saveFileEbsMtng(mtngToVo.getFiles(), mtngToVo.getFileKindCds(), mtngToVo.getMtngId());
+		MultipartFile[] files = mtngToVo.getFiles();
+		/*회의결과 보고서 등록 - ebs_mtng_file*/
+		if(files != null && files.length>0) {
+			
+		    // 유효성 검사: 하나라도 파일이 유효하지 않으면 중단
+		    boolean allValidFiles = Arrays.stream(files)
+		                                  .allMatch(file -> file != null && !file.isEmpty());
+
+		    if (allValidFiles) {
+				mtngToMapper.deleteMtngToFile(mtngToVo);
+				
+				comFileService.saveFileEbsMtng(mtngToVo.getFiles(), mtngToVo.getFileKindCds(), mtngToVo.getMtngId());
+		    }
+			
+
+		}else {
+		    log.info("파일이 존재하지 않습니다. 파일을 첨부해주세요.");
+		}
+		
+		
+
 		//파일 정보를 가지고 있어서 null처리
 		mtngToVo.setFiles(null);
 		

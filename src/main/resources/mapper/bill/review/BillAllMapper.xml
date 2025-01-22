@@ -17,8 +17,17 @@
 		    , em.na_term_cd             -- 대수 코드
 		    , em.bill_name_kg           -- 의안명 - kg
 		    , em.bill_name_ru           -- 의안명 - ru
+	        , CASE 
+		  		WHEN #{lang} = 'lng_type_1' then em.bill_name_kg
+		  		WHEN #{lang} = 'lng_type_2' then em.bill_name_ru
+	     		ELSE em.bill_name_kg
+	     		END AS billName
 		    , em.ppsl_knd_cd            -- 제안자 종류 (정부/의원)
-		    , cm.member_nm_kg as ppsrNm    -- 발의자
+      		, CASE 
+		  		WHEN #{lang} = 'lng_type_1' then cm.member_nm_kg 
+		  		WHEN #{lang} = 'lng_type_2' then cm.member_nm_ru 
+	      		ELSE cm.member_nm_kg
+	      		END AS ppsrNm
 		    , em.ppsr_id                -- 발의자 아이디
 		    , em.ppsl_dt                -- 제안일
 		    , em.gvrn_trsf_dt           -- 정부 이송일
@@ -30,8 +39,19 @@
 		    , em.mod_dt                 -- 수정 일자
 		    , em.etc_kg                 -- 비고 - kg
 		    , em.etc_ru                 -- 비고 - ru
-		FROM ebs_master em
-		, com_member cm        
+		    , (
+			     select 
+		           	CASE 
+					  	WHEN #{lang} = 'lng_type_1' then ccd.code_nm1
+					  	WHEN #{lang} = 'lng_type_2' then ccd.code_nm2
+				      	ELSE ccd.code_nm3
+			      		END AS statNm
+			     from com_code_detail ccd 
+			     where ccd.code_id = emd.cls_cd
+			     AND ccd.grp_code = 1015
+		     )
+		FROM ebs_master em left join ebs_master_detail emd on em.bill_id = emd.bill_id
+		, com_member cm      
 		WHERE 1=1     -- 내/외부, 접수 구분 뭔지 물어보고 추가해야함.
 		AND em.ppsr_id = cm.member_id
 	    <if test="searchBillName != null and searchBillName != ''">
@@ -48,40 +68,132 @@
     	</if>
     </select>
 
-    <select id="getBillById" parameterType="java.lang.String"
+	<!-- 기본정보 -->
+    <select id="selectBillById" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billAll.vo.BillAllVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper.getBillById */    
-        select 
-		      bill_id                -- 안건 ID
-		    , bill_no                -- 안건 번호
-		    , bill_kind              -- 의안 종류 (법률안/예산안 등)
-		    , na_term_cd             -- 대수 코드
-		    , bill_name_kg           -- 의안명 - kg
-		    , bill_name_ru           -- 의안명 - ru
-		    , ppsl_knd_cd            -- 제안자 종류 (정부/의원)
-		    , ppsr_nm                -- 발의자
-		    , ppsr_id                -- 발의자 아이디
-		    , ppsl_dt                -- 제안일
-		    , stat_cd                -- 상태 코드
-		    , cmt_id                 -- 위원회 아이디
-		    , submit_dt              -- 위원회 회부일
-		    , plnr_prsnt_dt          -- 본회의 예정일
-		    , plnr_dt                -- 본회의 처리일
-		    , plnr_result            -- 본회의 처리 결과
-		    , gvrn_trsf_dt           -- 정부 이송일
-		    , prmg_dt                -- 공포일자
-		    , prmg_no                -- 공포 번호
-		    , etc_kg                 -- 비고 - kg
-		    , etc_ru                 -- 비고 - ru
-		    , bill_ty                -- 제개정 타입
-		    , law_id                 -- 법률 아이디
-		    , wt_cn                  -- 철회 사유
-		    , reg_id                 -- 등록자 아이디
-		    , reg_dt                 -- 등록 일자
-		    , mod_id                 -- 수정자 아이디
-		    , mod_dt                 -- 수정 일자
-        from ebs_master
-        where bill_id = #{billId}
+		SELECT
+		      em.bill_id                -- 안건 ID
+		    , em.bill_no                -- 안건 번호
+		    , em.bill_kind              -- 의안 종류 (법률안/예산안 등)
+		    , em.na_term_cd             -- 대수 코드
+		    , em.bill_name_kg           -- 의안명 - kg
+		    , em.bill_name_ru           -- 의안명 - ru
+	        , CASE 
+		  		WHEN #{lang} = 'lng_type_1' then em.bill_name_kg
+		  		WHEN #{lang} = 'lng_type_2' then em.bill_name_ru
+	     		ELSE em.bill_name_kg
+	     		END AS billName
+		    , em.ppsl_knd_cd            -- 제안자 종류 (정부/의원)
+      		, CASE 
+		  		WHEN #{lang} = 'lng_type_1' then cm.member_nm_kg 
+		  		WHEN #{lang} = 'lng_type_2' then cm.member_nm_ru 
+	      		ELSE cm.member_nm_kg
+	      		END AS ppsrNm
+		    , em.ppsr_id                -- 발의자 아이디
+		    , em.ppsl_dt                -- 제안일
+		    , em.gvrn_trsf_dt           -- 정부 이송일
+		    , em.prmg_dt                -- 공포일자
+		    , em.prmg_no                -- 공포 번호
+		    , em.reg_id                 -- 등록자 아이디
+		    , em.reg_dt                 -- 등록 일자
+		    , em.mod_id                 -- 수정자 아이디
+		    , em.mod_dt                 -- 수정 일자
+		    , em.etc_kg                 -- 비고 - kg
+		    , em.etc_ru                 -- 비고 - ru
+		    , CASE 
+		  		WHEN #{lang} = 'lng_type_1' then em.etc_kg
+		  		WHEN #{lang} = 'lng_type_2' then em.etc_ru
+	     		ELSE em.etc_kg
+	     		END AS etc
+		    , (
+			     select 
+		           	CASE 
+					  	WHEN #{lang} = 'lng_type_1' then ccd.code_nm1
+					  	WHEN #{lang} = 'lng_type_2' then ccd.code_nm2
+				      	ELSE ccd.code_nm3
+			      		END AS statNm
+			     from com_code_detail ccd 
+			     where ccd.code_id = emd.cls_cd
+			     AND ccd.grp_code = 1015
+		     )
+		     , rcp_dt -- 안건 접수일자
+		FROM ebs_master em left join ebs_master_detail emd on em.bill_id = emd.bill_id
+		, com_member cm      
+		WHERE 1=1     -- 내/외부, 접수 구분 뭔지 물어보고 추가해야함.
+		AND em.ppsr_id = cm.member_id
+        AND em.bill_id = #{billId}
+    </select>
+    
+    <!-- 소관위 기본정보 -->
+    <select id="selectBillCmtInfo" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billAll.vo.BillAllVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper.selectBillCmtInfo */    
+		SELECT
+		ec.bill_id -- 안건 아이디
+		, ec.cmt_cd -- 위원회 아이디
+		, ec.reg_dt as submitDt -- 회부일
+		, (
+		     select 
+		           	CASE 
+					  	WHEN #{lang} = 'lng_type_1' then cd.dept_nm1
+					  	WHEN #{lang} = 'lng_type_2' then cd.dept_nm2
+				      	ELSE cd.dept_nm3 
+				      	END AS cmtNm
+		     from com_dept cd 
+		     where ec.cmt_cd = cd.dept_cd 
+		 ) -- 소관위 명
+		, ef.reg_dt as confirmDt -- 접수 확인일
+		FROM
+		kgst.ebs_master_cmt ec
+		left join kgst.ebs_file ef on ec.bill_id = ef.bill_id AND ef.file_kind_cd = '225'
+		WHERE 1=1
+		AND ec.cmt_se_cd = 'M'
+		AND ec.bill_id = #{billId}
+    </select>
+    <!-- 소관위 회의정보 -->
+    <select id="selectBillCmtMtng" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.vo.MtngAllVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper.selectBillCmtMtng */    
+		SELECT 
+		ema.bill_id
+		, em.dgr_cd --차수
+		, ema.reg_dt -- 접수일
+		, em.open_dtm -- 회의일
+		, ema.rslt_cd 
+		, (
+		     select 
+		       	CASE 
+				  	WHEN #{lang} = 'lng_type_1' then ccd.code_nm1
+				  	WHEN #{lang} = 'lng_type_2' then ccd.code_nm2
+			      	ELSE ccd.code_nm3
+		      		END AS rsltNm
+		     from kgst.com_code_detail ccd 
+		     where ccd.code_id = ema.rslt_cd 
+		     AND ccd.grp_code = 1008
+		 )
+		FROM 
+		kgst.ebs_mtng em
+		left join kgst.ebs_mtng_agenda ema on ema.mtng_id = em.mtng_id AND em.cmt_id = #{cmtId}
+		WHERE 1=1
+		AND ema.bill_id = #{billId}
+    </select>
+    <!-- 문서(회의별이 아니고 안건별 문서이므로 ebs_file에서 가져와야한다. -->
+    <select id="selectBillFile" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper.selectBillCmtMtng */    
+		SELECT
+			ef.bill_id 
+			, ef.cls_cd
+			, ef.file_kind_cd
+			, ef.org_file_id
+			, ef.org_file_nm
+			, ef.pdf_file_id
+			, ef.pdf_file_nm
+		FROM kgst.ebs_file ef
+		WHERE 1=1
+		AND ef.delete_yn = 'N'
+		AND ef.bill_id = #{billId}
     </select>
 
 </mapper>

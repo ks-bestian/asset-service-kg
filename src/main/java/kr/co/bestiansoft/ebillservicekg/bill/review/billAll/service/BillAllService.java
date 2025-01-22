@@ -7,6 +7,6 @@ import kr.co.bestiansoft.ebillservicekg.bill.review.billAll.vo.BillAllVo;
 public interface BillAllService {
 
     List<BillAllVo> getBillList(HashMap<String, Object> param);
-    BillAllVo getBillById(String billId);
+    BillAllVo getBillById(String billId, HashMap<String, Object> param);
 
 }

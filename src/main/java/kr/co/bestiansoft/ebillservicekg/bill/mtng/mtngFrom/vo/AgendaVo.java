@@ -15,6 +15,7 @@ public class AgendaVo extends ComDefaultVO {
 	private String ppslDt;
 	private int ord;
 	private String rsltCd;
+	private String rsltNm;
 	private String rmk;
     
 }

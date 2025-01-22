@@ -1,7 +1,10 @@
 package kr.co.bestiansoft.ebillservicekg.document.service;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
 
+import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo;
+import kr.co.bestiansoft.ebillservicekg.document.vo.FileShareVo;
 import kr.co.bestiansoft.ebillservicekg.document.vo.FileVo;
 import kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo;
 
@@ -41,4 +44,9 @@ public interface DocumentService {
     void removeFolders(List<Long> folderIds) throws Exception;
 	void removeFiles(List<String> fileIds) throws Exception;
     void removeFoldersAndFiles(List<Long> folderIds, List<String> fileGroupIds) throws Exception;
+    
+    void shareFile(FileShareVo vo);
+    List<FileShareVo> selectShareTargetList(FileShareVo vo);
+    
+    List<UserMemberVo> selectListUserMember(HashMap<String, Object> param);
 }

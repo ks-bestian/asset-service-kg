@@ -122,8 +122,9 @@
 		    , em.ppsl_dt                -- 제안일
 		    , ema.rslt_cd               -- 처리결과
 		    , ema.ord
-		 FROM EBS_MTNG_AGENDA ema 
-		 , kgst.EBS_MASTER em
+		 FROM 
+		 kgst.EBS_MASTER em
+		 , kgst.EBS_MTNG_AGENDA ema
 		 , com_member cm
 		 WHERE 1=1
 		 AND ema.bill_id = em.bill_id
@@ -162,13 +163,42 @@
 			,  #{dueDtm}
 		) RETURNING mtng_id 
     </insert>
+   	<select id="selectListDept" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MemberVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.repository.MtngFromMapper.selectListDept */
+        select
+              dept_cd --부서코드
+            , dept_nm1 --부서명(키르키즈어)
+            , dept_nm2 --부서명(러시아어)
+            , dept_nm3 --부서명(한국어)
+            , CASE 
+			  	WHEN #{lang} = 'lng_type_1' then dept_nm1
+			  	WHEN #{lang} = 'lng_type_2' then dept_nm2
+		      	ELSE dept_nm3 
+		      	END AS deptNm
+            , shrt_nm1 --부서 약칭(키르키즈어)
+            , shrt_nm2 --부서 약칭(러시아어)
+            , shrt_nm3 --부서 약칭(한국어)
+            , ord --순서
+            , upr_dept_cd --상위부서코드
+            , use_yn --사용여부
+            , reg_dt --등록일자
+            , reg_id --등록자
+            , mod_id --수정자
+            , mod_dt --수정일자
+        from com_dept
+        where 1=1
+        order by ord
+    </select>
     <select id="selectListMember" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MemberVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.repository.MtngFromMapper.selectListMember */
         SELECT
               cm.member_id --국회의원아이디
-            , cm.member_nm_kg --이름(키르키즈어)
-            , cm.member_nm_ru --이름(러시아어)
+            , CASE 
+		  		WHEN #{lang} = 'lng_type_1' then cm.member_nm_kg 
+		  		WHEN #{lang} = 'lng_type_2' then cm.member_nm_ru 
+	      		ELSE cm.member_nm_kg
+	      		END AS memberNm
             , cm.age_cd --대수
             , cm.cmit_cd --소속위원회코드
            	, CASE 
@@ -196,10 +226,10 @@
         WHERE 1=1
         AND cm.cmit_cd = cd.dept_cd 
         AND (cm.age_cd = ebc.code_id AND ebc.curr_yn = 'Y')
-        <if test="memberNmKg != null and memberNmKg != ''">
-            AND cm.member_nm_kg LIKE CONCAT('%', #{memberNmKg}, '%')
+        <if test="memberNm != null and memberNm != ''">
+            AND (cm.member_nm_kg LIKE CONCAT('%', #{memberNm}, '%') or cm.member_nm_ru LIKE CONCAT('%', #{memberNm}, '%'))
         </if>
-        ORDER BY cm.poly_nm, cm.member_nm_kg
+        ORDER BY cm.poly_nm, memberNm
         
     </select>
     <insert id="insertEbsMtngAttendant" parameterType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MemberVo">
