@@ -5,6 +5,7 @@ import java.util.List;
 
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.vo.RevokeResponse;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.vo.RevokeVo;
+import kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo;
 
 public interface RevokeService {
 
@@ -12,7 +13,7 @@ public interface RevokeService {
 
 	RevokeResponse getRevokeDetail(String billId, String lang);
 
-	int billRevokeRequest(String billId, HashMap<String, Object> param);
+	ProcessVo billRevokeRequest(String billId,RevokeVo vo);
 
 	int billRevokeCancle(String billId, HashMap<String, Object> param);
 

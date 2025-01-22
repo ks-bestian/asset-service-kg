@@ -1,11 +1,13 @@
 package kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.vo;
 
+import java.time.LocalDateTime;
+
 import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
 
 @Data
 public class RevokeVo extends ComDefaultVO {
-	
+
 	//안건아이디
 	private String billId;
     //등록번호(사회토론번호?)
@@ -18,10 +20,10 @@ public class RevokeVo extends ComDefaultVO {
 	private String billNameRu;
 	//제안자
 	private String ppsrNm;
-	//등록일
-	private String regDate;
-	//상태
-	private String statCd;
+
+	//제안일자
+	private String ppslDt;
+
 	//안건종류
 	private String billKind;
 	//비고
@@ -30,7 +32,7 @@ public class RevokeVo extends ComDefaultVO {
 	private String etcKg;
 	//비고ru
 	private String etcRu;
-	//철회사유 
+	//철회사유
 	private String wtCn;
 	//철회사유kg
 	private String wtCnKg;
@@ -46,9 +48,24 @@ public class RevokeVo extends ComDefaultVO {
 	private String memberNmKg;
 	//의원이름ru
 	private String memberNmRu;
-	
+
 	private String polyCd;
 	private String polyNm;
-	
-	//
+
+	private String statNm;
+	private String statCd;
+	private String naTermCd;
+	private LocalDateTime wtDt;
+	private LocalDateTime wtCncDt;
+
+    /** process stepId */
+    private String stepId;
+
+    /** process taskId  */
+    private String taskId;
+
+    /** process taskStatus */
+    private String taskStatus;
+
+
 }

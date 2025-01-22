@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.ProposerVo;
 import kr.co.bestiansoft.ebillservicekg.process.vo.CmttVo;
 import kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo;
 
@@ -25,5 +26,9 @@ public interface ProcessMapper {
 
 	CmttVo selectOneCmtt(ProcessVo vo);
 	void updateBpTask(ProcessVo vo);
+
+	List<ProposerVo> selectListProposerId(ProcessVo vo);
+
+
 
 }
