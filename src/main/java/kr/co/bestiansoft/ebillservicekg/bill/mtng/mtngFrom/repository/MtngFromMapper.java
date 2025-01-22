@@ -17,6 +17,7 @@ public interface MtngFromMapper {
     List<AgendaVo> selectListMtngAgenda (HashMap<String, Object> param);
     Long insertEbsMtng(MtngFromVo mtngFromVo);
     List<MemberVo> selectListMember(HashMap<String, Object> param);
+    List<MemberVo> selectListDept(HashMap<String, Object> param);
     void insertEbsMtngAttendant(MemberVo memberVo);
     void insertEbsMtngAgenda(AgendaVo agendaVo);
     void deleteMtngFrom(Long mtngId);

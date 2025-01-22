@@ -53,6 +53,12 @@ public class MtngFromController {
         return new ResponseEntity<>(new CommonResponse(200, "ok", mtngFromService.getMemberList(param)), HttpStatus.OK);
     }
     
+    @ApiOperation(value = "회의 예정 - 부서(위원회) 리스트 조회", notes = "회의 예정 - 부서(위원회) 리스트를 조회한다.")
+    @GetMapping("/bill/mtng/from/dept")
+    public ResponseEntity<CommonResponse> getDeptList(@RequestParam HashMap<String, Object> param) {
+        return new ResponseEntity<>(new CommonResponse(200, "ok", mtngFromService.getDeptList(param)), HttpStatus.OK);
+    }
+    
     @ApiOperation(value = "회의 예정 - 회의 취소", notes = "회의 취소")
     @DeleteMapping("/bill/mtng/from")
     public ResponseEntity<CommonResponse> deleteMtngFrom(@RequestBody List<Long> mtngIds) {
