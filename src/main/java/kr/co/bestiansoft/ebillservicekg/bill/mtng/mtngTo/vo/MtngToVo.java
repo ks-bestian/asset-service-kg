@@ -33,6 +33,7 @@ public class MtngToVo extends ComDefaultVO {
     private List<AgendaVo> agendaList;
     
     /* 파일 관련*/
+    private List<MtngFileVo> reportList;
     private MultipartFile[] files;
     private String[] fileKindCds;
     

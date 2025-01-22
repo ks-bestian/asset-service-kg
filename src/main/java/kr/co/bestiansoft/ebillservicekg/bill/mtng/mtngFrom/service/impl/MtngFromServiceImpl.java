@@ -95,6 +95,11 @@ public class MtngFromServiceImpl implements MtngFromService {
 	public List<MemberVo> getMemberList(HashMap<String, Object> param) {
 		return mtngFromMapper.selectListMember(param);
 	}
+	
+	@Override
+	public List<MemberVo> getDeptList(HashMap<String, Object> param) {
+		return mtngFromMapper.selectListDept(param);
+	}
 
 	@Override
 	public void deleteMtng(List<Long> mtngIds) {
@@ -107,4 +112,6 @@ public class MtngFromServiceImpl implements MtngFromService {
         }
         
 	}
+
+
 }

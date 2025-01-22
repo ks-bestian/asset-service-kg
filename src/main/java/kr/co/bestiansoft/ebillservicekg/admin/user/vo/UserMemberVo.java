@@ -31,4 +31,5 @@ public class UserMemberVo {
     private String polyNm;
     private String rsdnRgstNmbr;
     private String type;
+    private String mblNo;
 }

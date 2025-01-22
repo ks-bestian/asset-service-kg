@@ -32,11 +32,4 @@ public class CcofController {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Ccof saved successfully.", ccofService.createCcofInUser(ccofVo)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "겸직 삭제", notes = "메뉴 삭제한다.")
-    @DeleteMapping("admin/ccof")
-    public ResponseEntity<CommonResponse> deleteCcof(@RequestBody HashMap<String, Object> param) {
-        ccofService.deleteCcofInUser(param);
-        return new ResponseEntity<>(new CommonResponse(200, "ok", "Ccof deleted successfully."), HttpStatus.OK);
-
-    }
 }
