@@ -168,6 +168,10 @@
             , um.pos_cd
             , um.age_cd
             , um.cmit_cd
+            , (case when #{lang} = 'lng_type_1' then um.dept_nm_kg
+                    when #{lang} = 'lng_type_2' then um.dept_nm_ru
+                    else um.dept_nm_ko
+                end) as dept_nm
             , (case when #{lang} = 'lng_type_2' then dept_cmit.dept_nm2
             else dept_cmit.dept_nm1
             end) as cmit_nm
@@ -184,6 +188,12 @@
         left join com_dept dept_cmit on dept_cmit.dept_cd = um.cmit_cd
         left join com_code_detail cc on cc.code_id = um.job_cd
         where 1=1
+        <if test="polyCd != '' and polyCd != null">
+            and um.poly_cd = #{polyCd}
+        </if>
+        <if test="deptCd != '' and deptCd != null">
+            and um.dept_cd = #{deptCd}
+        </if>
         <choose>
             <when test="lang == 'lng_type_1'">
                 and um.user_nm_kg like concat('%', #{searchNm}, '%')

@@ -7,7 +7,8 @@
         select
               auth_id --권한아이디
             , (case when #{lang} = 'lng_type_2' then auth_nm2
-                else auth_nm1
+                    when #{lang} = 'lng_type_1' then auth_nm1
+                    else auth_nm3
               end) as auth_nm
             , auth_nm1 --권한명(키르키즈어)
             , auth_nm2 --권한명(러시아어)
@@ -29,7 +30,7 @@
         <if test="authNm3 != null and authNm3 != ''">
             and auth_nm3 like concat('%', #{authNm3}, '%')
         </if>
-        order by reg_dt desc
+        order by auth_id asc
     </select>
 
     <select id="selectAuth" parameterType="java.lang.Long" resultType="kr.co.bestiansoft.ebillservicekg.admin.auth.vo.AuthVo">

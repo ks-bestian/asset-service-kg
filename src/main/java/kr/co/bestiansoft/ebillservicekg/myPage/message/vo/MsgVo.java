@@ -20,10 +20,6 @@ public class MsgVo extends ComDefaultVO {
     private String fileGroupId;
     private String msgDiv;
     private String msgGroupId;
-    private String regId;
-    private LocalDateTime regDt;
-    private String modId;
-    private LocalDateTime modDt;
     private String rcvNm;
     private String sendNm;
 

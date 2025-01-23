@@ -17,9 +17,4 @@ public class ComCodeDetailVo extends ComDefaultVO {
     private String useYn;
     private Integer ord;
     private String rmk;
-    private LocalDateTime regDt;
-    private LocalDateTime modDt;
-    private String regId;
-    private String modId;
-
 }

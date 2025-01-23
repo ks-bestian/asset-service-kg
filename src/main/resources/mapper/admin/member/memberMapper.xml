@@ -40,6 +40,10 @@
                 </when>
             </choose>
         </if>
+
+        <if test="polyCd != null and polyCd !=''">
+            and poly_cd = #{polyCd}
+        </if>
         order by reg_dt
     </select>
 
