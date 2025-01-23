@@ -1,14 +1,11 @@
 package kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller;
 
-import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
-import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.exception.AlreadyExistsException;
-import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.exception.ForbiddenException;
-import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.exception.ResourceNotFoundException;
-import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.exception.UnauthorizedException;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Objects;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.postgresql.util.PSQLException;
-import org.postgresql.util.PSQLState;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -19,102 +16,154 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.Objects;
+import kr.co.bestiansoft.ebillservicekg.common.errLog.service.ErrLogService;
+import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
+import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.exception.AlreadyExistsException;
+import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.exception.ForbiddenException;
+import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.exception.ResourceNotFoundException;
+import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.exception.UnauthorizedException;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice
 public class ExceptionControllerAdvice {
+	
+	@Autowired
+	private ErrLogService errLogService;
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({MethodArgumentNotValidException.class})
-    public ResponseEntity<CommonResponse> methodArgumentNotValidException(MethodArgumentNotValidException e) {
+    public ResponseEntity<CommonResponse> methodArgumentNotValidException(MethodArgumentNotValidException e, HttpServletRequest request) {
 
+    	int errCd = HttpStatus.BAD_REQUEST.value();
+    	String errMsg = Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage();
+    	
         CommonResponse response = CommonResponse.builder()
-                                                .code(HttpStatus.BAD_REQUEST.value())
-                                                .message(Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage())
+                                                .code(errCd)
+                                                .message(errMsg)
                                                 .build();
-        log.error(e.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST.value())
-                             .body(response);
+//        log.error(e.getMessage());
+        e.printStackTrace();
+        
+        errLogService.saveErrLog(request, errCd, errMsg);
+        
+        return ResponseEntity.status(errCd).body(response);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({IllegalArgumentException.class})
-    public ResponseEntity<CommonResponse> illegalArgumentException(IllegalArgumentException e) {
+    public ResponseEntity<CommonResponse> illegalArgumentException(IllegalArgumentException e, HttpServletRequest request) {
+    	
+    	int errCd = HttpStatus.BAD_REQUEST.value();
+    	String errMsg = e.getMessage();
+    	
         CommonResponse response = CommonResponse.builder()
-                                                .code(HttpStatus.BAD_REQUEST.value())
-                                                .message(e.getMessage())
+                                                .code(errCd)
+                                                .message(errMsg)
                                                 .build();
-        log.error(e.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST.value())
-                             .body(response);
+//        log.error(e.getMessage());
+        e.printStackTrace();
+        
+        errLogService.saveErrLog(request, errCd, errMsg);
+        
+        return ResponseEntity.status(errCd).body(response);
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler({ResourceNotFoundException.class})
-    public ResponseEntity<CommonResponse> resourceNotFoundException(ResourceNotFoundException e) {
+    public ResponseEntity<CommonResponse> resourceNotFoundException(ResourceNotFoundException e, HttpServletRequest request) {
+    	
+    	int errCd = HttpStatus.NOT_FOUND.value();
+    	String errMsg = e.getMessage();
 
         CommonResponse response = CommonResponse.builder()
-                                                .code(HttpStatus.NOT_FOUND.value())
-                                                .message(e.getMessage())
+                                                .code(errCd)
+                                                .message(errMsg)
                                                 .build();
-        log.error(e.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND.value())
-                             .body(response);
+//        log.error(e.getMessage());
+        e.printStackTrace();
+        
+        errLogService.saveErrLog(request, errCd, errMsg);
+        
+        return ResponseEntity.status(errCd).body(response);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({AlreadyExistsException.class})
-    public ResponseEntity<CommonResponse> alreadyExistsException(AlreadyExistsException e) {
+    public ResponseEntity<CommonResponse> alreadyExistsException(AlreadyExistsException e, HttpServletRequest request) {
+    	
+    	int errCd = HttpStatus.BAD_REQUEST.value();
+    	String errMsg = e.getMessage();
 
         CommonResponse response = CommonResponse.builder()
-                                                .code(HttpStatus.BAD_REQUEST.value())
-                                                .message(e.getMessage())
+                                                .code(errCd)
+                                                .message(errMsg)
                                                 .build();
-        log.error(e.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST.value())
-                             .body(response);
+//        log.error(e.getMessage());
+        e.printStackTrace();
+        
+        errLogService.saveErrLog(request, errCd, errMsg);
+        
+        return ResponseEntity.status(errCd).body(response);
     }
 
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler({UnauthorizedException.class})
-    public ResponseEntity<CommonResponse> unauthorizedException(UnauthorizedException e) {
+    public ResponseEntity<CommonResponse> unauthorizedException(UnauthorizedException e, HttpServletRequest request) {
+    	
+    	int errCd = HttpStatus.UNAUTHORIZED.value();
+    	String errMsg = e.getMessage();
 
         CommonResponse response = CommonResponse.builder()
-                                                .code(HttpStatus.UNAUTHORIZED.value())
-                                                .message(e.getMessage())
+                                                .code(errCd)
+                                                .message(errMsg)
                                                 .build();
-        log.error(e.getMessage());
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value())
-                             .body(response);
+//        log.error(e.getMessage());
+        e.printStackTrace();
+        
+        errLogService.saveErrLog(request, errCd, errMsg);
+        
+        return ResponseEntity.status(errCd).body(response);
     }
     
     
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler({ForbiddenException.class})
-    public ResponseEntity<CommonResponse> forbiddenException(ForbiddenException e) {
+    public ResponseEntity<CommonResponse> forbiddenException(ForbiddenException e, HttpServletRequest request) {
 
+    	int errCd = HttpStatus.FORBIDDEN.value();
+    	String errMsg = e.getMessage();
+    	
         CommonResponse response = CommonResponse.builder()
-                                                .code(HttpStatus.FORBIDDEN.value())
-                                                .message(e.getMessage())
+                                                .code(errCd)
+                                                .message(errMsg)
                                                 .build();
-        log.error(e.getMessage());
-        return ResponseEntity.status(HttpStatus.FORBIDDEN.value())
-                             .body(response);
+//        log.error(e.getMessage());
+        e.printStackTrace();
+        
+        errLogService.saveErrLog(request, errCd, errMsg);
+        
+        return ResponseEntity.status(errCd).body(response);
     }
 
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler({PSQLException.class})
-    public ResponseEntity<CommonResponse> psqlException(PSQLException ex) {
-
+    public ResponseEntity<CommonResponse> psqlException(PSQLException ex, HttpServletRequest request) {
+    	
+    	int errCd = HttpStatus.INTERNAL_SERVER_ERROR.value();
     	String sqlState = ex.getSQLState(); // SQL 상태 코드
     	String errMsg = "SqlState: "+sqlState+", ErrMsg: "+ex.getMessage();
-    	CommonResponse response = CommonResponse.builder().code(HttpStatus.BAD_REQUEST.value()).message(errMsg).build();
-    	log.error(errMsg);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST.value()).body(response);
+    	
+    	CommonResponse response = CommonResponse.builder().code(errCd).message(errMsg).build();
+    	
+    	ex.printStackTrace();
+    	
+    	errLogService.saveErrLog(request, errCd, errMsg);
+        
+        return ResponseEntity.status(errCd).body(response);
     }
 
 //    @ResponseStatus(HttpStatus.FORBIDDEN)

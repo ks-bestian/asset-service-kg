@@ -514,4 +514,102 @@
 			and c.folder_id = #{folderId}
     </select>
     
+    <delete id="deleteShare">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.deleteShare */
+		DELETE FROM kgst.bs_share
+		WHERE 1=1
+			and folder_yn = #{folderYn}
+			<if test="folderYn = 'Y'">
+			and folder_id = #{folderId}
+			</if>
+			<if test="folderYn != 'Y'">
+			and file_group_id = #{fileGroupId}
+			</if>
+			and owner_id = #{ownerId}
+			and target_kind = #{targetKind}
+    </delete>
+    
+    <insert id="insertShare" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileShareVo">
+	/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.insertShare */		
+    	INSERT INTO kgst.bs_share (
+			  folder_id
+			, folder_yn
+			, target_kind
+			, target_id
+			, owner_id
+			, file_group_id
+			, reg_id
+			, reg_dt
+		)
+		VALUES (
+			  #{folderId}
+			, #{folderYn}
+			, #{targetKind}
+			, #{targetId}
+			, #{ownerId}
+			, #{fileGroupId}
+			, #{regId}
+			, now()
+		)
+    </insert>
+    
+    <select id="selectShareTargetList" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FileShareVo">
+    	/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectShareTargetList */
+		select 
+			  folder_id
+			, folder_yn
+			, target_kind
+			, target_id
+			, owner_id
+			, file_group_id
+			, reg_id
+			, reg_dt
+		from kgst.bs_share
+		where 1=1
+			and folder_yn = #{folderYn}
+			<if test="folderYn = 'Y'">
+			and folder_id = #{folderId}
+			</if>
+			<if test="folderYn != 'Y'">
+			and file_group_id = #{fileGroupId}
+			</if>
+			and owner_id = #{ownerId}
+    </select>
+    
+    <select id="selectListUserMember" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectListUserMember */
+        select * from (
+	        select
+	              view.user_id
+	            , (case when #{lang} = 'lng_type_1' then view.user_nm_kg
+	                else view.user_nm_ru
+	                end) as user_nm
+	            , view.dept_cd
+	            , (case when #{lang} = 'lng_type_1' then view.dept_nm_kg
+	                else view.dept_nm_ru
+	                end) as dept_nm
+	            , view.email
+	            , view.gen_cd
+	            , view.job_cd
+	            , (case when #{lang} = 'lng_type_1' then cc.code_nm1
+	                    else cc.code_nm1
+	                end) job_nm
+	            , view.pos_cd
+	            , view.age_cd
+	            , view.cmit_cd
+	            , (case when #{lang} = 'lng_type_1' then view.cmit_nm_kg
+	                else view.cmit_nm_ru
+	                end) as cmit_nm
+	            , view.poly_cd
+	            , view.poly_nm
+	        from kgst.view_user_member2 view
+	        left join com_code_detail cc on cc.code_id = view.job_cd
+	    ) a
+        where 1=1
+        <if test="searchNm != null and searchNm != ''">
+            AND a.user_nm like '%' || #{searchNm} || '%' 
+        </if>
+    </select>
+    
 </mapper>

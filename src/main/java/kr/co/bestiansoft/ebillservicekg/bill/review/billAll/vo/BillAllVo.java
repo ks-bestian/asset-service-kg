@@ -2,7 +2,10 @@ package kr.co.bestiansoft.ebillservicekg.bill.review.billAll.vo;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
+import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.vo.MtngAllVo;
+import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
 
@@ -16,6 +19,8 @@ public class BillAllVo extends ComDefaultVO {
     private String billKind;
     // 대수코드
     private String naTermCd;
+    // 의안명
+    private String billName;
     // 의안명 - kg
     private String billNameKg;
     // 의안명 - ru
@@ -27,13 +32,19 @@ public class BillAllVo extends ComDefaultVO {
     // 발의자아이디
     private String ppsrId;
     // 제안일
-    private LocalDate ppslDt;
+    private String ppslDt;
     // 상태코드
     private String statCd;
     // 위원회아이디
     private String cmtId;
+    // 위원회아이디
+    private String cmtCd;
+    // 위원회명
+    private String cmtNm;
     // 위원회회부일
     private LocalDate submitDt;
+    // 접수확인일
+    private LocalDate confirmDt;
     // 본회의예정일
     private LocalDateTime plnrPrsntDt;
     // 본회의처리일
@@ -56,6 +67,7 @@ public class BillAllVo extends ComDefaultVO {
     private String wtCn;
     
     // 비고
+    private String etc;
     private String etcKg;
     private String etcRu;
     
@@ -65,6 +77,24 @@ public class BillAllVo extends ComDefaultVO {
     private String searchBillName; 
     // 언어 구분에 따른 상태코드명 
     private String statNm; 
+    
+    // 안건 접수일자
+    private String rcpDt; 
+    // 발의자 명단 - 문자열로
+    private String proposerItems; 
+
+    /* 소관위 관련 */
+    private BillAllVo cmtData;
+    private List<MtngAllVo> cmtAgendaList; //회의정보
+    
+    /* 관련위 관련 */
+    private BillAllVo relData;
+    private List<MtngAllVo> relCmtAgendaList;
+    
+    /* 파일 관련*/
+    private List<EbsFileVo> fileList;
+    
+    
     
     
 

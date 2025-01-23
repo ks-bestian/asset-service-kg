@@ -10,8 +10,8 @@ public class MtngFileVo extends ComDefaultVO {
 	
 	private Long seq;
 	private Long mtngId;
-	private String fileId;
-	private String fileNm;
+	private String orgFileId;
+	private String orgFileNm;
 	private String pdfFileId;
 	private String pdfFileNm;
 	private String fileKindCd;

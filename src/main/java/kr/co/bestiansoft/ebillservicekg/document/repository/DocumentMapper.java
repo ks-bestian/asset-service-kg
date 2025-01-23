@@ -1,9 +1,13 @@
 package kr.co.bestiansoft.ebillservicekg.document.repository;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo;
+import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserVo;
+import kr.co.bestiansoft.ebillservicekg.document.vo.FileShareVo;
 import kr.co.bestiansoft.ebillservicekg.document.vo.FileVo;
 import kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo;
 
@@ -41,4 +45,10 @@ public interface DocumentMapper {
     
     List<Long> selectFolderIdsByUpperFolderId(Long upperFolderId);
     List<String> selectFileIdsByFolderId(Long folderId);
+    
+    void deleteShare(FileShareVo vo);
+    void insertShare(FileShareVo vo);
+    List<FileShareVo> selectShareTargetList(FileShareVo vo);
+    
+    List<UserMemberVo> selectListUserMember(HashMap<String, Object> param);
 }
