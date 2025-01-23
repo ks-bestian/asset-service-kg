@@ -51,6 +51,10 @@ public class ApplyServiceImpl implements ApplyService {
 		String ppsrId = new SecurityInfoUtil().getAccountId();
 		applyVo.setPpsrId(ppsrId);
 		applyMapper.insertApplyBill(applyVo);
+		
+		if (applyVo.getCmtCd() != null && !applyVo.getCmtCd().isEmpty()) {
+			applyMapper.insertApplyCmt(applyVo);
+		}
 
 		//파일등록
 		comFileService.saveFileEbs(applyVo.getFiles(), applyVo.getFileKindCds(), billId);
@@ -142,6 +146,10 @@ public class ApplyServiceImpl implements ApplyService {
 			comFileService.saveFileEbs(applyVo.getFiles(), applyVo.getFileKindCds(), billId);
 			applyVo.setFiles(null);
 		}
+		
+		if (applyVo.getCmtCd() != null && !applyVo.getCmtCd().isEmpty()) {
+			applyMapper.updateApplyCmt(applyVo);
+		}
 
 		//bill update
 		applyVo.setLoginId(loginId);
@@ -222,6 +230,11 @@ public class ApplyServiceImpl implements ApplyService {
 	public int deleteBillFile(EbsFileVo ebsFileVo) {
 		String userId = new SecurityInfoUtil().getAccountId();
 		return applyMapper.updateFileDelete(ebsFileVo, userId);
+	}
+	
+	@Override
+	public List<ApplyVo> selectBillAll(HashMap<String, Object> param) {
+		return applyMapper.selectBillAll(param);
 	}
 
 }
