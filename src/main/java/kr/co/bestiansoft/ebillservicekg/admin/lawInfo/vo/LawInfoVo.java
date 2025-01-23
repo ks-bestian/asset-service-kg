@@ -14,9 +14,5 @@ public class LawInfoVo extends ComDefaultVO {
     private String lawDeptCd;
     private String useYn;
     private String rmk;
-    private String regId;
-    private LocalDateTime regDt;
-    private String modId;
-    private LocalDateTime modDt;
     private String lawNm;
 }

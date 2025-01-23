@@ -21,10 +21,6 @@ public class DeptVo extends ComDefaultVO {
     private int ord;
     private String uprDeptCd;
     private String useYn;
-    private String regId;
-    private LocalDateTime regDt;
-    private String modId;
-    private LocalDateTime modDt;
 
     private List<DeptVo> children = new ArrayList<>();
 

@@ -37,12 +37,8 @@ public class MenuHierarchy {
         List<MenuNode> comMenuList = new ArrayList<>();
 
         for (MenuVo menu : menuList) {
-            String menuNm = "";
-            if("lng_type2".equals(lang)) {
-                menuNm = menu.getMenuNm2();
-            } else {
-                menuNm = menu.getMenuNm1();
-            }
+            String menuNm = menu.getMenuNm();
+
             comMenuList.add(MenuNode.builder()
                     .menuId(menu.getMenuId())
                     .menuNm(menuNm)
