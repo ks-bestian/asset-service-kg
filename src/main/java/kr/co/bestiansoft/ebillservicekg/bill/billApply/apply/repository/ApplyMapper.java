@@ -49,4 +49,8 @@ public interface ApplyMapper {
 
 	List<ApplyVo> selectBillAll(HashMap<String, Object> param);
 
+	int insertApplyCmt(ApplyVo applyVo);
+
+	void updateApplyCmt(ApplyVo applyVo);
+
 }

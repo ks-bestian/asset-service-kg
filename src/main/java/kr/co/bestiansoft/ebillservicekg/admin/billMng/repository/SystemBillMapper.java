@@ -15,10 +15,16 @@ public interface SystemBillMapper {
 
 	int createBillDetail(SystemBillVo systemBillVo);
 
-	List<EbsFileVo> selectOpinionFile(String billId);
+	List<EbsFileVo> selectBillFile(String billId);
 
 	int createBillFile(EbsFileVo fileVo);
 
 	int updateBillDetail(SystemBillVo systemBillVo);
+
+	List<SystemBillVo> selectBillMtngList(HashMap<String, Object> param);
+
+	List<EbsFileVo> selectMtngFile(HashMap<String, Object> param);
+
+	void createMtngFile(EbsFileVo fileVo);
 	
 }

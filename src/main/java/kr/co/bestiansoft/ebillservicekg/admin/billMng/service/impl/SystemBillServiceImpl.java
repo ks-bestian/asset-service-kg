@@ -37,7 +37,7 @@ public class SystemBillServiceImpl implements SystemBillService {
 		SystemBillVo billDetail = systemBillMapper.selectBillDetail(param);
 		response.setBillDetail(billDetail);
 		
-		List<EbsFileVo> fileList = systemBillMapper.selectOpinionFile(billId);
+		List<EbsFileVo> fileList = systemBillMapper.selectBillFile(billId);
 		response.setFileList(fileList);
 		
 		return response;
@@ -46,26 +46,27 @@ public class SystemBillServiceImpl implements SystemBillService {
 	@Transactional
 	@Override
 	public SystemBillVo createBillDetail(SystemBillVo systemBillVo) {
+		HashMap<String, Object> param = new HashMap<>();
+		param.put("billId", systemBillVo.getBillId());
+		param.put("clsCd", systemBillVo.getClsCd());
+		
+		SystemBillVo billDetail = systemBillMapper.selectBillDetail(param);
+		
 		String userId = new SecurityInfoUtil().getAccountId();
 		systemBillVo.setRegId(userId);
-		systemBillVo.setClsCd("110");
-		systemBillMapper.createBillDetail(systemBillVo);
+		
+		if(billDetail == null) {
+			systemBillMapper.createBillDetail(systemBillVo);
+		} else {
+			systemBillMapper.updateBillDetail(systemBillVo);
+		}
+		
 		return systemBillVo;
 	}
 	
-	@Transactional
-	@Override
-	public SystemBillVo updateBillDetail(SystemBillVo systemBillVo) {
-		String userId = new SecurityInfoUtil().getAccountId();
-		systemBillVo.setClsCd("110");
-		systemBillVo.setModId(userId);
-		systemBillMapper.updateBillDetail(systemBillVo);
-		return systemBillVo;
-	}
-
 	@Override
 	public List<EbsFileVo> selectOpinionFile(String billId) {
-		return systemBillMapper.selectOpinionFile(billId);
+		return systemBillMapper.selectBillFile(billId);
 	}
 
 	@Transactional
@@ -192,6 +193,71 @@ public class SystemBillServiceImpl implements SystemBillService {
 				idx++;
 				systemBillMapper.createBillFile(fileVo);
 			}
+		}
+		
+		systemBillVo.setFiles(null);
+		return systemBillVo;
+	}
+
+	@Override
+	public SystemBillResponse selectBillMtng(String billId, HashMap<String, Object> param) {
+		SystemBillResponse response = new SystemBillResponse();
+		param.put("billId", billId);
+		
+		List<SystemBillVo> mtngList = systemBillMapper.selectBillMtngList(param);
+		response.setMtngList(mtngList);
+		
+		List<EbsFileVo> fileList = systemBillMapper.selectBillFile(billId);
+		response.setFileList(fileList);
+		
+		return response;
+	}
+	
+	@Override
+	public SystemBillVo createMtngFile(SystemBillVo systemBillVo) {
+		String regId = new SecurityInfoUtil().getAccountId();
+		systemBillVo.setRegId(regId);
+		
+		HashMap<String, Object> param = new HashMap<>();
+		param.put("billId", systemBillVo.getBillId());
+		param.put("clsCd", systemBillVo.getClsCd());
+		
+		SystemBillVo billDetail = systemBillMapper.selectBillDetail(param);
+		if(billDetail == null) {
+			systemBillMapper.createBillDetail(systemBillVo);
+		}
+		
+		String[] fileKindCds = systemBillVo.getFileKindCds();
+		String[] clsCds = systemBillVo.getClsCds();
+		
+		int idx = 0;
+		for(MultipartFile file : systemBillVo.getFiles()) {
+			String orgFileId = StringUtil.getUUUID();
+			String orgFileNm = file.getOriginalFilename();
+			String fileKindCd = fileKindCds[idx];
+			String clsCd = clsCds[idx];
+			
+    		////////////////////////
+			try (InputStream edvIs = file.getInputStream()){
+				edv.save(orgFileId, edvIs);
+			} catch (Exception edvEx) {
+				throw new RuntimeException("EDV_NOT_WORK", edvEx);
+			}
+    		////////////////////////
+			
+			EbsFileVo fileVo = new EbsFileVo();
+			fileVo.setBillId(systemBillVo.getBillId());
+			fileVo.setOrgFileId(orgFileId);
+			fileVo.setOrgFileNm(orgFileNm);
+			fileVo.setFileSize(file.getSize());
+			fileVo.setDeleteYn("N");
+			fileVo.setOpbYn("N");
+			fileVo.setFileKindCd(fileKindCd);
+			fileVo.setClsCd(clsCd);
+			fileVo.setRegId(regId);
+			
+			idx++;
+			systemBillMapper.createBillFile(fileVo);
 		}
 		
 		systemBillVo.setFiles(null);

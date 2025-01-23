@@ -51,6 +51,10 @@ public class ApplyServiceImpl implements ApplyService {
 		String ppsrId = new SecurityInfoUtil().getAccountId();
 		applyVo.setPpsrId(ppsrId);
 		applyMapper.insertApplyBill(applyVo);
+		
+		if (applyVo.getCmtCd() != null && !applyVo.getCmtCd().isEmpty()) {
+			applyMapper.insertApplyCmt(applyVo);
+		}
 
 		//파일등록
 		comFileService.saveFileEbs(applyVo.getFiles(), applyVo.getFileKindCds(), billId);
@@ -141,6 +145,10 @@ public class ApplyServiceImpl implements ApplyService {
 		if (applyVo.getFiles() != null) {
 			comFileService.saveFileEbs(applyVo.getFiles(), applyVo.getFileKindCds(), billId);
 			applyVo.setFiles(null);
+		}
+		
+		if (applyVo.getCmtCd() != null && !applyVo.getCmtCd().isEmpty()) {
+			applyMapper.updateApplyCmt(applyVo);
 		}
 
 		//bill update

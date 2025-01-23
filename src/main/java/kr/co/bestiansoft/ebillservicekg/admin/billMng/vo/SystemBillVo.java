@@ -33,4 +33,15 @@ public class SystemBillVo extends ComDefaultVO {
     private MultipartFile[] files;
 	private String[] fileKindCds;
 	private String[] clsCds;
+	
+	//위원회 코드
+	private String cmtCd;
+	//회의 아이디
+	private String mtngId;
+	//회의 예정일시
+	private String dueDtm;
+	//회의결과코드
+	private String rsltCd;
+	//회의 차수
+	private String dgrCd;
 }

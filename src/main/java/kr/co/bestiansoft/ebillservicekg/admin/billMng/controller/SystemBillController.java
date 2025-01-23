@@ -43,12 +43,6 @@ public class SystemBillController {
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "billDetail created successfully", adminBillMngService.createBillDetail(systemBillVo)), HttpStatus.CREATED); 
     }
     
-    @ApiOperation(value = "법률검토 결과", notes = "법률검토 결과를 수정한다.")
-    @PutMapping("/system/bill/detail/update")
-    public ResponseEntity<CommonResponse> updateBillDetail(@RequestBody SystemBillVo systemBillVo) {
-    	return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "billDetail created successfully", adminBillMngService.updateBillDetail(systemBillVo)), HttpStatus.CREATED); 
-    }
-    
     @ApiOperation(value = "의견서 파일", notes = "의견서 파일을 조회한다")
     @GetMapping("/system/bill/opinion/{billId}")
     public ResponseEntity<CommonResponse> selectOpinionFile(@PathVariable String billId) {
@@ -71,6 +65,18 @@ public class SystemBillController {
     @PostMapping(value = "/system/bill/legal/update", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<CommonResponse> updateBillLegal(SystemBillVo systemBillVo) {
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "file create successfully", adminBillMngService.updateBillLegal(systemBillVo)), HttpStatus.CREATED);
+    }
+    
+    @ApiOperation(value = "안건 전체 상세 조회", notes = "상세를 조회한다.")
+    @GetMapping("/system/bill/mtng/{billId}")
+    public ResponseEntity<CommonResponse> selectBillMtng(@PathVariable String billId, @RequestParam HashMap<String, Object> param) {
+        return new ResponseEntity<>(new CommonResponse(200, "OK", adminBillMngService.selectBillMtng(billId, param)), HttpStatus.OK);
+    }
+    
+    @ApiOperation(value = "소관위 입력", notes = "소관위 정보를 입력한다")
+    @PostMapping(value = "/system/mtng/file", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<CommonResponse> createMtngFile(SystemBillVo systemBillVo) {
+    	return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "file create successfully", adminBillMngService.createMtngFile(systemBillVo)), HttpStatus.CREATED);
     }
     
 }

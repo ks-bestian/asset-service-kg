@@ -57,9 +57,9 @@
 		)
     </insert>
     
-    <select id="selectOpinionFile" parameterType="java.util.HashMap"
+    <select id="selectBillFile" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.billMng.repository.SystemBillMapper.selectOpinionFile */    
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.billMng.repository.SystemBillMapper.selectBillFile */    
 		SELECT
 		    max(seq) as seq
 		    , max(bill_id) as bill_id 
@@ -131,5 +131,73 @@
 	        <if test="lglActRsltCode != null">, lgl_act_rslt_code = #{lglActRsltCode}</if>
 	        <if test="rsltDt != null">, rslt_dt = #{rsltDt}</if>
 	    where bill_id = #{billId} and cls_cd = #{clsCd}
+    </insert>
+    
+    <select id="selectBillMtngList" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.admin.billMng.vo.SystemBillVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.billMng.repository.SystemBillMapper.selectBillMtngList */    
+		select 
+			emc.bill_id 		-- 안건아이디
+			, emc.cmt_cd 		-- 위원회코드
+			, ema.mtng_id 		-- 회의아이디
+			, em.due_dtm		-- 회의예정일시
+			, ema.rslt_cd		-- 회의결과코드
+			, em.dgr_cd 		-- 회의차수
+		from 
+			kgst.ebs_master_cmt emc 
+			left join kgst.ebs_mtng_agenda ema on ema.bill_id = emc.bill_id 
+			left join kgst.ebs_mtng em on em.mtng_id = ema.mtng_id 
+		where emc.bill_id = #{billId}
+			and em.mtng_type_cd = '1'
+			and emc.cmt_se_cd = 'M'
+		order by dgr_cd
+			
+    </select>
+    
+    <select id="selectMtngFile" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.billMng.repository.SystemBillMapper.selectMtngFile */    
+		select
+			emf.mtng_id 
+			, emf.org_file_id
+			, emf.org_file_nm 
+			, emf.pdf_file_id 
+			, emf.pdf_file_nm 
+		from 
+			kgst.ebs_master_cmt emc 
+			left join kgst.ebs_mtng_agenda ema on ema.bill_id = emc.bill_id 
+			left join kgst.ebs_mtng_file emf on emf.mtng_id = ema.mtng_id 
+		where 
+			emc.bill_id = #{billId}
+			and emf.delete_yn = 'N'
+			
+    </select>
+    
+    <insert id="createMtngFile" parameterType="kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.common.file.repository.FileMapper.createMtngFile */
+		insert into kgst.ebs_mtng_file (
+			  mtng_id
+			, file_kind_cd
+			, org_file_id
+			, org_file_nm
+			, pdf_file_id
+			, pdf_file_nm
+			, delete_yn
+			, file_size
+			, reg_id
+			, reg_dt
+		)
+		values (
+			  #{mtngId}
+			, #{fileKindCd}
+			, #{orgFileId}
+			, #{orgFileNm}
+			, #{pdfFileId}
+			, #{pdfFileNm}
+			, 'N'
+			, #{fileSize}
+			, #{regId}
+			, now()
+		)
     </insert>
 </mapper>
