@@ -1,5 +1,7 @@
 package kr.co.bestiansoft.ebillservicekg.admin.billMng.controller;
 
+import java.util.HashMap;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -7,6 +9,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,15 +32,21 @@ public class SystemBillController {
     private final SystemBillService adminBillMngService;
 
     @ApiOperation(value = "안건 전체 상세 조회", notes = "상세를 조회한다.")
-    @GetMapping("/system/bill/mng/{billId}")
-    public ResponseEntity<CommonResponse> getBillById(@PathVariable String billId, @RequestParam String lang) {
-        return new ResponseEntity<>(new CommonResponse(200, "OK", adminBillMngService.selectBillDetail(billId, lang)), HttpStatus.OK);
+    @GetMapping("/system/bill/detail/{billId}")
+    public ResponseEntity<CommonResponse> getBillById(@PathVariable String billId, @RequestParam HashMap<String, Object> param) {
+        return new ResponseEntity<>(new CommonResponse(200, "OK", adminBillMngService.selectBillDetail(billId, param)), HttpStatus.OK);
     }
 
     @ApiOperation(value = "법률검토 결과", notes = "법률검토 결과를 입력한다.")
-    @PostMapping("/system/bill/mng")
+    @PostMapping("/system/bill/detail")
     public ResponseEntity<CommonResponse> createBillDetail(@RequestBody SystemBillVo systemBillVo) {
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "billDetail created successfully", adminBillMngService.createBillDetail(systemBillVo)), HttpStatus.CREATED); 
+    }
+    
+    @ApiOperation(value = "법률검토 결과", notes = "법률검토 결과를 수정한다.")
+    @PutMapping("/system/bill/detail/update")
+    public ResponseEntity<CommonResponse> updateBillDetail(@RequestBody SystemBillVo systemBillVo) {
+    	return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "billDetail created successfully", adminBillMngService.updateBillDetail(systemBillVo)), HttpStatus.CREATED); 
     }
     
     @ApiOperation(value = "의견서 파일", notes = "의견서 파일을 조회한다")
@@ -51,4 +60,17 @@ public class SystemBillController {
     public ResponseEntity<CommonResponse> createBillApply(SystemBillVo systemBillVo) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "file create successfully", adminBillMngService.createBillFile(systemBillVo)), HttpStatus.CREATED);
     }
+    
+    @ApiOperation(value = "법적행위부서 입력", notes = "안건 법적행위부서 상세를 입력한다")
+    @PostMapping(value = "/system/bill/legal", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<CommonResponse> createBillLegal(SystemBillVo systemBillVo) {
+    	return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "file create successfully", adminBillMngService.createBillLegal(systemBillVo)), HttpStatus.CREATED);
+    }
+    
+    @ApiOperation(value = "법적행위부서 수정", notes = "안건 법적행위부서 상세를 수정한다")
+    @PostMapping(value = "/system/bill/legal/update", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<CommonResponse> updateBillLegal(SystemBillVo systemBillVo) {
+    	return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "file create successfully", adminBillMngService.updateBillLegal(systemBillVo)), HttpStatus.CREATED);
+    }
+    
 }

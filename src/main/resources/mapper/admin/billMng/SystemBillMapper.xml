@@ -23,7 +23,8 @@
 			, emd.mod_dt 
 		from 
 			kgst.ebs_master_detail emd 
-		where emd.bill_id = #{billId}
+		where emd.bill_id = #{billId} 
+			and emd.cls_cd = #{clsCd}
     </select>
     
     <insert id="createBillDetail" parameterType="kr.co.bestiansoft.ebillservicekg.admin.billMng.vo.SystemBillVo">
@@ -116,4 +117,19 @@
 		)
     </insert>
 
+	<insert id="updateBillDetail" parameterType="kr.co.bestiansoft.ebillservicekg.admin.billMng.vo.SystemBillVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.billMng.repository.SystemBillMapper.updateBillDetail */
+	    update kgst.ebs_master_detail
+	    set
+	        mod_id = #{modId}
+	        , mod_dt = now()
+	        <if test="rmrkKg != null">, rmrk_kg = #{rmrkKg}</if>
+	        <if test="rmrkRu != null">, rmrk_ru = #{rmrkRu}</if>
+	        <if test="mtnDt != null">, mtn_dt = #{mtnDt}</if>
+	        <if test="prsdRjctDt != null">, prsd_rjct_dt = #{prsdRjctDt}</if>
+	        <if test="lglRvwRsltCode != null">, lgl_rvw_rslt_code = #{lglRvwRsltCode}</if>
+	        <if test="lglActRsltCode != null">, lgl_act_rslt_code = #{lglActRsltCode}</if>
+	        <if test="rsltDt != null">, rslt_dt = #{rsltDt}</if>
+	    where bill_id = #{billId} and cls_cd = #{clsCd}
+    </insert>
 </mapper>
