@@ -8,5 +8,6 @@ public interface BillAllService {
 
     List<BillAllVo> getBillList(HashMap<String, Object> param);
     BillAllVo getBillById(String billId, HashMap<String, Object> param);
+    BillAllVo getBillDetailById(String billId, HashMap<String, Object> param);
 
 }
