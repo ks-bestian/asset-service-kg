@@ -34,6 +34,7 @@ public interface DocumentService {
     List<FileVo> selectMyFileList(FileVo vo);
     int insertMyFolder(FolderVo vo);
     
+    List<FileVo> selectShareFileList(FileVo vo);
     List<FileVo> selectStarFileList(FileVo vo);
     List<FileVo> selectDeleteFileList(FileVo vo);
     List<FolderVo> selectDeleteFolderList(FolderVo vo);
@@ -46,7 +47,14 @@ public interface DocumentService {
     void removeFoldersAndFiles(List<Long> folderIds, List<String> fileGroupIds) throws Exception;
     
     void shareFile(FileShareVo vo);
+    void unshareFile(FileShareVo vo);
     List<FileShareVo> selectShareTargetList(FileShareVo vo);
     
     List<UserMemberVo> selectListUserMember(HashMap<String, Object> param);
+    List<FolderVo> selectShareFolderList(FolderVo vo);
+    
+    List<FolderVo> selectShareFolderListByFolderId(FolderVo vo);
+    List<FileVo> selectShareFileListByFolderId(FileVo vo);
+    
+    void saveFavorite(FileVo vo);
 }

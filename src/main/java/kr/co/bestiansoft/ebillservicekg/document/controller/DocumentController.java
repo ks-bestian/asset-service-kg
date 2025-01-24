@@ -88,6 +88,24 @@ public class DocumentController {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.selectMyFolderList(vo)), HttpStatus.OK);
     }
     
+    @ApiOperation(value = "공유 폴더 목록 조회", notes = "공유 폴더 목록 조회")
+    @GetMapping("/document/share/folders")
+    public ResponseEntity<CommonResponse> selectShareFolderList(FolderVo vo) {
+    	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.selectShareFolderList(vo)), HttpStatus.OK);
+    }
+    
+    @ApiOperation(value = "공유 폴더 내부폴더 조회", notes = "공유 폴더 내부폴더 조회")
+    @GetMapping("/document/share/folders/content")
+    public ResponseEntity<CommonResponse> selectShareFolderListByFolderId(FolderVo vo) {
+    	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.selectShareFolderListByFolderId(vo)), HttpStatus.OK);
+    }
+    
+    @ApiOperation(value = "공유 폴더 내부파일 조회", notes = "공유 폴더 내부파일 조회")
+    @GetMapping("/document/share/files/content")
+    public ResponseEntity<CommonResponse> selectShareFileListByFolderId(FileVo vo) {
+    	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.selectShareFileListByFolderId(vo)), HttpStatus.OK);
+    }
+    
     @ApiOperation(value = "삭제 폴더 목록 조회", notes = "삭제 폴더 목록 조회")
     @GetMapping("/document/trash/folders")
     public ResponseEntity<CommonResponse> selectDeleteFolderList(FolderVo vo) {
@@ -151,6 +169,12 @@ public class DocumentController {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.selectMyFileList(vo)), HttpStatus.OK);
     }
     
+    @ApiOperation(value = "공유 파일 목록 조회", notes = "공유 파일 목록 조회")
+    @GetMapping("/document/share/files")
+    public ResponseEntity<CommonResponse> selectShareFileList(FileVo vo) {
+    	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.selectShareFileList(vo)), HttpStatus.OK);
+    }
+    
     @ApiOperation(value = "중요 파일 목록 조회", notes = "중요 파일 목록 조회")
     @GetMapping("/document/star/files")
     public ResponseEntity<CommonResponse> selectStarFileList(FileVo vo) {
@@ -199,6 +223,13 @@ public class DocumentController {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.updateFile(vo)), HttpStatus.OK);
     }
     
+    @ApiOperation(value = "파일 중요여부 수정", notes = "파일 중요여부 수정")
+    @PutMapping("/document/files/star")
+    public ResponseEntity<CommonResponse> updateFileStar(@RequestBody FileVo vo) {
+    	documentService.saveFavorite(vo);
+    	return new ResponseEntity<>(new CommonResponse(200, "OK", null), HttpStatus.OK);
+    }
+    
 //    @ApiOperation(value = "부서 파일 수정(파일묶음)", notes = "부서 파일 수정(파일묶음)")
 //    @PutMapping(value = "/document/dept/files/group", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 //    public ResponseEntity<CommonResponse> updateFileGroup(FileVo vo) throws Exception {
@@ -212,9 +243,16 @@ public class DocumentController {
     }
     
     @ApiOperation(value = "파일 공유", notes = "파일 공유")
-    @PutMapping("/document/files/share")
+    @PostMapping("/document/files/share")
     public ResponseEntity<CommonResponse> shareFile(@RequestBody FileShareVo vo) {
     	documentService.shareFile(vo);
+    	return new ResponseEntity<>(new CommonResponse(200, "OK", null), HttpStatus.OK);
+    }
+    
+    @ApiOperation(value = "파일 공유 중지", notes = "파일 공유 중지")
+    @PostMapping("/document/files/unshare")
+    public ResponseEntity<CommonResponse> unshareFile(@RequestBody FileShareVo vo) {
+    	documentService.unshareFile(vo);
     	return new ResponseEntity<>(new CommonResponse(200, "OK", null), HttpStatus.OK);
     }
     

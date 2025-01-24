@@ -51,4 +51,12 @@ public interface DocumentMapper {
     List<FileShareVo> selectShareTargetList(FileShareVo vo);
     
     List<UserMemberVo> selectListUserMember(HashMap<String, Object> param);
+    
+    List<FileVo> selectShareFileList(FileVo vo);
+    List<FolderVo> selectShareFolderList(FolderVo vo);
+    
+    List<FolderVo> selectFolderList(FolderVo vo);
+    List<FileVo> selectFileList(FileVo vo);
+    
+    FileShareVo selectShare(FileShareVo vo);
 }

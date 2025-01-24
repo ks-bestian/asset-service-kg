@@ -22,4 +22,7 @@ public class FileShareVo extends ComDefaultVO {
 	private String targetKind;
 	private String targetId;
 	private List<String> targetIds;
+	
+	private String userId;
+	private String deptCd;
 }
