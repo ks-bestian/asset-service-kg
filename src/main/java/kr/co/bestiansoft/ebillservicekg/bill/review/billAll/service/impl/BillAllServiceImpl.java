@@ -2,6 +2,7 @@ package kr.co.bestiansoft.ebillservicekg.bill.review.billAll.service.impl;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -79,7 +80,15 @@ public class BillAllServiceImpl implements BillAllService {
     	List<MtngAllVo> relCmtAgendaList = billAllMapper.selectBillRelCmtMtng(param);
     	dto.setRelAgendaList(relCmtAgendaList);
     	
-    	/*본회의 회의정보*/
+    	/*본회의 회의정보 - 1,2,3차*/
+    	List<BillAllVo> masterDetailList = billAllMapper.selectBillMastarDetail(param);
+    	List<BillAllVo> plenaryList = masterDetailList.stream()
+    		    .filter(item -> "370".equals(item.getClsCd()) || 
+    		                    "380".equals(item.getClsCd()) || 
+    		                    "390".equals(item.getClsCd()))
+    		    .collect(Collectors.toList());
+    	
+    	dto.setPlenaryList(plenaryList);
     	
     	/*정부 이송*/
     	
