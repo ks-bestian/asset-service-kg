@@ -6,10 +6,7 @@
         /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.auth.repository.AuthMapper.selectListAuth */
         select
               auth_id --권한아이디
-            , (case when #{lang} = 'lng_type_2' then auth_nm2
-                    when #{lang} = 'lng_type_1' then auth_nm1
-                    else auth_nm3
-              end) as auth_nm
+            , kgst.fngetlangnm(auth_nm1,auth_nm2,auth_nm3,#{lang}) as auth_nm
             , auth_nm1 --권한명(키르키즈어)
             , auth_nm2 --권한명(러시아어)
             , auth_nm3 --권한명(한국어)

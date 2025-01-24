@@ -103,14 +103,8 @@
             , em.reg_dt
             , em.mod_id
             , em.mod_dt
-            , (case when #{lang} = 'lng_type_1' then mRcv.user_nm_kg
-                    else mRcv.user_nm_ru
-                end) as rcv_nm
-        , (case when #{lang} = 'lng_type_1' then mSend.user_nm_kg
-                else mSend.user_nm_ru
-                end) as send_nm
-<!--        , mRcv.user_nm_kg as rcv_nm-->
-<!--        , mSend.user_nm_kg as send_nm-->
+            , kgst.fngetlangnm(mRcv.user_nm_kg,mRcv.user_nm_ru,mRcv.user_nm_kg,#{lang}) as rcv_nm
+            , kgst.fngetlangnm(mSend.user_nm_kg,mSend.user_nm_ru, mSend.user_nm_kg,#{lang}) as send_nm
         from ebs_msg em
         inner join view_user_member mRcv on mRcv.user_id = em.rcv_id
         inner join view_user_member mSend on mSend.user_id = em.send_id
@@ -168,25 +162,21 @@
             , um.pos_cd
             , um.age_cd
             , um.cmit_cd
-            , (case when #{lang} = 'lng_type_1' then um.dept_nm_kg
-                    when #{lang} = 'lng_type_2' then um.dept_nm_ru
-                    else um.dept_nm_ko
-                end) as dept_nm
-            , (case when #{lang} = 'lng_type_2' then dept_cmit.dept_nm2
-            else dept_cmit.dept_nm1
-            end) as cmit_nm
+            , kgst.fngetlangnm(um.dept_nm_kg,um.dept_nm_ru,um.dept_nm_ko,#{lang}) as dept_nm
+            , kgst.fngetlangnm(um.cmit_nm_kg,um.cmit_nm_ru,um.cmit_nm_kg,#{lang}) as cmit_nm
+            , um.cmit_nm_kg
+            , um.cmit_nm_ru
+            , um.cmit_nm_ko
             , um.poly_cd
-            , (case when #{lang} = 'lng_type_2' then dept_poly.dept_nm2
-            else dept_poly.dept_nm1
-            end) as poly_nm
+            , um.poly_nm
+            ,dept_nm1
             , um.rsdn_rgst_nmbr
             , (case when um.user_id in (select cu.user_id from com_user cu) then 'user'
                     when um.member_id in (select cm.member_id from com_member cm) then 'member'
               end) as type
         from view_user_member um
-        left join com_dept dept_poly on dept_poly.dept_cd = um.poly_cd
-        left join com_dept dept_cmit on dept_cmit.dept_cd = um.cmit_cd
         left join com_code_detail cc on cc.code_id = um.job_cd
+        left join com_ccof ccc on ccc.user_id = um.user_
         where 1=1
         <if test="polyCd != '' and polyCd != null">
             and um.poly_cd = #{polyCd}
