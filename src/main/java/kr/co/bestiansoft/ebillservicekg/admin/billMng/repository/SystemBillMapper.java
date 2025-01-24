@@ -28,5 +28,15 @@ public interface SystemBillMapper {
 	void createMtngFile(EbsFileVo fileVo);
 
 	void updateFileRmk(EbsFileVo fileVo);
-	
+
+	void createMasterCmt(SystemBillVo systemBillVo);
+
+	List<EbsFileVo> selectBillFileByCmt(HashMap<String, Object> param);
+
+	List<SystemBillVo> selectMtnBillList(HashMap<String, Object> param);
+
+	List<EbsFileVo> selectBillFileMtn(String billId);
+
+	List<SystemBillVo> selectBillRelationMtngList(HashMap<String, Object> param);
+
 }

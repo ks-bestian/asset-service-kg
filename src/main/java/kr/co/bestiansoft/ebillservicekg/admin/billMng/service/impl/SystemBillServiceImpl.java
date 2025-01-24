@@ -178,7 +178,9 @@ public class SystemBillServiceImpl implements SystemBillService {
 		
 		List<EbsFileVo> fileList = systemBillMapper.selectBillFile(billId);
 		response.setFileList(fileList);
-		
+
+		List<EbsFileVo> cmtFileList = systemBillMapper.selectBillFileByCmt(param);
+		response.setCmtFileList(cmtFileList);
 		return response;
 	}
 	
@@ -314,4 +316,97 @@ public class SystemBillServiceImpl implements SystemBillService {
 		return systemBillVo;
 	}
 
+	@Override
+	public SystemBillVo createMasterCmt(SystemBillVo systemBillVo) {
+		String userId = new SecurityInfoUtil().getAccountId();
+		systemBillVo.setRegId(userId);
+		systemBillVo.setCmtSeCd("R");
+
+		systemBillMapper.createMasterCmt(systemBillVo);
+		return systemBillVo;
+	}
+
+	@Override
+	public SystemBillResponse selectBillMtnList(String billId, HashMap<String, Object> param) {
+		SystemBillResponse response = new SystemBillResponse();
+		param.put("billId", billId);
+		
+		List<SystemBillVo> mtngList = systemBillMapper.selectMtnBillList(param);
+		response.setMtngList(mtngList);
+		
+		List<EbsFileVo> fileList = systemBillMapper.selectBillFile(billId);
+		response.setFileList(fileList);
+
+		return response;
+	}
+
+	@Override
+	public SystemBillVo createMtnMaster(SystemBillVo systemBillVo) {
+		String userId = new SecurityInfoUtil().getAccountId();
+		systemBillVo.setRegId(userId);
+		systemBillVo.setModId(userId);
+		
+		HashMap<String, Object> param = new HashMap<>();
+		param.put("billId", systemBillVo.getBillId());
+		param.put("clsCd", systemBillVo.getClsCd());
+		
+		SystemBillVo billDetail = systemBillMapper.selectBillDetail(param);
+		if(billDetail == null) {
+			systemBillMapper.createBillDetail(systemBillVo);
+		} else {
+			systemBillMapper.updateBillDetail(systemBillVo);
+		}
+		
+		String[] fileKindCds = systemBillVo.getFileKindCds();
+		String[] clsCds = systemBillVo.getClsCds();
+		
+		int idx = 0;
+		if (systemBillVo.getFiles() != null) {
+			for(MultipartFile file : systemBillVo.getFiles()) {
+				String orgFileId = StringUtil.getUUUID();
+				String orgFileNm = file.getOriginalFilename();
+				String fileKindCd = fileKindCds[idx];
+				String clsCd = clsCds[idx];
+				
+	    		////////////////////////
+				try (InputStream edvIs = file.getInputStream()){
+					edv.save(orgFileId, edvIs);
+				} catch (Exception edvEx) {
+					throw new RuntimeException("EDV_NOT_WORK", edvEx);
+				}
+	    		////////////////////////
+				
+				EbsFileVo fileVo = new EbsFileVo();
+				fileVo.setBillId(systemBillVo.getBillId());
+				fileVo.setOrgFileId(orgFileId);
+				fileVo.setOrgFileNm(orgFileNm);
+				fileVo.setFileSize(file.getSize());
+				fileVo.setDeleteYn("N");
+				fileVo.setOpbYn("N");
+				fileVo.setFileKindCd(fileKindCd);
+				fileVo.setClsCd(clsCd);
+				fileVo.setRegId(userId);
+				
+				idx++;
+				systemBillMapper.createBillFile(fileVo);
+			}
+		}
+		
+		systemBillVo.setFiles(null);
+		return systemBillVo;
+	}
+
+	@Override
+	public SystemBillResponse selectBillRelationMtngList(String billId, HashMap<String, Object> param) {
+		SystemBillResponse response = new SystemBillResponse();
+		param.put("billId", billId);
+		
+		List<SystemBillVo> mtngList = systemBillMapper.selectBillRelationMtngList(param);
+		response.setMtngList(mtngList);
+		
+		List<EbsFileVo> fileList = systemBillMapper.selectBillFile(billId);
+		response.setFileList(fileList);
+
+		return response;
+	}
 }

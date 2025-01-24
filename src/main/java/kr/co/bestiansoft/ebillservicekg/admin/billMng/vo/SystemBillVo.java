@@ -44,8 +44,22 @@ public class SystemBillVo extends ComDefaultVO {
 	private String rsltCd;
 	//회의 차수
 	private String dgrCd;
+	//위원회 구분
+	private String cmtSeCd;
+	//회의타입
+	private String mtngTypeCd;
+	//회의시작일
+	private String openDtm;
+	//회의종료일
+	private String closeDtm;
+	//위원회명
+	private String cmtNm;
+	//결과값
+	private String rsltCode;
 	
 	private String[] rmks;
 	private String[] orgFileIds;
+	
+	
 	
 }

@@ -27,4 +27,12 @@ public interface SystemBillService {
 
 	SystemBillVo updateFileRmk(SystemBillVo systemBillVo);
 
+	SystemBillVo createMasterCmt(SystemBillVo systemBillVo);
+
+	SystemBillResponse selectBillMtnList(String billId, HashMap<String, Object> param);
+
+	SystemBillVo createMtnMaster(SystemBillVo systemBillVo);
+
+	SystemBillResponse selectBillRelationMtngList(String billId, HashMap<String, Object> param);
+
 }

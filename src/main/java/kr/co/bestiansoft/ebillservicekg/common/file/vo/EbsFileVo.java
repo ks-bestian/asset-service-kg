@@ -20,5 +20,6 @@ public class EbsFileVo extends ComDefaultVO {
 	private Long mtngId;
 	
 	private String clsCd;
+	private String detailSeq;
 	
 }

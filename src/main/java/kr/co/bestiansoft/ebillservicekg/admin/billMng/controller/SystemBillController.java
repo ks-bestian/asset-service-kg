@@ -85,4 +85,27 @@ public class SystemBillController {
       return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "file Rmk updated successfully", adminBillMngService.updateFileRmk(systemBillVo)), HttpStatus.CREATED);
     }
     
+    @ApiOperation(value = "관련위원회 추가", notes = "관련위원회를 추가한다")
+    @PostMapping(value = "/system/cmt/create")
+    public ResponseEntity<CommonResponse> createMasterCmt(@RequestBody SystemBillVo systemBillVo) {
+    	return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "file create successfully", adminBillMngService.createMasterCmt(systemBillVo)), HttpStatus.CREATED);
+    }
+    
+    @ApiOperation(value = "안건 전체 상세 조회", notes = "상세를 조회한다.")
+    @GetMapping("/system/bill/mtn/{billId}")
+    public ResponseEntity<CommonResponse> selectBillMtnList(@PathVariable String billId, @RequestParam HashMap<String, Object> param) {
+        return new ResponseEntity<>(new CommonResponse(200, "OK", adminBillMngService.selectBillMtnList(billId, param)), HttpStatus.OK);
+    }
+    
+    @ApiOperation(value = "관련검증 부서 입력", notes = "관련검증 부서를 입력한다")
+    @PostMapping(value = "/system/bill/mnt/create", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<CommonResponse> createMtnMaster(SystemBillVo systemBillVo) {
+    	return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "file create successfully", adminBillMngService.createMtnMaster(systemBillVo)), HttpStatus.CREATED);
+    }
+    
+    @ApiOperation(value = "관련위원회 상세 조회", notes = "상세를 조회한다.")
+    @GetMapping("/system/bill/recmt/{billId}")
+    public ResponseEntity<CommonResponse> selectBillRelationMtngList(@PathVariable String billId, @RequestParam HashMap<String, Object> param) {
+        return new ResponseEntity<>(new CommonResponse(200, "OK", adminBillMngService.selectBillRelationMtngList(billId, param)), HttpStatus.OK);
+    }
 }
