@@ -200,4 +200,14 @@
 			, now()
 		)
     </insert>
+    
+    <insert id="updateFileRmk" parameterType="kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.billMng.repository.SystemBillMapper.updateFileRmk */
+	    update kgst.ebs_file
+	    set
+	        mod_id = #{modId}
+	        , mod_dt = now()
+	        , rmk = #{rmk}
+	    where bill_id = #{billId} and org_file_id = #{orgFileId}
+    </insert>
 </mapper>

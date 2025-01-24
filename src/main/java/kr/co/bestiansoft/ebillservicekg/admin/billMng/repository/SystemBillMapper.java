@@ -26,5 +26,7 @@ public interface SystemBillMapper {
 	List<EbsFileVo> selectMtngFile(HashMap<String, Object> param);
 
 	void createMtngFile(EbsFileVo fileVo);
+
+	void updateFileRmk(EbsFileVo fileVo);
 	
 }

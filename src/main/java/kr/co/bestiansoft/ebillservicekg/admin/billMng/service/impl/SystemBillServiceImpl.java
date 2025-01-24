@@ -77,95 +77,64 @@ public class SystemBillServiceImpl implements SystemBillService {
 		String[] clsCds = systemBillVo.getClsCds();
 		
 		int idx = 0;
-		for(MultipartFile file : systemBillVo.getFiles()) {
-			String orgFileId = StringUtil.getUUUID();
-			String orgFileNm = file.getOriginalFilename();
-			String fileKindCd = fileKindCds[idx];
-			String clsCd = clsCds[idx];
-			
-    		////////////////////////
-			try (InputStream edvIs = file.getInputStream()){
-				edv.save(orgFileId, edvIs);
-			} catch (Exception edvEx) {
-				throw new RuntimeException("EDV_NOT_WORK", edvEx);
+		if (systemBillVo.getFiles() != null) {
+			for(MultipartFile file : systemBillVo.getFiles()) {
+				String orgFileId = StringUtil.getUUUID();
+				String orgFileNm = file.getOriginalFilename();
+				String fileKindCd = fileKindCds[idx];
+				String clsCd = clsCds[idx];
+				
+	    		////////////////////////
+				try (InputStream edvIs = file.getInputStream()){
+					edv.save(orgFileId, edvIs);
+				} catch (Exception edvEx) {
+					throw new RuntimeException("EDV_NOT_WORK", edvEx);
+				}
+	    		////////////////////////
+				
+				EbsFileVo fileVo = new EbsFileVo();
+				fileVo.setBillId(systemBillVo.getBillId());
+				fileVo.setOrgFileId(orgFileId);
+				fileVo.setOrgFileNm(orgFileNm);
+				fileVo.setFileSize(file.getSize());
+				fileVo.setDeleteYn("N");
+				fileVo.setOpbYn("N");
+				fileVo.setFileKindCd(fileKindCd);
+				fileVo.setClsCd(clsCd);
+				fileVo.setRegId(regId);
+				
+				idx++;
+				systemBillMapper.createBillFile(fileVo);
 			}
-    		////////////////////////
-			
-			EbsFileVo fileVo = new EbsFileVo();
-			fileVo.setBillId(systemBillVo.getBillId());
-			fileVo.setOrgFileId(orgFileId);
-			fileVo.setOrgFileNm(orgFileNm);
-			fileVo.setFileSize(file.getSize());
-			fileVo.setDeleteYn("N");
-			fileVo.setOpbYn("N");
-			fileVo.setFileKindCd(fileKindCd);
-			fileVo.setClsCd(clsCd);
-			fileVo.setRegId(regId);
-			
-			idx++;
-			systemBillMapper.createBillFile(fileVo);
 		}
-		
 		systemBillVo.setFiles(null);
 		return systemBillVo;
 	}
 
 	@Override
-	public SystemBillVo createBillLegal(SystemBillVo systemBillVo) {
-		String regId = new SecurityInfoUtil().getAccountId();
-		systemBillVo.setRegId(regId);
-		systemBillMapper.createBillDetail(systemBillVo);
-		
-		String[] fileKindCds = systemBillVo.getFileKindCds();
-		String[] clsCds = systemBillVo.getClsCds();
-		
-		int idx = 0;
-		for(MultipartFile file : systemBillVo.getFiles()) {
-			String orgFileId = StringUtil.getUUUID();
-			String orgFileNm = file.getOriginalFilename();
-			String fileKindCd = fileKindCds[idx];
-			String clsCd = clsCds[idx];
-			
-    		////////////////////////
-			try (InputStream edvIs = file.getInputStream()){
-				edv.save(orgFileId, edvIs);
-			} catch (Exception edvEx) {
-				throw new RuntimeException("EDV_NOT_WORK", edvEx);
-			}
-    		////////////////////////
-			
-			EbsFileVo fileVo = new EbsFileVo();
-			fileVo.setBillId(systemBillVo.getBillId());
-			fileVo.setOrgFileId(orgFileId);
-			fileVo.setOrgFileNm(orgFileNm);
-			fileVo.setFileSize(file.getSize());
-			fileVo.setDeleteYn("N");
-			fileVo.setOpbYn("N");
-			fileVo.setFileKindCd(fileKindCd);
-			fileVo.setClsCd(clsCd);
-			fileVo.setRegId(regId);
-			
-			idx++;
-			systemBillMapper.createBillFile(fileVo);
-		}
-		
-		systemBillVo.setFiles(null);
-		return systemBillVo;
-	}
-	
-	@Override
 	public SystemBillVo updateBillLegal(SystemBillVo systemBillVo) {
 		String userId = new SecurityInfoUtil().getAccountId();
-		systemBillVo.setModId(userId);
-		systemBillMapper.updateBillDetail(systemBillVo);
+		
+		HashMap<String, Object> param = new HashMap<>();
+		param.put("billId", systemBillVo.getBillId());
+		param.put("clsCd", systemBillVo.getClsCd());
+		
+		SystemBillVo billDetail = systemBillMapper.selectBillDetail(param);
+		if(billDetail == null) {
+			systemBillVo.setRegId(userId);
+			systemBillMapper.createBillDetail(systemBillVo);
+		} else {
+			systemBillVo.setModId(userId);
+			systemBillMapper.updateBillDetail(systemBillVo);
+		}
 		
 		String[] fileKindCds = systemBillVo.getFileKindCds();
 		String[] clsCds = systemBillVo.getClsCds();
 		
 		int idx = 0;
 		if (systemBillVo.getFiles() != null) {
+//			createBillFile(systemBillVo);
 			for(MultipartFile file : systemBillVo.getFiles()) {
-				
 				String orgFileId = StringUtil.getUUUID();
 				String orgFileNm = file.getOriginalFilename();
 				String fileKindCd = fileKindCds[idx];
@@ -261,6 +230,87 @@ public class SystemBillServiceImpl implements SystemBillService {
 		}
 		
 		systemBillVo.setFiles(null);
+		return systemBillVo;
+	}
+
+	@Override
+	public SystemBillVo createValidationDept(SystemBillVo systemBillVo) {
+		String regId = new SecurityInfoUtil().getAccountId();
+		systemBillVo.setRegId(regId);
+		String[] rmks = systemBillVo.getRmks();
+		String[] fileKindCds = systemBillVo.getFileKindCds();
+		String[] clsCds = systemBillVo.getClsCds();
+		
+		HashMap<String, Object> param = new HashMap<>();
+		param.put("billId", systemBillVo.getBillId());
+		
+		int idx = 0;
+		if (systemBillVo.getFiles() != null) {
+			for(MultipartFile file : systemBillVo.getFiles()) {
+				String orgFileId = StringUtil.getUUUID();
+				String orgFileNm = file.getOriginalFilename();
+				String fileKindCd = fileKindCds[idx];
+				String clsCd = clsCds[idx];
+				String rmk = rmks[idx];
+				
+				//ebs_master_detail
+				param.put("clsCd", clsCd);
+				
+				SystemBillVo billDetail = systemBillMapper.selectBillDetail(param);
+				if(billDetail == null) {
+					systemBillVo.setClsCd(clsCd);
+					systemBillMapper.createBillDetail(systemBillVo);
+				}
+				
+				
+				//ebs_file
+	    		////////////////////////
+				try (InputStream edvIs = file.getInputStream()){
+					edv.save(orgFileId, edvIs);
+				} catch (Exception edvEx) {
+					throw new RuntimeException("EDV_NOT_WORK", edvEx);
+				}
+	    		////////////////////////
+				
+				EbsFileVo fileVo = new EbsFileVo();
+				fileVo.setBillId(systemBillVo.getBillId());
+				fileVo.setOrgFileId(orgFileId);
+				fileVo.setOrgFileNm(orgFileNm);
+				fileVo.setFileSize(file.getSize());
+				fileVo.setDeleteYn("N");
+				fileVo.setOpbYn("N");
+				fileVo.setFileKindCd(fileKindCd);
+				fileVo.setClsCd(clsCd);
+				fileVo.setRegId(regId);
+				fileVo.setRmk(rmk);
+				
+				idx++;
+				systemBillMapper.createBillFile(fileVo);
+			}
+		}
+		systemBillVo.setFiles(null);
+		return systemBillVo;
+	}
+
+	@Transactional
+	@Override
+	public SystemBillVo updateFileRmk(SystemBillVo systemBillVo) {
+		String userId = new SecurityInfoUtil().getAccountId();
+		String[] orgFileIds = systemBillVo.getOrgFileIds();
+		
+	    int index = 0;
+	    for (String rmk : systemBillVo.getRmks()) {
+	        String orgFileId = orgFileIds[index];
+	        
+	        EbsFileVo fileVo = new EbsFileVo();
+	        fileVo.setBillId(systemBillVo.getBillId());
+	        fileVo.setOrgFileId(orgFileId);
+	        fileVo.setRmk(rmk);
+	        fileVo.setModId(userId);
+	        
+	        systemBillMapper.updateFileRmk(fileVo);
+	        index++;
+	    }
 		return systemBillVo;
 	}
 

@@ -55,14 +55,8 @@ public class SystemBillController {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "file create successfully", adminBillMngService.createBillFile(systemBillVo)), HttpStatus.CREATED);
     }
     
-    @ApiOperation(value = "법적행위부서 입력", notes = "안건 법적행위부서 상세를 입력한다")
+    @ApiOperation(value = "법적행위부서", notes = "안건 법적행위부서 상세를 입력 및 수정한다")
     @PostMapping(value = "/system/bill/legal", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<CommonResponse> createBillLegal(SystemBillVo systemBillVo) {
-    	return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "file create successfully", adminBillMngService.createBillLegal(systemBillVo)), HttpStatus.CREATED);
-    }
-    
-    @ApiOperation(value = "법적행위부서 수정", notes = "안건 법적행위부서 상세를 수정한다")
-    @PostMapping(value = "/system/bill/legal/update", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<CommonResponse> updateBillLegal(SystemBillVo systemBillVo) {
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "file create successfully", adminBillMngService.updateBillLegal(systemBillVo)), HttpStatus.CREATED);
     }
@@ -77,6 +71,18 @@ public class SystemBillController {
     @PostMapping(value = "/system/mtng/file", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<CommonResponse> createMtngFile(SystemBillVo systemBillVo) {
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "file create successfully", adminBillMngService.createMtngFile(systemBillVo)), HttpStatus.CREATED);
+    }
+    
+    @ApiOperation(value = "관련검증 부서 입력", notes = "관련검증 부서를 입력한다")
+    @PostMapping(value = "/system/bill/validation/dept", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<CommonResponse> createValidationDept(SystemBillVo systemBillVo) {
+    	return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "file create successfully", adminBillMngService.createValidationDept(systemBillVo)), HttpStatus.CREATED);
+    }
+    
+    @ApiOperation(value = "파일 비고 변경", notes = "파일 비고를 변경한다")
+    @PutMapping(value = "/system/bill/rmk/update")
+    public ResponseEntity<CommonResponse> updateFileRmk(@RequestBody SystemBillVo systemBillVo) {
+      return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "file Rmk updated successfully", adminBillMngService.updateFileRmk(systemBillVo)), HttpStatus.CREATED);
     }
     
 }

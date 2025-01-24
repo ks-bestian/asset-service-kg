@@ -17,12 +17,14 @@ public interface SystemBillService {
 
 	SystemBillVo createBillFile(SystemBillVo systemBillVo);
 
-	SystemBillVo createBillLegal(SystemBillVo systemBillVo);
-
 	SystemBillVo updateBillLegal(SystemBillVo systemBillVo);
 
 	SystemBillResponse selectBillMtng(String billId, HashMap<String, Object> param);
 
 	SystemBillVo createMtngFile(SystemBillVo systemBillVo);
+
+	SystemBillVo createValidationDept(SystemBillVo systemBillVo);
+
+	SystemBillVo updateFileRmk(SystemBillVo systemBillVo);
 
 }
