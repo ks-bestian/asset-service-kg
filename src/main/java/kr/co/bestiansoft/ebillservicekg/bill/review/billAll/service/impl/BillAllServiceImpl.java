@@ -2,6 +2,7 @@ package kr.co.bestiansoft.ebillservicekg.bill.review.billAll.service.impl;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +38,11 @@ public class BillAllServiceImpl implements BillAllService {
     	param.put("billId", billId);
     	/* 기본정보 */
     	BillAllVo dto = billAllMapper.selectBillById(param);
+    	
+        // Null 체크 추가
+        if (dto == null) {
+            dto = new BillAllVo(); // Null일 경우 기본 객체로 초기화
+        }
     	List<AgreeVo> proposerList = agreeMapper.selectAgreeProposerList(billId);
     	StringBuilder proposerItems = new StringBuilder(); // StringBuilder 사용 권장
     	for(int i=0; i<proposerList.size();i++) {
@@ -68,13 +74,42 @@ public class BillAllServiceImpl implements BillAllService {
     	dto.setCmtAgendaList(cmtAgendaList);
     	
     	/*관련위 기본정보*/
-    	
+    	BillAllVo relCmtData = billAllMapper.selectBillRelCmtInfo(param);
+    	dto.setRelData(relCmtData);
     	/*관련위 회의정보*/
+    	List<MtngAllVo> relCmtAgendaList = billAllMapper.selectBillRelCmtMtng(param);
+    	dto.setRelAgendaList(relCmtAgendaList);
     	
-    	/*본회의 회의정보*/
+    	/*본회의 회의정보 - 1,2,3차*/
+    	List<BillAllVo> masterDetailList = billAllMapper.selectBillMastarDetail(param);
+    	List<BillAllVo> plenaryList = masterDetailList.stream()
+    		    .filter(item -> "370".equals(item.getClsCd()) || 
+    		                    "380".equals(item.getClsCd()) || 
+    		                    "390".equals(item.getClsCd()))
+    		    .collect(Collectors.toList());
+    	
+    	dto.setPlenaryList(plenaryList);
     	
     	/*정부 이송*/
     	
         return dto;
     }
+
+	@Override
+	public BillAllVo getBillDetailById(String billId, HashMap<String, Object> param) {
+    	param.put("billId", billId);
+    	
+    	BillAllVo dto = new BillAllVo();
+    	dto.setBillId(billId);
+
+    	/* 문서 */
+    	List<EbsFileVo> fileList = billAllMapper.selectBillFile(param);
+    	dto.setFileList(fileList);
+
+    	/* ebs_masgter_detail 정보 */
+    	List<BillAllVo> masterDetailList = billAllMapper.selectBillMastarDetail(param);
+    	dto.setMasterDetailList(masterDetailList);
+    	
+        return dto;
+	}
 }

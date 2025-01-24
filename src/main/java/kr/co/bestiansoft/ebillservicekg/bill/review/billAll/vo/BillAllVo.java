@@ -82,6 +82,17 @@ public class BillAllVo extends ComDefaultVO {
     private String rcpDt; 
     // 발의자 명단 - 문자열로
     private String proposerItems; 
+    
+    /* ebs_master_detail 관련 */
+    private String clsCd; 
+    private String rmrk; 
+    private String mtnDt; 
+    private String lglRvwRsltCode; 
+    private String lglActRsltCode;
+    private String rsltDt;
+    private String rsltCode;
+    private String rsltNm;
+    private List<BillAllVo> masterDetailList; //회의정보
 
     /* 소관위 관련 */
     private BillAllVo cmtData;
@@ -89,7 +100,10 @@ public class BillAllVo extends ComDefaultVO {
     
     /* 관련위 관련 */
     private BillAllVo relData;
-    private List<MtngAllVo> relCmtAgendaList;
+    private List<MtngAllVo> relAgendaList;
+    
+    /* 본회의 관련 */
+    private List<BillAllVo> plenaryList;
     
     /* 파일 관련*/
     private List<EbsFileVo> fileList;
