@@ -156,9 +156,7 @@
             , um.doc_mgr_yn
             , um.dept_head_yn
             , um.job_cd
-            , (case when #{lang} = 'lng_type_2' then cc.code_nm2
-                else cc.code_nm1
-                end) as job_nm
+            , kgst.fngetlangnm(cc.code_nm1,cc.code_nm2,cc.code_nm1,#{lang}) as job_nm
             , um.pos_cd
             , um.age_cd
             , um.cmit_cd
@@ -169,20 +167,19 @@
             , um.cmit_nm_ko
             , um.poly_cd
             , um.poly_nm
-            ,dept_nm1
             , um.rsdn_rgst_nmbr
             , (case when um.user_id in (select cu.user_id from com_user cu) then 'user'
                     when um.member_id in (select cm.member_id from com_member cm) then 'member'
               end) as type
         from view_user_member um
         left join com_code_detail cc on cc.code_id = um.job_cd
-        left join com_ccof ccc on ccc.user_id = um.user_
+        left join com_ccof ccof on ccof.user_id = um.user_id
         where 1=1
         <if test="polyCd != '' and polyCd != null">
             and um.poly_cd = #{polyCd}
         </if>
         <if test="deptCd != '' and deptCd != null">
-            and um.dept_cd = #{deptCd}
+            and um.dept_cd = #{deptCd} or ccof.dept_cd = #{deptCd}
         </if>
         <choose>
             <when test="lang == 'lng_type_1'">
