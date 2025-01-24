@@ -17,4 +17,7 @@ public interface UserMapper {
     int insertUser(UserVo userVo);
     int updateUser(UserVo userVo);
     void deleteUser(String userId);
+
+    int updateMyInfoMember(UserMemberVo userMemberVo);
+    int updateMyInfoUser(UserMemberVo userMemberVo);
 }
