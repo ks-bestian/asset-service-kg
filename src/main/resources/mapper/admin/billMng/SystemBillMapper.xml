@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.bestiansoft.ebillservicekg.admin.billMng.repository.SystemBillMapper">
+
+    <select id="selectBillDetail" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.admin.billMng.vo.SystemBillVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.billMng.repository.SystemBillMapper.selectBillDetail */    
+        select 
+			emd.seq 
+			, emd.bill_id 
+			, emd.cls_cd 
+			, emd.rmrk_kg 
+			, emd.rmrk_ru 
+			, emd.mtn_dt 
+			, emd.prsd_rjct_dt 
+			, emd.lgl_rvw_rslt_code 
+			, emd.lgl_act_rslt_code 
+			, emd.rslt_dt 
+			, emd.reg_id 
+			, emd.reg_dt 
+			, emd.mod_id 
+			, emd.mod_dt 
+		from 
+			kgst.ebs_master_detail emd 
+		where emd.bill_id = #{billId} 
+			and emd.cls_cd = #{clsCd}
+    </select>
+    
+    <insert id="createBillDetail" parameterType="kr.co.bestiansoft.ebillservicekg.admin.billMng.vo.SystemBillVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.billMng.repository.SystemBillMapper.createBillDetail */
+		insert into kgst.ebs_master_detail (
+		    bill_id
+		    , cls_cd
+		    <if test="rmrkKg != null">, rmrk_kg</if>
+		    <if test="rmrkRu != null">, rmrk_ru</if>
+		    <if test="mtnDt != null">, mtn_dt</if>
+		    <if test="prsdRjctDt != null">, prsd_rjct_dt</if>
+		    <if test="lglRvwRsltCode != null">, lgl_rvw_rslt_code</if>
+		    <if test="lglActRsltCode != null">, lgl_act_rslt_code</if>
+		    <if test="rsltDt != null">, rslt_dt</if>
+		    , reg_id
+		    , reg_dt
+		)
+		values (
+		    #{billId}
+		    , #{clsCd}
+		    <if test="rmrkKg != null">, #{rmrkKg}</if>
+		    <if test="rmrkRu != null">, #{rmrkRu}</if>
+		    <if test="mtnDt != null">, #{mtnDt}</if>
+		    <if test="prsdRjctDt != null">, #{prsdRjctDt}</if>
+		    <if test="lglRvwRsltCode != null">, #{lglRvwRsltCode}</if>
+		    <if test="lglActRsltCode != null">, #{lglActRsltCode}</if>
+		    <if test="rsltDt != null">, #{rsltDt}</if>
+		    , #{regId}
+		    , now()
+		)
+    </insert>
+    
+    <select id="selectBillFile" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.billMng.repository.SystemBillMapper.selectBillFile */    
+		SELECT
+		    max(seq) as seq
+		    , max(bill_id) as bill_id 
+		    , max(file_kind_cd) as file_kind_cd 
+		    , max(cls_cd) as cls_cd 
+		    , max(org_file_id) as org_file_id 
+		    , max(org_file_nm) as org_file_nm 
+		    , max(pdf_file_id) as pdf_file_id 
+		    , max(pdf_file_nm) as pdf_file_nm 
+		    , max(rmk) as rmk 
+		    , max(opb_yn) as opb_yn 
+		    , max(delete_yn) as delete_yn 
+		    , max(file_size) as file_size 
+		    , max(reg_id) as reg_id 
+		    , max(reg_dt) as reg_dt 
+		    , max(mod_id) as mod_id 
+		    , max(mod_dt) as mod_dt 
+		FROM kgst.ebs_file
+		WHERE delete_yn = 'N' 
+			and bill_id = #{billId}
+		group by file_kind_cd, cls_cd
+    </select>
+    
+    <insert id="createBillFile" parameterType="kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.common.file.repository.FileMapper.insertFileEbs */
+		insert into kgst.ebs_file (
+			  bill_id
+			, file_kind_cd
+			, cls_cd
+			, org_file_id
+			, org_file_nm
+			, pdf_file_id
+			, pdf_file_nm
+			, rmk
+			, opb_yn
+			, delete_yn
+			, file_size
+			, reg_id
+			, reg_dt
+		)
+		values (
+			  #{billId}
+			, #{fileKindCd}
+			, #{clsCd}
+			, #{orgFileId}
+			, #{orgFileNm}
+			, #{pdfFileId}
+			, #{pdfFileNm}
+			, #{rmk}
+			, #{opbYn}
+			, 'N'
+			, #{fileSize}
+			, #{regId}
+			, now()
+		)
+    </insert>
+
+	<insert id="updateBillDetail" parameterType="kr.co.bestiansoft.ebillservicekg.admin.billMng.vo.SystemBillVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.billMng.repository.SystemBillMapper.updateBillDetail */
+	    update kgst.ebs_master_detail
+	    set
+	        mod_id = #{modId}
+	        , mod_dt = now()
+	        <if test="rmrkKg != null">, rmrk_kg = #{rmrkKg}</if>
+	        <if test="rmrkRu != null">, rmrk_ru = #{rmrkRu}</if>
+	        <if test="mtnDt != null">, mtn_dt = #{mtnDt}</if>
+	        <if test="prsdRjctDt != null">, prsd_rjct_dt = #{prsdRjctDt}</if>
+	        <if test="lglRvwRsltCode != null">, lgl_rvw_rslt_code = #{lglRvwRsltCode}</if>
+	        <if test="lglActRsltCode != null">, lgl_act_rslt_code = #{lglActRsltCode}</if>
+	        <if test="rsltDt != null">, rslt_dt = #{rsltDt}</if>
+	    where bill_id = #{billId} and cls_cd = #{clsCd}
+    </insert>
+    
+    <select id="selectBillMtngList" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.admin.billMng.vo.SystemBillVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.billMng.repository.SystemBillMapper.selectBillMtngList */    
+		select 
+			emc.bill_id 		-- 안건아이디
+			, emc.cmt_cd 		-- 위원회코드
+			, ema.mtng_id 		-- 회의아이디
+			, em.due_dtm		-- 회의예정일시
+			, ema.rslt_cd		-- 회의결과코드
+			, em.dgr_cd 		-- 회의차수
+		from 
+			kgst.ebs_master_cmt emc 
+			left join kgst.ebs_mtng_agenda ema on ema.bill_id = emc.bill_id 
+			left join kgst.ebs_mtng em on em.mtng_id = ema.mtng_id 
+		where emc.bill_id = #{billId}
+			and em.mtng_type_cd = '1'
+			and emc.cmt_se_cd = 'M'
+		order by dgr_cd
+			
+    </select>
+    
+    <select id="selectMtngFile" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.billMng.repository.SystemBillMapper.selectMtngFile */    
+		select
+			emf.mtng_id 
+			, emf.org_file_id
+			, emf.org_file_nm 
+			, emf.pdf_file_id 
+			, emf.pdf_file_nm 
+		from 
+			kgst.ebs_master_cmt emc 
+			left join kgst.ebs_mtng_agenda ema on ema.bill_id = emc.bill_id 
+			left join kgst.ebs_mtng_file emf on emf.mtng_id = ema.mtng_id 
+		where 
+			emc.bill_id = #{billId}
+			and emf.delete_yn = 'N'
+			
+    </select>
+    
+    <insert id="createMtngFile" parameterType="kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.common.file.repository.FileMapper.createMtngFile */
+		insert into kgst.ebs_mtng_file (
+			  mtng_id
+			, file_kind_cd
+			, org_file_id
+			, org_file_nm
+			, pdf_file_id
+			, pdf_file_nm
+			, delete_yn
+			, file_size
+			, reg_id
+			, reg_dt
+		)
+		values (
+			  #{mtngId}
+			, #{fileKindCd}
+			, #{orgFileId}
+			, #{orgFileNm}
+			, #{pdfFileId}
+			, #{pdfFileNm}
+			, 'N'
+			, #{fileSize}
+			, #{regId}
+			, now()
+		)
+    </insert>
+</mapper>

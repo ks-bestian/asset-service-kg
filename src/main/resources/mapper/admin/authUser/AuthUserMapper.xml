@@ -14,12 +14,13 @@
             , (case when #{lang} = 'lng_type_1' then vu.user_nm_kg
                 else vu.user_nm_ru
                 end) as user_nm
-            , (case when #{lang} = 'lng_type_1' then cd.dept_nm1
-                else cd.dept_nm2
+            , (case when #{lang} = 'lng_type_1' then vu.dept_nm_kg
+                    when #{lang} = 'lng_type_2' then vu.dept_nm_ru
+                else vu.dept_nm_ko
                 end) as dept_nm
+            , vu.poly_nm
         from kgst.com_auth_user ca
-        inner join view_user_member vu on vu.user_id = ca.user_id
-        left join com_dept cd on cd.dept_cd = vu.dept_cd
+        left join view_user_member vu on vu.user_id = ca.user_id
         where ca.auth_id = #{authId}
     </select>
 
@@ -33,7 +34,7 @@
             , reg_dt
             , mod_id
             , mod_dt
-            )
+        )
         values (
               #{authId}
             , #{userId}

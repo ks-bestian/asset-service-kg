@@ -11,10 +11,6 @@ public class QuickMenuVo extends ComDefaultVO {
     private Long seq;
     private String userId;
     private Long menuId;
-    private String regId;
-    private LocalDateTime regDt;
-    private String modId;
-    private LocalDateTime modDt;
     private Boolean isFavorite;
     private String menuNm;
 }

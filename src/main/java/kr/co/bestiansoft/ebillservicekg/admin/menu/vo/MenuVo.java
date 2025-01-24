@@ -17,8 +17,4 @@ public class MenuVo {
     private String menuPath;
     private String useYn;
     private String rmk;
-    private LocalDateTime regDt;
-    private String regId;
-    private LocalDateTime modDt;
-    private String modId;
 }

@@ -333,6 +333,7 @@
 	     , BP_INSTANCE_ID
 	     , STEP_ID
 	     , ASSIGNED_TO
+	     , TRGT_USER_ID
 	     , STATUS
 	     , DUE_DT
 	     , BILL_APRV_NO
@@ -345,6 +346,7 @@
 	     ,  #{bpInstanceId}
 	     ,  #{stepId}
 	     ,  #{assignedTo}
+	     ,  #{trgtUserId}
 	     ,  #{status}
 	     ,  #{dueDt}
 	     ,  #{billAprvNo}
@@ -410,5 +412,20 @@
 	  and cmt_type = 'M'
 
 	</select>
+
+
+
+  <!-- 해당안건의 공동발의자 목록 -->
+   <select id="selectListProposerId"  parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo"
+   	    resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.ProposerVo">
+   	    /* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.selectListProposerId */
+		select
+		    bill_id
+		  , proposer_id
+		from ebs_proposer
+		where bill_id = #{billId}
+
+	</select>
+
 
 </mapper>

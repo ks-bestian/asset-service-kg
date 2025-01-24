@@ -11,5 +11,5 @@ import java.util.List;
 public interface AuthUserMapper {
     List<AuthUserVo> selectListAuthUser(HashMap<String, Object> param);
     int createAuthUser(AuthUserVo authUserVo);
-    void deleteAuthMenu(AuthUserVo authUserVo);
+    void deleteAuthUser(Long authId);
 }

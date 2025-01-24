@@ -54,4 +54,8 @@ public class ComDefaultVO {
 	/** 검색KeywordTo */
     private String searchKeywordTo = "";
 
+
+
+
+
 }

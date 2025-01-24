@@ -21,8 +21,9 @@
         /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.menu.repository.MenuMapper.selectListMenu */
         select
               menu_id --메뉴아이디
-            , (case when #{lang} = 'lny_type_2' then menu_nm2
-                else menu_nm1
+            , (case when #{lang} = 'lng_type_2' then menu_nm2
+                    when #{lang} = 'lng_type_1' then menu_nm1
+                else menu_nm3
                 end) as menu_nm
             , menu_nm1 --메뉴명(키르기스어)
             , menu_nm2 --메뉴명(러시아어)

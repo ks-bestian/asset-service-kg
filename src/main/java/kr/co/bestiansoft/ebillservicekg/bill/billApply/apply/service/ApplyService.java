@@ -29,4 +29,6 @@ public interface ApplyService {
 
 	int deleteBillFile(EbsFileVo ebsFileVo);
 
+	List<ApplyVo> selectBillAll(HashMap<String, Object> param);
+
 }

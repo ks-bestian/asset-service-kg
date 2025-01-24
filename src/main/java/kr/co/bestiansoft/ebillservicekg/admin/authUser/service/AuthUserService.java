@@ -9,5 +9,5 @@ public interface AuthUserService {
 
     List<AuthUserVo> getAuthUserList(HashMap<String, Object> param);
     AuthUserVo createAuthUser(AuthUserVo authUserVo);
-    void deleteAuthUser(AuthUserVo authUserVo);
+    void deleteAuthUser(List<Long> authId);
 }

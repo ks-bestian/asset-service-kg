@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.ProposerVo;
+import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.process.controller.ProcessHandler;
 import kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper;
 import kr.co.bestiansoft.ebillservicekg.process.service.ProcessService;
@@ -227,14 +229,24 @@ public class ProcessServiceImpl implements ProcessService {
 		/*안건철회관리*/
 		void executeService_1100(ProcessVo argVo) {
 
+			String userId = new SecurityInfoUtil().getAccountId();
+			List<ProposerVo> properList = processMapper.selectListProposerId(argVo);
+
 			ProcessVo taskVo = new ProcessVo();
 			taskVo.setTaskNm(argVo.getStepNm());
 			taskVo.setBpInstanceId(argVo.getBpInstanceId());
 			taskVo.setStepId(argVo.getStepId());
-			taskVo.setStatus("P");
-			taskVo.setAssignedTo("");//해당국회의원 할당
-			processMapper.insertBpTask(taskVo);
 
+			for(ProposerVo ppVo:properList) {
+
+				if(userId.equals(ppVo.getProposerId())) {//로그인한자가 제안자이면 이미완료.
+					taskVo.setStatus("C");
+				} else {
+					taskVo.setStatus("P");
+				}
+				taskVo.setTrgtUserId(ppVo.getProposerId());//해당국회의원 할당 공동발의자 들에게
+				processMapper.insertBpTask(taskVo);
+			}
 		}
 
 		/*법률부서검토관리*/

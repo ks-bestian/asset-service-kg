@@ -1,11 +1,12 @@
 package kr.co.bestiansoft.ebillservicekg.admin.user.vo;
 
+import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
-public class UserVo {
+public class UserVo extends ComDefaultVO {
 
     private String deptCd;
     private String email;
@@ -20,10 +21,6 @@ public class UserVo {
     private String userNmRu;
     private String deptHeadYn;
     private String docMgrYn;
-    private String regId;
-    private LocalDateTime regDt;
-    private String modId;
-    private LocalDateTime modDt;
     private String deptNm;
     private String jobNm;
 }

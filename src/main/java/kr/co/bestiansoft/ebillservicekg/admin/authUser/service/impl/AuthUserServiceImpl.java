@@ -23,6 +23,7 @@ public class AuthUserServiceImpl implements AuthUserService {
 
 
     private final AuthUserMapper authUserMapper;
+
     @Override
     public List<AuthUserVo> getAuthUserList(HashMap<String, Object> param) {
         return authUserMapper.selectListAuthUser(param);
@@ -30,14 +31,21 @@ public class AuthUserServiceImpl implements AuthUserService {
 
     @Override
     public AuthUserVo createAuthUser(AuthUserVo authUserVo) {
+        authUserMapper.deleteAuthUser(authUserVo.getAuthId());
         authUserVo.setRegId(new SecurityInfoUtil().getAccountId());
-        authUserMapper.createAuthUser(authUserVo);
+        for(String userId : authUserVo.getUserIds()) {
+            authUserVo.setUserId(userId);
+            authUserMapper.createAuthUser(authUserVo);
+        }
 
         return authUserVo;
     }
 
     @Override
-    public void deleteAuthUser(AuthUserVo authUserVo) {
-        authUserMapper.deleteAuthMenu(authUserVo);
+    public void deleteAuthUser(List<Long> authId) {
+        for (Long id : authId) {
+            authUserMapper.deleteAuthUser(id);
+        }
+
     }
 }

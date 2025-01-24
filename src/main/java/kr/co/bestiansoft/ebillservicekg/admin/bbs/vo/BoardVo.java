@@ -15,9 +15,7 @@ public class BoardVo extends ComDefaultVO {
     private String brdSj;
     private String brdType;
     private String brdCn;
-    private LocalDateTime regDt;
     private String regDtNm;
-    private String regId;
     private Long notiInqCnt = 0L;
     private String pupYn;
     private String pupBgDt;
