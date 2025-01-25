@@ -15,4 +15,6 @@ public class SystemBillResponse {
 	List<SystemBillVo> mtngList;
 	
 	List<EbsFileVo> cmtFileList;
+	
+	List<SystemBillVo> billDetailList;
 }

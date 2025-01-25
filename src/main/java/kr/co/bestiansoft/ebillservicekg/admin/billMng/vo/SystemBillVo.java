@@ -56,6 +56,9 @@ public class SystemBillVo extends ComDefaultVO {
 	private String cmtNm;
 	//결과값
 	private String rsltCode;
+	//코드명
+	private String codeNm;
+	
 	
 	private String[] rmks;
 	private String[] orgFileIds;

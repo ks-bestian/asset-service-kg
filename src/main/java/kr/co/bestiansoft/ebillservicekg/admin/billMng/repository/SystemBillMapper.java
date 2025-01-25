@@ -39,4 +39,6 @@ public interface SystemBillMapper {
 
 	List<SystemBillVo> selectBillRelationMtngList(HashMap<String, Object> param);
 
+	List<SystemBillVo> selectBillGovermentList(HashMap<String, Object> param);
+
 }

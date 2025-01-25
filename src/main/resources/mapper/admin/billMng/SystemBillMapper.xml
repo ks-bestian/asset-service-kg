@@ -287,7 +287,7 @@
 		select 
 			em.open_dtm 
 			, emd.rslt_code
-			, (select kgst.fngetlangnm(cd.dept_nm1, cd.dept_nm2, cd.dept_nm3, 'd') from kgst.com_dept cd where cd.dept_cd = emc.cmt_cd) as cmt_nm
+			, (select kgst.fngetlangnm(cd.dept_nm1, cd.dept_nm2, cd.dept_nm3, #{lang}) from kgst.com_dept cd where cd.dept_cd = emc.cmt_cd) as cmt_nm
 			, emd.seq 
 			, em.mtng_id
 		from 
@@ -298,5 +298,25 @@
 		where emc.bill_id = #{billId}
 			and emc.cmt_se_cd = 'R'
 			and em.mtng_type_cd = '2'
+    </select>
+    
+    
+    <select id="selectBillGovermentList" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.admin.billMng.vo.SystemBillVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.billMng.repository.SystemBillMapper.selectBillGovermentList */    
+		select 
+		emd.cls_cd
+		, emd.rslt_dt 
+		, emd.prsd_rjct_dt 
+		, emd.rslt_code 
+		, em.gvrn_trsf_dt 
+		, em.prmg_dt
+		, em.prmg_no 
+		, (select kgst.fngetlangnm(ccd.code_nm1, ccd.code_nm2, ccd.code_nm3, 'd') from kgst.com_code_detail ccd where ccd.code_id = emd.rslt_code) as code_nm
+	from 
+		kgst.ebs_master em
+		left join kgst.ebs_master_detail emd on emd.bill_id = em.bill_id  
+	where emd.bill_id = #{billId}
+		and emd.cls_cd in ('320', '330')
     </select>
 </mapper>

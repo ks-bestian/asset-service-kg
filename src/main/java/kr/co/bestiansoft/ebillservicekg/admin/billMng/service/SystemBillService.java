@@ -37,4 +37,8 @@ public interface SystemBillService {
 
 	SystemBillVo cretaeRelateMtng(SystemBillVo systemBillVo);
 
+	SystemBillResponse selectBillGoverment(String billId, HashMap<String, Object> param);
+
+	SystemBillVo cretaeGoverment(SystemBillVo systemBillVo);
+
 }
