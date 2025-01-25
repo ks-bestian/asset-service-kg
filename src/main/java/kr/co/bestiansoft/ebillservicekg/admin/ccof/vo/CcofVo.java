@@ -10,10 +10,6 @@ public class CcofVo extends ComDefaultVO {
     private String userId;
     private String deptCd;
     private Integer ord;
-    private String regId;
-    private LocalDateTime regDt;
-    private String modId;
-    private LocalDateTime modDt;
     private String deptNm;
     private String shrtNm;
 

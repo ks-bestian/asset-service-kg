@@ -14,8 +14,4 @@ public class AuthVo extends ComDefaultVO {
     private String authNm3;
     private String useYn;
     private Long ord;
-    private String regId;
-    private LocalDateTime regDt;
-    private String modId;
-    private LocalDateTime modDt;
 }

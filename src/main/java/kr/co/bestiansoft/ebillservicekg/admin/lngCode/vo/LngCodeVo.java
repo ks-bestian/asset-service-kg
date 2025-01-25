@@ -12,9 +12,5 @@ public class LngCodeVo extends ComDefaultVO {
     private String lngTy2;
     private String lngTy3;
     private String rmk;
-    private String regId;
-    private LocalDateTime regDt;
-    private String modId;
-    private LocalDateTime modDt;
     private Long num;
 }

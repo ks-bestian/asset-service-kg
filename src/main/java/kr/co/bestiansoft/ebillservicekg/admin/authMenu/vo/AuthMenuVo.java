@@ -13,10 +13,6 @@ public class AuthMenuVo extends ComDefaultVO {
     private Long authId;
     private Long menuId;
     private Long menuAuth;
-    private String regId;
-    private LocalDateTime regDt;
-    private String modId;
-    private LocalDateTime modDt;
     private boolean menuChecked;
     private List<AuthMenuVo> chlidren = new ArrayList<>();
 }

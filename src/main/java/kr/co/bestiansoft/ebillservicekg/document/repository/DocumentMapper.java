@@ -27,6 +27,7 @@ public interface DocumentMapper {
     List<FileVo> selectDeptFileList(FileVo vo);
     List<FileVo> selectFileGroup(FileVo vo);
     FileVo selectFile(String fileId);
+    FileVo selectFile2(String fileId);
     
     FolderVo selectFolderByFolderId(Long folderId);
     
@@ -51,4 +52,15 @@ public interface DocumentMapper {
     List<FileShareVo> selectShareTargetList(FileShareVo vo);
     
     List<UserMemberVo> selectListUserMember(HashMap<String, Object> param);
+    
+    List<FileVo> selectShareFileList(FileVo vo);
+    List<FolderVo> selectShareFolderList(FolderVo vo);
+    
+    List<FolderVo> selectFolderList(FolderVo vo);
+    List<FileVo> selectFileList(FileVo vo);
+    
+    FileShareVo selectShare(FileShareVo vo);
+    
+    Long selectTotalUseCpct(String userId);
+    void addUseCpct(String userId, Long cpct);
 }

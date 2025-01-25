@@ -20,4 +20,6 @@ public class FolderVo extends ComDefaultVO {
     private String userId;
     
     private String folderYn = "Y";
+    
+    private String ownerId;
 }

@@ -22,11 +22,6 @@ public class MenuNode {
     String menuPath;
     String useYn;
     String rmk;
-    LocalDateTime regDt;
-    String regId;
-    LocalDateTime modDt;
-    String modId;
-
     int level;
     int menuAuth;
     boolean menuChecked;

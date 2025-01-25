@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.exception.ForbiddenException;
+import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.exception.MaximumCapacityReachedException;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.impl.EDVHelper;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
@@ -37,6 +38,8 @@ public class DocumentServiceImpl implements DocumentService {
     private final DocumentMapper documentMapper;
     private final EDVHelper edv;
     private final ThumbnailService thumbnailService;
+    
+    private final Long MAX_USE_CPCT = Long.MAX_VALUE;
     
     @Override
     public List<FolderVo> selectDeptFolderListAll(FolderVo vo) {
@@ -64,6 +67,15 @@ public class DocumentServiceImpl implements DocumentService {
     	String userId = new SecurityInfoUtil().getAccountId();
     	vo.setUserId(userId);
         return documentMapper.selectMyFolderList(vo);
+    }
+    
+    @Override
+    public List<FolderVo> selectShareFolderList(FolderVo vo) {
+    	String userId = new SecurityInfoUtil().getAccountId();
+    	String deptCd = new SecurityInfoUtil().getDeptCd();
+    	vo.setUserId(userId);
+    	vo.setDeptCd(deptCd);
+        return documentMapper.selectShareFolderList(vo);
     }
     
     @Override
@@ -100,6 +112,12 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     public int updateFolder(FolderVo vo) {
     	String userId = new SecurityInfoUtil().getAccountId();
+    	
+    	FolderVo folder = documentMapper.selectFolderByFolderId(vo.getFolderId());
+		if(folder != null && !folder.getRegId().equals(userId)) {
+			throw new ForbiddenException("forbidden");
+		}
+    	
     	vo.setModId(userId);
     	return documentMapper.updateFolder(vo);
     }
@@ -283,6 +301,9 @@ public class DocumentServiceImpl implements DocumentService {
     
     @Transactional
     public void removeFile(String fileId) throws Exception {
+    	String userId = new SecurityInfoUtil().getAccountId();
+    	FileVo fileVo = documentMapper.selectFile2(fileId);
+    	documentMapper.addUseCpct(userId, -fileVo.getFileSize()); 
     	documentMapper.removeFile(fileId);
 		edv.delete(fileId);
     }
@@ -294,6 +315,16 @@ public class DocumentServiceImpl implements DocumentService {
     	int ret = 0;
 		
 		MultipartFile[] files = vo.getFiles();
+		
+		String userId = new SecurityInfoUtil().getAccountId();
+		long useCpct = documentMapper.selectTotalUseCpct(userId);
+		long tot = 0;
+		for(MultipartFile mpf : files) {
+			tot += mpf.getSize();
+		}
+		if(useCpct + tot > MAX_USE_CPCT) {
+			throw new MaximumCapacityReachedException("Maximum Capacity Reached");
+		}
 		
 		Map<String, Long> map = new HashMap<>();
 		map.put("", vo.getFolderId());
@@ -476,6 +507,8 @@ public class DocumentServiceImpl implements DocumentService {
 			}	
 		}
 		
+		documentMapper.addUseCpct(userId, fileSize);
+		
 		return ret;
 	}
     
@@ -490,6 +523,13 @@ public class DocumentServiceImpl implements DocumentService {
     public List<FileVo> selectMyFileList(FileVo vo) {
     	vo.setUserId(new SecurityInfoUtil().getAccountId());
     	return documentMapper.selectMyFileList(vo);
+    }
+    
+    @Override
+    public List<FileVo> selectShareFileList(FileVo vo) {
+    	vo.setUserId(new SecurityInfoUtil().getAccountId());
+    	vo.setDeptCd(new SecurityInfoUtil().getDeptCd());
+    	return documentMapper.selectShareFileList(vo);
     }
     
     @Override
@@ -514,16 +554,31 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     public int updateFile(FileVo vo) {
     	String userId = new SecurityInfoUtil().getAccountId();
+    	
+    	FileVo file = documentMapper.selectFile(vo.getFileId());
+		if(file != null && !file.getRegId().equals(userId)) {
+			throw new ForbiddenException("forbidden");
+		}
+    	
     	vo.setModId(userId);
     	int ret = documentMapper.updateFileByFileId(vo);
+
+    	saveFavorite(vo);
+    	return ret;
+    }
+    
+    @Transactional
+    @Override
+    public void saveFavorite(FileVo vo) {
+    	String userId = new SecurityInfoUtil().getAccountId();
     	
-    	String fileGroupId = documentMapper.selectFile(vo.getFileId()).getFileGroupId();
+//    	String fileGroupId = documentMapper.selectFile(vo.getFileId()).getFileGroupId();
+    	String fileGroupId = vo.getFileId();
     	vo.setFileGroupId(fileGroupId);
     	vo.setUserId(userId);
     	vo.setRegId(userId);
     	vo.setModId(userId);
     	documentMapper.saveFavorite(vo);
-    	return ret;
     }
     
 //    @Transactional
@@ -594,14 +649,29 @@ public class DocumentServiceImpl implements DocumentService {
     	
     	vo.setOwnerId(userId);
     	vo.setRegId(userId);
-    	documentMapper.deleteShare(vo);
+    	documentMapper.insertShare(vo);
+    }
+    
+    @Transactional
+    @Override
+    public void unshareFile(FileShareVo vo) {
+    	String userId = new SecurityInfoUtil().getAccountId();
     	
-    	if(vo.getTargetIds() != null) {
-    		for(String targetId : vo.getTargetIds()) {
-    			vo.setTargetId(targetId);
-    			documentMapper.insertShare(vo);
-    		}
+    	if("Y".equals(vo.getFolderYn())) {
+    		FolderVo folder = documentMapper.selectFolderByFolderId(vo.getFolderId());
+    		if(folder != null && !folder.getRegId().equals(userId)) {
+    			throw new ForbiddenException("forbidden");
+    		}	
     	}
+    	else {
+    		FileVo file = documentMapper.selectFile(vo.getFileId());
+			if(file != null && !file.getRegId().equals(userId)) {
+				throw new ForbiddenException("forbidden");
+			}   		
+    	}
+    	
+    	vo.setOwnerId(userId);
+    	documentMapper.deleteShare(vo);
     }
     
     @Transactional
@@ -617,7 +687,56 @@ public class DocumentServiceImpl implements DocumentService {
     	return documentMapper.selectListUserMember(param);
     }
     
+    private boolean isSharedFolder(Long folderId) {
+    	
+    	if(folderId == null || folderId == -1) {
+    		return false;
+    	}
+    	
+    	String userId = new SecurityInfoUtil().getAccountId();
+    	String deptCd = new SecurityInfoUtil().getDeptCd();
+    	
+    	FileShareVo fileShareVo = new FileShareVo();
+    	fileShareVo.setFolderYn("Y");
+    	fileShareVo.setFolderId(folderId);
+    	fileShareVo.setTargetKind("DEPT");
+    	fileShareVo.setTargetId(deptCd);
+    	FileShareVo share1 = documentMapper.selectShare(fileShareVo);
+    	
+    	if(share1 != null) {
+    		return true;
+    	}
+    	
+    	fileShareVo.setTargetKind("INDV");
+    	fileShareVo.setTargetId(userId);
+    	FileShareVo share2 = documentMapper.selectShare(fileShareVo);
+    	
+    	if(share2 != null) {
+    		return true;
+    	}
+    	
+    	FolderVo folder = documentMapper.selectFolderByFolderId(folderId);
+    	return isSharedFolder(folder.getUpperFolderId());
+    }
     
-    
+    @Override
+    public List<FolderVo> selectShareFolderListByFolderId(FolderVo vo) {
+    	
+    	if( !isSharedFolder(vo.getUpperFolderId()) ) {
+    		throw new ForbiddenException("forbidden");
+    	}
+    	
+    	return documentMapper.selectFolderList(vo);
+    }   
+ 
+    @Override
+    public List<FileVo> selectShareFileListByFolderId(FileVo vo) {
+    	if( !isSharedFolder(vo.getFolderId()) ) {
+    		throw new ForbiddenException("forbidden");
+    	}
+    	String userId = new SecurityInfoUtil().getAccountId();
+    	vo.setUserId(userId);
+    	return documentMapper.selectFileList(vo);
+    }
     
 }

@@ -14,9 +14,7 @@
             , cu.msg_rcv_yn --메세지수신여부
             , cu.pos_cd
             , cu.user_id --직원아이디
-            , (case when #{lang} = 'lng_type_1' then cu.user_nm_kg
-                else cu.user_nm_ru
-                end) as user_nm
+            , kgst.fngetlangnm(cu.user_nm_kg,cu.user_nm_ru,cu.user_nm_kg,#{lang}) as user_nm
             , cu.user_nm_kg --이름(키르키즈어)
             , cu.user_nm_ru --이름(러시아어)
             , cu.dept_head_yn --부서장여부
@@ -25,12 +23,8 @@
             , cu.reg_dt
             , cu.mod_id
             , cu.mod_dt
-            , (case when #{lang} = 'lng_type_1' then cd.dept_nm1
-                else cd.dept_nm2
-                end) as dept_nm
-            , (case when #{lang} = 'lng_type_1' then cc.code_nm1
-                else cc.code_nm2
-                end) as job_nm
+            , kgst.fngetlangnm(cd.dept_nm1,cd.dept_nm2,cd.dept_nm1,#{lang}) as dept_nm
+            , kgst.fngetlangnm(cc.code_nm1,cc.code_nm2,cc.code_nm1,#{lang}) as job_nm
         from com_user cu
         left join com_dept cd on cd.dept_cd = cu.dept_cd
         left join com_code_detail cc on cc.code_id = cu.job_cd
@@ -53,25 +47,17 @@
         /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.user.repository.UserMapper.selectListUserByDept */
         select
               view.user_id
-            , (case when #{lang} = 'lng_type_1' then view.user_nm_kg
-                else view.user_nm_ru
-                end) as user_nm
+            , kgst.fngetlangnm(view.user_nm_kg,view.user_nm_ru,view.user_nm_kg,#{lang}) as user_nm
             , view.dept_cd
-            , (case when #{lang} = 'lng_type_1' then view.dept_nm_kg
-                else view.dept_nm_ru
-                end) as dept_nm
+            , kgst.fngetlangnm(view.dept_nm_kg,view.dept_nm_ru,view.dept_nm_kg,#{lang}) as dept_nm
             , view.email
             , view.gen_cd
             , view.job_cd
-            , (case when #{lang} = 'lng_type_1' then cc.code_nm1
-                    else cc.code_nm1
-                end) job_nm
+            , kgst.fngetlangnm(cc.code_nm1,cc.code_nm2,cc.code_nm1,#{lang}) as job_nm
             , view.pos_cd
             , view.age_cd
             , view.cmit_cd
-            , (case when #{lang} = 'lng_type_1' then view.cmit_nm_kg
-                else view.cmit_nm_ru
-                end) as cmit_nm
+            , kgst.fngetlangnm(view.cmit_nm_kg,view.cmit_nm_ru,view.cmit_nm_kg,#{lang}) as cmit_nm
             , view.poly_cd
             , view.poly_nm
         from kgst.view_user_member view
@@ -91,24 +77,22 @@
             , view.user_nm_kg
             , view.user_nm_ru
             , view.dept_cd
-            , (case when #{lang} = 'lng_type_1' then view.dept_nm_kg
-                else view.dept_nm_ru
-                end) as dept_nm
+            , kgst.fngetlangnm(view.dept_nm_kg,view.dept_nm_ru,view.dept_nm_kg,#{lang}) as dept_nm
             , view.email
             , view.gen_cd
             , view.job_cd
-            , (case when #{lang} = 'lng_type_1' then cc.code_nm1
-                else cc.code_nm1
-                end) job_nm
+            , view.msg_rcv_yn
+            , kgst.fngetlangnm(cc.code_nm1,cc.code_nm2,cc.code_nm1,#{lang}) as user_nm
             , view.pos_cd
             , view.age_cd
             , view.cmit_cd
-            , (case when #{lang} = 'lng_type_1' then view.cmit_nm_kg
-                else view.cmit_nm_ru
-                end) as cmit_nm
+            , kgst.fngetlangnm(view.cmit_nm_kg,view.cmit_nm_ru,view.cmit_nm_kg,#{lang}) as cmit_nm
             , view.poly_cd
             , view.poly_nm
             , cm.mbl_no
+            , (case when view.user_id in (select cu.user_id from com_user cu) then 'user'
+                    when view.member_id in (select comm.member_id from com_member comm) then 'member'
+                end) as type
         from kgst.view_user_member view
         left join com_code_detail cc on cc.code_id = view.job_cd
         left join com_member cm on cm.member_id = view.user_id
@@ -137,10 +121,7 @@
             , cu.reg_dt
             , cu.mod_id
             , cu.mod_dt
-            , (case when #{lang} = 'lng_type_1' then cd.dept_nm1
-                    when #{lang} = 'lng_type_2' then cd.dept_nm2
-                    else cd.dept_nm3
-              end) as dept_nm
+            , kgst.fngetlangnm(cd.dept_nm1,cd.dept_nm2,cd.dept_nm_3,#{lang}) as dept_nm
         from com_user cu
         inner join com_dept cd on cd.dept_cd = cu.dept_cd
         where seq = #{seq}
@@ -212,5 +193,24 @@
         delete from com_user
         where user_id = #{userId}
     </delete>
+
+    <update id="updateMyInfoMember" parameterType="kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo">
+        update com_member
+        set
+              email = #{email}
+            , msg_rcv_yn = #{msgRcvYn}
+            , profile_img_path = #{profileImgPath}
+            , mbl_no = #{mblNo}
+        where member_id = #{memberId}
+    </update>
+
+    <update id="updateMyInfoUser" parameterType="kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo">
+        update com_user
+        set
+              email = #{email}
+            , msg_rcv_yn = #{msgRcvYn}
+            , profile_img_path = #{profileImgPath}
+        where user_id = #{userId}
+    </update>
 
 </mapper>

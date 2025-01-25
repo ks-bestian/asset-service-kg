@@ -39,8 +39,8 @@ public class AuthUserController {
 
     @ApiOperation(value = "권한별 사용자 삭제", notes = "권한별 사용자를 삭제한다.")
     @DeleteMapping("/admin/authUser")
-    public ResponseEntity<CommonResponse> deleteAuthUser(@RequestBody AuthUserVo authUserVo) {
-        authUserService.deleteAuthUser(authUserVo);
+    public ResponseEntity<CommonResponse> deleteAuthUser(@RequestBody List<Long> authId) {
+        authUserService.deleteAuthUser(authId);
         return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "OK", "AuthUser deleted."), HttpStatus.OK);
     }
 

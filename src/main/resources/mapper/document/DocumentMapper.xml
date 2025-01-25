@@ -152,12 +152,71 @@
 			</if>
 	</select>
 	
+	<select id="selectShareFolderList" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectShareFolderList */
+		select 
+			  c.*
+			, sh.owner_id 
+		from (
+	    	select
+				  a.folder_id
+				, a.folder_nm
+				, a.folder_nm as title
+				, a.upper_folder_id
+				, a.dept_cd
+				, a.del_yn
+				, a.reg_dt
+				, a.reg_id
+				, a.mod_dt
+				, a.mod_id
+				, a.dept_folder_yn
+				, a.user_id
+				, b.folder_nm as upper_folder_nm
+				, (select user_nm_kg 
+				from kgst.view_user_member vcm
+				where vcm.user_id = a.reg_id) as reg_nm
+				, (select user_nm_kg 
+				from kgst.view_user_member vcm
+				where vcm.user_id = a.mod_id) as mod_nm
+			from
+				kgst.bs_folder_info a
+			left outer join kgst.bs_folder_info b
+				on a.upper_folder_id = b.folder_id
+		) c
+		inner join kgst.bs_share sh
+			on sh.folder_id = c.folder_id
+			and sh.folder_yn = 'Y'
+			and ((sh.target_kind = 'INDV' and sh.target_id = #{userId}) or (sh.target_kind = 'DEPT' and sh.target_id = #{deptCd}))
+		where 1=1
+			and c.del_yn = 'N'
+			<if test="title != null and title != ''">
+			and c.folder_nm like '%' || #{title} || '%'
+			</if>
+			<if test="regNm != null and regNm != ''">
+			and c.reg_nm like '%' || #{regNm} || '%'
+			</if>
+	</select>
+	
 	<select id="selectDeleteFolderList" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo">
 		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectDeleteFolderList */
 		<include refid="selectFolder" />
 		where 1=1
 			and c.del_yn = 'Y'
 			and c.mod_id = #{userId}
+			<if test="title != null and title != ''">
+			and c.folder_nm like '%' || #{title} || '%'
+			</if>
+			<if test="regNm != null and regNm != ''">
+			and c.reg_nm like '%' || #{regNm} || '%'
+			</if>
+	</select>
+	
+	<select id="selectFolderList" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectFolderList */
+		<include refid="selectFolder" />
+		where 1=1
+			and c.del_yn = 'N'
+			and c.upper_folder_id = #{upperFolderId}
 			<if test="title != null and title != ''">
 			and c.folder_nm like '%' || #{title} || '%'
 			</if>
@@ -334,6 +393,47 @@
 			</if>
 	</select>
 	
+	<select id="selectShareFileList" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectShareFileList */
+		select * from (
+			select 
+				  b.*
+				, b.file_title as title
+				, coalesce(c.favorite_yn, 'N') as favorite_yn
+				, d.folder_nm as folder_nm
+				, sh.owner_id as owner_id
+				, (select user_nm_kg 
+				from kgst.view_user_member vcm
+				where vcm.user_id = b.reg_id) as reg_nm
+				, (select user_nm_kg 
+				from kgst.view_user_member vcm
+				where vcm.user_id = b.mod_id) as mod_nm
+			from (
+				select
+					<include refid="fileColumns"></include>
+				from kgst.bs_file_info a
+				where 1=1
+					and a.del_yn = 'N'
+			) b
+			inner join kgst.bs_share sh
+				on b.file_group_id = sh.file_group_id
+				and sh.folder_yn = 'N'
+				and ((sh.target_kind = 'INDV' and sh.target_id = #{userId}) or (sh.target_kind = 'DEPT' and sh.target_id = #{deptCd}))				
+			left outer join kgst.bs_favorite c
+				on b.file_group_id = c.file_group_id
+				and c.user_id = #{userId}
+			left outer join kgst.bs_folder_info d
+				on d.folder_id = b.folder_id
+		) x
+		where 1=1
+			<if test="title != null and title != ''">
+			and x.title like '%' || #{title} || '%'
+			</if>
+			<if test="regNm != null and regNm != ''">
+			and x.reg_nm like '%' || #{regNm} || '%'
+			</if>
+	</select>
+	
 	<select id="selectStarFileList" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo">
 		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectStarFileList */
 		select * from (
@@ -392,6 +492,43 @@
 				where 1=1
 					and a.del_yn = 'Y'
 					and a.mod_id = #{userId}
+			) b
+			left outer join kgst.bs_favorite c
+				on b.file_group_id = c.file_group_id
+				and c.user_id = #{userId}
+			left outer join kgst.bs_folder_info d
+				on d.folder_id = b.folder_id
+		) x
+		where 1=1
+			<if test="title != null and title != ''">
+			and x.title like '%' || #{title} || '%'
+			</if>
+			<if test="regNm != null and regNm != ''">
+			and x.reg_nm like '%' || #{regNm} || '%'
+			</if>
+	</select>
+	
+	<select id="selectFileList" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectFileList */
+		select * from (
+			select 
+				  b.*
+				, b.file_title as title
+				, coalesce(c.favorite_yn, 'N') as favorite_yn
+				, d.folder_nm as folder_nm
+				, (select user_nm_kg 
+				from kgst.view_user_member vcm
+				where vcm.user_id = b.reg_id) as reg_nm
+				, (select user_nm_kg 
+				from kgst.view_user_member vcm
+				where vcm.user_id = b.mod_id) as mod_nm
+			from (
+				select
+					<include refid="fileColumns"></include>
+				from kgst.bs_file_info a
+				where 1=1
+					and a.del_yn = 'N'
+					and a.folder_id = #{folderId}
 			) b
 			left outer join kgst.bs_favorite c
 				on b.file_group_id = c.file_group_id
@@ -490,6 +627,14 @@
 			and a.del_yn = 'N'
     </select>
     
+    <select id="selectFile2" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo">
+    	/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectFile */
+		select 
+			<include refid="fileColumns"></include>
+		from kgst.bs_file_info a
+		where a.file_id = #{fileId}
+    </select>
+    
     <select id="selectFileGroup" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo">
 		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectFileGroup */
 		select 
@@ -508,7 +653,7 @@
 	</select>
 	
 	<select id="selectFolderByFolderId" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo">
-    	/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectFolder */
+    	/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectFolderByFolderId */
 		<include refid="selectFolder"></include>
 		where c.del_yn = 'N'
 			and c.folder_id = #{folderId}
@@ -519,14 +664,15 @@
 		DELETE FROM kgst.bs_share
 		WHERE 1=1
 			and folder_yn = #{folderYn}
-			<if test="folderYn = 'Y'">
+			<if test='folderYn == "Y"'>
 			and folder_id = #{folderId}
 			</if>
-			<if test="folderYn != 'Y'">
+			<if test='folderYn != "Y"'>
 			and file_group_id = #{fileGroupId}
 			</if>
 			and owner_id = #{ownerId}
 			and target_kind = #{targetKind}
+			and target_id = #{targetId}
     </delete>
     
     <insert id="insertShare" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileShareVo">
@@ -553,7 +699,8 @@
 		)
     </insert>
     
-    <select id="selectShareTargetList" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FileShareVo">
+    <select id="selectShareTargetList" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileShareVo" 
+    		resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FileShareVo">
     	/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectShareTargetList */
 		select 
 			  folder_id
@@ -567,13 +714,39 @@
 		from kgst.bs_share
 		where 1=1
 			and folder_yn = #{folderYn}
-			<if test="folderYn = 'Y'">
+			<if test='folderYn == "Y"'>
 			and folder_id = #{folderId}
 			</if>
-			<if test="folderYn != 'Y'">
+			<if test='folderYn != "Y"'>
 			and file_group_id = #{fileGroupId}
 			</if>
 			and owner_id = #{ownerId}
+			and target_kind = #{targetKind}
+    </select>
+    
+    <select id="selectShare" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileShareVo" 
+    		resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FileShareVo">
+    	/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectShare */
+		select 
+			  folder_id
+			, folder_yn
+			, target_kind
+			, target_id
+			, owner_id
+			, file_group_id
+			, reg_id
+			, reg_dt
+		from kgst.bs_share
+		where 1=1
+			and folder_yn = #{folderYn}
+			<if test='folderYn == "Y"'>
+			and folder_id = #{folderId}
+			</if>
+			<if test='folderYn != "Y"'>
+			and file_group_id = #{fileGroupId}
+			</if>
+			and target_kind = #{targetKind}
+			and target_id = #{targetId}
     </select>
     
     <select id="selectListUserMember" parameterType="java.util.HashMap"
@@ -603,13 +776,41 @@
 	                end) as cmit_nm
 	            , view.poly_cd
 	            , view.poly_nm
-	        from kgst.view_user_member2 view
+	        from kgst.view_user_member view
 	        left join com_code_detail cc on cc.code_id = view.job_cd
 	    ) a
         where 1=1
         <if test="searchNm != null and searchNm != ''">
             AND a.user_nm like '%' || #{searchNm} || '%' 
         </if>
+    </select>
+    
+    <update id="addUseCpct">
+    /* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.addUseCpct */
+    	INSERT INTO kgst.bs_use_cpct (
+			  user_id
+			, use_cpct
+			, reg_id
+			, reg_dt
+		)
+		VALUES (
+			  #{userId}
+			, #{cpct}
+			, #{userId}
+			, now()
+		)
+		ON CONFLICT (user_id)
+		DO UPDATE 
+		SET   mod_dt = now()
+			, mod_id = #{userId}
+			, use_cpct = ((select use_cpct from kgst.bs_use_cpct where user_id = #{userId}) + #{cpct})
+    </update>
+    
+    <select id="selectTotalUseCpct" resultType="java.lang.Long">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectTotalUseCpct */
+        select coalesce(sum(use_cpct), 0)
+		from kgst.bs_use_cpct
+		where user_id = #{userId}
     </select>
     
 </mapper>

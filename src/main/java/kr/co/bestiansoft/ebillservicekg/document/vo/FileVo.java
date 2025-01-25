@@ -47,4 +47,5 @@ public class FileVo extends ComDefaultVO {
 	private Long toFolderId;
 	
 	private String deptFileYn;
+	private String ownerId;
 }

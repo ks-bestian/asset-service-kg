@@ -7,9 +7,7 @@
         /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.member.repository.MemberMapper.selectListMember */
         select
               member_id --국회의원아이디
-            , (case when #{lang} = 'lng_type_1' then member_nm_kg
-                else member_nm_ru
-                end) as member_nm
+            , kgst.fngetlangnm(member_nm_kg,member_nm_ru,member_nm_kg,#{lang}) as member_nm
             , member_nm_kg --이름(키르키즈어)
             , member_nm_ru --이름(러시아어)
             , age_cd --대수
@@ -40,6 +38,10 @@
                 </when>
             </choose>
         </if>
+
+        <if test="polyCd != null and polyCd !=''">
+            and poly_cd = #{polyCd}
+        </if>
         order by reg_dt
     </select>
 
@@ -65,10 +67,7 @@
             , cm.reg_dt
             , cm.mod_id
             , cm.mod_dt
-            , (case when #{lang} = 'lng_type_1' then cd.dept_nm1
-                    when #{lang} = 'lng_type_2' then cd.dept_nm2
-                    else cd.dept_nm3
-              end) as dept_nm
+            , kgst.fngetlangnm(cd.dept_nm1,cd.dept_nm2,cd.dept_nm3,#{lang}) as dept_nm
         from com_member cm
         inner join com_dept cd on cd.dept_cd = cm.dept_id
         where member_id = #{memberId}

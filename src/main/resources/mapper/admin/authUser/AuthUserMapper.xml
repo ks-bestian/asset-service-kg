@@ -11,15 +11,11 @@
             , ca.reg_dt
             , ca.mod_id
             , ca.mod_dt
-            , (case when #{lang} = 'lng_type_1' then vu.user_nm_kg
-                else vu.user_nm_ru
-                end) as user_nm
-            , (case when #{lang} = 'lng_type_1' then cd.dept_nm1
-                else cd.dept_nm2
-                end) as dept_nm
+            , kgst.fngetlangnm(vu.user_nm_kg,vu.user_nm_ru,vu.user_nm_kg,#{lang}) as user_nm
+            , kgst.fngetlangnm(vu.dept_nm_kg, vu.dept_nm_ru,vu.dept_nm_kg,#{lang}) as dept_nm
+            , vu.poly_nm
         from kgst.com_auth_user ca
-        inner join view_user_member vu on vu.user_id = ca.user_id
-        left join com_dept cd on cd.dept_cd = vu.dept_cd
+        left join view_user_member vu on vu.user_id = ca.user_id
         where ca.auth_id = #{authId}
     </select>
 
@@ -33,7 +29,7 @@
             , reg_dt
             , mod_id
             , mod_dt
-            )
+        )
         values (
               #{authId}
             , #{userId}
