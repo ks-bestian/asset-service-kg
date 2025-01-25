@@ -28,6 +28,8 @@ public interface ProcessMapper {
 	void updateBpTask(ProcessVo vo);
 
 	List<ProposerVo> selectListProposerId(ProcessVo vo);
+	List<ProposerVo> selectListSrvcJobAuth();
+
 
 
 

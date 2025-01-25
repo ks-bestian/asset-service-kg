@@ -8,41 +8,47 @@
             resultType="kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.vo.RevokeVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.repository.RevokeMapper.selectRevokeList */
 
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.revokeAgree.repository.RevokeAgreeMapper.selectRevokeAgreeList */
+
 		select
 		    AA.bill_id
 		  , kgst.fngetlangnm(AA.bill_name_kg,AA.bill_name_ru,AA.bill_name_kg,#{lang}) as bill_name -- 안건 이름
 		  , kgst.fngetlangnm(vum.member_nm_kg,vum.member_nm_ru,vum.member_nm_kg,#{lang}) as ppsr_nm -- 제안자 이름
-          , AA.scl_dsc_rcp_nmb
-          , AA.ppsl_dt
-          , AA.reg_dt
-          , AA.stat_nm
-          , AA.stat_cd
-          , AA.na_term_cd
-          , ep.wt_dt
+	      , AA.scl_dsc_rcp_nmb
+	      , AA.ppsl_dt
+	      , AA.stat_nm
+	      , AA.stat_cd
+	      , AA.na_term_cd
+	      , AA.step_id
+	      , AA.task_id
+	      , AA.task_status
+	      , ep.wt_dt
 		from (
 			select
 			   pl.bill_id
 			 , max(pl.bill_name_kg) as bill_name_kg
-			 , max(pl.bp_instance_id) as bp_instance_id
 			 , max(pl.bill_name_ru) as bill_name_ru
-			 , max(pl.na_term_cd) as na_term_cd
+			 , max(pl.bp_instance_id) as bp_instance_id
 			 , max(pl.current_step_id) as current_step_id
 			 , max(pl.ppsr_id) as ppsr_id
 			 , max(pl.ppsl_dt) as ppsl_dt
 			 , max(pl.scl_dsc_rcp_nmb) as scl_dsc_rcp_nmb
 			 , max(pl.reg_dt) as reg_dt
+			 , max(pl.na_term_cd) as na_term_cd
+			 , max(pl.step_id) as step_id
+			 , max(pl.task_id) as task_id
+			 , max(pl.status) as task_status
 			 , max(ebs.stat_cd) as stat_cd
 			 , kgst.fngetcodenm('1010',max(ebs.stat_cd),#{lang}) as stat_nm
 			from kgst.view_bill_process_list pl
 			join kgst.ebs_bp_step ebs on (pl.bp_df_id = ebs.bp_df_id and pl.current_step_id = ebs.step_id)
-			where 1=1
-			  and pl.current_step_id = '1100'
+			where pl.current_step_id = '1100'
+			  and pl.trgt_user_id = #{userId}
 			group by bill_id
 		) AA
 		join kgst.view_user_member vum on (AA.ppsr_id = vum.user_id)
-		join kgst.ebs_proposer ep on (AA.bill_id = ep.bill_id and ep.proposer_id = AA.ppsr_id)
-		where 1=1
-		  and AA.ppsr_id = #{userId}
+		join kgst.ebs_proposer ep on (ep.bill_id = AA.bill_id and ep.proposer_id = #{userId})
+        where 1=1
 		<if test="naTermCd != null and naTermCd != ''">
 			and AA.na_term_cd = #{naTermCd}
 		</if>

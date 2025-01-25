@@ -148,6 +148,7 @@
 			  em.bill_name_kg 					-- 안건이름kg
 			, em.bill_name_ru  				-- 안건이름ru
 			, kgst.fngetlangnm(view.member_nm_kg,view.member_nm_ru,view.member_nm_kg,#{lang}) as member_nm -- 제안자 이름
+			, em.ppsr_id  -- 제안자아이디
 			, em.etc_kg						-- 비고kg
 			, em.etc_ru						-- 비고ru
 			, to_char(em.reg_dt, 'DD/MM/YYYY HH:mm') as regDate -- 등록일

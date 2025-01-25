@@ -23,10 +23,10 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Service
 public class AgreeServiceImpl implements AgreeService {
-	
+
 	private final AgreeMapper agreeMapper;
 	private final ApplyMapper applyMapper;
-	
+
 	@Override
 	public List<AgreeVo> getAgreeList(HashMap<String, Object> param) {
 		param.put("loginId", new SecurityInfoUtil().getAccountId());
@@ -35,32 +35,33 @@ public class AgreeServiceImpl implements AgreeService {
 
 	@Override
 	public AgreeResponse getAgreeDetail(String billId, String lang) {
+
 		AgreeResponse result = new AgreeResponse();
-		
+
 		//동의 상세
 		String userId = new SecurityInfoUtil().getAccountId();
 		AgreeVo agreeDetail = agreeMapper.selectAgreeDetail(billId, userId, lang);
 		result.setAgreeDetail(agreeDetail);
-		
+
 		//동의서명 목록
 		List<AgreeVo> proposerList = agreeMapper.selectAgreeProposerList(billId);
 		result.setProposerList(proposerList);
-		
+
 		//파일목록
 		List<EbsFileVo> fileList = applyMapper.selectApplyFileList(billId);
 		result.setFileList(fileList);
-		
+
 		return result;
 	}
 
 	@Transactional
 	@Override
 	public int setBillAgree(String billId, HashMap<String, Object> param) {
+
 		String userId = new SecurityInfoUtil().getAccountId();
 		param.put("userId", userId);
 		param.put("billId", billId);
-		
-		System.out.println("param.get(\"agreeYn\") :: " + param.get("agreeYn"));
+
 		return agreeMapper.updateBillAgree(param);
 	}
 

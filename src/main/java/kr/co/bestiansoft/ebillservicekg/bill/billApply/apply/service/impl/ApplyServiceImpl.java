@@ -19,6 +19,7 @@ import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
+import kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper;
 import kr.co.bestiansoft.ebillservicekg.process.service.ProcessService;
 import kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,7 @@ public class ApplyServiceImpl implements ApplyService {
 
 	private final ApplyMapper applyMapper;
 	private final AgreeMapper agreeMapper;
+	private final ProcessMapper processMapper;
 	private final ComFileService comFileService;
 	private final ProcessService processService;
 
@@ -157,6 +159,7 @@ public class ApplyServiceImpl implements ApplyService {
 
 	@Override
 	public ApplyResponse getApplyDetail(String billId, String lang) {
+
 		ApplyResponse result = new ApplyResponse();
 
 		//안건 상세
@@ -170,6 +173,13 @@ public class ApplyServiceImpl implements ApplyService {
 		//발의자 대상
 		List<AgreeVo> proposerList = agreeMapper.selectAgreeProposerList(billId);
 		result.setProposerList(proposerList);
+
+
+		//안건 프로세스정보가져오기.
+		ProcessVo pcParam = new ProcessVo();
+		pcParam.setBillId(billId);
+		ProcessVo pcVo = processMapper.selectBpInstance(pcParam);
+		result.setProcessVo(pcVo);
 
 		return result;
 	}

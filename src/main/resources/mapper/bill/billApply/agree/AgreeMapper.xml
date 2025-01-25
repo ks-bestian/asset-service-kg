@@ -42,7 +42,6 @@
 	join kgst.view_user_member vum on (AA.ppsr_id = vum.user_id)
 	join kgst.ebs_proposer ep on (AA.bill_id = ep.bill_id)
 	where 1=1
-	  and AA.ppsr_id = ep.proposer_id
 	  and ep.proposer_id = #{loginId}
 	<if test="naTermCd != null and naTermCd != ''">
 		and AA.na_term_cd = #{naTermCd}
@@ -83,6 +82,13 @@
       , AA.stat_cd
       , AA.na_term_cd
       , kgst.fngetlangnm(AA.etc_kg,AA.etc_ru,AA.etc_kg,#{lang}) as etc -- 안건 이름
+      , ep.sign_dt
+      , ep.sign_cnc_dt
+      , ep.wt_dt
+      , ep.wt_cnc_dt
+      , case when ep.sign_dt is null then 'N' else 'Y' end as agree_yn
+      , case when ep.wt_dt is null then 'N' else 'Y' end as wt_yn
+      , COALESCE(kgst.fngetlangnm(AA.etc_kg,AA.etc_ru,AA.etc_kg,#{lang}),'') as etc -- 안건 이름
 	from (
 		select
 		   pl.bill_id
@@ -105,6 +111,7 @@
 		group by bill_id
 	) AA
 	join kgst.view_user_member vum on (AA.ppsr_id = vum.user_id)
+	join kgst.ebs_proposer ep on (AA.bill_id = ep.bill_id and ep.proposer_id = #{userId})
 	where AA.bill_id = #{billId}
 
     </select>
@@ -114,17 +121,15 @@
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.repository.AgreeMapper.selectAgreeProposerList */
 		select
 			  ep.proposer_id					-- 제안자 대상
-			, case
-				when (ep.sign_dt is not null and ep.sign_cnc_dt is null) then 'Y'
-				else 'N'
-			  end as agreeYn 				-- 동의여부
-			, view.member_nm_kg					-- 의원이름kg
-			, view.member_nm_ru					-- 의원이름ru
-			, kgst.fngetlangnm(view.member_nm_kg,view.member_nm_ru,view.member_nm_kg,#{lang}) as member_nm -- 의원이름
-			, view.poly_nm  					-- 정당이름
-			, view.poly_cd 					-- 정당코드
+			, case when ep.sign_dt is null then 'N' else 'Y' end as agree_yn -- 동의여부
+			, case when ep.wt_dt is null then 'N' else 'Y' end as wt_yn -- 철회동의여부
+			, kgst.fngetlangnm(vum.member_nm_kg,vum.member_nm_ru,vum.member_nm_kg,#{lang}) as member_nm -- 의원이름
+			, vum.member_nm_kg					-- 의원이름kg
+			, vum.member_nm_ru					-- 의원이름ru
+			, vum.poly_nm  					-- 정당이름
+			, vum.poly_cd 					-- 정당코드
 		from ebs_proposer ep
-		left join kgst.view_user_member view on view.member_id = ep.proposer_id
+		left join kgst.view_user_member vum on (vum.member_id = ep.proposer_id)
 		where ep.bill_id = #{billId}
     </select>
 
@@ -132,18 +137,18 @@
     	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.updateBillAgree */
 		update kgst.ebs_proposer
 		set
-			  mod_id = #{modId} 			-- 수정자 아이디
+			  mod_id = #{userId} 			-- 수정자 아이디
 			, mod_dt = now()			-- 수정날짜
 			<if test='agreeYn == "N"'> 	-- 서명 취소
 			, sign_cnc_dt = now()
+			, sign_dt = null
 			</if>
 			<if test='agreeYn == "Y"'> 	-- 서명 동의
 			, sign_dt = now()
 			, sign_cnc_dt = null
 			</if>
-		where
-			bill_id = #{billId}
-			and proposer_id = #{userId}
+		where bill_id = #{billId}
+		  and proposer_id = #{userId}
     </update>
 
 

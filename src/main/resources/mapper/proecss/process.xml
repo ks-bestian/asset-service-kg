@@ -428,4 +428,17 @@
 	</select>
 
 
+  <!-- 서비스별 버튼권한 목록 -->
+   <select id="selectListSrvcJobAuth"  parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo"
+   	    resultType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
+   	    /* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.selectListSrvcJobAuth */
+		select
+		    srvc_cd
+		  , job_cd
+		from ebs_bp_srvc_job
+		where use_yn = 'Y'
+	</select>
+
+
+
 </mapper>
