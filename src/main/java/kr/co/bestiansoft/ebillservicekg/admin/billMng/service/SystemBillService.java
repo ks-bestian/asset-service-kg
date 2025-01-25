@@ -35,4 +35,6 @@ public interface SystemBillService {
 
 	SystemBillResponse selectBillRelationMtngList(String billId, HashMap<String, Object> param);
 
+	SystemBillVo cretaeRelateMtng(SystemBillVo systemBillVo);
+
 }

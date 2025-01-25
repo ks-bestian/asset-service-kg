@@ -108,4 +108,10 @@ public class SystemBillController {
     public ResponseEntity<CommonResponse> selectBillRelationMtngList(@PathVariable String billId, @RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", adminBillMngService.selectBillRelationMtngList(billId, param)), HttpStatus.OK);
     }
+    
+    @ApiOperation(value = "관련위원회 결과", notes = "관련위원회 결과를 입력한다")
+    @PostMapping(value = "/system/relate/mtng", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<CommonResponse> cretaeRelateMtng(SystemBillVo systemBillVo) {
+    	return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "file create successfully", adminBillMngService.cretaeRelateMtng(systemBillVo)), HttpStatus.CREATED);
+    }
 }
