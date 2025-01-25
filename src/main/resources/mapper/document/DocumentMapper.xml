@@ -627,6 +627,14 @@
 			and a.del_yn = 'N'
     </select>
     
+    <select id="selectFile2" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo">
+    	/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectFile */
+		select 
+			<include refid="fileColumns"></include>
+		from kgst.bs_file_info a
+		where a.file_id = #{fileId}
+    </select>
+    
     <select id="selectFileGroup" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo">
 		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectFileGroup */
 		select 
@@ -775,6 +783,34 @@
         <if test="searchNm != null and searchNm != ''">
             AND a.user_nm like '%' || #{searchNm} || '%' 
         </if>
+    </select>
+    
+    <update id="addUseCpct">
+    /* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.addUseCpct */
+    	INSERT INTO kgst.bs_use_cpct (
+			  user_id
+			, use_cpct
+			, reg_id
+			, reg_dt
+		)
+		VALUES (
+			  #{userId}
+			, #{cpct}
+			, #{userId}
+			, now()
+		)
+		ON CONFLICT (user_id)
+		DO UPDATE 
+		SET   mod_dt = now()
+			, mod_id = #{userId}
+			, use_cpct = ((select use_cpct from kgst.bs_use_cpct where user_id = #{userId}) + #{cpct})
+    </update>
+    
+    <select id="selectTotalUseCpct" resultType="java.lang.Long">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectTotalUseCpct */
+        select coalesce(sum(use_cpct), 0)
+		from kgst.bs_use_cpct
+		where user_id = #{userId}
     </select>
     
 </mapper>

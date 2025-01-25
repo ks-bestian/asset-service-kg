@@ -273,14 +273,25 @@
 		      emd.bill_id
 			, emd.cls_cd 
 			, CASE 
-				WHEN 'lng_type_1' = 'lng_type_1' then emd.rmrk_kg
-				WHEN 'lng_type_1' = 'lng_type_2' then emd.rmrk_ru
+				WHEN #{lang} = 'lng_type_1' then emd.rmrk_kg
+				WHEN #{lang} = 'lng_type_2' then emd.rmrk_ru
 				ELSE emd.rmrk_kg
 				END AS rmrk -- 기타, 비고, 사유
 			, emd.mtn_dt -- 본회의장 회의일시
 			, emd.lgl_rvw_rslt_code -- 법률검토결과코드
 			, emd.lgl_act_rslt_code -- 법적행위결과코드
 			, emd.rslt_dt -- 결과처리일자
+			, (
+			     select 
+			       	CASE 
+					  	WHEN #{lang} = 'lng_type_1' then ccd.code_nm1
+					  	WHEN #{lang} = 'lng_type_2' then ccd.code_nm2
+				      	ELSE ccd.code_nm3
+			      		END AS rsltNm
+			     from kgst.com_code_detail ccd 
+			     where ccd.code_id = emd.rslt_code 
+			     AND ccd.grp_code = 1009
+			 )
 		FROM 
 		kgst.ebs_master_detail emd 
 		WHERE 1=1

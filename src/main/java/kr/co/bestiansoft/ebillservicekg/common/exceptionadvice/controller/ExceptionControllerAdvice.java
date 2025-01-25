@@ -20,6 +20,7 @@ import kr.co.bestiansoft.ebillservicekg.common.errLog.service.ErrLogService;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.exception.AlreadyExistsException;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.exception.ForbiddenException;
+import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.exception.MaximumCapacityReachedException;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.exception.ResourceNotFoundException;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.exception.UnauthorizedException;
 import lombok.extern.slf4j.Slf4j;
@@ -156,6 +157,38 @@ public class ExceptionControllerAdvice {
     	int errCd = HttpStatus.INTERNAL_SERVER_ERROR.value();
     	String sqlState = ex.getSQLState(); // SQL 상태 코드
     	String errMsg = "SqlState: "+sqlState+", ErrMsg: "+ex.getMessage();
+    	
+    	CommonResponse response = CommonResponse.builder().code(errCd).message(errMsg).build();
+    	
+    	ex.printStackTrace();
+    	
+    	errLogService.saveErrLog(request, errCd, errMsg);
+        
+        return ResponseEntity.status(errCd).body(response);
+    }
+    
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    @ExceptionHandler({MaximumCapacityReachedException.class})
+    public ResponseEntity<CommonResponse> maximumCapacityReachedException(MaximumCapacityReachedException ex, HttpServletRequest request) {
+    	
+    	int errCd = HttpStatus.UNPROCESSABLE_ENTITY.value();
+    	String errMsg = ex.getMessage();
+    	
+    	CommonResponse response = CommonResponse.builder().code(errCd).message(errMsg).build();
+    	
+    	ex.printStackTrace();
+    	
+    	errLogService.saveErrLog(request, errCd, errMsg);
+        
+        return ResponseEntity.status(errCd).body(response);
+    }
+    
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler({Exception.class})
+    public ResponseEntity<CommonResponse> exception(Exception ex, HttpServletRequest request) {
+    	
+    	int errCd = HttpStatus.INTERNAL_SERVER_ERROR.value();
+    	String errMsg = ex.getMessage();
     	
     	CommonResponse response = CommonResponse.builder().code(errCd).message(errMsg).build();
     	

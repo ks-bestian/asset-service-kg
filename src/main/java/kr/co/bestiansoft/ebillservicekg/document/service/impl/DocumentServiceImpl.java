@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.exception.ForbiddenException;
+import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.exception.MaximumCapacityReachedException;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.impl.EDVHelper;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
@@ -37,6 +38,8 @@ public class DocumentServiceImpl implements DocumentService {
     private final DocumentMapper documentMapper;
     private final EDVHelper edv;
     private final ThumbnailService thumbnailService;
+    
+    private final Long MAX_USE_CPCT = Long.MAX_VALUE;
     
     @Override
     public List<FolderVo> selectDeptFolderListAll(FolderVo vo) {
@@ -298,6 +301,9 @@ public class DocumentServiceImpl implements DocumentService {
     
     @Transactional
     public void removeFile(String fileId) throws Exception {
+    	String userId = new SecurityInfoUtil().getAccountId();
+    	FileVo fileVo = documentMapper.selectFile2(fileId);
+    	documentMapper.addUseCpct(userId, -fileVo.getFileSize()); 
     	documentMapper.removeFile(fileId);
 		edv.delete(fileId);
     }
@@ -309,6 +315,16 @@ public class DocumentServiceImpl implements DocumentService {
     	int ret = 0;
 		
 		MultipartFile[] files = vo.getFiles();
+		
+		String userId = new SecurityInfoUtil().getAccountId();
+		long useCpct = documentMapper.selectTotalUseCpct(userId);
+		long tot = 0;
+		for(MultipartFile mpf : files) {
+			tot += mpf.getSize();
+		}
+		if(useCpct + tot > MAX_USE_CPCT) {
+			throw new MaximumCapacityReachedException("Maximum Capacity Reached");
+		}
 		
 		Map<String, Long> map = new HashMap<>();
 		map.put("", vo.getFolderId());
@@ -490,6 +506,8 @@ public class DocumentServiceImpl implements DocumentService {
 				documentMapper.saveFavorite(fileVo);	
 			}	
 		}
+		
+		documentMapper.addUseCpct(userId, fileSize);
 		
 		return ret;
 	}

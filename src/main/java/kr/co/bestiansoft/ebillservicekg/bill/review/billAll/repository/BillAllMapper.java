@@ -26,5 +26,4 @@ public interface BillAllMapper {
     List<MtngAllVo> selectBillRelCmtMtng(HashMap<String, Object> param);
     /* ebs_master_detail 정보 */
     List<BillAllVo> selectBillMastarDetail(HashMap<String, Object> param);
-
 }
