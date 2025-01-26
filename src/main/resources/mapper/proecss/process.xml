@@ -65,7 +65,7 @@
 
 
     <!-- 프로세스 인스턴스 -->
-	<insert id="insertBpInstance" useGeneratedKeys="true" keyProperty="bpInstanceId"  parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
+	<insert id="insertBpInstance" useGeneratedKeys="true"  parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
 	/* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.insertBpInstance */
 	INSERT INTO EBS_BP_INSTANCE
 	     (
@@ -93,8 +93,7 @@
    resultType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
    /* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.selectBpInstance */
 	SELECT
-	        BP_INSTANCE_ID
-	     ,  BILL_ID
+	        BILL_ID
 	     ,  BP_DF_ID
 	     ,  START_DT
 	     ,  END_DT
@@ -115,10 +114,10 @@
 	/* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.updateBpInstanceCurrentStep */
 	UPDATE EBS_BP_INSTANCE
 	   SET
-	       CURRENT_STEP_ID = #{currentStepId}
+	       CURRENT_STEP_ID = #{stepId}
 	     , MOD_ID = #{modId}
 	     , MOD_DT = now()
-	 WHERE BP_INSTANCE_ID = #{bpInstanceId}
+	 WHERE BILL_ID = #{billId}
     </update>
 
     <update id="updateEndBpInstance" parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
@@ -130,7 +129,7 @@
 	     , CURRENT_STEP_ID = #{currentStepId}
 	     , MOD_ID = #{modId}
 	     , MOD_DT = now()
-	 WHERE BP_INSTANCE_ID = #{bpInstanceId}
+	 WHERE BILL_ID = #{billId}
     </update>
 
     <update id="updateBpInstance" parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
@@ -146,10 +145,8 @@
     <delete id="deleteBpInstance" parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
 	/* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.deleteBpInstance */
 	DELETE FROM EBS_BP_INSTANCE
-	WHERE BP_INSTANCE_ID = #{bpInstanceId}
+	WHERE BILL_ID = #{billId}
     </delete>
-
-
 
 
     <!-- 프로세스 서비스정의 -->
@@ -269,7 +266,6 @@
 	     , A.RMK
 	     , A.REQ_AUTH_ID
 	     , A.STEP_ORD
-	     , B.bp_instance_id
 	     , B.bill_id
 	FROM EBS_BP_STEP A, ebs_bp_instance B
 	WHERE A.BP_DF_ID = B.BP_DF_ID
@@ -288,7 +284,6 @@
 	     , A.RMK
 	     , A.REQ_AUTH_ID
 	     , A.STEP_ORD
-	     , B.bp_instance_id
 	     , B.bill_id
 	FROM EBS_BP_STEP A, ebs_bp_instance B
 	WHERE A.BP_DF_ID = B.BP_DF_ID
@@ -330,7 +325,7 @@
 	INSERT INTO EBS_BP_TASKS
 	     (
 	       TASK_NM
-	     , BP_INSTANCE_ID
+	     , BILL_ID
 	     , STEP_ID
 	     , ASSIGNED_TO
 	     , TRGT_USER_ID
@@ -343,7 +338,7 @@
 	VALUES
 	     (
 	        #{taskNm}
-	     ,  #{bpInstanceId}
+	     ,  #{billId}
 	     ,  #{stepId}
 	     ,  #{assignedTo}
 	     ,  #{trgtUserId}
@@ -362,7 +357,7 @@
 	SELECT
 	        TASK_ID
 	     ,  TASK_NM
-	     ,  BP_INSTANCE_ID
+	     ,  BILL_ID
 	     ,  STEP_ID
 	     ,  ASSIGNED_TO
 	     ,  STATUS
@@ -374,8 +369,8 @@
 	     ,  MOD_ID
 	     ,  MOD_DT
 	  FROM EBS_BP_TASKS
-	 WHERE TASK_ID = #{TASK_ID}
-	   AND BP_INSTANCE_ID = #{BP_INSTANCE_ID}
+	 WHERE TASK_ID = #{taskId}
+	   AND BILL_ID = #{billId}
 
 	</select>
 
@@ -395,9 +390,9 @@
     <delete id="deleteBpTasks" parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
 	/* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.deleteBpTasks */
 	DELETE FROM EBS_BP_TASKS
-	WHERE TASK_ID = #{TASK_ID}
-	   AND STEP_ID = #{STEP_ID}
-	   AND BP_INSTANCE_ID = #{BP_INSTANCE_ID}
+	WHERE TASK_ID = #{taskId}
+	   AND STEP_ID = #{stepId}
+	   AND BILL_ID = #{billId}
     </delete>
 
    <!-- 해당안건의 소관위 -->
@@ -438,6 +433,7 @@
 		from ebs_bp_srvc_job
 		where use_yn = 'Y'
 	</select>
+
 
 
 

@@ -10,11 +10,7 @@ public class BillMngResponse {
 	private List<ProposerVo> proposerList;
     private List<BillMngVo> cmtList;
     private BillMngVo billMngVo;
-    
-    public BillMngResponse(BillMngVo billMngVo, List<ProposerVo> proposerList, List<BillMngVo> cmtList) {
-        this.billMngVo = billMngVo;
-        this.proposerList = proposerList;
-        this.cmtList = cmtList;
-	}
-    
+
+
+
 }

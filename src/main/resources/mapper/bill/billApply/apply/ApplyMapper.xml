@@ -44,57 +44,70 @@
     <select id="selectListApply" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.selectListApply */
+
 		select
 		    AA.bill_id
-		  , kgst.fngetlangnm(AA.bill_name_kg,AA.bill_name_ru,AA.bill_name_kg,#{lang}) as bill_name -- 안건 이름
-		  , kgst.fngetlangnm(vum.member_nm_kg,vum.member_nm_ru,vum.member_nm_kg,#{lang}) as member_nm -- 제안자 이름
-          , AA.scl_dsc_rcp_nmb
-          , AA.ppsl_dt
-          , AA.reg_dt
-          , AA.stat_nm
-          , AA.stat_cd
-          , AA.na_term_cd
+		  , kgst.fngetlangnm(AA.bill_name_kg,AA.bill_name_ru,AA.bill_name_kg,#{lang})  as bill_name -- 안건 이름
+		  , kgst.fngetlangnm(AA.member_nm_kg,AA.member_nm_ru,AA.member_nm_kg,#{lang}) as ppsr_nm -- 제안자 이름
+		  , AA.bill_name_kg
+		  , AA.bill_name_ru
+		  , AA.scl_dsc_rcp_nmb
+		  , AA.ppsl_dt
+		  , AA.reg_dt
+		  , AA.stat_nm
+		  , AA.stat_cd
+		  , AA.na_term_cd
+		  , kgst.fngetlangnm(AA.etc_kg,AA.etc_ru,AA.etc_kg,#{lang}) as etc -- etc
 		from (
 			select
-			   pl.bill_id
-			 , max(pl.bill_name_kg) as bill_name_kg
-			 , max(pl.bp_instance_id) as bp_instance_id
-			 , max(pl.bill_name_ru) as bill_name_ru
-			 , max(pl.na_term_cd) as na_term_cd
-			 , max(pl.current_step_id) as current_step_id
-			 , max(pl.ppsr_id) as ppsr_id
-			 , max(pl.ppsl_dt) as ppsl_dt
-			 , max(pl.scl_dsc_rcp_nmb) as scl_dsc_rcp_nmb
-			 , max(pl.reg_dt) as reg_dt
-			 , max(ebs.stat_cd) as stat_cd
-			 , kgst.fngetcodenm('1010',max(ebs.stat_cd),#{lang}) as stat_nm
+			    pl.bill_id
+			  , max(pl.bill_name_kg ) as bill_name_kg
+			  , max(pl.bill_name_ru) as bill_name_ru
+			  , max(pl.bill_no) as bill_no
+			  , max(pl.bill_kind) as bill_kind
+			  , max(pl.scl_dsc_rcp_nmb) as scl_dsc_rcp_nmb
+			  , max(pl.na_term_cd ) as na_term_cd
+			  , max(pl.ppsr_id) as ppsr_id
+			  , max(vum.member_nm_kg) as member_nm_kg
+			  , max(vum.member_nm_ru) as member_nm_ru
+			  , max(pl.etc_kg) as etc_kg
+			  , max(pl.etc_ru) as etc_ru
+			  , max(pl.ppsl_dt) as ppsl_dt
+			  , max(pl.reg_dt) as reg_dt
+			  , max(pl.current_step_id) as current_step_id
+			  , max(pl.step_id) as step_id
+			  , max(pl.task_id) as task_id
+			  , max(pl.task_status) as task_status
+			  , max(pl.stat_cd) as stat_cd
+			  , max(kgst.fngetcodenm('1010',pl.stat_cd,#{lang})) as stat_nm
 			from kgst.view_bill_process_list pl
-			join kgst.ebs_bp_step ebs on (pl.bp_df_id = ebs.bp_df_id and pl.current_step_id = ebs.step_id)
-			group by bill_id
-		) AA
-		join kgst.view_user_member vum on (AA.ppsr_id = vum.user_id)
-		where 1=1
-		  and AA.ppsr_id = #{loginId}
-			<if test="naTermCd != null and naTermCd != ''">
-				and AA.na_term_cd = #{naTermCd}
-			</if>
-			<if test="billName != null and billName != ''">
-			    <if test="lang == 'lng_type_1' or lang == 'lng_type_3'">
-			    	and AA.bill_name_kg like concat('%', #{billName}, '%')
-			    </if>
-			    <if test="lang == 'lng_type_2'">
-			    	and AA.bill_name_ru like concat('%', #{billName}, '%')
-			    </if>
-			</if>
-			<if test="sclDscRcpNmb != null and sclDscRcpNmb != ''">
-				and AA.scl_dsc_rcp_nmb like concat('%', #{sclDscRcpNmb}, '%')
-			</if>
-			<if test="statCd != null and statCd != ''">
-				and AA.stat_cd = #{statCd}
-			</if>
-			<if test="ppslDt != null and ppslDt != ''">
-				and AA.ppsl_dt = #{ppslDt}
-			</if>
+			join kgst.view_user_member vum on (pl.ppsr_id = vum.user_id)
+			where 1=1
+			  and pl.ppsr_id = #{loginId}
+			group by pl.bill_id
+		 ) AA
+        where 1=1
+
+		<if test="naTermCd != null and naTermCd != ''">
+			and AA.na_term_cd = #{naTermCd}
+		</if>
+		<if test="billName != null and billName != ''">
+		    <if test="lang == 'lng_type_1' or lang == 'lng_type_3'">
+		    	and AA.bill_name_kg like concat('%', #{billName}, '%')
+		    </if>
+		    <if test="lang == 'lng_type_2'">
+		    	and AA.bill_name_ru like concat('%', #{billName}, '%')
+		    </if>
+		</if>
+		<if test="sclDscRcpNmb != null and sclDscRcpNmb != ''">
+			and AA.scl_dsc_rcp_nmb like concat('%', #{sclDscRcpNmb}, '%')
+		</if>
+		<if test="statCd != null and statCd != ''">
+			and AA.stat_cd = #{statCd}
+		</if>
+		<if test="ppslDt != null and ppslDt != ''">
+			and AA.ppsl_dt = #{ppslDt}
+		</if>
 	    order by AA.reg_dt desc
 
     </select>
@@ -315,7 +328,6 @@
 			   pl.bill_id
 			 , max(pl.bill_no) as bill_no
 			 , max(pl.bill_name_kg) as bill_name_kg
-			 , max(pl.bp_instance_id) as bp_instance_id
 			 , max(pl.bill_name_ru) as bill_name_ru
 			 , max(pl.na_term_cd) as na_term_cd
 			 , max(pl.current_step_id) as current_step_id

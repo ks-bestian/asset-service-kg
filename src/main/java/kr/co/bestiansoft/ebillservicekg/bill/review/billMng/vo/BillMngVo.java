@@ -4,13 +4,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo;
 import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
 
 @Data
 public class BillMngVo extends ComDefaultVO {
-	
+
     private String billId;// 안건아이디
     // 안건번호
     private String billNo;
@@ -18,6 +17,9 @@ public class BillMngVo extends ComDefaultVO {
     private String billKind;
     // 대수코드
     private String naTermCd;
+
+    private String billName;
+
     // 의안명 - kg
     private String billNameKg;
     // 의안명 - ru
@@ -29,9 +31,11 @@ public class BillMngVo extends ComDefaultVO {
     // 발의자아이디
     private String ppsrId;
     // 제안일
-    private LocalDate ppslDt;
+    private String ppslDt;
     // 상태코드
     private String statCd;
+    private String statNm;
+
     // 위원회아이디
     private String cmtId;
     // 위원회회부일
@@ -58,27 +62,36 @@ public class BillMngVo extends ComDefaultVO {
     private String wtCnKg;
     // 철회 사유-러시아
     private String wtCnRu;
-    
+
     // 비고
     private String etcKg;
     private String etcRu;
-    
+
     //사회토론접수번호
     private String sclDscRcpNmb;
     //정부제출전자문서번호
     private String gvrnSbmsElctDcmnNmbr;
-    
+
     // 목록 검색용 : 넘버링
-    private String num; 
+    private String num;
     // 목록 검색용 : 의안명 검색
-    private String searchBillName; 
-    // 언어 구분에 따른 상태코드명 
-    private String statNm; 
-    
+    private String searchBillName;
+    // 언어 구분에 따른 상태코드명
+
     // 위원회 심사 차수
     private String cmtCnt;
-    
+
     private List<ProposerVo> proposerList;
+
+    //process info
+    private String currentStepId;
+    private String stepId;
+    private Long taskId;
+    private String taskStatus;
+    private String bpInstanceId;
+    private String assignedTo;
+    private String trgtUserId;
+
 
 
 }

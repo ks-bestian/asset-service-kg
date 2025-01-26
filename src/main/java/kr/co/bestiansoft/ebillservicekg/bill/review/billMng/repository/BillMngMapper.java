@@ -11,9 +11,16 @@ import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.ProposerVo;
 @Mapper
 public interface BillMngMapper {
 
-    List<BillMngVo> getBillList (HashMap<String, Object> param);
+	List<BillMngVo> selectListBillMng(HashMap<String, Object> param);
+	BillMngVo selectOneBill(HashMap<String, Object> param);
 
-    BillMngVo getBillById(HashMap<String, Object> param);
+
+/////////////////////////////
+
+
+
+
+
     List<ProposerVo> selectProposerMemberList (HashMap<String, Object> param);
     List<BillMngVo> selectCmtList (HashMap<String, Object> param);
 

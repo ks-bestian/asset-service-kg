@@ -9,7 +9,6 @@ public class ProcessVo extends ComDefaultVO {
 	private String bpDfId;
 	private String bpDfNm;
 	private String rmk;
-	private Long bpInstanceId;
 	private String billId;
 	private String startDt;
 	private String endDt;

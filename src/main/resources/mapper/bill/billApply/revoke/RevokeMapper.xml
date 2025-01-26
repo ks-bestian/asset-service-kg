@@ -28,7 +28,6 @@
 			   pl.bill_id
 			 , max(pl.bill_name_kg) as bill_name_kg
 			 , max(pl.bill_name_ru) as bill_name_ru
-			 , max(pl.bp_instance_id) as bp_instance_id
 			 , max(pl.current_step_id) as current_step_id
 			 , max(pl.ppsr_id) as ppsr_id
 			 , max(pl.ppsl_dt) as ppsl_dt
