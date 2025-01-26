@@ -126,4 +126,10 @@ public class SystemBillController {
     public ResponseEntity<CommonResponse> cretaeGoverment(SystemBillVo systemBillVo) {
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "file create successfully", adminBillMngService.cretaeGoverment(systemBillVo)), HttpStatus.CREATED);
     }
+    
+    @ApiOperation(value = "안건 상세 조회", notes = "안건의 상세를 조회한다")
+    @GetMapping("/system/bill/apply/{billId}")
+    public ResponseEntity<CommonResponse> getBillDetail(@PathVariable String billId, @RequestParam String lang) {
+    	return new ResponseEntity<>(new CommonResponse(200, "OK", adminBillMngService.getApplyDetail(billId, lang)), HttpStatus.OK);
+    }
 }

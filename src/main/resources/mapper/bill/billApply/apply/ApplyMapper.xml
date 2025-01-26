@@ -175,6 +175,7 @@
 			, em.scl_dsc_rcp_nmb 				-- 사회토론번호
 			, em.ppsl_dt 						-- 제안일
 			, em.bill_no						-- 안건번호
+			, (select emc.cmt_cd from kgst.ebs_master_cmt emc where emc.bill_id = em.bill_id and emc.cmt_se_cd = 'M') as cmt_cd
 		from kgst.ebs_master em
 		left join kgst.view_user_member view on (view.member_id = em.ppsr_id)
 		where em.bill_id = #{billId}

@@ -41,4 +41,6 @@ public interface SystemBillMapper {
 
 	List<SystemBillVo> selectBillGovermentList(HashMap<String, Object> param);
 
+	SystemBillVo selectApplyDetail(String billId, String lang);
+
 }

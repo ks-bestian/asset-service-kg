@@ -12,10 +12,15 @@ import kr.co.bestiansoft.ebillservicekg.admin.billMng.repository.SystemBillMappe
 import kr.co.bestiansoft.ebillservicekg.admin.billMng.service.SystemBillService;
 import kr.co.bestiansoft.ebillservicekg.admin.billMng.vo.SystemBillResponse;
 import kr.co.bestiansoft.ebillservicekg.admin.billMng.vo.SystemBillVo;
+import kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.repository.AgreeMapper;
+import kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.vo.AgreeVo;
+import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyResponse;
+import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.impl.EDVHelper;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
+import kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 public class SystemBillServiceImpl implements SystemBillService {
 	
     private final SystemBillMapper systemBillMapper;
+    private final AgreeMapper agreeMapper;
     private final EDVHelper edv;
     
 	@Override
@@ -538,5 +544,25 @@ public class SystemBillServiceImpl implements SystemBillService {
 		
 		systemBillVo.setFiles(null);
 		return systemBillVo;
+	}
+	
+	@Override
+	public SystemBillResponse getApplyDetail(String billId, String lang) {
+
+		SystemBillResponse result = new SystemBillResponse();
+
+		//안건 상세
+		SystemBillVo billDetail = systemBillMapper.selectApplyDetail(billId, lang);
+		result.setBillDetail(billDetail);
+
+		//파일 리스트
+		List<EbsFileVo> fileList = systemBillMapper.selectBillFile(billId);
+		result.setFileList(fileList);
+
+		//발의자 대상
+		List<AgreeVo> proposerList = agreeMapper.selectAgreeProposerList(billId);
+		result.setProposerList(proposerList);
+
+		return result;
 	}
 }

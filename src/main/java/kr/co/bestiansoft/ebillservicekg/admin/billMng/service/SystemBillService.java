@@ -41,4 +41,6 @@ public interface SystemBillService {
 
 	SystemBillVo cretaeGoverment(SystemBillVo systemBillVo);
 
+	SystemBillResponse getApplyDetail(String billId, String lang);
+
 }
