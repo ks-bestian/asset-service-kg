@@ -17,6 +17,20 @@ public interface BillMngService {
     /* 안건관리 - 안건접수 */
     BillMngVo billRegisterMng(BillMngVo billMngVo);
 
+
+	/* 안건 관리 법률검토 리스트 화면 */
+    List<BillMngVo> selectListlegalReview(HashMap<String, Object> param);
+
+    /* 안건 관리 법률검토 상세 화면 */
+    BillMngResponse selectOnelegalReview(HashMap<String, Object> param);
+
+    /* 안건관리 기타정보등록 */
+    BillMngVo insertBillDetail(BillMngVo billMngVo);
+
+    /* 안건관리 법률검토 보고 */
+    BillMngVo insertBillLegalReviewReport(BillMngVo billMngVo);
+
+
     ////////////////////////////////////////////////////////////////////
 
 

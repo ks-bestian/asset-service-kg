@@ -60,6 +60,50 @@ public class BillMngServiceImpl implements BillMngService {
 	}
 
 
+	@Override
+	public List<BillMngVo> selectListlegalReview(HashMap<String, Object> param) {
+        List<BillMngVo> result = billMngMapper.selectListlegalReview(param);
+        return result;
+	}
+
+
+	@Override
+	public BillMngResponse selectOnelegalReview(HashMap<String, Object> param) {
+
+		BillMngResponse billMngResponse = new BillMngResponse();
+		BillMngVo billMngVo = billMngMapper.selectOnelegalReview(param);
+		billMngResponse.setBillMngVo(billMngVo);
+
+		//////////////////////////
+		ProcessVo pvo = new ProcessVo();
+		pvo.setTaskId(Long.valueOf(String.valueOf(param.get("taskId"))));
+		ProcessVo taskVo = processService.selectBpTask(pvo);
+		billMngResponse.setProcessVo(taskVo);
+
+		return billMngResponse;
+	}
+
+	@Transactional
+	@Override
+	public BillMngVo insertBillDetail(BillMngVo billMngVo) {
+		billMngMapper.insertBillDetail(billMngVo);
+		return billMngVo;
+	}
+
+	@Override
+	public BillMngVo insertBillLegalReviewReport(BillMngVo billMngVo) {
+
+		//현재 스텝 완료처리
+		//다음스텝가져와서 인서트
+		ProcessVo pVo = new ProcessVo();
+		pVo.setBillId(billMngVo.getBillId());
+		pVo.setStepId(billMngVo.getStepId());
+		processService.handleProcess(pVo);
+
+		return null;
+	}
+
+
 	///////////////////////////////////////////////////////////////////
 
 
@@ -75,6 +119,9 @@ public class BillMngServiceImpl implements BillMngService {
 
     	return billMngVo;
 	}
+
+
+
 
 
 }

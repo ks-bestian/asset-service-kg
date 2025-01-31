@@ -74,6 +74,145 @@
 
     </select>
 
+
+
+
+    <select id="selectListlegalReview" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper.selectListlegalReview */
+		select
+		    pl.bill_id
+		  , kgst.fngetlangnm(pl.bill_name_kg,pl.bill_name_ru,pl.bill_name_kg,#{lang}) as bill_name -- 안건 이름
+		  , kgst.fngetlangnm(vum.member_nm_kg,vum.member_nm_ru,vum.member_nm_kg,#{lang}) as ppsr_nm -- 제안자 이름
+		  , kgst.fngetlangnm(pl.etc_kg,pl.etc_ru,pl.etc_kg,#{lang}) as etc -- etc
+		  , pl.bill_name_kg
+		  , pl.bill_name_ru
+		  , pl.bill_no
+		  , pl.scl_dsc_rcp_nmb
+		  , pl.bill_kind
+		  , pl.na_term_cd
+		  , pl.ppsr_id
+		  , vum.member_nm_kg
+		  , vum.member_nm_ru
+		  , pl.ppsl_dt
+		  , pl.current_step_id
+		  , pl.task_id
+		  , pl.task_status
+		  , pl.step_id
+		  , pl.stat_cd
+		  , kgst.fngetcodenm('1010',pl.stat_cd,#{lang}) as stat_nm
+		  , pl.assigned_to
+		  , pl.trgt_user_id
+		from kgst.view_bill_process_list pl
+		join kgst.view_user_member vum on (pl.ppsr_id = vum.user_id)
+		where 1=1
+		  and pl.assigned_to = #{deptCd}
+
+		<if test="stepId != null and stepId != ''">
+			and pl.step_id = #{stepId}
+		</if>
+
+		<if test="naTermCd != null and naTermCd != ''">
+			and pl.na_term_cd = #{naTermCd}
+		</if>
+
+    </select>
+
+    <select id="selectOnelegalReview" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper.selectOnelegalReview */
+        select
+			  emd.seq
+			, emd.bill_id
+			, emd.cls_cd
+			, emd.rmrk_kg
+			, emd.rmrk_ru
+			, emd.mtn_dt
+			, emd.prsd_rjct_dt
+			, emd.lgl_rvw_rslt_code
+			, emd.lgl_act_rslt_code
+			, emd.rslt_dt
+			, emd.reg_id
+			, emd.reg_dt
+		from kgst.ebs_master_detail emd
+		where emd.bill_id = #{billId}
+			and emd.cls_cd = #{clsCd}
+    </select>
+
+    <insert id="insertBillDetail" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo"
+     useGeneratedKeys="true" keyProperty="seq">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper.insertBillDetail */
+		insert into kgst.ebs_master_detail (
+		      bill_id
+		    , cls_cd
+		    <if test="rmrkKg != null">, rmrk_kg</if>
+		    <if test="rmrkRu != null">, rmrk_ru</if>
+		    <if test="mtnDt != null">, mtn_dt</if>
+		    <if test="prsdRjctDt != null">, prsd_rjct_dt</if>
+		    <if test="lglRvwRsltCode != null">, lgl_rvw_rslt_code</if>
+		    <if test="lglActRsltCode != null">, lgl_act_rslt_code</if>
+		    <if test="rsltDt != null">, rslt_dt</if>
+		    <if test="rsltCode != null">, rslt_code</if>
+		    , reg_id
+		    , reg_dt
+		)
+		values (
+		      #{billId}
+		    , #{clsCd}
+		    <if test="rmrkKg != null">, #{rmrkKg}</if>
+		    <if test="rmrkRu != null">, #{rmrkRu}</if>
+		    <if test="mtnDt != null">, #{mtnDt}</if>
+		    <if test="prsdRjctDt != null">, #{prsdRjctDt}</if>
+		    <if test="lglRvwRsltCode != null">, #{lglRvwRsltCode}</if>
+		    <if test="lglActRsltCode != null">, #{lglActRsltCode}</if>
+		    <if test="rsltDt != null">, #{rsltDt}</if>
+		    <if test="rsltCode != null">, #{rsltCode}</if>
+		    , #{regId}
+		    , now()
+		)
+
+		ON CONFLICT (bill_id,cls_cd) -- Specify the unique key or constraint here
+        DO UPDATE SET
+	          mod_id = #{modId}
+	        , mod_dt = now()
+    	    <if test="rmrkKg != null">, rmrk_kg = #{rmrkKg}</if>
+	        <if test="rmrkRu != null">, rmrk_ru = #{rmrkRu}</if>
+	        <if test="mtnDt != null">, mtn_dt = #{mtnDt}</if>
+	        <if test="prsdRjctDt != null">, prsd_rjct_dt = #{prsdRjctDt}</if>
+	        <if test="lglRvwRsltCode != null">, lgl_rvw_rslt_code = #{lglRvwRsltCode}</if>
+	        <if test="lglActRsltCode != null">, lgl_act_rslt_code = #{lglActRsltCode}</if>
+	        <if test="rsltDt != null">, rslt_dt = #{rsltDt}</if>
+	        <if test="rsltCode != null">, rslt_code = #{rsltCode}</if>
+    </insert>
+
+
+
+
+    <!-- jjjjjjjjjjjjjjjjjjj -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <select id="selectProposerMemberList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.ProposerVo">
     	/* 발의자 명단 조회 */
 		SELECT

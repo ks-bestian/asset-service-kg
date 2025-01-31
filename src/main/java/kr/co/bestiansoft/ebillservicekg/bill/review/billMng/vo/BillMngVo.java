@@ -10,6 +10,8 @@ import lombok.Data;
 @Data
 public class BillMngVo extends ComDefaultVO {
 
+	private Long seq;
+
     private String billId;// 안건아이디
     // 안건번호
     private String billNo;
@@ -81,6 +83,20 @@ public class BillMngVo extends ComDefaultVO {
     // 위원회 심사 차수
     private String cmtCnt;
 
+    private String rmrkKg;
+    private String rmrkRu;
+    private String rmrk;
+    private String mtnDt;
+    private String prsdRjctDt;
+    private String lglRvwRsltCode;
+    private String lglActRsltCode;
+    private String rsltCode;
+    private String rsltDt;
+    private String clsCd;
+
+
+
+
     private List<ProposerVo> proposerList;
 
     //process info
@@ -91,7 +107,6 @@ public class BillMngVo extends ComDefaultVO {
     private String bpInstanceId;
     private String assignedTo;
     private String trgtUserId;
-
-
+    private String deptCd;
 
 }

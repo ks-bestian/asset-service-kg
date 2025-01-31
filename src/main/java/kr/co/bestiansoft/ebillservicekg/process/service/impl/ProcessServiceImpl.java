@@ -46,11 +46,11 @@ public class ProcessServiceImpl implements ProcessService {
 
 		}
 
-		//ProcessVo stepVo = processMapper.selectBpStep(argVo);
+		ProcessVo stepVo = processMapper.selectBpStep(argVo);
 
 		//stepVo.setBpInstanceId(stepVo.getBpInstanceId());
 		//stepVo.setBillId(stepVo.getBillId());
-		executeServiceTasks(argVo);
+		executeServiceTasks(stepVo);
 
 		/*현재의 스텝아이디 변경*/
 		processMapper.updateBpInstanceCurrentStep(argVo);
@@ -61,9 +61,9 @@ public class ProcessServiceImpl implements ProcessService {
 
 	public void executeServiceTasks(ProcessVo argVo)  {
 
-		String stepId = argVo.getStepId();
+		String nextStepId = argVo.getNextStepId();
 
-		switch (stepId) {
+		switch (nextStepId) {
 	        case "0":
 	        	executeService_0(argVo);
 	            break;
@@ -240,7 +240,7 @@ public class ProcessServiceImpl implements ProcessService {
 			//task 완료처리
 			ProcessVo cpltVo = new ProcessVo();
 			cpltVo.setTaskId(argVo.getTaskId());
-			cpltVo.setStatus("C");
+			cpltVo.setTaskStatus("C");
 			processMapper.updateBpTask(cpltVo);
 
 		}
@@ -250,12 +250,19 @@ public class ProcessServiceImpl implements ProcessService {
 
 			ProcessVo taskVo = new ProcessVo();
 			taskVo.setBillId(argVo.getBillId());
-			taskVo.setStepId(argVo.getStepId());
+			taskVo.setStepId(argVo.getNextStepId());
 			taskVo.setTaskNm("의장접수");
 			taskVo.setStatus("P");
-			taskVo.setAssignedTo(AuthConstants.AUTH_23);//의장 할당
+			taskVo.setAssignedTo(AuthConstants.AUTH_CMOFFC);//의장실 할당
 			processMapper.insertBpTask(taskVo);
 
+
+			//stepId tasks 완료처리
+			ProcessVo cpltVo = new ProcessVo();
+			cpltVo.setBillId(argVo.getBillId());
+			cpltVo.setStepId(argVo.getStepId());
+			cpltVo.setTaskStatus("C");
+			processMapper.updateStepTasks(cpltVo);
 		}
 
 		/*1차위원회 회의예정*/
@@ -381,7 +388,7 @@ public class ProcessServiceImpl implements ProcessService {
 
 			taskVo.setTaskNm("의장검토");
 			taskVo.setStatus("P");
-			taskVo.setAssignedTo(AuthConstants.AUTH_23);//의장 할당
+			taskVo.setAssignedTo(AuthConstants.AUTH_CMOFFC);//의장 할당
 			processMapper.insertBpTask(taskVo);
 
 		}
@@ -486,12 +493,18 @@ public class ProcessServiceImpl implements ProcessService {
 		@Override
 		public ProcessVo handleTask(ProcessVo argVo) {
 			//task 완료처리
+			String userId = new SecurityInfoUtil().getAccountId();
 			ProcessVo cpltVo = new ProcessVo();
-			cpltVo.setBillId(argVo.getBillId());
 			cpltVo.setTaskId(argVo.getTaskId());
-			cpltVo.setStatus("C");
+			cpltVo.setTaskStatus(argVo.getTaskStatus());
+			cpltVo.setMdfrId(userId);
 			processMapper.updateBpTask(cpltVo);
 			return cpltVo;
+		}
+
+		@Override
+		public ProcessVo selectBpTask(ProcessVo argVo) {
+			return processMapper.selectBpTask(argVo);
 		}
 
 

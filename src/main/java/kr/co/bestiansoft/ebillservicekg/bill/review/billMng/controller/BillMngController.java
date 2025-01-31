@@ -48,8 +48,34 @@ public class BillMngController {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Bill created successfully", billMngService.billRegisterMng(billMngVo)), HttpStatus.CREATED);
     }
 
-    ////////////////////////////////////////////////////////////////////////
 
+
+    @ApiOperation(value = "안건 관리 법률검토 목록조회", notes = "안건 관리 법률검토 조회")
+    @GetMapping("/bill/review/billLegalReview")
+    public ResponseEntity<CommonResponse> selectListlegalReview(@RequestParam HashMap<String, Object> param) {
+        return new ResponseEntity<>(new CommonResponse(200, "OK", billMngService.selectListlegalReview(param)), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "안건 관리 법률검토 상세조회", notes = "안건 관리 법률검토 상세조회")
+    @GetMapping("/bill/review/billLegalReview/{billId}")
+    public ResponseEntity<CommonResponse> selectOnelegalReview(@PathVariable String billId,@RequestParam HashMap<String, Object> param) {
+    	param.put("billId",billId );
+        return new ResponseEntity<>(new CommonResponse(200, "OK", billMngService.selectOnelegalReview(param)), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "안건관리 법률검토 등록", notes = "기타정보 등록")
+    @PostMapping(value = "/bill/review/billLegalReview")
+    public ResponseEntity<CommonResponse> insertBillDetail(@RequestBody BillMngVo billMngVo) {
+        return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Bill created successfully", billMngService.insertBillDetail(billMngVo)), HttpStatus.CREATED);
+    }
+
+    @ApiOperation(value = "안건관리 법률검토 검토보고", notes = "법률검토 검토보고 등록")
+    @PostMapping(value = "/bill/review/billLegalReview/report")
+    public ResponseEntity<CommonResponse> insertBillLegalReviewReport(@RequestBody BillMngVo billMngVo) {
+        return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Bill created successfully", billMngService.insertBillLegalReviewReport(billMngVo)), HttpStatus.CREATED);
+    }
+
+    ////////////////////////////////////////////////////////////////////////
 
 
 
@@ -67,7 +93,6 @@ public class BillMngController {
     public ResponseEntity<CommonResponse> createBill(@RequestBody BillMngVo billMngVo) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Bill created successfully", billMngService.createBill(billMngVo)), HttpStatus.CREATED);
     }
-
 
 
 

@@ -9,4 +9,7 @@ public interface ProcessService {
 
 	ProcessVo handleTask(ProcessVo argVo);
 
+	ProcessVo selectBpTask(ProcessVo argVo);
+
+
 }

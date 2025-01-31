@@ -351,16 +351,16 @@
 
 	</insert>
 
-   <select id="selectBpTasks"  parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo"
+   <select id="selectBpTask"  parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo"
     resultType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
-   /* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.selectBpTasks */
+   /* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.selectBpTask */
 	SELECT
 	        TASK_ID
 	     ,  TASK_NM
 	     ,  BILL_ID
 	     ,  STEP_ID
 	     ,  ASSIGNED_TO
-	     ,  STATUS
+	     ,  STATUS as TASK_STATUS
 	     ,  DUE_DT
 	     ,  COMPLETED_DT
 	     ,  BILL_APRV_NO
@@ -370,7 +370,6 @@
 	     ,  MOD_DT
 	  FROM EBS_BP_TASKS
 	 WHERE TASK_ID = #{taskId}
-	   AND BILL_ID = #{billId}
 
 	</select>
 
@@ -378,13 +377,23 @@
 	/* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.updateBpTask */
 	 UPDATE EBS_BP_TASKS
 	   SET
-	       STATUS = #{status}
+	       STATUS = #{taskStatus}
 	     , COMPLETED_DT = now()
-	     , MOD_ID = #{modId}
+	     , MOD_ID = #{mdfrId}
 	     , MOD_DT = now()
 	 WHERE TASK_ID = #{taskId}
+    </update>
 
-
+    <update id="updateStepTasks" parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
+	/* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.updateStepTasks */
+	 UPDATE EBS_BP_TASKS
+	   SET
+	       STATUS = #{taskStatus}
+	     , COMPLETED_DT = now()
+	     , MOD_ID = #{mdfrId}
+	     , MOD_DT = now()
+	 WHERE BILL_ID = #{billId}
+	   and STEP_ID = #{stepId}
     </update>
 
     <delete id="deleteBpTasks" parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
