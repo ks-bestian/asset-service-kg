@@ -52,7 +52,7 @@ public class BillMngServiceImpl implements BillMngService {
 
 		ProcessVo pVo = new ProcessVo();
 		pVo.setBillId(billMngVo.getBillId());
-		pVo.setStepId("1200");//GD가 안건접수하여 법률파트로 넘김
+		pVo.setStepId(billMngVo.getStepId());
 		pVo.setTaskId(billMngVo.getTaskId());
 		processService.handleProcess(pVo);
 
@@ -98,6 +98,7 @@ public class BillMngServiceImpl implements BillMngService {
 		ProcessVo pVo = new ProcessVo();
 		pVo.setBillId(billMngVo.getBillId());
 		pVo.setStepId(billMngVo.getStepId());
+		pVo.setTaskId(billMngVo.getTaskId());
 		processService.handleProcess(pVo);
 
 		return null;

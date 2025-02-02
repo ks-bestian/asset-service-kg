@@ -7,8 +7,8 @@ public class AuthConstants {
 	public static final String AUTH_GD = "GD";//일반부서(GD)
 	public static final String AUTH_LGRV = "LGRV";//법률부서  legal department  LGRV review
 	public static final String AUTH_CMOFFC = "CMOFFC";//의장실
-	public static final String AUTH_24 = "24";//언어전문파트
-	public static final String AUTH_25 = "25";//심사부서
+	public static final String AUTH_LGGSPLZ = "LGGSPLZ";//언어전문파트
+	public static final String AUTH_LGEXNTN = "LGEXNTN";//법률심사부서
 
 	public static final String AUTH_26 = "26";//법적행위부서
 	public static final String AUTH_27 = "27";//번역언어심사부서

@@ -62,7 +62,7 @@ public class RevokeVo extends ComDefaultVO {
     private String stepId;
 
     /** process taskId  */
-    private String taskId;
+    private Long taskId;
 
     /** process taskStatus */
     private String taskStatus;

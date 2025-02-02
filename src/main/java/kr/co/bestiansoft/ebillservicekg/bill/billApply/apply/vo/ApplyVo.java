@@ -76,10 +76,14 @@ public class ApplyVo extends ComDefaultVO {
 
 	//로그인아이디
 	private String loginId;
-	
+
 	//위원회코드
 	private String cmtCd;
 
+
+	//process stepId
+	private String stepId;
+	private Long taskId;
 
 
 }

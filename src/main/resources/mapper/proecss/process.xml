@@ -114,8 +114,8 @@
 	/* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.updateBpInstanceCurrentStep */
 	UPDATE EBS_BP_INSTANCE
 	   SET
-	       CURRENT_STEP_ID = #{stepId}
-	     , MOD_ID = #{modId}
+	       CURRENT_STEP_ID = #{nextStepId}
+	     , MOD_ID = #{mdfrId}
 	     , MOD_DT = now()
 	 WHERE BILL_ID = #{billId}
     </update>
@@ -269,7 +269,7 @@
 	     , B.bill_id
 	FROM EBS_BP_STEP A, ebs_bp_instance B
 	WHERE A.BP_DF_ID = B.BP_DF_ID
-		and A.STEP_ID = #{stepId}
+		and A.STEP_ID = (select current_step_id from ebs_bp_instance where bill_id = #{billId})
 		and B.bill_id = #{billId}
 	</select>
 
@@ -327,8 +327,8 @@
 	       TASK_NM
 	     , BILL_ID
 	     , STEP_ID
-	     , ASSIGNED_TO
-	     , TRGT_USER_ID
+	   <if test="assignedTo != null and assignedTo != ''">  , ASSIGNED_TO </if>
+	   <if test="trgtUserId != null and trgtUserId != ''">  , TRGT_USER_ID </if>
 	     , STATUS
 	     , DUE_DT
 	     , BILL_APRV_NO
@@ -340,8 +340,8 @@
 	        #{taskNm}
 	     ,  #{billId}
 	     ,  #{stepId}
-	     ,  #{assignedTo}
-	     ,  #{trgtUserId}
+	     <if test="assignedTo != null and assignedTo != ''">,  #{assignedTo} </if>
+	     <if test="trgtUserId != null and trgtUserId != ''">,  #{trgtUserId} </if>
 	     ,  #{status}
 	     ,  #{dueDt}
 	     ,  #{billAprvNo}

@@ -53,7 +53,7 @@ public class ApplyServiceImpl implements ApplyService {
 		String ppsrId = new SecurityInfoUtil().getAccountId();
 		applyVo.setPpsrId(ppsrId);
 		applyMapper.insertApplyBill(applyVo);
-		
+
 		if (applyVo.getCmtCd() != null && !applyVo.getCmtCd().isEmpty()) {
 			applyMapper.insertApplyCmt(applyVo);
 		}
@@ -85,7 +85,7 @@ public class ApplyServiceImpl implements ApplyService {
 
 		ProcessVo pVo = new ProcessVo();
 		pVo.setBillId(billId);
-		pVo.setStepId("0");//안건생성 프로세스시작
+		pVo.setStepId("PC_START");//안건생성 프로세스시작
 		processService.handleProcess(pVo);
 
 		return applyVo;
@@ -148,7 +148,7 @@ public class ApplyServiceImpl implements ApplyService {
 			comFileService.saveFileEbs(applyVo.getFiles(), applyVo.getFileKindCds(), billId);
 			applyVo.setFiles(null);
 		}
-		
+
 		if (applyVo.getCmtCd() != null && !applyVo.getCmtCd().isEmpty()) {
 			applyMapper.updateApplyCmt(applyVo);
 		}
@@ -228,9 +228,11 @@ public class ApplyServiceImpl implements ApplyService {
 	@Override
 	public ApplyVo saveBillAccept(String billId, ApplyVo applyVo) {
 
+
 		ProcessVo pVo = new ProcessVo();
 		pVo.setBillId(billId);
-		pVo.setStepId("1000");//안건접수관리
+		pVo.setStepId(applyVo.getStepId());
+		pVo.setTaskId(applyVo.getTaskId());
 		processService.handleProcess(pVo);
 
 		return applyVo;
@@ -241,7 +243,7 @@ public class ApplyServiceImpl implements ApplyService {
 		String userId = new SecurityInfoUtil().getAccountId();
 		return applyMapper.updateFileDelete(ebsFileVo, userId);
 	}
-	
+
 	@Override
 	public List<ApplyVo> selectBillAll(HashMap<String, Object> param) {
 		return applyMapper.selectBillAll(param);

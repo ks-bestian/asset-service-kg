@@ -64,7 +64,8 @@ public class RevokeServiceImpl implements RevokeService {
 
 		ProcessVo pVo = new ProcessVo();
 		pVo.setBillId(billId);
-		pVo.setStepId("1100");//안건철회관리
+		pVo.setStepId(vo.getStepId());
+		pVo.setTaskId(vo.getTaskId());
 		processService.handleProcess(pVo);
 
 		return pVo;

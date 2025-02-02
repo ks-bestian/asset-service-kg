@@ -23,14 +23,13 @@ import lombok.RequiredArgsConstructor;
 public class ProcessController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProcessController.class);
-
 	private final ProcessService processService;
 
-    @ApiOperation(value = "Process task관리", notes = "Process task관리")
-    @PostMapping(value = "/process/taskMng/taskUpdate")
-    public ResponseEntity<CommonResponse> handleTask(@RequestBody ProcessVo processVo) {
-        return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "OK", processService.handleTask(processVo)), HttpStatus.CREATED);
-    }
+//    @ApiOperation(value = "Process task관리", notes = "Process task관리")
+//    @PostMapping(value = "/process/taskMng/taskUpdate")
+//    public ResponseEntity<CommonResponse> handleTask(@RequestBody ProcessVo processVo) {
+//        return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "OK", processService.handleTask(processVo)), HttpStatus.CREATED);
+//    }
 
 
 }

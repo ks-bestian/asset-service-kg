@@ -24,7 +24,6 @@ import org.slf4j.LoggerFactory;
 public class ProcessServiceImpl implements ProcessService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProcessServiceImpl.class);
-
 	private final ProcessMapper processMapper;
 
 
@@ -32,28 +31,39 @@ public class ProcessServiceImpl implements ProcessService {
 	@Override
 	public ProcessVo handleProcess(ProcessVo argVo) {
 
-		if("0".equals(argVo.getStepId())) {
+		String userId = new SecurityInfoUtil().getAccountId();
+		ProcessVo stepVo = new ProcessVo();
 
-			argVo.setBpDfId("1");//일단은 하나로 설정 여러개라면 안건유형에 따라서
-			argVo.setStatus("P");//진행중
-			argVo.setCurrentStepId("0");
-			processMapper.insertBpInstance(argVo);
+		if("PC_START".equals(argVo.getStepId())) {// 시작점 bp instance 생성
+			// BpDfId 를 접수시 할지? 등록시 할지?
+			ProcessVo pVo = new ProcessVo();
+			pVo.setBillId(argVo.getBillId());
+			pVo.setBpDfId("1");//일단은 하나로 설정 여러개라면 안건유형에 따라서
+			pVo.setStatus("P");//진행중
+			pVo.setCurrentStepId("0");
+			pVo.setRegId(argVo.getRegId());
+			processMapper.insertBpInstance(pVo);
 
-		} else if("1000".equals(argVo.getStepId())) {
-
-			argVo.setBpDfId("1");//일단은 하나로 설정 여러개라면 안건유형에 따라서
-			processMapper.updateBpInstance(argVo);
-
+			stepVo.setStepId("0");
+			stepVo.setBillId(argVo.getBillId());
+			stepVo.setNextStepId("0");
+		} else {
+			stepVo = processMapper.selectBpStep(argVo);
 		}
 
-		ProcessVo stepVo = processMapper.selectBpStep(argVo);
+		if(argVo.getTaskId() != null && !"".equals(argVo.getTaskId())) {//taskId 가 존재시 타스크만 완료업뎃
 
-		//stepVo.setBpInstanceId(stepVo.getBpInstanceId());
-		//stepVo.setBillId(stepVo.getBillId());
+			//task 완료처리
+			ProcessVo cpltVo = new ProcessVo();
+			cpltVo.setTaskId(argVo.getTaskId());
+			cpltVo.setTaskStatus("C");
+			cpltVo.setMdfrId(userId);
+			processMapper.updateBpTask(cpltVo);
+		}
+
+		stepVo.setRegId(userId);
+		stepVo.setMdfrId(userId);
 		executeServiceTasks(stepVo);
-
-		/*현재의 스텝아이디 변경*/
-		processMapper.updateBpInstanceCurrentStep(argVo);
 
 		return argVo;
 
@@ -61,7 +71,10 @@ public class ProcessServiceImpl implements ProcessService {
 
 	public void executeServiceTasks(ProcessVo argVo)  {
 
+		String stepId = argVo.getStepId();
 		String nextStepId = argVo.getNextStepId();
+
+		if(stepId == null || "".equals(stepId)) return;
 
 		switch (nextStepId) {
 	        case "0":
@@ -173,18 +186,22 @@ public class ProcessServiceImpl implements ProcessService {
 
 		}
 
+		/*현재의 스텝아이디 변경*/
+		processMapper.updateBpInstanceCurrentStep(argVo);
     }
 
 
-		/*안건등록 시작점*/
+		/*안건등록 시작점 프로세스시작*/
 		void executeService_0(ProcessVo argVo)  {
 
 			ProcessVo taskVo = new ProcessVo();
-			taskVo.setTaskNm(argVo.getStepNm());
+			taskVo.setTaskNm("안건등록");
 			taskVo.setBillId(argVo.getBillId());
 			taskVo.setStepId(argVo.getStepId());
 			taskVo.setStatus("C");
-			taskVo.setAssignedTo(null);
+			taskVo.setTrgtUserId(argVo.getRegId());
+			taskVo.setRegId(argVo.getRegId());
+
 			processMapper.insertBpTask(taskVo);
 		}
 
@@ -192,12 +209,17 @@ public class ProcessServiceImpl implements ProcessService {
 		/*안건접수관리*/
 		void executeService_1000(ProcessVo argVo) {
 
+			// BpDfId 를 접수시 할지? 등록시 할지?
+			//argVo.setBpDfId("1");//일단은 하나로 설정 여러개라면 안건유형에 따라서
+			//processMapper.updateBpInstance(argVo);
+
 			ProcessVo taskVo = new ProcessVo();
-			taskVo.setTaskNm("안건접수관리");
+			taskVo.setTaskNm("안건접수");
 			taskVo.setBillId(argVo.getBillId());
-			taskVo.setStepId(argVo.getStepId());
+			taskVo.setStepId(argVo.getNextStepId());
 			taskVo.setStatus("P");
 			taskVo.setAssignedTo(AuthConstants.AUTH_GD);//GD부서에 할당
+			taskVo.setRegId(argVo.getRegId());
 			processMapper.insertBpTask(taskVo);
 
 		}
@@ -209,10 +231,10 @@ public class ProcessServiceImpl implements ProcessService {
 			List<ProposerVo> properList = processMapper.selectListProposerId(argVo);
 
 			ProcessVo taskVo = new ProcessVo();
-			taskVo.setTaskNm("안건철회관리");
+			taskVo.setTaskNm("안건철회");
 			taskVo.setBillId(argVo.getBillId());
-			taskVo.setStepId(argVo.getStepId());
-
+			taskVo.setStepId(argVo.getNextStepId());
+			taskVo.setRegId(argVo.getRegId());
 			for(ProposerVo ppVo:properList) {
 
 				if(userId.equals(ppVo.getProposerId())) {//로그인한자가 제안자이면 이미완료.
@@ -225,23 +247,18 @@ public class ProcessServiceImpl implements ProcessService {
 			}
 		}
 
-		/*법률부서검토관리*/
+		/*법률부서검토관리
+		 * GD가 안건접수시 법류부서검토로*/
 		void executeService_1200(ProcessVo argVo) {
 
 			ProcessVo taskVo = new ProcessVo();
 			taskVo.setBillId(argVo.getBillId());
-			taskVo.setStepId(argVo.getStepId());
-			taskVo.setTaskNm("법률부서검토관리");
+			taskVo.setStepId(argVo.getNextStepId());
+			taskVo.setTaskNm("법률부서검토");
 			taskVo.setStatus("P");
 			taskVo.setAssignedTo(AuthConstants.AUTH_LGRV);//법률부서에 할당
-
+			taskVo.setRegId(argVo.getRegId());
 			processMapper.insertBpTask(taskVo);
-
-			//task 완료처리
-			ProcessVo cpltVo = new ProcessVo();
-			cpltVo.setTaskId(argVo.getTaskId());
-			cpltVo.setTaskStatus("C");
-			processMapper.updateBpTask(cpltVo);
 
 		}
 
@@ -251,18 +268,12 @@ public class ProcessServiceImpl implements ProcessService {
 			ProcessVo taskVo = new ProcessVo();
 			taskVo.setBillId(argVo.getBillId());
 			taskVo.setStepId(argVo.getNextStepId());
-			taskVo.setTaskNm("의장접수");
+			taskVo.setTaskNm("의장접수(결재");
 			taskVo.setStatus("P");
 			taskVo.setAssignedTo(AuthConstants.AUTH_CMOFFC);//의장실 할당
+			taskVo.setRegId(argVo.getRegId());
 			processMapper.insertBpTask(taskVo);
 
-
-			//stepId tasks 완료처리
-			ProcessVo cpltVo = new ProcessVo();
-			cpltVo.setBillId(argVo.getBillId());
-			cpltVo.setStepId(argVo.getStepId());
-			cpltVo.setTaskStatus("C");
-			processMapper.updateStepTasks(cpltVo);
 		}
 
 		/*1차위원회 회의예정*/
@@ -272,18 +283,18 @@ public class ProcessServiceImpl implements ProcessService {
 //			심사부서 의견서등록
 //			회의예정화면에서 회의안건으로 선택하여	회의를 저장한다.
 
-
 			ProcessVo taskVo = new ProcessVo();
 			taskVo.setBillId(argVo.getBillId());
-			taskVo.setStepId(argVo.getStepId());
+			taskVo.setStepId(argVo.getNextStepId());
 			taskVo.setTaskNm("언어전문파트의견서등록");
 			taskVo.setStatus("P");
-			taskVo.setAssignedTo(AuthConstants.AUTH_24);//언어전문파트 할당
+			taskVo.setAssignedTo(AuthConstants.AUTH_LGGSPLZ);//언어전문파트 할당
+			taskVo.setRegId(argVo.getRegId());
 			processMapper.insertBpTask(taskVo);
 
 			taskVo.setTaskNm("심사부서의견서등록");
 			taskVo.setStatus("P");
-			taskVo.setAssignedTo(AuthConstants.AUTH_25);//심사부서 할당
+			taskVo.setAssignedTo(AuthConstants.AUTH_LGEXNTN);//심사부서 할당
 			processMapper.insertBpTask(taskVo);
 
 		}
@@ -295,10 +306,11 @@ public class ProcessServiceImpl implements ProcessService {
 
 			ProcessVo taskVo = new ProcessVo();
 			taskVo.setBillId(argVo.getBillId());
-			taskVo.setStepId(argVo.getStepId());
+			taskVo.setStepId(argVo.getNextStepId());
 			taskVo.setTaskNm("1차위원회 회의결과등록");
 			taskVo.setStatus("P");
 			taskVo.setAssignedTo(cmttVo.getCmtId());//위원회 할당
+			taskVo.setRegId(argVo.getRegId());
 			processMapper.insertBpTask(taskVo);
 
 		}
@@ -312,10 +324,11 @@ public class ProcessServiceImpl implements ProcessService {
 
 			ProcessVo taskVo = new ProcessVo();
 			taskVo.setBillId(argVo.getBillId());
-			taskVo.setStepId(argVo.getStepId());
+			taskVo.setStepId(argVo.getNextStepId());
 			taskVo.setTaskNm("1차위원회 회의심사보고");
 			taskVo.setStatus("P");
 			taskVo.setAssignedTo(cmttVo.getCmtId());//위원회 할당
+			taskVo.setRegId(argVo.getRegId());
 			processMapper.insertBpTask(taskVo);
 
 		}
@@ -327,10 +340,11 @@ public class ProcessServiceImpl implements ProcessService {
 
 			ProcessVo taskVo = new ProcessVo();
 			taskVo.setBillId(argVo.getBillId());
-			taskVo.setStepId(argVo.getStepId());
+			taskVo.setStepId(argVo.getNextStepId());
 			taskVo.setTaskNm("1차본회의 심사요청");
 			taskVo.setStatus("C");
 			taskVo.setAssignedTo(cmttVo.getCmtId());//위원회 할당
+			taskVo.setRegId(argVo.getRegId());
 			processMapper.insertBpTask(taskVo);
 
 		}
@@ -344,10 +358,11 @@ public class ProcessServiceImpl implements ProcessService {
 //			심사보고서등록
 			ProcessVo taskVo = new ProcessVo();
 			taskVo.setBillId(argVo.getBillId());
-			taskVo.setStepId(argVo.getStepId());
+			taskVo.setStepId(argVo.getNextStepId());
 			taskVo.setTaskNm("본회의 심사요청");
 			taskVo.setStatus("P");
 			taskVo.setAssignedTo(cmttVo.getCmtId());//위원회 할당
+			taskVo.setRegId(argVo.getRegId());
 			processMapper.insertBpTask(taskVo);
 
 		}
@@ -365,10 +380,11 @@ public class ProcessServiceImpl implements ProcessService {
 
 			ProcessVo taskVo = new ProcessVo();
 			taskVo.setBillId(argVo.getBillId());
-			taskVo.setStepId(argVo.getStepId());
+			taskVo.setStepId(argVo.getNextStepId());
 			taskVo.setTaskNm("법적행위 검토 보고서");
 			taskVo.setStatus("P");
 			taskVo.setAssignedTo(AuthConstants.AUTH_26);//법적행위 할당
+			taskVo.setRegId(argVo.getRegId());
 			processMapper.insertBpTask(taskVo);
 
 			taskVo.setTaskNm("번역언어심사 의견서");
@@ -462,6 +478,7 @@ public class ProcessServiceImpl implements ProcessService {
 			taskVo.setTaskNm("정부이송 요청");
 			taskVo.setStatus("P");
 			taskVo.setAssignedTo(AuthConstants.AUTH_GD);//일반부서(GD)
+			taskVo.setRegId(argVo.getRegId());
 			processMapper.insertBpTask(taskVo);
 
 		}
@@ -475,6 +492,7 @@ public class ProcessServiceImpl implements ProcessService {
 			taskVo.setTaskNm("공포");
 			taskVo.setStatus("P");
 			taskVo.setAssignedTo(AuthConstants.AUTH_GD);//일반부서(GD)
+			taskVo.setRegId(argVo.getRegId());
 			processMapper.insertBpTask(taskVo);
 
 		}
@@ -487,20 +505,10 @@ public class ProcessServiceImpl implements ProcessService {
 			taskVo.setBillId(argVo.getBillId());
 			taskVo.setStepId(argVo.getStepId());
 			taskVo.setStatus("C");
+			taskVo.setRegId(argVo.getRegId());
 			processMapper.insertBpTask(taskVo);
 		}
 
-		@Override
-		public ProcessVo handleTask(ProcessVo argVo) {
-			//task 완료처리
-			String userId = new SecurityInfoUtil().getAccountId();
-			ProcessVo cpltVo = new ProcessVo();
-			cpltVo.setTaskId(argVo.getTaskId());
-			cpltVo.setTaskStatus(argVo.getTaskStatus());
-			cpltVo.setMdfrId(userId);
-			processMapper.updateBpTask(cpltVo);
-			return cpltVo;
-		}
 
 		@Override
 		public ProcessVo selectBpTask(ProcessVo argVo) {
