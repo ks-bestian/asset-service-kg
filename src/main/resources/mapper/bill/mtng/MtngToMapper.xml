@@ -22,7 +22,17 @@
 			     AND ccd.grp_code = 1014
 		     )
 		     ,  CMT_ID
-		     ,  CMT_NM
+		     , (
+			     select 
+		           	CASE 
+					  	WHEN #{lang} = 'lng_type_1' then cd.dept_nm1
+					  	WHEN #{lang} = 'lng_type_2' then cd.dept_nm2
+				      	ELSE cd.dept_nm3
+			      		END AS CMT_NM
+			     from com_dept cd 
+			     where cd.dept_cd = em.CMT_ID 
+			     AND cd.upr_dept_cd = 'CMT'
+		     )
 		     ,  DGR_CD
 		     ,  OPEN_DTM
 		     ,  CLOSE_DTM
@@ -66,7 +76,17 @@
 			     AND ccd.grp_code = 1014
 		     )
 		     ,  CMT_ID
-		     ,  CMT_NM
+		     , (
+			     select 
+		           	CASE 
+					  	WHEN #{lang} = 'lng_type_1' then cd.dept_nm1
+					  	WHEN #{lang} = 'lng_type_2' then cd.dept_nm2
+				      	ELSE cd.dept_nm3
+			      		END AS CMT_NM
+			     from com_dept cd 
+			     where cd.dept_cd = em.CMT_ID 
+			     AND cd.upr_dept_cd = 'CMT'
+		     )
 		     ,  DGR_CD
 		     ,  OPEN_DTM
 		     ,  CLOSE_DTM
