@@ -25,11 +25,4 @@ public class CcofController {
     public ResponseEntity<CommonResponse> getMenuList(@RequestParam HashMap<String, Object> param, @PathVariable String userId) {
         return new ResponseEntity<>(new CommonResponse(200, "ok", ccofService.getCcofList(param, userId)), HttpStatus.OK);
     }
-
-    @ApiOperation(value = "사용자 겸직 저장", notes = "사용자의 겸직을 저장한다.")
-    @PostMapping("admin/ccof")
-    public ResponseEntity<CommonResponse> createMenu(@RequestBody CcofVo ccofVo) {
-        return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Ccof saved successfully.", ccofService.createCcofInUser(ccofVo)), HttpStatus.OK);
-    }
-
 }

@@ -1,5 +1,6 @@
 package kr.co.bestiansoft.ebillservicekg.admin.user.service.impl;
 
+import kr.co.bestiansoft.ebillservicekg.admin.ccof.repository.CcofMapper;
 import kr.co.bestiansoft.ebillservicekg.admin.user.repository.UserMapper;
 import kr.co.bestiansoft.ebillservicekg.admin.user.service.UserService;
 import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserVo;
@@ -18,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
+    private final CcofMapper ccofMapper;
 
     @Override
     public List<UserVo> getUserList(HashMap<String, Object> param) {
@@ -31,14 +33,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserVo createUser(UserVo userVo) {
-        userVo.setRegId(new SecurityInfoUtil().getAccountId());
+        String regId = new SecurityInfoUtil().getAccountId();
+
+        userVo.getCcofVo().setRegId(regId);
+        ccofMapper.insertCcofInUser(userVo.getCcofVo());
+
+        userVo.setRegId(regId);
         userMapper.insertUser(userVo);
         return userVo;
     }
 
     @Override
     public int updateUser(UserVo userVo) {
-        userVo.setModId(new SecurityInfoUtil().getAccountId());
+        String modId = new SecurityInfoUtil().getAccountId();
+
+        userVo.setModId(modId);
+
+        ccofMapper.updateCcof(userVo);
         return userMapper.updateUser(userVo);
     }
 

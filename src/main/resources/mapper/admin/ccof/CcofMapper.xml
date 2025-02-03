@@ -45,13 +45,17 @@
             , #{ord}
             , #{regId}
             , now()
-            , null
+            , #{modId}
             , null
         )
     </insert>
 
-    <delete id="deleteCcofInUser" parameterType="java.util.HashMap">
-        delete from com_ccof
+    <update id="updateCcof" parameterType="kr.co.bestiansoft.ebillservicekg.admin.ccof.vo.CcofVo">
+        update com_ccof
+        set
+              dept_cd = #{ccofCd}
+            , mod_id = #{modId}
+            , mod_dt = #{modDt}
         where user_id = #{userId}
-    </delete>
+    </update>
 </mapper>

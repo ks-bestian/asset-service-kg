@@ -22,19 +22,4 @@ public class CcofServiceImpl implements CcofService {
         return ccofMapper.selectListCcof(param, userId);
     }
 
-    @Override
-    public CcofVo createCcofInUser(CcofVo ccofVo) {
-        HashMap<String, Object> param = new HashMap<>();
-        param.put("deptCd", ccofVo.getDeptCd());
-        param.put("userId", ccofVo.getUserId());
-
-        ccofMapper.deleteCcofInUser(param);
-        ccofMapper.insertCcofInUser(ccofVo);
-        return ccofVo;
-    }
-
-    @Override
-    public void deleteCcofInUser(HashMap<String, Object> param) {
-        ccofMapper.deleteCcofInUser(param);
-    }
 }

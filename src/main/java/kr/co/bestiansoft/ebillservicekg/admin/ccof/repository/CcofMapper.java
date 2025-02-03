@@ -1,6 +1,7 @@
 package kr.co.bestiansoft.ebillservicekg.admin.ccof.repository;
 
 import kr.co.bestiansoft.ebillservicekg.admin.ccof.vo.CcofVo;
+import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserVo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.HashMap;
@@ -11,5 +12,5 @@ import java.util.List;
 public interface CcofMapper {
     List<CcofVo> selectListCcof(HashMap<String, Object> param, String userId);
     int insertCcofInUser(CcofVo ccofVo);
-    void deleteCcofInUser(HashMap<String, Object> param);
+    int updateCcof(UserVo ccofVo);
 }

@@ -1,5 +1,6 @@
 package kr.co.bestiansoft.ebillservicekg.admin.user.vo;
 
+import kr.co.bestiansoft.ebillservicekg.admin.ccof.vo.CcofVo;
 import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
 
@@ -23,4 +24,7 @@ public class UserVo extends ComDefaultVO {
     private String docMgrYn;
     private String deptNm;
     private String jobNm;
+    private String ccofCd;
+
+    private CcofVo ccofVo;
 }
