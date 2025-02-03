@@ -5,6 +5,7 @@ import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class UserVo extends ComDefaultVO {
@@ -25,6 +26,6 @@ public class UserVo extends ComDefaultVO {
     private String deptNm;
     private String jobNm;
     private String ccofCd;
-
-    private CcofVo ccofVo;
+    private List<String> ccofCds;
+    private Integer ord;
 }

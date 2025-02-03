@@ -174,7 +174,7 @@
         from view_user_member um
         left join com_code_detail cc on cc.code_id = um.job_cd
         left join com_ccof ccof on ccof.user_id = um.user_id
-        where 1=1
+        where um.msg_rcv_yn != 'N'
         <if test="polyCd != '' and polyCd != null">
             and um.poly_cd = #{polyCd}
         </if>

@@ -34,12 +34,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserVo createUser(UserVo userVo) {
         String regId = new SecurityInfoUtil().getAccountId();
-
-        userVo.getCcofVo().setRegId(regId);
-        ccofMapper.insertCcofInUser(userVo.getCcofVo());
-
         userVo.setRegId(regId);
+        int ord = 1;
+        List<String> ccofCds = userVo.getCcofCds();
+
         userMapper.insertUser(userVo);
+        for (String deptCd : ccofCds) {
+            userVo.setDeptCd(deptCd);
+            userVo.setOrd(ord);
+            if (deptCd != null) {
+                ccofMapper.insertCcofInUser(userVo);
+            }
+            ord++;
+        }
+
         return userVo;
     }
 
@@ -48,15 +56,31 @@ public class UserServiceImpl implements UserService {
         String modId = new SecurityInfoUtil().getAccountId();
 
         userVo.setModId(modId);
+        userMapper.updateUser(userVo);
 
-        ccofMapper.updateCcof(userVo);
-        return userMapper.updateUser(userVo);
+        ccofMapper.deleteCcof(userVo.getUserId());
+        int ord = 1;
+
+        List<String> ccofCds = userVo.getCcofCds();
+
+        for (String deptCd : ccofCds) {
+            userVo.setDeptCd(deptCd);
+            userVo.setOrd(ord);
+
+            if(deptCd != null) {
+                ccofMapper.insertCcofInUser(userVo);
+            }
+            ord++;
+        }
+
+        return 0;
     }
 
     @Override
     public void deleteUser(List<String> seq) {
         for (String id : seq) {
             userMapper.deleteUser(id);
+            ccofMapper.deleteCcof(id);
         }
     }
 

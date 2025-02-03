@@ -10,7 +10,8 @@ import java.util.List;
 
 @Mapper
 public interface CcofMapper {
-    List<CcofVo> selectListCcof(HashMap<String, Object> param, String userId);
-    int insertCcofInUser(CcofVo ccofVo);
+    List<CcofVo> selectListCcof(HashMap<String, Object> param);
+    int insertCcofInUser(UserVo userVo);
     int updateCcof(UserVo ccofVo);
+    void deleteCcof(String userId);
 }
