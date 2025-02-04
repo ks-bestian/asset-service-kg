@@ -9,11 +9,11 @@
             , dept_nm1 --부서명(키르키즈어)
             , dept_nm2 --부서명(러시아어)
             , dept_nm3 --부서명(한국어)
-            , kgst.fngetlangnm(dept_nm1, dept_nm2, dept_nm1,#{lang}) as dept_nm
+            , kgst.fngetlangnm(dept_nm1, dept_nm2, dept_nm3,#{lang}) as dept_nm
             , shrt_nm1 --부서 약칭(키르키즈어)
             , shrt_nm2 --부서 약칭(러시아어)
             , shrt_nm3 --부서 약칭(한국어)
-            , kgst.fngetlangnm(shrt_nm1, shrt_nm2, shrt_nm1,#{lang}) as shrt_nm
+            , kgst.fngetlangnm(shrt_nm1, shrt_nm2, shrt_nm3,#{lang}) as shrt_nm
             , ord --순서
             , upr_dept_cd --상위부서코드
             , use_yn --사용여부
@@ -30,6 +30,9 @@
                 </when>
                 <when test="lang == 'lng_type_2'">
                     and dept_nm2 like concat('%', #{deptNm}, '%')
+                </when>
+                <when test="lang == 'lng_type_3'">
+                    and dept_nm3 like concat('%', #{deptNm}, '%')
                 </when>
             </choose>
         </if>

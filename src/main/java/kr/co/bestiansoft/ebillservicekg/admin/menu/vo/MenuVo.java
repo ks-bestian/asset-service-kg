@@ -1,12 +1,13 @@
 package kr.co.bestiansoft.ebillservicekg.admin.menu.vo;
 
+import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
-public class MenuVo {
+public class MenuVo extends ComDefaultVO {
     private Long menuId;
     private String menuNm;
     private String menuNm1;
