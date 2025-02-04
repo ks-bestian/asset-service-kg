@@ -4,6 +4,8 @@ import kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo;
 import kr.co.bestiansoft.ebillservicekg.admin.user.repository.UserMapper;
 import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
+import kr.co.bestiansoft.ebillservicekg.common.file.service.impl.EDVHelper;
+import kr.co.bestiansoft.ebillservicekg.common.file.vo.ComFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.myPage.myInfo.service.MyInfoService;
 import lombok.RequiredArgsConstructor;
@@ -12,9 +14,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
 
 @Service
 @Transactional
@@ -24,6 +28,7 @@ public class MyInfoServiceImpl implements MyInfoService {
 
     private final UserMapper userMapper;
     private final ComFileService comFileService;
+    private final EDVHelper edv;
 
     @Override
     public UserMemberVo getMyInfo(HashMap<String, Object> param) {
@@ -33,17 +38,22 @@ public class MyInfoServiceImpl implements MyInfoService {
 
 
     @Override
-    public byte[] getFileContentByPath(HashMap<String, Object> param) {
+    public InputStream getFileContentByPath(HashMap<String, Object> param) {
         try {
             param.put("userId", new SecurityInfoUtil().getAccountId());
             UserMemberVo myInfo = userMapper.userDetail(param);
-            byte[] resource = null;
+            InputStream resource = null;
             if (myInfo.getProfileImgPath() != null && !myInfo.getProfileImgPath().equals("")) {
-                resource = Files.readAllBytes(Paths.get(myInfo.getProfileImgPath()));
+//                resource = Files.readAllBytes(Paths.get(myInfo.getProfileImgPath()));
+            	List<ComFileVo> fileList = comFileService.getFileList(myInfo.getProfileImgPath());
+            	if(fileList != null && fileList.size() > 0) {
+            		String fileId = fileList.get(0).getFileId();
+               		resource = edv.download(fileId);	
+            	}
             }
             return resource;
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
@@ -58,8 +68,10 @@ public class MyInfoServiceImpl implements MyInfoService {
         }
 
         if (userMemberVo.getType().equals("member")) {
+        	userMemberVo.setMemberId(new SecurityInfoUtil().getAccountId());
             userMapper.updateMyInfoMember(userMemberVo);
         } else if(userMemberVo.getType().equals("user")){
+        	userMemberVo.setUserId(new SecurityInfoUtil().getAccountId());
             userMapper.updateMyInfoUser(userMemberVo);
         }
 

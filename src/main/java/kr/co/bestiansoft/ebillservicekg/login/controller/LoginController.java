@@ -28,6 +28,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.bestiansoft.ebillservicekg.admin.baseCode.service.BaseCodeService;
 import kr.co.bestiansoft.ebillservicekg.admin.baseCode.vo.BaseCodeVo;
+import kr.co.bestiansoft.ebillservicekg.admin.ccof.service.impl.CcofService;
+import kr.co.bestiansoft.ebillservicekg.admin.ccof.vo.CcofVo;
 import kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeDetailVo;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.ProposerVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
@@ -59,6 +61,7 @@ public class LoginController {
 	private final ProcessMapper processMapper;
 
 	private final BaseCodeService basecodeService;
+	private final CcofService ccofService;
 
 	@PostMapping("/login")
 	public ResponseEntity<LoginResponse> authenticate(@RequestBody @Valid LoginRequest loginRead, HttpServletRequest req, HttpServletResponse res) {
@@ -102,6 +105,9 @@ public class LoginController {
 	        List<ComCodeDetailVo> comCodes = loginMapper.selectListComCodeAll();
 	        List<BaseCodeVo> baseCodes = basecodeService.getBaseCodeList(new HashMap<>());
 	        List<ProposerVo> srvcJobs = processMapper.selectListSrvcJobAuth();
+	        HashMap<String, Object> param = new HashMap<>();
+	        param.put("userId", account.getUserId());
+	        List<CcofVo> ccofList = ccofService.getCcofList(param);
 
 	        rep.setResult(result);
 	        rep.setMsg(msg);
@@ -110,6 +116,7 @@ public class LoginController {
 	        rep.setComCodes(comCodes);
 	        rep.setBaseCodes(baseCodes);
 	        rep.setSrvcJobs(srvcJobs);
+	        rep.setCcofList(ccofList);
 
 	        return new ResponseEntity<>(rep, httpHeaders, HttpStatus.OK);
 

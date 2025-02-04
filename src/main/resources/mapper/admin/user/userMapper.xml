@@ -93,6 +93,7 @@
             , (case when view.user_id in (select cu.user_id from com_user cu) then 'user'
                     when view.member_id in (select comm.member_id from com_member comm) then 'member'
                 end) as type
+            , view.profile_img_path
         from kgst.view_user_member view
         left join com_code_detail cc on cc.code_id = view.job_cd
         left join com_member cm on cm.member_id = view.user_id

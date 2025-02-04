@@ -12,6 +12,11 @@ spring:
     username: best
     password: best1234
 
+#    driver-class-name: org.postgresql.Driver
+#    url: jdbc:postgresql://43.203.192.251:5432/postgres?currentSchema=homepage&useUnicode=true&characterEncoding=utf8&autoReconnect=true
+#    username: home
+#    password: homepass
+
   mvc:
     pathmatch:
       matching-strategy: ANT_PATH_MATCHER
@@ -52,3 +57,4 @@ edv:
 #  datastore-path: C:/proj/edv_postgre/edv-bestian/repository/datastore/${edv.root-folder}
 #  datastore-path: /home/eBill/edv-bestian/repository/datastore/${edv.root-folder}
   datastore-path: /home/EDV/edv-bestian/repository/datastore/${edv.root-folder}
+  max-use-cpct: 1073741824
