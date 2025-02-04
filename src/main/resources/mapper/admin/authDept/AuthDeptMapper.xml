@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.bestiansoft.ebillservicekg.admin.authDept.repository.AuthDeptMapper">
+    <select id="selectListAuthDept" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.admin.authDept.vo.AuthDeptVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.authUser.repository.AuthDeptMapper.selectListAuthDept */
+        select
+              dept_cd --부서코드
+            , menu_cd --메뉴코드
+        from com_dept_menu
+        where dept_cd = #{deptCd}
+    </select>
+
+    <insert id="insertAuthDept" parameterType="kr.co.bestiansoft.ebillservicekg.admin.authDept.vo.AuthDeptVo">
+        insert into kgst.com_dept_menu
+            (
+              dept_cd
+            , menu_cd
+            , reg_id
+            , reg_dt
+            )
+        values
+            (
+              #{deptCd}
+            , #{menuCd}
+            , #{regId}
+            , now()
+            )
+    </insert>
+
+    <delete id="deleteAuthDept" parameterType="java.lang.String">
+        delete from com_dept_menu
+        where dept_cd = #{deptCd}
+    </delete>
+</mapper>
