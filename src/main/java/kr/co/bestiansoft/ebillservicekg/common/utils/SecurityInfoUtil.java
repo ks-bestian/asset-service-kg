@@ -34,6 +34,10 @@ public class SecurityInfoUtil {
 		return account.getDeptCd();
 	}
 	
+	public String getDeptHeadYn() {
+		return account.getDeptHeadYn();
+	}
+	
 	public Collection<GrantedAuthority> getAuthorities() {
 		return account.getAuthorities();
 	}

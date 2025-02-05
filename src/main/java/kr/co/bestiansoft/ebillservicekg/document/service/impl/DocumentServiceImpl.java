@@ -5,6 +5,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.file.FileStore;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +28,7 @@ import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
 import kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper;
 import kr.co.bestiansoft.ebillservicekg.document.service.DocumentService;
 import kr.co.bestiansoft.ebillservicekg.document.service.ThumbnailService;
+import kr.co.bestiansoft.ebillservicekg.document.vo.DiskSpaceVo;
 import kr.co.bestiansoft.ebillservicekg.document.vo.FileShareVo;
 import kr.co.bestiansoft.ebillservicekg.document.vo.FileVo;
 import kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo;
@@ -42,6 +47,10 @@ public class DocumentServiceImpl implements DocumentService {
     
     @Value("${edv.max-use-cpct}")
     private long MAX_USE_CPCT;
+    
+//    @Value("${edv.datastore-path}")
+//    private String DATASTORE_PATH;
+    private String DATASTORE_PATH = System.getProperty("user.home");
     
     @Override
     public List<FolderVo> selectDeptFolderListAll(FolderVo vo) {
@@ -116,7 +125,7 @@ public class DocumentServiceImpl implements DocumentService {
     	String userId = new SecurityInfoUtil().getAccountId();
     	
     	FolderVo folder = documentMapper.selectFolderByFolderId(vo.getFolderId());
-		if(folder != null && !folder.getRegId().equals(userId)) {
+		if(!isAuthorized(folder)) {
 			throw new ForbiddenException("forbidden");
 		}
     	
@@ -136,11 +145,12 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     public int deleteFolders(List<Long> folderIds) {
     	String userId = new SecurityInfoUtil().getAccountId();
+    	
     	int ret = 0;
     	if(folderIds != null) {
     		for(Long folderId : folderIds) {
     			FolderVo folder = documentMapper.selectFolderByFolderId(folderId);
-    			if(folder != null && !folder.getRegId().equals(userId)) {
+    			if(!isAuthorized(folder)) {
     				throw new ForbiddenException("forbidden");
     			}
         		FolderVo vo = new FolderVo();
@@ -157,11 +167,12 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     public int deleteFiles(List<String> fileGroupIds) {
     	String userId = new SecurityInfoUtil().getAccountId();
+    	
     	int ret = 0;
     	if(fileGroupIds != null) {
     		for(String fileGroupId : fileGroupIds) {
     			FileVo file = documentMapper.selectFile(fileGroupId);
-    			if(file != null && !file.getRegId().equals(userId)) {
+    			if(!isAuthorized(file)) {
     				throw new ForbiddenException("forbidden");
     			}
         		FileVo vo = new FileVo();
@@ -558,7 +569,7 @@ public class DocumentServiceImpl implements DocumentService {
     	String userId = new SecurityInfoUtil().getAccountId();
     	
     	FileVo file = documentMapper.selectFile(vo.getFileId());
-		if(file != null && !file.getRegId().equals(userId)) {
+		if(!isAuthorized(file)) {
 			throw new ForbiddenException("forbidden");
 		}
     	
@@ -567,6 +578,28 @@ public class DocumentServiceImpl implements DocumentService {
 
     	saveFavorite(vo);
     	return ret;
+    }
+    
+    private boolean isAuthorized(FolderVo folder) {
+    	String userId = new SecurityInfoUtil().getAccountId();
+    	String deptCd = new SecurityInfoUtil().getDeptCd();
+    	String deptHeadYn = new SecurityInfoUtil().getDeptHeadYn();
+    	
+    	if(folder != null && "Y".equals(folder.getDeptFolderYn()) && deptCd.equals(folder.getDeptCd()) && "Y".equals(deptHeadYn)) {
+    		return true;
+    	}
+    	return folder != null && folder.getRegId().equals(userId);
+    }
+    
+    private boolean isAuthorized(FileVo file) {
+    	String userId = new SecurityInfoUtil().getAccountId();
+    	String deptCd = new SecurityInfoUtil().getDeptCd();
+    	String deptHeadYn = new SecurityInfoUtil().getDeptHeadYn();
+    	
+    	if(file != null && "Y".equals(file.getDeptFileYn()) && deptCd.equals(file.getDeptCd()) && "Y".equals(deptHeadYn)) {
+    		return true;
+    	}
+    	return file != null && file.getRegId().equals(userId);
     }
     
     @Transactional
@@ -638,13 +671,13 @@ public class DocumentServiceImpl implements DocumentService {
     	
     	if("Y".equals(vo.getFolderYn())) {
     		FolderVo folder = documentMapper.selectFolderByFolderId(vo.getFolderId());
-    		if(folder != null && !folder.getRegId().equals(userId)) {
+    		if(!isAuthorized(folder)) {
     			throw new ForbiddenException("forbidden");
     		}	
     	}
     	else {
-    		FileVo file = documentMapper.selectFile(vo.getFileId());
-			if(file != null && !file.getRegId().equals(userId)) {
+    		FileVo file = documentMapper.selectFile(vo.getFileGroupId());
+			if(!isAuthorized(file)) {
 				throw new ForbiddenException("forbidden");
 			}   		
     	}
@@ -661,13 +694,13 @@ public class DocumentServiceImpl implements DocumentService {
     	
     	if("Y".equals(vo.getFolderYn())) {
     		FolderVo folder = documentMapper.selectFolderByFolderId(vo.getFolderId());
-    		if(folder != null && !folder.getRegId().equals(userId)) {
+    		if(!isAuthorized(folder)) {
     			throw new ForbiddenException("forbidden");
     		}	
     	}
     	else {
-    		FileVo file = documentMapper.selectFile(vo.getFileId());
-			if(file != null && !file.getRegId().equals(userId)) {
+    		FileVo file = documentMapper.selectFile(vo.getFileGroupId());
+			if(!isAuthorized(file)) {
 				throw new ForbiddenException("forbidden");
 			}   		
     	}
@@ -739,6 +772,24 @@ public class DocumentServiceImpl implements DocumentService {
     	String userId = new SecurityInfoUtil().getAccountId();
     	vo.setUserId(userId);
     	return documentMapper.selectFileList(vo);
+    }
+    
+    @Override
+    public DiskSpaceVo getDiskSpace() throws Exception {
+    	Path dir = Paths.get(DATASTORE_PATH);
+		dir = dir.toRealPath();
+		
+		FileStore fs = Files.getFileStore(dir);
+		long freeSpace = fs.getUsableSpace();
+		long totalSpace = fs.getTotalSpace();
+
+		
+		DiskSpaceVo ret = new DiskSpaceVo();
+		ret.setTotalSpace(totalSpace);
+		ret.setFreeSpace(freeSpace);
+		ret.setUsedSpace(totalSpace - freeSpace);
+		
+		return ret;
     }
     
 }

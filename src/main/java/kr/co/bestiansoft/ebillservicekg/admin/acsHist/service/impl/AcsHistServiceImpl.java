@@ -28,4 +28,9 @@ public class AcsHistServiceImpl implements AcsHistService {
     public void createAcsHist(AcsHistVo acsHistVo) {
         acsHistMapper.createAcsHist(acsHistVo);
     }
+    
+    @Override
+    public void createEbsAcsHist(AcsHistVo acsHistVo) {
+        acsHistMapper.createEbsAcsHist(acsHistVo);
+    }
 }

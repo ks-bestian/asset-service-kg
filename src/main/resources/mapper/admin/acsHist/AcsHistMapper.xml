@@ -56,6 +56,35 @@
 			, #{regId}
 			, now()
 		)
-    </insert>    
+    </insert>
+    
+    <insert id="createEbsAcsHist" parameterType="kr.co.bestiansoft.ebillservicekg.admin.acsHist.vo.AcsHistVo">
+        insert into kgst.ebs_acs_hist (
+			  acs_ip
+			, req_url
+			, req_method
+			, reg_id
+			, reg_dt
+		)
+		values (
+			  #{acsIp}
+			, #{reqUrl}
+			, #{reqMethod}
+			, #{regId}
+			, now()
+		)
+    </insert>
+    
+    <delete id="deleteOldAcsHist">
+    	delete from kgst.com_acs_hist
+		where 1=1
+		and reg_dt <![CDATA[<=]]> (now() - interval'1 month')
+    </delete>
+    
+    <delete id="deleteOldEbsAcsHist">
+    	delete from kgst.ebs_acs_hist
+		where 1=1
+		and reg_dt <![CDATA[<=]]> (now() - interval'1 month')
+    </delete>
     
 </mapper>

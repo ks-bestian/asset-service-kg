@@ -8,4 +8,5 @@ import java.util.List;
 public interface AcsHistService {
     List<AcsHistVo> getAcsHistList(HashMap<String, Object> param);
     void createAcsHist(AcsHistVo acsHistVo);
+    void createEbsAcsHist(AcsHistVo acsHistVo);
 }

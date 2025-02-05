@@ -30,6 +30,7 @@ public class FileScheduledTasks {
     	String formattedDate = dateFormat.format(new Date(System.currentTimeMillis()));
         logger.info("배치 작업이 실행됩니다: " + formattedDate);
         storageService.batchFileDelete();
+        formattedDate = dateFormat.format(new Date(System.currentTimeMillis()));
         logger.info("배치 작업이 종료됩니다: " + formattedDate);
     }
 }

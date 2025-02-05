@@ -10,4 +10,7 @@ import java.util.List;
 public interface AcsHistMapper {
     List<AcsHistVo> getAcsHistList(HashMap<String, Object> param);
     void createAcsHist(AcsHistVo acsHistVo);
+    void createEbsAcsHist(AcsHistVo acsHistVo);
+    void deleteOldAcsHist();
+    void deleteOldEbsAcsHist();
 }

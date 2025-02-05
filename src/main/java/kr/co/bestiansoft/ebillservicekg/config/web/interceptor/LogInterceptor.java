@@ -47,6 +47,10 @@ public class LogInterceptor implements HandlerInterceptor {
             ahVo.setReqMethod(reqMethod);
             ahVo.setAcsIp(accessIp);
             acsHistService.createAcsHist(ahVo);
+            
+            if(reqURL.startsWith("/bill/") && !reqMethod.equals("GET")) {
+            	acsHistService.createEbsAcsHist(ahVo);
+            }
         }
 
         return true;
