@@ -268,4 +268,10 @@ public class DocumentController {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.selectListUserMember(param)), HttpStatus.OK);
     }
     
+    @ApiOperation(value = "edv 사용용량 조회", notes = "edv 사용용량 조회")
+    @GetMapping("/document/files/diskspace")
+    public ResponseEntity<CommonResponse> getDiskSpace() throws Exception {
+    	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.getDiskSpace()), HttpStatus.OK);
+    }
+    
 }

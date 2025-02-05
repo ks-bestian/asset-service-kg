@@ -70,6 +70,7 @@ public class TokenProvider implements InitializingBean {
         return Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim("deptCd", account.getDeptCd())
+                .claim("deptHeadYn", account.getDeptHeadYn())
                 .claim(AUTHORITIES_KEY, authorities) // 정보 저장
                 .signWith(key, SignatureAlgorithm.HS256) // 사용할 암호화 알고리즘과 , signature 에 들어갈 secret값 세팅
                 .setExpiration(validity) // set Expire Time 해당 옵션 안넣으면 expire안함
@@ -87,11 +88,13 @@ public class TokenProvider implements InitializingBean {
         
         String userId = claims.getSubject();
         String deptCd = Objects.toString(claims.get("deptCd"), null);
+        String deptHeadYn = Objects.toString(claims.get("deptHeadYn"), null);
         String authorities = Objects.toString(claims.get(AUTHORITIES_KEY), null);
         
         LoginUserVo user = new LoginUserVo();
         user.setUserId(userId);
         user.setDeptCd(deptCd);
+        user.setDeptHeadYn(deptHeadYn);
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
 
         if(!StringUtil.isNullOrEmpty(authorities)) {

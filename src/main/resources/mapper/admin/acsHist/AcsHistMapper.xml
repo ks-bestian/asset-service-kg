@@ -55,8 +55,7 @@
 			, now()
 		)
     </insert>
-
-
+    
     <select id="getBillHistList" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.admin.acsHist.vo.AcsHistVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.acsHist.repository.AcsHistMapper.getBillHistList */
@@ -111,5 +110,17 @@
             , now()
             )
     </insert>
+    
+    <delete id="deleteOldAcsHist">
+    	delete from kgst.com_acs_hist
+		where 1=1
+		and reg_dt <![CDATA[<=]]> (now() - interval'1 month')
+    </delete>
+    
+    <delete id="deleteOldEbsAcsHist">
+    	delete from kgst.ebs_acs_hist
+		where 1=1
+		and reg_dt <![CDATA[<=]]> (now() - interval'1 month')
+    </delete>
     
 </mapper>

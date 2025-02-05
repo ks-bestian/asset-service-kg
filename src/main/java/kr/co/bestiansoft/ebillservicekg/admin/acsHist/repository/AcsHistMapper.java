@@ -12,4 +12,6 @@ public interface AcsHistMapper {
     List<AcsHistVo> getBillHistList(HashMap<String, Object> param);
     void createAcsHist(AcsHistVo acsHistVo);
     void createBillHist(AcsHistVo acsHistVo);
+    void deleteOldAcsHist();
+    void deleteOldBillHist();
 }

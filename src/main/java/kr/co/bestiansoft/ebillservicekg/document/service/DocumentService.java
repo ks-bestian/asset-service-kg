@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo;
+import kr.co.bestiansoft.ebillservicekg.document.vo.DiskSpaceVo;
 import kr.co.bestiansoft.ebillservicekg.document.vo.FileShareVo;
 import kr.co.bestiansoft.ebillservicekg.document.vo.FileVo;
 import kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo;
@@ -57,4 +58,6 @@ public interface DocumentService {
     List<FileVo> selectShareFileListByFolderId(FileVo vo);
     
     void saveFavorite(FileVo vo);
+    
+    DiskSpaceVo getDiskSpace() throws Exception;
 }
