@@ -11,7 +11,6 @@
             , em.msg_sj --메세지제목
             , em.rcv_dt --수신일시
             , em.rcv_id --수신자아이디
-            , to_char(em.send_dt, 'DD/MM/YYYY HH24:MI') as send_date--발신일시
             , em.send_id --발신자아이디
             , em.file_group_id --파일그룹아이디
             , em.msg_div --발송구분 발송(S) 수신(R)
@@ -20,9 +19,8 @@
             , em.reg_dt
             , em.mod_id
             , em.mod_dt
-            , (case when #{lang} = 'lng_type_2' then vum.user_nm_ru
-                    else vum.user_nm_kg
-                end) as send_nm
+            , em.send_dt
+            , kgst.fngetlangnm(vum.user_nm_kg, vum.user_nm_ru, vum.user_nm_kg, #{lang}) as send_nm
         from ebs_msg em
         inner join view_user_member vum on vum.user_id = em.send_id
         where em.msg_div = 'R'
@@ -52,7 +50,6 @@
             , em.msg_sj --메세지제목
             , em.rcv_dt --수신일시
             , em.rcv_id --수신자아이디
-            , to_char(em.send_dt, 'DD/MM/YYYY HH24:MI') as send_date --발신일시
             , em.send_id --발신자아이디
             , em.file_group_id --파일그룹아이디
             , em.msg_div --발송구분 발송(S) 수신(R)
@@ -61,9 +58,8 @@
             , em.reg_dt
             , em.mod_id
             , em.mod_dt
-            , (case when #{lang} = 'lng_type_2' then vum.user_nm_ru
-               else vum.user_nm_kg
-               end) as rcv_nm
+            , em.send_dt
+            , kgst.fngetlangnm(vum.user_nm_kg, vum.user_nm_ru, vum.user_nm_kg, #{lang}) as rcv_nm
         from ebs_msg em
         left join view_user_member vum on vum.user_id = em.rcv_id
         where msg_div = 'S'
@@ -137,12 +133,18 @@
         )
     </insert>
 
+
+    <update id="updateRcvDt" parameterType="java.util.HashMap">
+        update ebs_msg
+        set
+            rcv_dt = now()
+        where rcv_id = #{rcvId} and msg_group_id = #{msgGroupId}
+    </update>
+
     <select id="selectUserMember" parameterType="kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo">
         select
               um.user_id
-            , (case when #{lang} = 'lng_type_2' then um.user_nm_ru
-                else um.user_nm_kg
-                end) as user_nm
+            , kgst.fngetlangnm(um.user_nm_kg, um.user_nm_ru, um.user_nm_kg, #{lang}) as user_nm
             , um.user_nm_kg
             , um.user_nm_ru
             , um.member_id
@@ -174,7 +176,7 @@
         from view_user_member um
         left join com_code_detail cc on cc.code_id = um.job_cd
         left join com_ccof ccof on ccof.user_id = um.user_id
-        where 1=1
+        where um.msg_rcv_yn != 'N'
         <if test="polyCd != '' and polyCd != null">
             and um.poly_cd = #{polyCd}
         </if>

@@ -39,10 +39,11 @@ public class MenuNode {
     }
 
     @Builder
-    public MenuNode(Long menuId, String menuNm, Long uprMenuId) {
+    public MenuNode(Long menuId, String menuNm, Long uprMenuId, String menuPath) {
         this.menuId = menuId;
         this.menuNm = menuNm;
         this.uprMenuId = uprMenuId;
+        this.menuPath = menuPath; // 추가(20250203 조진호)
     }
 
 }

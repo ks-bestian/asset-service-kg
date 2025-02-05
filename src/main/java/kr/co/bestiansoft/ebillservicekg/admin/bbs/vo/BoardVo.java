@@ -24,7 +24,6 @@ public class BoardVo extends ComDefaultVO {
     private String fileGroupId;
     private Long num;
     private String regNm;
-    private String regDate;
     private String importantYn;
     private String hiddenYn;
 

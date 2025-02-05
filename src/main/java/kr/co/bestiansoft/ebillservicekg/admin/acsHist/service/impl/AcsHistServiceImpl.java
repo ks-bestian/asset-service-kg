@@ -25,7 +25,17 @@ public class AcsHistServiceImpl implements AcsHistService {
     }
 
     @Override
+    public List<AcsHistVo> getBillHistList(HashMap<String, Object> param) {
+        return acsHistMapper.getBillHistList(param);
+    }
+
+    @Override
     public void createAcsHist(AcsHistVo acsHistVo) {
         acsHistMapper.createAcsHist(acsHistVo);
+    }
+
+    @Override
+    public void createBillHist(AcsHistVo acsHistVo) {
+        acsHistMapper.createBillHist(acsHistVo);
     }
 }

@@ -124,10 +124,7 @@
             , cq.mod_id
             , cq.mod_dt
             , cm.menu_nm1 as menu_nm
-<!--            , (case when #{lang} = 'lng_type_1' then cm.menu_nm1 &#45;&#45;수정-->
-<!--                    when #{lang} = 'lng_type_2' then cm.menu_nm2-->
-<!--                    else cm.menu_nm3-->
-<!--              end) as menu_nm-->
+            . kgst.fngetlangnm(cm.menu_nm1, cm.menu_nm2, cm.menu_nm3, #{lang}) as menu_nm
         from com_quick_menu cq
         inner join com_menu cm on cm.menu_id = cq.menu_id
         where cq.user_id = #{userId}

@@ -1,6 +1,5 @@
 package kr.co.bestiansoft.ebillservicekg.admin.user.service;
 
-import kr.co.bestiansoft.ebillservicekg.admin.member.vo.MemberVo;
 import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserVo;
 
 import java.util.HashMap;

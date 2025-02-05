@@ -43,6 +43,7 @@ public class MenuHierarchy {
                     .menuId(menu.getMenuId())
                     .menuNm(menuNm)
                     .uprMenuId(menu.getUprMenuId())
+                    .menuPath(menu.getMenuPath()) // 추가(20250203 조진호)
                     .build());
         }
         Map<Long, MenuNode> categoryMap = new HashMap<>();
@@ -87,6 +88,7 @@ public class MenuHierarchy {
         ObjectNode jsonNode = mapper.createObjectNode();
         jsonNode.put("key", comMenu.getMenuId());
         jsonNode.put("label", comMenu.getMenuNm());
+        jsonNode.put("menuPath", comMenu.getMenuPath()); // 추가(20250203 조진호)
 
         ArrayNode childrenNode = mapper.createArrayNode();
         for (MenuNode child : comMenu.getChildren()) {

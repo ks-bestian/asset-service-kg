@@ -12,16 +12,8 @@
             , cc.reg_dt
             , cc.mod_id
             , cc.mod_dt
-            , cd.dept_nm1 as dept_nm
+            , kgst.fngetlangnm(cd.dept_nm1, cd.dept_nm2, cd.dept_nm3, #{lang}) as dept_nm
             , cd.shrt_nm1 as shrt_nm
-<!--            , (case when #{lang} = 'lng_type_1' then cd.dept_nm1-->
-<!--                    when #{lang} = 'lng_type_2' then cd.dept_nm2-->
-<!--                    else cd.dept_nm3-->
-<!--              end) as dept_nm-->
-<!--            , (case when #{lang} = 'lng_type_1' then cd.shrt_nm1-->
-<!--                    when #{lang} = 'lng_type_2' then cd.shrt_nm2-->
-<!--                    else cd.shrt_nm3-->
-<!--              end) as shrt_nm-->
         from com_ccof cc
         left join com_user cu on cu.user_id = cc.user_id
         inner join com_dept cd on cd.dept_cd = cc.dept_cd
@@ -29,7 +21,7 @@
         order by ord
     </select>
 
-    <insert id="insertCcofInUser" parameterType="kr.co.bestiansoft.ebillservicekg.admin.ccof.vo.CcofVo">
+    <insert id="insertCcofInUser" parameterType="kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserVo">
         insert into com_ccof (
               user_id
             , dept_cd
@@ -50,7 +42,16 @@
         )
     </insert>
 
-    <delete id="deleteCcofInUser" parameterType="java.util.HashMap">
+    <update id="updateCcof" parameterType="kr.co.bestiansoft.ebillservicekg.admin.ccof.vo.CcofVo">
+        update com_ccof
+        set
+              dept_cd = #{deptCd}
+            , mod_id = #{modId}
+            , mod_dt = #{modDt}
+        where user_id = #{userId}
+    </update>
+
+    <delete id="deleteCcof" parameterType="java.lang.String">
         delete from com_ccof
         where user_id = #{userId}
     </delete>

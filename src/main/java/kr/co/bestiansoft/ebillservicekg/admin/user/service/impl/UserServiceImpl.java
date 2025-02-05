@@ -1,5 +1,6 @@
 package kr.co.bestiansoft.ebillservicekg.admin.user.service.impl;
 
+import kr.co.bestiansoft.ebillservicekg.admin.ccof.repository.CcofMapper;
 import kr.co.bestiansoft.ebillservicekg.admin.user.repository.UserMapper;
 import kr.co.bestiansoft.ebillservicekg.admin.user.service.UserService;
 import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserVo;
@@ -18,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
+    private final CcofMapper ccofMapper;
 
     @Override
     public List<UserVo> getUserList(HashMap<String, Object> param) {
@@ -31,21 +33,54 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserVo createUser(UserVo userVo) {
-        userVo.setRegId(new SecurityInfoUtil().getAccountId());
+        String regId = new SecurityInfoUtil().getAccountId();
+        userVo.setRegId(regId);
+        int ord = 1;
+        List<String> ccofCds = userVo.getCcofCds();
+
         userMapper.insertUser(userVo);
+        for (String deptCd : ccofCds) {
+            userVo.setDeptCd(deptCd);
+            userVo.setOrd(ord);
+            if (deptCd != null) {
+                ccofMapper.insertCcofInUser(userVo);
+            }
+            ord++;
+        }
+
         return userVo;
     }
 
     @Override
     public int updateUser(UserVo userVo) {
-        userVo.setModId(new SecurityInfoUtil().getAccountId());
-        return userMapper.updateUser(userVo);
+        String modId = new SecurityInfoUtil().getAccountId();
+
+        userVo.setModId(modId);
+        userMapper.updateUser(userVo);
+
+        ccofMapper.deleteCcof(userVo.getUserId());
+        int ord = 1;
+
+        List<String> ccofCds = userVo.getCcofCds();
+
+        for (String deptCd : ccofCds) {
+            userVo.setDeptCd(deptCd);
+            userVo.setOrd(ord);
+
+            if(deptCd != null) {
+                ccofMapper.insertCcofInUser(userVo);
+            }
+            ord++;
+        }
+
+        return 0;
     }
 
     @Override
     public void deleteUser(List<String> seq) {
         for (String id : seq) {
             userMapper.deleteUser(id);
+            ccofMapper.deleteCcof(id);
         }
     }
 

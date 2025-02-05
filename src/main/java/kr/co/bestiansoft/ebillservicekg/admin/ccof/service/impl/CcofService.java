@@ -7,7 +7,5 @@ import java.util.HashMap;
 import java.util.List;
 
 public interface CcofService {
-    List<CcofVo> getCcofList(HashMap<String, Object> param, String userId);
-    CcofVo createCcofInUser(CcofVo ccofVo);
-    void deleteCcofInUser(HashMap<String, Object> param);
+    List<CcofVo> getCcofList(HashMap<String, Object> param);
 }

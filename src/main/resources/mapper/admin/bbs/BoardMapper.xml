@@ -19,12 +19,10 @@
         	, cb.ord
         	, cb.file_group_id
         	, cb.reg_id
-        	, to_char(cb.reg_dt, 'DD/MM/YYYY') as reg_date
+			, cb.reg_dt
         	, cb.mod_id
         	, cb.mod_dt
-			, (case when #{lang} = 'lng_type_1' then view.user_nm_kg
-				else view.user_nm_ru
-				end) as reg_nm
+			, kgst.fngetlangnm(view.user_nm_kg, view.user_nm_ru, view.user_nm_kg, #{lang}) as reg_nm
 			, cb.important_yn
 			, cb.hidden_yn
         from com_board cb
@@ -55,10 +53,7 @@
         	, cb.mod_dt
 			, cb.important_yn
 			, cb.hidden_yn
-			, to_char(cb.reg_dt, 'DD/MM/YYYY') as reg_date
-			, (case when #{lang} = 'lng_type_1' then view.user_nm_kg
-				else view.user_nm_ru
-				end) as reg_nm
+			, kgst.fngetlangnm(view.user_nm_kg, view.user_nm_ru, view.user_nm_kg, #{lang}) as reg_nm
         from com_board cb
 		inner join view_user_member view on view.user_id = cb.reg_id
         where brd_id = #{id}

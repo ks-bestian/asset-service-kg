@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,7 +40,8 @@ public class DocumentServiceImpl implements DocumentService {
     private final EDVHelper edv;
     private final ThumbnailService thumbnailService;
     
-    private final Long MAX_USE_CPCT = Long.MAX_VALUE;
+    @Value("${edv.max-use-cpct}")
+    private long MAX_USE_CPCT;
     
     @Override
     public List<FolderVo> selectDeptFolderListAll(FolderVo vo) {
