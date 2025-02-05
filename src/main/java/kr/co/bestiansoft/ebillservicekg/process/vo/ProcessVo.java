@@ -31,5 +31,6 @@ public class ProcessVo extends ComDefaultVO {
 
 	private String srvcCd;
 	private String jobCd;
+	private String atrzMngNo;//결재관리번호
 
 }

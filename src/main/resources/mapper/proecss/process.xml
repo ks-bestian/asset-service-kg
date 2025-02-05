@@ -331,7 +331,7 @@
 	   <if test="trgtUserId != null and trgtUserId != ''">  , TRGT_USER_ID </if>
 	     , STATUS
 	     , DUE_DT
-	     , BILL_APRV_NO
+	     , atrz_mng_no
 	     , REG_ID
 	     , REG_DT
 	     )
@@ -344,7 +344,7 @@
 	     <if test="trgtUserId != null and trgtUserId != ''">,  #{trgtUserId} </if>
 	     ,  #{status}
 	     ,  #{dueDt}
-	     ,  #{billAprvNo}
+	     ,  #{atrzMngNo}
 	     ,  #{regId}
 	     ,  now()
 	    )
@@ -363,7 +363,7 @@
 	     ,  STATUS as TASK_STATUS
 	     ,  DUE_DT
 	     ,  COMPLETED_DT
-	     ,  BILL_APRV_NO
+	     ,  atrz_mng_no
 	     ,  REG_ID
 	     ,  REG_DT
 	     ,  MOD_ID
