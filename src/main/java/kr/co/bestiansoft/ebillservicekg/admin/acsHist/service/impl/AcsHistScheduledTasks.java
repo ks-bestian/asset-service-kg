@@ -42,7 +42,7 @@ public class AcsHistScheduledTasks {
     public void oldEbsAcsHistDeleteTask() {
     	String formattedDate = dateFormat.format(new Date(System.currentTimeMillis()));
         logger.info("ebs 접속이력 정리 배치 작업이 실행됩니다: " + formattedDate);
-        acsHistMapper.deleteOldEbsAcsHist();
+        acsHistMapper.deleteOldBillHist();
         formattedDate = dateFormat.format(new Date(System.currentTimeMillis()));
         logger.info("ebs 접속이력 정리 배치 작업이 종료됩니다: " + formattedDate);
     }

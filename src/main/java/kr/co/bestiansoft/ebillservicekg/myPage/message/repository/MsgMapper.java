@@ -14,6 +14,7 @@ public interface MsgMapper {
     List<MsgVo> selectListSend(HashMap<String, Object> param);
     MsgVo selectMsg(Long msgId);
     int insertMsg(MsgRequest msgRequest);
+    int updateRcvDt(HashMap<String, Object> param);
     void deleteMsg(Long msgId);
     List<UserMemberVo> selectUserMember(HashMap<String, Object> param);
 }

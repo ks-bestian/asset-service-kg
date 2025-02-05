@@ -12,10 +12,8 @@
             , req_url --접속요청주소
             , req_method --접속요청메소드
             , reg_id --접속자아이디
-            , to_char(reg_dt, 'DD/MM/YYYY HH24:MI') as reg_date --접속요청시간
-            , (case when #{lang} = 'lng_type_1' then vum.member_nm_kg
-                    else vum.member_nm_ru
-              end) as member_nm
+            , reg_dt
+            , kgst.fngetlangnm(member_nm_kg, member_nm_ru, member_nm_kg, #{lang}) as member_nm
         from com_acs_hist ca
         left join view_user_member vum on vum.member_id = ca.reg_id
         where 1=1
@@ -58,21 +56,59 @@
 		)
     </insert>
     
-    <insert id="createEbsAcsHist" parameterType="kr.co.bestiansoft.ebillservicekg.admin.acsHist.vo.AcsHistVo">
-        insert into kgst.ebs_acs_hist (
-			  acs_ip
-			, req_url
-			, req_method
-			, reg_id
-			, reg_dt
-		)
-		values (
-			  #{acsIp}
-			, #{reqUrl}
-			, #{reqMethod}
-			, #{regId}
-			, now()
-		)
+    <select id="getBillHistList" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.admin.acsHist.vo.AcsHistVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.acsHist.repository.AcsHistMapper.getBillHistList */
+        select
+              seq --접속이력아이디
+            , acs_ip --접속아이피
+            , req_url --접속요청주소
+            , req_method --접속요청메소드
+            , reg_id --접속자아이디
+            , reg_dt
+            , kgst.fngetlangnm(member_nm_kg, member_nm_ru, member_nm_kg, #{lang}) as member_nm
+        from ebs_acs_hist ca
+        left join view_user_member vum on vum.member_id = ca.reg_id
+        where 1=1
+        <if test="memberNm != null and memberNm != ''">
+            <choose>
+                <when test="lang == 'lng_type_1'">
+                    and vum.member_nm_kg like concat('%', #{memberNm}, '%')
+                </when>
+                <when test="lang == 'lng_type_2'">
+                    and vum.member_nm_ru like concat('%', #{memberNm}, '%')
+                </when>
+            </choose>
+        </if>
+        <if test="url != null and url != ''">
+            and req_url like concat('%', #{url}, '%')
+        </if>
+        <if test="stDt != null and stDt != ''" > -- stDt 날짜 형식 yyyy-mm-dd
+            and reg_dt::text &gt;= concat(#{stDt})
+        </if>
+        <if test="edDt != null and edDt != ''">
+            and reg_dt::text &lt;= concat(#{edDt}, '23:59:59')
+        </if>
+        order by reg_dt desc
+    </select>
+
+    <insert id="createBillHist" parameterType="kr.co.bestiansoft.ebillservicekg.admin.acsHist.vo.AcsHistVo">
+        insert into kgst.ebs_acs_hist
+            (
+              acs_ip
+            , req_url
+            , req_method
+            , reg_id
+            , reg_dt
+            )
+        values
+            (
+              #{acsIp}
+            , #{reqUrl}
+            , #{reqMethod}
+            , #{regId}
+            , now()
+            )
     </insert>
     
     <delete id="deleteOldAcsHist">

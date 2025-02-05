@@ -73,6 +73,16 @@ public class MsgServiceImpl implements MsgService {
     }
 
     @Override
+    public int msgRcvDt(HashMap<String, Object> param) {
+        Long msgId = ((Integer) param.get("msgId")).longValue();
+        MsgVo msg = msgMapper.selectMsg(msgId);
+        if(msg.getRcvDt() != null) {
+            msgMapper.updateRcvDt(param);
+        }
+        return 0;
+    }
+
+    @Override
     public void deleteMsg(List<Long> msgIds) {
         for (Long id : msgIds) {
             msgMapper.deleteMsg(id);
