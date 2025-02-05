@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiOperation;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
 import kr.co.bestiansoft.ebillservicekg.myPage.message.service.MsgService;
 import kr.co.bestiansoft.ebillservicekg.myPage.message.vo.MsgRequest;
+import kr.co.bestiansoft.ebillservicekg.myPage.message.vo.MsgVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -44,6 +45,12 @@ public class MsgController {
     @PostMapping(value = "/myPage/msg", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<CommonResponse> sendMsg(MsgRequest msgRequest) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Msg sent successfully.", msgService.sendMsg(msgRequest)), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "메세지 확인일시 저장", notes = "메세지 확인일시를 저장한다.")
+    @PutMapping(value = "/myPage/msg/rcvDt")
+    public ResponseEntity<CommonResponse> msgRcvDt(@RequestBody HashMap<String, Object> param) {
+        return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Msg sent successfully.", msgService.msgRcvDt(param)), HttpStatus.OK);
     }
 
     @ApiOperation(value = "사용자 전체 조회", notes = "전체 사용자를 조회한다.")
