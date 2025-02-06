@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 public class ProcessVo extends ComDefaultVO {
 
+
 	private String bpDfId;
 	private String bpDfNm;
 	private String rmk;

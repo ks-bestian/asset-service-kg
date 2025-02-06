@@ -26,6 +26,7 @@ public class BillAllServiceImpl implements BillAllService {
     private final BillAllMapper billAllMapper;
     private final AgreeMapper agreeMapper;
 
+
     @Override
     public List<BillAllVo> getBillList(HashMap<String, Object> param) {
 
@@ -38,7 +39,7 @@ public class BillAllServiceImpl implements BillAllService {
     	param.put("billId", billId);
     	/* 기본정보 */
     	BillAllVo dto = billAllMapper.selectBillById(param);
-    	
+
         // Null 체크 추가
         if (dto == null) {
             dto = new BillAllVo(); // Null일 경우 기본 객체로 초기화
@@ -52,53 +53,53 @@ public class BillAllServiceImpl implements BillAllService {
     			proposerItems.append(proposerList.get(i).getMemberNmRu());
     		}else {
     			proposerItems.append(proposerList.get(i).getMemberNmKg());
-    		}	
-    		
+    		}
+
     	    // 마지막 항목이 아니라면 콤마 추가
     	    if (i < proposerList.size() - 1) {
     	        proposerItems.append(", ");
     	    }
     	}
-    	dto.setProposerItems(proposerItems.toString());	
-    	
+    	dto.setProposerItems(proposerItems.toString());
+
     	/* 문서 */
     	List<EbsFileVo> fileList = billAllMapper.selectBillFile(param);
     	dto.setFileList(fileList);
-    	
+
     	/*소관위 기본정보*/
     	BillAllVo cmtData = billAllMapper.selectBillCmtInfo(param);
     	dto.setCmtData(cmtData);
-    	
+
     	/*소관위 회의정보*/
     	List<MtngAllVo> cmtAgendaList = billAllMapper.selectBillCmtMtng(param);
     	dto.setCmtAgendaList(cmtAgendaList);
-    	
+
     	/*관련위 기본정보*/
     	BillAllVo relCmtData = billAllMapper.selectBillRelCmtInfo(param);
     	dto.setRelData(relCmtData);
     	/*관련위 회의정보*/
     	List<MtngAllVo> relCmtAgendaList = billAllMapper.selectBillRelCmtMtng(param);
     	dto.setRelAgendaList(relCmtAgendaList);
-    	
+
     	/*본회의 회의정보 - 1,2,3차*/
     	List<BillAllVo> masterDetailList = billAllMapper.selectBillMastarDetail(param);
     	List<BillAllVo> plenaryList = masterDetailList.stream()
-    		    .filter(item -> "370".equals(item.getClsCd()) || 
-    		                    "380".equals(item.getClsCd()) || 
+    		    .filter(item -> "370".equals(item.getClsCd()) ||
+    		                    "380".equals(item.getClsCd()) ||
     		                    "390".equals(item.getClsCd()))
     		    .collect(Collectors.toList());
-    	
+
     	dto.setPlenaryList(plenaryList);
-    	
+
     	/*정부 이송*/
-    	
+
         return dto;
     }
 
 	@Override
 	public BillAllVo getBillDetailById(String billId, HashMap<String, Object> param) {
     	param.put("billId", billId);
-    	
+
     	BillAllVo dto = new BillAllVo();
     	dto.setBillId(billId);
 
@@ -109,7 +110,7 @@ public class BillAllServiceImpl implements BillAllService {
     	/* ebs_masgter_detail 정보 */
     	List<BillAllVo> masterDetailList = billAllMapper.selectBillMastarDetail(param);
     	dto.setMasterDetailList(masterDetailList);
-    	
+
         return dto;
 	}
 }
