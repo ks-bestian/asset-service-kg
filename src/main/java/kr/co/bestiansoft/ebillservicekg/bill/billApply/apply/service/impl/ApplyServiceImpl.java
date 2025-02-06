@@ -71,6 +71,8 @@ public class ApplyServiceImpl implements ApplyService {
 		for(String memberId : proposerList) {
 			ApplyVo member = applyMapper.getProposerInfo(memberId);
 
+			if(member == null) break;
+			
 			applyVo.setOrd(++ord);
 			applyVo.setPolyCd(member.getPolyCd());
 			applyVo.setPolyNm(member.getPolyNm());
