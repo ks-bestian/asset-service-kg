@@ -112,19 +112,22 @@ public class MtngToServiceImpl implements MtngToService {
 		mtngToMapper.deleteMtngToAgenda(mtngToVo);
 		
 		List<AgendaVo> agendaList = mtngToVo.getAgendaList();
-		for(int i=0;i<agendaList.size();i++) {
-			log.info("billId : {}", agendaList.get(i).getBillId());
-			log.info("agenda : {}", agendaList.get(i));
-			AgendaVo agendaVo = new AgendaVo();
-			agendaVo.setBillId(agendaList.get(i).getBillId());
-			agendaVo.setMtngId(mtngToVo.getMtngId());
-			agendaVo.setOrd(i+1);
-			agendaVo.setRegId(regId);
-			agendaVo.setRsltCd(agendaList.get(i).getRsltCd());
-			agendaList.set(i, agendaVo);
-			//존재하는 행인 경우 업데이트. 아닌경우 인서트
-			mtngToMapper.updateMtngToAgenda(agendaList.get(i));
+		if(agendaList!=null) {
+			for(int i=0;i<agendaList.size();i++) {
+				log.info("billId : {}", agendaList.get(i).getBillId());
+				log.info("agenda : {}", agendaList.get(i));
+				AgendaVo agendaVo = new AgendaVo();
+				agendaVo.setBillId(agendaList.get(i).getBillId());
+				agendaVo.setMtngId(mtngToVo.getMtngId());
+				agendaVo.setOrd(i+1);
+				agendaVo.setRegId(regId);
+				agendaVo.setRsltCd(agendaList.get(i).getRsltCd());
+				agendaList.set(i, agendaVo);
+				//존재하는 행인 경우 업데이트. 아닌경우 인서트
+				mtngToMapper.updateMtngToAgenda(agendaList.get(i));
+			}
 		}
+
 		
 		/*참석자 ebs_mtng_attendant*/
 		
@@ -132,19 +135,23 @@ public class MtngToServiceImpl implements MtngToService {
 		mtngToMapper.deleteMtngToAttendant(mtngToVo);
 		
 		List<MemberVo> attendantList = mtngToVo.getAttendantList();
-		for(int i=0;i<attendantList.size();i++) {
-			log.info("attendant : {}", attendantList.get(i));
-			MemberVo memberVo = new MemberVo();
-			memberVo.setMtngId(mtngToVo.getMtngId());
-			memberVo.setAtdtUserId(attendantList.get(i).getAtdtUserId());
-			memberVo.setAtdtUserNm(attendantList.get(i).getAtdtUserNm());
-			memberVo.setAtdtKind("ATT01");// 참석자 구분(의원)
-			memberVo.setRegId(regId);
-			memberVo.setAtdtDivCd(attendantList.get(i).getAtdtDivCd());
-			attendantList.set(i, memberVo);
-			//존재하는 행인 경우 업데이트. 아닌경우 인서트
-			mtngToMapper.updateMtngToAttendant(attendantList.get(i));
+		if(attendantList!=null) {
+			for(int i=0;i<attendantList.size();i++) {
+				log.info("attendant : {}", attendantList.get(i));
+				MemberVo memberVo = new MemberVo();
+				memberVo.setMtngId(mtngToVo.getMtngId());
+				memberVo.setAtdtUserId(attendantList.get(i).getAtdtUserId());
+				memberVo.setAtdtUserNm(attendantList.get(i).getAtdtUserNm());
+				//뷰테이블의 사용자 가져와서 쓰라고 하셨는데... 참석자 구분을 할만한 정보가 없음. 내부인지 외부인지 직원인지 의원인지 등등...
+				//memberVo.setAtdtKind("ATT01");// 참석자 구분(의원)
+				memberVo.setRegId(regId);
+				memberVo.setAtdtDivCd(attendantList.get(i).getAtdtDivCd());
+				attendantList.set(i, memberVo);
+				//존재하는 행인 경우 업데이트. 아닌경우 인서트
+				mtngToMapper.updateMtngToAttendant(attendantList.get(i));
+			}
 		}
+
 		
 		return mtngToVo;
 	}

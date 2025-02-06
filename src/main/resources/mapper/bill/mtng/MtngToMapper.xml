@@ -105,25 +105,32 @@
     <select id="selectListMtngAttendant" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MemberVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.repository.MtngToMapper.selectListMtngAttendant */    
-        SELECT
-              ema.atdt_user_id 
-           		, CASE 
-		  		WHEN #{lang} = 'lng_type_1' then cm.member_nm_kg 
-		  		WHEN #{lang} = 'lng_type_2' then cm.member_nm_ru 
-	      		ELSE cm.member_nm_kg
-	      		END AS atdtUserNm
-	      	  , ema.atdt_div_cd
-              , cm.poly_cd
-              , cm.poly_nm
-        FROM ebs_mtng_attendant ema
-        , com_member cm 
-        WHERE 1=1
-        AND ema.atdt_user_id = cm.member_id
-        AND ema.mtng_id = #{mtngId}
-        ORDER BY cm.poly_nm, atdtUserNm
+		SELECT
+		  	vum.member_id --국회의원아이디
+			, CASE 
+				WHEN #{lang} = 'lng_type_1' then vum.member_nm_kg 
+				WHEN #{lang} = 'lng_type_2' then vum.member_nm_ru 
+				ELSE vum.member_nm_kg
+				END AS memberNm
+			, vum.dept_cd
+			, vum.cmit_cd
+			, CASE 
+				WHEN #{lang} = 'lng_type_1' then vum.dept_nm_kg
+				WHEN #{lang} = 'lng_type_2' then vum.dept_nm_ru
+				ELSE vum.dept_nm_kg
+				END AS deptNm
+			, vum.poly_cd
+			, vum.poly_nm 
+			, ema.atdt_div_cd
+		FROM 
+		kgst.view_user_member vum 
+		, ebs_mtng_attendant ema
+		WHERE 1=1
+		AND vum.member_id = ema.atdt_user_id
+		AND ema.mtng_id = #{mtngId}
+        ORDER BY deptNm, memberNm
     </select>
-    <select id="selectListMtngAgenda" parameterType="java.util.HashMap"
-            resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.AgendaVo">
+    <select id="selectListMtngAgenda" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.AgendaVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.repository.MtngToMapper.selectListMtngAgenda */    
        	SELECT 
 			  ema.mtng_id  
@@ -259,10 +266,12 @@
     <delete id="deleteMtngToAgenda" parameterType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.vo.MtngToVo">
 	    DELETE FROM ebs_mtng_agenda
 	    WHERE mtng_id = #{mtngId}
+	    <if test="agendaList != null and agendaList.size() > 0">
 	      AND bill_id NOT IN
-	    <foreach collection="agendaList" item="agenda" index="index" open="(" separator="," close=")">
-	        #{agenda.billId}
-	    </foreach>
+		    <foreach collection="agendaList" item="agenda" index="index" open="(" separator="," close=")">
+		        #{agenda.billId}
+		    </foreach>
+	    </if>
 	</delete>
     <update id="updateMtngToAgenda" parameterType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.AgendaVo">
 		INSERT INTO EBS_MTNG_AGENDA
@@ -292,10 +301,12 @@
     <delete id="deleteMtngToAttendant" parameterType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.vo.MtngToVo">
 	    DELETE FROM ebs_mtng_attendant
 	    WHERE mtng_id = #{mtngId}
+	    <if test="attendantList != null and attendantList.size() > 0">
 	      AND atdt_user_id NOT IN
-	    <foreach collection="attendantList" item="attendant" index="index" open="(" separator="," close=")">
+	      <foreach collection="attendantList" item="attendant" index="index" open="(" separator="," close=")">
 	        #{attendant.atdtUserId}
-	    </foreach>
+	      </foreach>
+	    </if>
 	</delete>
     <update id="updateMtngToAttendant" parameterType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.AgendaVo">
 		INSERT INTO EBS_MTNG_ATTENDANT
