@@ -1,7 +1,5 @@
 package kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo;
 
-import java.time.LocalDateTime;
-
 import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
 

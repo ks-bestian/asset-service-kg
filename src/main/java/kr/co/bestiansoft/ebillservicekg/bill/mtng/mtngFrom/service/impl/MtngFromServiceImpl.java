@@ -81,8 +81,10 @@ public class MtngFromServiceImpl implements MtngFromService {
 			MemberVo memberVo = new MemberVo();
 			memberVo.setMtngId(mtngFromVo.getMtngId());
 			memberVo.setAtdtUserId(attendantList.get(i).getMemberId());
-			memberVo.setAtdtUserNm(attendantList.get(i).getMemberNmKg());
-			memberVo.setAtdtKind("ATT01");// 참석자 구분(의원)
+			memberVo.setAtdtUserNm(attendantList.get(i).getMemberNm());
+			
+			//뷰테이블의 사용자 가져와서 쓰라고 하셨는데... 참석자 구분을 할만한 정보가 없음. 내부인지 외부인지 직원인지 의원인지 등등...
+			//memberVo.setAtdtKind("ATT01");// 참석자 구분(의원)
 			memberVo.setRegId(regId);
 			attendantList.set(i, memberVo);
 			mtngFromMapper.insertEbsMtngAttendant(attendantList.get(i));
