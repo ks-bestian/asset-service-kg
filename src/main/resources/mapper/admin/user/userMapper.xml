@@ -39,6 +39,9 @@
                 </when>
             </choose>
         </if>
+        <if test="deptCd != null and deptCd !=''">
+            and cu.dept_cd = #{deptCd}
+        </if>
         order by reg_dt desc
     </select>
 

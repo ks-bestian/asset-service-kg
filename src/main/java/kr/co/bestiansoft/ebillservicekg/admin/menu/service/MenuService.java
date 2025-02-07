@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface MenuService {
     ArrayNode getMenuList(HashMap<String, Object> param);
-    MenuVo getMenuDetail(Long menuId);
+    MenuVo getMenuDetail(Long menuId, HashMap<String, Object> param);
     MenuVo createMenu(MenuVo menuVo);
     int updateMenu(MenuVo menuVo);
     void deleteMenu(List<Long> menuId);

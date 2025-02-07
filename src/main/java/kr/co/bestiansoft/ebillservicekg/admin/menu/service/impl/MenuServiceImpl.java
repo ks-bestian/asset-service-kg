@@ -36,8 +36,8 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public MenuVo getMenuDetail(Long menuId) {
-        return menuMapper.selectMenu(menuId);
+    public MenuVo getMenuDetail(Long menuId, HashMap<String, Object> param) {
+        return menuMapper.selectMenu(menuId, (String) param.get("lang"));
     }
 
     @Override
