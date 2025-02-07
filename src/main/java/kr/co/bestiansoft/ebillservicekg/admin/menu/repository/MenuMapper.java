@@ -11,7 +11,7 @@ import java.util.List;
 public interface MenuMapper {
 
     List<MenuVo> selectListMenu(HashMap<String, Object> param);
-    MenuVo selectMenu(Long menuId);
+    MenuVo selectMenu(Long menuId, String lang);
     int insertMenu(MenuVo menuVo);
     int updateMenu(MenuVo menuVo);
     void deleteMenu(Long id);
