@@ -62,6 +62,8 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public BoardVo getBoardById(Long brdId, String lang) {
     	BoardVo dto = boardMapper.getBoardById(brdId, lang);
+        System.out.println("!3");
+        System.out.println(dto.toString());
     	if(dto != null) {
     		dto.setNotiInqCnt(dto.getNotiInqCnt() + 1);
             boardMapper.updateNotiInqCnt(brdId, dto.getNotiInqCnt());
@@ -76,7 +78,8 @@ public class BoardServiceImpl implements BoardService {
     	
     	boardVo.setBrdType(brdType);
     	boardVo.setFileGroupId(fileGroupId);
-    	
+
+        boardVo.setRegId(new SecurityInfoUtil().getAccountId());
     	boardMapper.insertBoard(boardVo);
     	boardVo.setFiles(null);
     	return boardVo;

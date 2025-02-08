@@ -37,8 +37,8 @@ public class MsgController {
 
     @ApiOperation(value = "메세지 상세 조회", notes = "메세지 상세를 조회한다.")
     @GetMapping("/myPage/msg/{msgId}")
-    public ResponseEntity<CommonResponse> getMsgDetail(@PathVariable Long msgId) {
-        return new ResponseEntity<>(new CommonResponse(200, "ok", msgService.getMsgDetail(msgId)), HttpStatus.OK);
+    public ResponseEntity<CommonResponse> getMsgDetail(@PathVariable Long msgId, @RequestParam String lang) {
+        return new ResponseEntity<>(new CommonResponse(200, "ok", msgService.getMsgDetail(msgId, lang)), HttpStatus.OK);
     }
 
     @ApiOperation(value = "메세지 전송", notes = "메세지를 전송한다.")
@@ -65,5 +65,6 @@ public class MsgController {
         msgService.deleteMsg(msgIds);
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Msg deleted successfully.", "deleted"), HttpStatus.OK);
     }
+
 
 }

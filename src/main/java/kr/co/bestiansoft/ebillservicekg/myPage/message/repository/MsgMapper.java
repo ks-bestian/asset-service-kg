@@ -12,7 +12,7 @@ import java.util.List;
 public interface MsgMapper {
     List<MsgVo> selectListRcv(HashMap<String, Object> param);
     List<MsgVo> selectListSend(HashMap<String, Object> param);
-    MsgVo selectMsg(Long msgId);
+    MsgVo selectMsg(Long msgId, String lang);
     int insertMsg(MsgRequest msgRequest);
     int updateRcvDt(HashMap<String, Object> param);
     void deleteMsg(Long msgId);

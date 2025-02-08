@@ -81,7 +81,7 @@
     </select>
 
 
-    <select id="selectMsg" parameterType="java.lang.Long" resultType="kr.co.bestiansoft.ebillservicekg.myPage.message.vo.MsgVo">
+    <select id="selectMsg" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.myPage.message.vo.MsgVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.myPage.message.repository.MsgMapper.selectMsg */
         select
               em.msg_id --메세지아이디
@@ -99,8 +99,8 @@
             , em.reg_dt
             , em.mod_id
             , em.mod_dt
-            , kgst.fngetlangnm(mRcv.user_nm_kg,mRcv.user_nm_ru,mRcv.user_nm_kg,#{lang}) as rcv_nm
-            , kgst.fngetlangnm(mSend.user_nm_kg,mSend.user_nm_ru, mSend.user_nm_kg,#{lang}) as send_nm
+            , kgst.fngetlangnm(mRcv.user_nm_kg, mRcv.user_nm_ru ,mRcv.user_nm_kg, #{lang}) as rcv_nm
+            , kgst.fngetlangnm(mSend.user_nm_kg, mSend.user_nm_ru, mSend.user_nm_kg, #{lang}) as send_nm
         from ebs_msg em
         inner join view_user_member mRcv on mRcv.user_id = em.rcv_id
         inner join view_user_member mSend on mSend.user_id = em.send_id
@@ -175,22 +175,26 @@
               end) as type
         from view_user_member um
         left join com_code_detail cc on cc.code_id = um.job_cd
-        left join com_ccof ccof on ccof.user_id = um.user_id
+        <if test="deptCd != '' and deptCd != null">
+            left join com_ccof ccof on ccof.user_id = um.user_id
+        </if>
         where um.msg_rcv_yn != 'N'
         <if test="polyCd != '' and polyCd != null">
             and um.poly_cd = #{polyCd}
         </if>
         <if test="deptCd != '' and deptCd != null">
-            and um.dept_cd = #{deptCd} or ccof.dept_cd = #{deptCd}
+            and (um.dept_cd = #{deptCd} or ccof.dept_cd = #{deptCd})
         </if>
-        <choose>
-            <when test="lang == 'lng_type_1'">
-                and um.user_nm_kg like concat('%', #{searchNm}, '%')
-            </when>
-            <when test="lang == 'lng_type_2'">
-                and um.user_nm_ru like concat ('%', #{searchNm}, '%')
-            </when>
-        </choose>
+        <if test="lang != null and lang != ''">
+            <choose>
+                <when test="lang == 'lng_type_1'">
+                    and um.user_nm_kg like concat('%', #{searchNm}, '%')
+                </when>
+                <when test="lang == 'lng_type_2'">
+                    and um.user_nm_ru like concat ('%', #{searchNm}, '%')
+                </when>
+            </choose>
+        </if>
     </select>
 
     <delete id="deleteMsg" parameterType="java.lang.Long">

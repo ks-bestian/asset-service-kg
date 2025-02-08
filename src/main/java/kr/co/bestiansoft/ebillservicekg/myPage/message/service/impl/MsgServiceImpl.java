@@ -39,8 +39,8 @@ public class MsgServiceImpl implements MsgService {
     }
 
     @Override
-    public MsgVo getMsgDetail(Long msgId) {
-        return msgMapper.selectMsg(msgId);
+    public MsgVo getMsgDetail(Long msgId, String lang) {
+        return msgMapper.selectMsg(msgId, lang);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class MsgServiceImpl implements MsgService {
         msgRequest.setSendId(new SecurityInfoUtil().getAccountId());
         String fileGroupId = null;
 
-        if(msgRequest.getFiles() != null) {
+        if (msgRequest.getFiles() != null) {
             fileGroupId = comFileService.saveFile(msgRequest.getFiles());
         }
 
@@ -74,12 +74,7 @@ public class MsgServiceImpl implements MsgService {
 
     @Override
     public int msgRcvDt(HashMap<String, Object> param) {
-        Long msgId = ((Integer) param.get("msgId")).longValue();
-        MsgVo msg = msgMapper.selectMsg(msgId);
-        if(msg.getRcvDt() != null) {
-            msgMapper.updateRcvDt(param);
-        }
-        return 0;
+        return msgMapper.updateRcvDt(param);
     }
 
     @Override

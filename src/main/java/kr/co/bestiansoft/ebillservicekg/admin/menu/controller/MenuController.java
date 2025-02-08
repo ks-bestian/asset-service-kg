@@ -30,8 +30,8 @@ public class MenuController {
 
     @ApiOperation(value = "메뉴상세 조회", notes = "메뉴 상세를 조회한다.")
     @GetMapping("admin/menu/{menuId}")
-    public ResponseEntity<CommonResponse> getMenuDetail(@PathVariable Long menuId) {
-        return new ResponseEntity<>(new CommonResponse(200, "ok", menuService.getMenuDetail(menuId)), HttpStatus.OK);
+    public ResponseEntity<CommonResponse> getMenuDetail(@PathVariable Long menuId, @RequestParam HashMap<String, Object> param) {
+        return new ResponseEntity<>(new CommonResponse(200, "ok", menuService.getMenuDetail(menuId, param)), HttpStatus.OK);
     }
 
     @ApiOperation(value = "메뉴 생성", notes = "메뉴를 생성한다.")

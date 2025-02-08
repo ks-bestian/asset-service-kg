@@ -35,17 +35,21 @@
             , mod_dt
             , mod_id
         from com_menu
-        where use_yn = 'Y'
+        where 1=1
+        <if test="menuList != null and menuList != ''">
+            and use_yn = 'Y'
+        </if>
         order by upr_menu_id, ord
     </select>
-
-    <select id="selectMenu" parameterType="java.lang.Long" resultType="kr.co.bestiansoft.ebillservicekg.admin.menu.vo.MenuVo">
+    
+    <select id="selectMenu" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.menu.vo.MenuVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.menu.repository.MenuMapper.selectMenu */
         select
               menu_id
             , menu_nm1
             , menu_nm2
             , menu_nm3
+            , kgst.fngetlangnm(menu_nm1, menu_nm2, menu_nm3, #{lang}) as menu_nm
             , ord
             , upr_menu_id
             , menu_path
