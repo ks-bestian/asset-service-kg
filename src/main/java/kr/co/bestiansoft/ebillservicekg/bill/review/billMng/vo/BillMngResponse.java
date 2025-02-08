@@ -10,7 +10,8 @@ public class BillMngResponse {
 
 	private List<ProposerVo> proposerList;
     private List<BillMngVo> cmtList;
-    private BillMngVo billMngVo;
+    private BillMngVo billMngVo;//안건기본
+    private BillMngVo billlegalReviewVo;//법률검토
     private ProcessVo processVo;
 
 

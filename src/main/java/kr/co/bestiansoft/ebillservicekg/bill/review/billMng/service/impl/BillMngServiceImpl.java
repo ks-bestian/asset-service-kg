@@ -34,14 +34,16 @@ public class BillMngServiceImpl implements BillMngService {
     }
 
     @Override
-    public BillMngResponse getBillById(HashMap<String, Object> param) {
+    public BillMngResponse getBillById(BillMngVo argVo) {
 
-    	BillMngVo billMngVo = billMngMapper.selectOneBill(param);
+    	BillMngVo billMngVo = billMngMapper.selectOneBill(argVo);
+		BillMngVo billlegalReviewVo = billMngMapper.selectOnelegalReview(argVo);
     	//List<ProposerVo> proposerList = billMngMapper.selectProposerMemberList(param);
     	//List<BillMngVo> cmtList = billMngMapper.selectCmtList(param);
 
     	BillMngResponse billMngResponse = new BillMngResponse();
     	billMngResponse.setBillMngVo(billMngVo);
+    	billMngResponse.setBilllegalReviewVo(billlegalReviewVo);
 
         return billMngResponse;
     }
@@ -59,6 +61,18 @@ public class BillMngServiceImpl implements BillMngService {
 		return null;
 	}
 
+	@Override
+	public BillMngVo billCmtRegMng(BillMngVo billMngVo) {
+
+        //위원회 생성
+
+		ProcessVo pVo = new ProcessVo();
+		pVo.setBillId(billMngVo.getBillId());
+		pVo.setStepId(billMngVo.getStepId());
+		pVo.setTaskId(billMngVo.getTaskId());
+		processService.handleProcess(pVo);
+		return null;
+	}
 
 	@Override
 	public List<BillMngVo> selectListlegalReview(HashMap<String, Object> param) {
@@ -67,21 +81,21 @@ public class BillMngServiceImpl implements BillMngService {
 	}
 
 
-	@Override
-	public BillMngResponse selectOnelegalReview(HashMap<String, Object> param) {
-
-		BillMngResponse billMngResponse = new BillMngResponse();
-		BillMngVo billMngVo = billMngMapper.selectOnelegalReview(param);
-		billMngResponse.setBillMngVo(billMngVo);
-
-		//////////////////////////
-		ProcessVo pvo = new ProcessVo();
-		pvo.setTaskId(Long.valueOf(String.valueOf(param.get("taskId"))));
-		ProcessVo taskVo = processService.selectBpTask(pvo);
-		billMngResponse.setProcessVo(taskVo);
-
-		return billMngResponse;
-	}
+//	@Override
+//	public BillMngResponse selectOnelegalReview(HashMap<String, Object> param) {
+//
+//		BillMngResponse billMngResponse = new BillMngResponse();
+//		BillMngVo billMngVo = billMngMapper.selectOnelegalReview(param);
+//		billMngResponse.setBillMngVo(billMngVo);
+//
+//		//////////////////////////
+//		ProcessVo pvo = new ProcessVo();
+//		pvo.setTaskId(Long.valueOf(String.valueOf(param.get("taskId"))));
+//		ProcessVo taskVo = processService.selectBpTask(pvo);
+//		billMngResponse.setProcessVo(taskVo);
+//
+//		return billMngResponse;
+//	}
 
 	@Transactional
 	@Override
@@ -120,6 +134,8 @@ public class BillMngServiceImpl implements BillMngService {
 
     	return billMngVo;
 	}
+
+
 
 
 

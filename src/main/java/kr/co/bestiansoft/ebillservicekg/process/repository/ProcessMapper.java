@@ -29,6 +29,7 @@ public interface ProcessMapper {
 
 
 	CmttVo selectOneCmtt(ProcessVo vo);
+
 	void updateBpTask(ProcessVo vo);
 
 	List<ProposerVo> selectListProposerId(ProcessVo vo);

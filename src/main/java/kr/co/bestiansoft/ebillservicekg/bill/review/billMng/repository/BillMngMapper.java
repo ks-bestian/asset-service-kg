@@ -12,12 +12,12 @@ import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.ProposerVo;
 public interface BillMngMapper {
 
 	List<BillMngVo> selectListBillMng(HashMap<String, Object> param);
-	BillMngVo selectOneBill(HashMap<String, Object> param);
+	BillMngVo selectOneBill(BillMngVo argVo);
 
 
 	void insertBillDetail(BillMngVo billMngVo);
 	List<BillMngVo> selectListlegalReview(HashMap<String, Object> param);
-	BillMngVo selectOnelegalReview(HashMap<String, Object> param);
+	BillMngVo selectOnelegalReview(BillMngVo argVo);
 
 
 /////////////////////////////

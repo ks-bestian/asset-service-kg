@@ -32,15 +32,30 @@
 		from kgst.view_bill_process_list pl
 		join kgst.view_user_member vum on (pl.ppsr_id = vum.user_id)
 		where 1=1
-		  and pl.assigned_to = 'GD'
-		  and pl.step_id = '1000'
-		<if test="naTermCd != null and naTermCd != ''">
-			and pl.na_term_cd = #{naTermCd}
-		</if>
+
+		  <if test="assignedTo != null and assignedTo != ''">
+		  	and pl.assigned_to = #{assignedTo}
+		  </if>
+
+		  <if test="trgtUserId != null and trgtUserId != ''">
+		    and pl.trgtUserId = #{trgtUserId}
+		  </if>
+
+		  <if test="stepId != null and stepId != ''">
+		    and pl.step_id = #{stepId}
+		  </if>
+
+		  <if test="taskStatus != null and taskStatus != ''">
+		    and pl.task_status = #{taskStatus}
+		  </if>
+
+		  <if test="naTermCd != null and naTermCd != ''">
+		    and pl.na_term_cd = #{naTermCd}
+		  </if>
 
     </select>
 
-    <select id="selectOneBill" parameterType="java.util.HashMap"
+    <select id="selectOneBill" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
         /* 안건 관리 상세 화면 */
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper.selectOneBill */
@@ -69,8 +84,8 @@
 		join kgst.view_user_member vum on (pl.ppsr_id = vum.user_id)
 		where 1=1
 		  and pl.bill_id = #{billId}
-		  and pl.assigned_to = 'GD'
-		  and pl.step_id = '1000'
+		  and pl.assigned_to = #{assignedTo}
+		  and pl.task_id = #{taskId}
 
     </select>
 
@@ -118,7 +133,7 @@
 
     </select>
 
-    <select id="selectOnelegalReview" parameterType="java.util.HashMap"
+    <select id="selectOnelegalReview" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper.selectOnelegalReview */
         select

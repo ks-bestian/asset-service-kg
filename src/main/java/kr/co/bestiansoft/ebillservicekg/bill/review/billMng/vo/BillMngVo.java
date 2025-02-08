@@ -108,5 +108,6 @@ public class BillMngVo extends ComDefaultVO {
     private String assignedTo;
     private String trgtUserId;
     private String deptCd;
+    private String lang;
 
 }

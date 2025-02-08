@@ -263,15 +263,15 @@ public class ProcessServiceImpl implements ProcessService {
 
 		}
 
-		/*의장접수(결재)*/
+		/*안건접수(위원회작성)*/
 		void executeService_1300(ProcessVo argVo) {
 
 			ProcessVo taskVo = new ProcessVo();
 			taskVo.setBillId(argVo.getBillId());
 			taskVo.setStepId(argVo.getNextStepId());
-			taskVo.setTaskNm("의장접수(결재");
+			taskVo.setTaskNm("위원회회부");
 			taskVo.setStatus("P");
-			taskVo.setAssignedTo(AuthConstants.AUTH_CMOFFC);//의장실 할당
+			taskVo.setAssignedTo(AuthConstants.AUTH_GD);//GD 할당
 			taskVo.setRegId(argVo.getRegId());
 			processMapper.insertBpTask(taskVo);
 
@@ -514,6 +514,14 @@ public class ProcessServiceImpl implements ProcessService {
 		@Override
 		public ProcessVo selectBpTask(ProcessVo argVo) {
 			return processMapper.selectBpTask(argVo);
+		}
+
+		@Override
+		public ProcessVo handleTask(ProcessVo argVo) {
+			String userId = new SecurityInfoUtil().getAccountId();
+			argVo.setMdfrId(userId);
+			processMapper.updateBpTask(argVo);
+			return argVo;
 		}
 
 

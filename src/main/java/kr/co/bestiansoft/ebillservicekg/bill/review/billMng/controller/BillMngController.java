@@ -36,9 +36,10 @@ public class BillMngController {
 
     @ApiOperation(value = "안건 관리 상세 조회", notes = "상세를 조회한다.")
     @GetMapping("/bill/review/billMng/detail")
-    public ResponseEntity<CommonResponse> getBillById(@RequestParam HashMap<String, Object> param) {
+    public ResponseEntity<CommonResponse> getBillById(BillMngVo param) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", billMngService.getBillById(param)), HttpStatus.OK);
     }
+
 
 
 
@@ -48,7 +49,11 @@ public class BillMngController {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Bill created successfully", billMngService.billRegisterMng(billMngVo)), HttpStatus.CREATED);
     }
 
-
+    @ApiOperation(value = "안건 관리 - 위원회회부", notes = "위원회회부")
+    @PostMapping(value = "/bill/review/billCmtRegMng")
+    public ResponseEntity<CommonResponse> billCmtRegMng(@RequestBody BillMngVo billMngVo) {
+        return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Bill created successfully", billMngService.billRegisterMng(billMngVo)), HttpStatus.CREATED);
+    }
 
     @ApiOperation(value = "안건 관리 법률검토 목록조회", notes = "안건 관리 법률검토 조회")
     @GetMapping("/bill/review/billLegalReview")
@@ -56,12 +61,12 @@ public class BillMngController {
         return new ResponseEntity<>(new CommonResponse(200, "OK", billMngService.selectListlegalReview(param)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "안건 관리 법률검토 상세조회", notes = "안건 관리 법률검토 상세조회")
-    @GetMapping("/bill/review/billLegalReview/{billId}")
-    public ResponseEntity<CommonResponse> selectOnelegalReview(@PathVariable String billId,@RequestParam HashMap<String, Object> param) {
-    	param.put("billId",billId );
-        return new ResponseEntity<>(new CommonResponse(200, "OK", billMngService.selectOnelegalReview(param)), HttpStatus.OK);
-    }
+//    @ApiOperation(value = "안건 관리 법률검토 상세조회", notes = "안건 관리 법률검토 상세조회")
+//    @GetMapping("/bill/review/billLegalReview/{billId}")
+//    public ResponseEntity<CommonResponse> selectOnelegalReview(@PathVariable String billId,@RequestParam HashMap<String, Object> param) {
+//    	param.put("billId",billId );
+//        return new ResponseEntity<>(new CommonResponse(200, "OK", billMngService.selectOnelegalReview(param)), HttpStatus.OK);
+//    }
 
     @ApiOperation(value = "안건관리 법률검토 등록", notes = "기타정보 등록")
     @PostMapping(value = "/bill/review/billLegalReview")
@@ -75,21 +80,21 @@ public class BillMngController {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Bill created successfully", billMngService.insertBillLegalReviewReport(billMngVo)), HttpStatus.CREATED);
     }
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     ////////////////////////////////////////////////////////////////////////
 
 
