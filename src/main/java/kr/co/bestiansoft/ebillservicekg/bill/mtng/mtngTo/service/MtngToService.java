@@ -10,7 +10,11 @@ public interface MtngToService {
     List<MtngToVo> getMtngToList(HashMap<String, Object> param);
     MtngToVo getMtngToById(Long mtngId, HashMap<String, Object> param);
     MtngToVo createMtngTo(MtngToVo mtngFromVo);
+    MtngToVo reportMtngTo(MtngToVo mtngFromVo) throws Exception ;
+
+
+
     List<MemberVo> getMemberList(HashMap<String, Object> param);
     void deleteMtng(List<Long> mtngIds);
-    
+
 }

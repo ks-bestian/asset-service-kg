@@ -40,30 +40,38 @@ public class MtngFromController {
     public ResponseEntity<CommonResponse> getMtngFromById(@PathVariable Long mtngId, @RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", mtngFromService.getMtngFromById(mtngId, param)), HttpStatus.OK);
     }
-    
+
     @ApiOperation(value = "회의 예정 등록", notes = "회의 예정 등록")
     @PostMapping(value = "/bill/mtng/from")
     public ResponseEntity<CommonResponse> createMtngFrom(@RequestBody MtngFromVo mtngFromVo) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Mtng created successfully", mtngFromService.createMtngFrom(mtngFromVo)), HttpStatus.CREATED);
     }
-    
+
     @ApiOperation(value = "회의 예정 - 의원 리스트 조회", notes = "회의 예정 - 의원 리스트를 조회한다.")
     @GetMapping("/bill/mtng/from/member")
     public ResponseEntity<CommonResponse> getMemberList(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "ok", mtngFromService.getMemberList(param)), HttpStatus.OK);
     }
-    
+
     @ApiOperation(value = "회의 예정 - 부서(위원회) 리스트 조회", notes = "회의 예정 - 부서(위원회) 리스트를 조회한다.")
     @GetMapping("/bill/mtng/from/dept")
     public ResponseEntity<CommonResponse> getDeptList(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "ok", mtngFromService.getDeptList(param)), HttpStatus.OK);
     }
-    
+
     @ApiOperation(value = "회의 예정 - 회의 취소", notes = "회의 취소")
     @DeleteMapping("/bill/mtng/from")
     public ResponseEntity<CommonResponse> deleteMtngFrom(@RequestBody List<Long> mtngIds) {
     	mtngFromService.deleteMtng(mtngIds);
         return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "OK", "meeting deleted successfully"), HttpStatus.OK);
     }
+
+    @ApiOperation(value = "회의 예정 - 위원회회의 해당안건 조회", notes = "회의 예정 - 해당안건을 조회한다.")
+    @GetMapping("/bill/mtng/from/selectListMtngBill")
+    public ResponseEntity<CommonResponse> selectListMtngBill(@RequestParam HashMap<String, Object> param) {
+        return new ResponseEntity<>(new CommonResponse(200, "ok", mtngFromService.selectListMtngBill(param)), HttpStatus.OK);
+    }
+
+
 
 }

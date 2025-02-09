@@ -4,6 +4,7 @@ import java.util.List;
 
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MemberVo;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MtngFromVo;
+import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo;
 
 public interface MtngFromService {
 
@@ -13,5 +14,6 @@ public interface MtngFromService {
     List<MemberVo> getMemberList(HashMap<String, Object> param);
     List<MemberVo> getDeptList(HashMap<String, Object> param);
     void deleteMtng(List<Long> mtngIds);
-    
+
+    List<BillMngVo> selectListMtngBill(HashMap<String, Object> param);
 }

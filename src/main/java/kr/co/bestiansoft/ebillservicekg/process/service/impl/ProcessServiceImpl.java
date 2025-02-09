@@ -64,6 +64,7 @@ public class ProcessServiceImpl implements ProcessService {
 
 		stepVo.setRegId(userId);
 		stepVo.setMdfrId(userId);
+		stepVo.setCmtCd(argVo.getCmtCd());
 		executeServiceTasks(stepVo);
 
 		return argVo;
@@ -303,14 +304,14 @@ public class ProcessServiceImpl implements ProcessService {
 		/*1차위원회 회의결과등록*/
 		void executeService_1500(ProcessVo argVo) {
 	        //회의결과화면에서 결과정보를 등록한다.
-			CmttVo cmttVo = processMapper.selectOneCmtt(argVo);
+			//CmttVo cmttVo = processMapper.selectOneCmtt(argVo);
 
 			ProcessVo taskVo = new ProcessVo();
 			taskVo.setBillId(argVo.getBillId());
 			taskVo.setStepId(argVo.getNextStepId());
 			taskVo.setTaskNm("1차위원회 회의결과등록");
 			taskVo.setStatus("P");
-			taskVo.setAssignedTo(cmttVo.getCmtId());//위원회 할당
+			taskVo.setAssignedTo(argVo.getCmtCd());//위원회 할당
 			taskVo.setRegId(argVo.getRegId());
 			processMapper.insertBpTask(taskVo);
 
@@ -384,18 +385,18 @@ public class ProcessServiceImpl implements ProcessService {
 			taskVo.setStepId(argVo.getNextStepId());
 			taskVo.setTaskNm("법적행위 검토 보고서");
 			taskVo.setStatus("P");
-			taskVo.setAssignedTo(AuthConstants.AUTH_26);//법적행위 할당
+			taskVo.setAssignedTo(AuthConstants.AUTH_LGACT);//법적행위 할당
 			taskVo.setRegId(argVo.getRegId());
 			processMapper.insertBpTask(taskVo);
 
 			taskVo.setTaskNm("번역언어심사 의견서");
 			taskVo.setStatus("P");
-			taskVo.setAssignedTo(AuthConstants.AUTH_27);//번역언어심사 할당
+			taskVo.setAssignedTo(AuthConstants.AUTH_TRSLLGRV);//번역언어심사 할당
 			processMapper.insertBpTask(taskVo);
 
 			taskVo.setTaskNm("법률검토 의견서");
 			taskVo.setStatus("P");
-			taskVo.setAssignedTo(AuthConstants.AUTH_28);//법률검토 할당
+			taskVo.setAssignedTo(AuthConstants.AUTH_LGRV);//법률검토 할당
 			processMapper.insertBpTask(taskVo);
 
 			taskVo.setTaskNm("소관위 심사보고서");
@@ -403,10 +404,10 @@ public class ProcessServiceImpl implements ProcessService {
 			taskVo.setAssignedTo(cmttVo.getCmtId());//위원회 할당
 			processMapper.insertBpTask(taskVo);
 
-			taskVo.setTaskNm("의장검토");
-			taskVo.setStatus("P");
-			taskVo.setAssignedTo(AuthConstants.AUTH_CMOFFC);//의장 할당
-			processMapper.insertBpTask(taskVo);
+//			taskVo.setTaskNm("의장검토");
+//			taskVo.setStatus("P");
+//			taskVo.setAssignedTo(AuthConstants.AUTH_CMOFFC);//의장 할당
+//			processMapper.insertBpTask(taskVo);
 
 		}
 

@@ -11,7 +11,7 @@ import lombok.Data;
 
 @Data
 public class MtngToVo extends ComDefaultVO {
-	
+
 	private Long mtngId;
 	private String mtngTypeCd;
 	private String mtngTypeNm;
@@ -25,16 +25,19 @@ public class MtngToVo extends ComDefaultVO {
 	private String rmk;
 	private String statCd;
 	private String dueDtm;
-	
+
 	/* 참석자 관련 */
     private List<MemberVo> attendantList;
-    
+
     /* 안건 관련 */
     private List<AgendaVo> agendaList;
-    
+
     /* 파일 관련*/
     private List<MtngFileVo> reportList;
     private MultipartFile[] files;
     private String[] fileKindCds;
-    
+
+    private String jsonData;
+
+
 }

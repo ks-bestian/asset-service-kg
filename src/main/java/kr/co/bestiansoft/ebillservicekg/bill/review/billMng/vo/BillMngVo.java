@@ -94,7 +94,10 @@ public class BillMngVo extends ComDefaultVO {
     private String rsltDt;
     private String clsCd;
 
-
+    //위원회 코드
+    private String cmtCd;
+    //위원회구분
+    private String cmtSeCd;
 
 
     private List<ProposerVo> proposerList;

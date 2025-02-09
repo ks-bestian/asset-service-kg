@@ -43,19 +43,27 @@ public class MtngToController {
     public ResponseEntity<CommonResponse> getMtngToById(@PathVariable Long mtngId, @RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", mtngToService.getMtngToById(mtngId, param)), HttpStatus.OK);
     }
-    
+
     @ApiOperation(value = "회의 결과 등록", notes = "회의 결과 등록")
     @PostMapping(value = "/bill/mtng/to", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<CommonResponse> createMtngTo(@ModelAttribute MtngToVo mtngToVo) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Mtng created successfully", mtngToService.createMtngTo(mtngToVo)), HttpStatus.CREATED);
     }
-    
+
+
+    @ApiOperation(value = "회의 결과 등록 프로세스진행", notes = "회의 결과 등록 프로세스진행")
+    @PostMapping(value = "/bill/mtng/to/report", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<CommonResponse> reportMtngTo(@ModelAttribute MtngToVo mtngToVo) throws Exception {
+        return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Mtng created successfully", mtngToService.reportMtngTo(mtngToVo)), HttpStatus.CREATED);
+    }
+
+
     @ApiOperation(value = "회의 결과 - 의원 리스트 조회", notes = "회의 결과 - 의원 리스트를 조회한다.")
     @GetMapping("/bill/mtng/to/member")
     public ResponseEntity<CommonResponse> getMemberList(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "ok", mtngToService.getMemberList(param)), HttpStatus.OK);
     }
-    
+
     @ApiOperation(value = "회의 결과 - 회의 취소", notes = "회의 취소")
     @DeleteMapping("/bill/mtng/to")
     public ResponseEntity<CommonResponse> deleteMtngTo(@RequestBody List<Long> mtngIds) {

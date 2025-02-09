@@ -410,12 +410,14 @@
    <select id="selectOneCmtt"  parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo"
     resultType="kr.co.bestiansoft.ebillservicekg.process.vo.CmttVo">
    /* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.selectOneCmtt */
+
 	select
 		bill_id
-	  , cmt_id
-	from ebs_cmt
+	  , cmt_cd
+	  , cmt_se_cd
+	from ebs_master_cmt
 	where bill_id = #{billId}
-	  and cmt_type = 'M'
+	  and cmt_se_cd = 'M'
 
 	</select>
 

@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.AgendaVo;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MemberVo;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MtngFromVo;
+import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo;
 
 @Mapper
 public interface MtngFromMapper {
@@ -23,4 +24,10 @@ public interface MtngFromMapper {
     void deleteMtngFrom(Long mtngId);
     void deleteMtngFromAttendant(Long mtngId);
     void deleteMtngFromAgenda(Long mtngId);
+
+    List<BillMngVo> selectListMtngBill(HashMap<String, Object> param);
+    List<BillMngVo> selectListMainMtngBill(HashMap<String, Object> param);
+
+
+
 }

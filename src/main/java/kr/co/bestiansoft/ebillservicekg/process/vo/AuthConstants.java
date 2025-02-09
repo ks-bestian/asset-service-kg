@@ -8,14 +8,13 @@ public class AuthConstants {
 	public static final String AUTH_LGRV = "LGRV";//법률검토부서 legal department  LGRV review
 	public static final String AUTH_CMOFFC = "CMOFFC";//의장실
 	public static final String AUTH_LGGSPLZ = "LGGSPLZ";//언어전문파트
-	public static final String AUTH_LGEXNTN = "LGEXNTN";//법률심사부서
+	public static final String AUTH_LGEXNTN = "LGEXNTN";//심사부서
 
-	public static final String AUTH_26 = "26";//법적행위부서
-	public static final String AUTH_27 = "27";//번역언어심사부서
-	public static final String AUTH_28 = "28";//법률검토부서
-
+	public static final String AUTH_LGACT = "LGACT";//법적행위부서 : 1, 2, 3 차 본회의 회의 후 안건에 대한 문법 및 법률용어 확인
+	public static final String AUTH_TRSLLGRV = "TRSLLGRV";//번역언어심사부서
 
 
+//위원회
 
 
 //	20	член Конгресса	депутат парламента	국회의원

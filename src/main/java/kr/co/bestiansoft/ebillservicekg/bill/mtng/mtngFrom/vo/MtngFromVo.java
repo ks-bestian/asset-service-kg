@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 public class MtngFromVo extends ComDefaultVO {
-	
+
 	private Long mtngId;
 	private String mtngTypeCd;
 	private String mtngTypeNm;
@@ -21,8 +21,10 @@ public class MtngFromVo extends ComDefaultVO {
 	private String rmk;
 	private String statCd;
 	private String dueDtm;
-	
+
     private List<MemberVo> attendantList;
     private List<AgendaVo> agendaList;
-    
+
+
+
 }
