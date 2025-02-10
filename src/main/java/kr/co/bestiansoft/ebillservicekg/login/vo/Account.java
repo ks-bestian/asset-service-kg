@@ -6,8 +6,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class Account extends User {
 
 	private String userId;
@@ -17,6 +19,9 @@ public class Account extends User {
 	private String memberNmKg;
 	private String memberNmRu;
 	private String deptCd;
+	private String deptNmKg;
+	private String deptNmRu;
+	private String deptNmKo;
 	private String email;
 	private String genCd;
 	private String profileImgPath;
@@ -27,6 +32,9 @@ public class Account extends User {
 	private String posCd;
 	private String ageCd;
 	private String cmitCd;
+	private String cmitNmKg;
+	private String cmitNmRu;
+	private String cmitNmKo;
 	private String polyCd;
 	private String polyNm;
 	private String rsdnRgstNmbr;
@@ -41,6 +49,9 @@ public class Account extends User {
 		this.memberNmKg = user.getMemberNmKg();
 		this.memberNmRu = user.getMemberNmRu();
 		this.deptCd = user.getDeptCd();
+		this.deptNmKg = user.getDeptNmKg();
+		this.deptNmRu = user.getDeptNmRu();
+		this.deptNmKo = user.getDeptNmKo();
 		this.email = user.getEmail();
 		this.genCd = user.getGenCd();
 		this.profileImgPath = user.getProfileImgPath();
@@ -51,6 +62,9 @@ public class Account extends User {
 		this.posCd = user.getPosCd();
 		this.ageCd = user.getAgeCd();
 		this.cmitCd = user.getCmitCd();
+		this.cmitNmKg = user.getCmitNmKg();
+		this.cmitNmRu = user.getCmitNmRu();
+		this.cmitNmKo = user.getCmitNmKo();
 		this.polyCd = user.getPolyCd();
 		this.polyNm = user.getPolyNm();
 		this.rsdnRgstNmbr = user.getRsdnRgstNmbr();

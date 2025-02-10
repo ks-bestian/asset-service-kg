@@ -13,6 +13,9 @@
 			, member_nm_kg
 			, member_nm_ru
 			, dept_cd
+			, dept_nm_kg
+			, dept_nm_ru
+			, dept_nm_ko
 			, email
 			, gen_cd
 			, profile_img_path
@@ -23,6 +26,9 @@
 			, pos_cd
 			, age_cd
 			, cmit_cd
+			, cmit_nm_kg
+			, cmit_nm_ru
+			, cmit_nm_ko
 			, poly_cd
 			, poly_nm
 			, rsdn_rgst_nmbr

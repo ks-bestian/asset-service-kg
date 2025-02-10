@@ -6,6 +6,7 @@ import kr.co.bestiansoft.ebillservicekg.admin.menu.repository.MenuMapper;
 import kr.co.bestiansoft.ebillservicekg.admin.menu.service.MenuService;
 import kr.co.bestiansoft.ebillservicekg.admin.menu.vo.MenuVo;
 import kr.co.bestiansoft.ebillservicekg.admin.menu.vo.QuickMenuVo;
+import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
@@ -28,6 +29,20 @@ public class MenuServiceImpl implements MenuService {
         String lang = (String) param.get("lang");
         String type = (String) param.get("type");
 
+        List<MenuVo> list = menuMapper.selectListMenu(param);
+        MenuHierarchy mh = new MenuHierarchy();
+        mh.buildMenuHierarchy(list, lang);
+        ArrayNode rootNode = mh.getMenuJson(type);
+        return rootNode;
+    }
+    
+    // 추가(20250210 조진호)
+    @Override
+    public ArrayNode getDeptMenuList(HashMap<String, Object> param) {
+        String lang = (String) param.get("lang");
+        String type = (String) param.get("type");
+
+        param.put("deptCd", new SecurityInfoUtil().getDeptCd());
         List<MenuVo> list = menuMapper.selectListMenu(param);
         MenuHierarchy mh = new MenuHierarchy();
         mh.buildMenuHierarchy(list, lang);

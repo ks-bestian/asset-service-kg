@@ -28,7 +28,7 @@ import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
 import kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper;
 import kr.co.bestiansoft.ebillservicekg.document.service.DocumentService;
 import kr.co.bestiansoft.ebillservicekg.document.service.ThumbnailService;
-import kr.co.bestiansoft.ebillservicekg.document.vo.DiskSpaceVo;
+import kr.co.bestiansoft.ebillservicekg.document.vo.UseCpctVo;
 import kr.co.bestiansoft.ebillservicekg.document.vo.FileShareVo;
 import kr.co.bestiansoft.ebillservicekg.document.vo.FileVo;
 import kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo;
@@ -775,21 +775,24 @@ public class DocumentServiceImpl implements DocumentService {
     }
     
     @Override
-    public DiskSpaceVo getDiskSpace() throws Exception {
-    	Path dir = Paths.get(DATASTORE_PATH);
-		dir = dir.toRealPath();
-		
-		FileStore fs = Files.getFileStore(dir);
-		long freeSpace = fs.getUsableSpace();
-		long totalSpace = fs.getTotalSpace();
+    public UseCpctVo selectUseCpct() {
+//    	Path dir = Paths.get(DATASTORE_PATH);
+//		dir = dir.toRealPath();
+//		
+//		FileStore fs = Files.getFileStore(dir);
+//		long freeSpace = fs.getUsableSpace();
+//		long totalSpace = fs.getTotalSpace();
 
+    	String userId = new SecurityInfoUtil().getAccountId();
+    	
+    	long useCpct = documentMapper.selectTotalUseCpct(userId);
 		
-		DiskSpaceVo ret = new DiskSpaceVo();
-		ret.setTotalSpace(totalSpace);
-		ret.setFreeSpace(freeSpace);
-		ret.setUsedSpace(totalSpace - freeSpace);
+		UseCpctVo ret = new UseCpctVo();
+		ret.setTotalSpace(MAX_USE_CPCT);
+		ret.setUsedSpace(useCpct);
 		
 		return ret;
     }
+    
     
 }

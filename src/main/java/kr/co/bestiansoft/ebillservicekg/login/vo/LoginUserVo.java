@@ -24,6 +24,9 @@ public class LoginUserVo extends ComDefaultVO {
 	private String memberNmKg;
 	private String memberNmRu;
 	private String deptCd;
+	private String deptNmKg;
+	private String deptNmRu;
+	private String deptNmKo;
 	private String email;
 	private String genCd;
 	private String profileImgPath;
@@ -34,6 +37,9 @@ public class LoginUserVo extends ComDefaultVO {
 	private String posCd;
 	private String ageCd;
 	private String cmitCd;
+	private String cmitNmKg;
+	private String cmitNmRu;
+	private String cmitNmKo;
 	private String polyCd;
 	private String polyNm;
 	private String rsdnRgstNmbr;
