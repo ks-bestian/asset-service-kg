@@ -20,14 +20,7 @@
         from com_lng_code
         where 1=1
         <if test="search != null and search != ''">
-            <choose>
-                <when test="lang == 'lng_type_1'">
-                    and lng_ty1 like concat('%', #{search}, '%')
-                </when>
-                <when test="lang == 'lng_type_2'">
-                    and lng_ty2 like concat('%', #{search}, '%')
-                </when>
-            </choose>
+            and (lng_ty1 like concat('%', #{search}, '%') or lng_ty2 like concat('%', #{search}, '%') or lng_ty3 like concat('%', #{search}, '%'))
         </if>
         order by reg_dt desc
     </select>

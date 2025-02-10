@@ -69,7 +69,7 @@
         </if>
         <if test="rcvNm != null and rcvNm != ''">
             <choose>
-                <when test="lang == 'lng_typ_2'">
+                <when test="lang == 'lng_type_2'">
                     and vum.user_nm_ru like concat('%', #{rcvNm}, '%')
                 </when>
                 <otherwise>

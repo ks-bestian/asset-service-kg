@@ -30,12 +30,12 @@
         where 1=1
         <if test="memberNm != null and memberNm !=''">
             <choose>
-                <when test="lang == 'lng_type_1'">
-                    and member_nm_kg like concat('%', #{memberNm}, '%')
-                </when>
                 <when test="lang == 'lng_type_2'">
                     and member_nm_ru like concat('%', #{memberNm}, '%')
                 </when>
+                <otherwise>
+                    and member_nm_kg like concat('%', #{memberNm}, '%')
+                </otherwise>
             </choose>
         </if>
 
