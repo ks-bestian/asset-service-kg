@@ -11,7 +11,8 @@ public class AuthConstants {
 	public static final String AUTH_LGEXNTN = "LGEXNTN";//심사부서
 
 	public static final String AUTH_LGACT = "LGACT";//법적행위부서 : 1, 2, 3 차 본회의 회의 후 안건에 대한 문법 및 법률용어 확인
-	public static final String AUTH_TRSLLGRV = "TRSLLGRV";//번역언어심사부서
+	//public static final String AUTH_TRSLLGRV = "TRSLLGRV";//번역언어심사부서
+
 
 
 //위원회

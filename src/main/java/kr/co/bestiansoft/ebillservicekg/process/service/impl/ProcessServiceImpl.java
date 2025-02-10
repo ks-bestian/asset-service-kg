@@ -378,7 +378,7 @@ public class ProcessServiceImpl implements ProcessService {
 //			소관위
 //			의장결재"
 
-			CmttVo cmttVo = processMapper.selectOneCmtt(argVo);
+			//CmttVo cmttVo = processMapper.selectOneCmtt(argVo);
 
 			ProcessVo taskVo = new ProcessVo();
 			taskVo.setBillId(argVo.getBillId());
@@ -389,20 +389,20 @@ public class ProcessServiceImpl implements ProcessService {
 			taskVo.setRegId(argVo.getRegId());
 			processMapper.insertBpTask(taskVo);
 
-			taskVo.setTaskNm("번역언어심사 의견서");
-			taskVo.setStatus("P");
-			taskVo.setAssignedTo(AuthConstants.AUTH_TRSLLGRV);//번역언어심사 할당
-			processMapper.insertBpTask(taskVo);
+//			taskVo.setTaskNm("번역언어심사 의견서");
+//			taskVo.setStatus("P");
+//			taskVo.setAssignedTo(AuthConstants.AUTH_TRSLLGRV);//번역언어심사 할당
+//			processMapper.insertBpTask(taskVo);
 
-			taskVo.setTaskNm("법률검토 의견서");
-			taskVo.setStatus("P");
-			taskVo.setAssignedTo(AuthConstants.AUTH_LGRV);//법률검토 할당
-			processMapper.insertBpTask(taskVo);
+//			taskVo.setTaskNm("법률검토 의견서");
+//			taskVo.setStatus("P");
+//			taskVo.setAssignedTo(AuthConstants.AUTH_LGRV);//법률검토 할당
+//			processMapper.insertBpTask(taskVo);
 
-			taskVo.setTaskNm("소관위 심사보고서");
-			taskVo.setStatus("P");
-			taskVo.setAssignedTo(cmttVo.getCmtId());//위원회 할당
-			processMapper.insertBpTask(taskVo);
+//			taskVo.setTaskNm("소관위 심사보고서");
+//			taskVo.setStatus("P");
+//			taskVo.setAssignedTo(cmttVo.getCmtId());//위원회 할당
+//			processMapper.insertBpTask(taskVo);
 
 //			taskVo.setTaskNm("의장검토");
 //			taskVo.setStatus("P");
