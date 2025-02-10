@@ -10,6 +10,7 @@ import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserVo;
 import kr.co.bestiansoft.ebillservicekg.document.vo.FileShareVo;
 import kr.co.bestiansoft.ebillservicekg.document.vo.FileVo;
 import kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo;
+import kr.co.bestiansoft.ebillservicekg.document.vo.UseCpctVo;
 
 @Mapper
 public interface DocumentMapper {

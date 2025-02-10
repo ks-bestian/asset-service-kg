@@ -27,6 +27,13 @@ public class MenuController {
     public ResponseEntity<CommonResponse> getMenuList(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "ok", menuService.getMenuList(param)), HttpStatus.OK);
     }
+    
+    // 추가(20250210 조진호)
+    @ApiOperation(value = "부서메뉴 리스트 조회", notes = "부서메뉴 리스트를 조회한다.")
+    @GetMapping("admin/deptmenu")
+    public ResponseEntity<CommonResponse> getDeptMenuList(@RequestParam HashMap<String, Object> param) {
+        return new ResponseEntity<>(new CommonResponse(200, "ok", menuService.getDeptMenuList(param)), HttpStatus.OK);
+    }
 
     @ApiOperation(value = "메뉴상세 조회", notes = "메뉴 상세를 조회한다.")
     @GetMapping("admin/menu/{menuId}")

@@ -11,9 +11,8 @@ import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
 
 @Data
-public class DiskSpaceVo {
+public class UseCpctVo {
 
 	private Long totalSpace;
-	private Long freeSpace;
 	private Long usedSpace;
 }

@@ -24,6 +24,7 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.bestiansoft.ebillservicekg.admin.baseCode.service.BaseCodeService;
@@ -36,9 +37,11 @@ import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.config.web.JwtFilter;
 import kr.co.bestiansoft.ebillservicekg.config.web.TokenProvider;
 import kr.co.bestiansoft.ebillservicekg.login.repository.LoginMapper;
+import kr.co.bestiansoft.ebillservicekg.login.service.CustomUserDetailsService;
 import kr.co.bestiansoft.ebillservicekg.login.vo.Account;
 import kr.co.bestiansoft.ebillservicekg.login.vo.LoginRequest;
 import kr.co.bestiansoft.ebillservicekg.login.vo.LoginResponse;
+import kr.co.bestiansoft.ebillservicekg.login.vo.LoginUserVo;
 import kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -62,6 +65,8 @@ public class LoginController {
 
 	private final BaseCodeService basecodeService;
 	private final CcofService ccofService;
+	
+	private final CustomUserDetailsService customUserDetailsService;
 
 	@PostMapping("/login")
 	public ResponseEntity<LoginResponse> authenticate(@RequestBody @Valid LoginRequest loginRead, HttpServletRequest req, HttpServletResponse res) {
@@ -134,5 +139,34 @@ public class LoginController {
         }
 
 	}
+	
+	@PostMapping("/changedept")
+	public ResponseEntity<?> changedept(@RequestBody LoginUserVo loginUserVo) {
+		String userId = new SecurityInfoUtil().getAccountId();
+		Account account = (Account)customUserDetailsService.loadUserByUsername(userId);
+		String orgDeptCd = account.getDeptCd();
+		
+		HashMap<String, Object> param = new HashMap<>();
+        param.put("userId", userId);
+		List<CcofVo> ccofList = ccofService.getCcofList(param);
+		boolean ok = orgDeptCd.equals(loginUserVo.getDeptCd());
+		for(CcofVo ccof : ccofList) {
+			if(ccof.getDeptCd().equals(loginUserVo.getDeptCd())) {
+				ok = true;
+			}
+		}
+		if(!ok) {
+			return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+		}
+		new SecurityInfoUtil().getAccount().setDeptCd(loginUserVo.getDeptCd());
+		
+		Authentication authentication = new SecurityInfoUtil().getAuthentication();
+		String token = tokenProvider.createToken(authentication);
+		
+		LoginResponse rep = new LoginResponse();
+		rep.setToken(token);
+		return new ResponseEntity<>(rep, HttpStatus.OK);
+	}
+
 
 }

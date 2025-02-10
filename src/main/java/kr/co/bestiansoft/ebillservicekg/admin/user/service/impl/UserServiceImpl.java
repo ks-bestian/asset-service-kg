@@ -23,8 +23,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserVo> getUserList(HashMap<String, Object> param) {
-        System.out.println("!2");
-        System.out.println(param.toString());
         return userMapper.selectListUser(param);
     }
 

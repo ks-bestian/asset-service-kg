@@ -39,6 +39,14 @@
         <if test="menuList != null and menuList != ''">
             and use_yn = 'Y'
         </if>
+        <if test="deptCd != null and deptCd != ''">
+        	-- 추가(20250210 조진호)
+            and menu_id in (
+            	select menu_cd 
+            	from kgst.com_dept_menu
+				where dept_cd = #{deptCd}
+            )
+        </if>
         order by upr_menu_id, ord
     </select>
     
