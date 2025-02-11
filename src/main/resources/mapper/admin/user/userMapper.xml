@@ -65,9 +65,10 @@
             , view.poly_nm
         from kgst.view_user_member view
         left join com_code_detail cc on cc.code_id = view.job_cd
+        left join com_ccof cf on cf.user_id = view.user_id
         where 1=1
         <if test="deptCd != null and deptCd != ''">
-            AND (view.dept_cd = #{deptCd} OR view.poly_cd = #{deptCd} OR view.cmit_cd = #{deptCd})
+            AND (view.dept_cd = #{deptCd} OR view.poly_cd = #{deptCd} OR view.cmit_cd = #{deptCd} or cf.dept_cd = #{deptCd})
         </if>
     </select>
 
