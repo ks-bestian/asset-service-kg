@@ -42,6 +42,7 @@
 	join kgst.ebs_proposer ep on (AA.bill_id = ep.bill_id)
 	where 1=1
 	  and ep.proposer_id = #{loginId}
+	  and AA.ppsr_id != #{loginId}
 	<if test="naTermCd != null and naTermCd != ''">
 		and AA.na_term_cd = #{naTermCd}
 	</if>

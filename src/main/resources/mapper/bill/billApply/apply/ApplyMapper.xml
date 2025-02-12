@@ -105,8 +105,11 @@
 		<if test="statCd != null and statCd != ''">
 			and AA.stat_cd = #{statCd}
 		</if>
-		<if test="ppslDt != null and ppslDt != ''">
-			and AA.ppsl_dt = #{ppslDt}
+		<if test="toDate != null and toDate != ''">
+			AND AA.ppsl_dt <![CDATA[>=]]> #{toDate}
+		</if>
+		<if test="fromDate != null and fromDate != ''">
+			AND AA.ppsl_dt <![CDATA[<=]]> #{fromDate}
 		</if>
 	    order by AA.reg_dt desc
 
