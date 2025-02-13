@@ -11,6 +11,7 @@ import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.service.BillMngServi
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngResponse;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.ProposerVo;
+import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 import kr.co.bestiansoft.ebillservicekg.process.service.ProcessService;
 import kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo;
 import lombok.RequiredArgsConstructor;
@@ -38,12 +39,14 @@ public class BillMngServiceImpl implements BillMngService {
 
     	BillMngVo billMngVo = billMngMapper.selectOneBill(argVo);
 		BillMngVo billlegalReviewVo = billMngMapper.selectOnelegalReview(argVo);
+		List<EbsFileVo> fileList = billMngMapper.selectFileList(argVo);
     	//List<ProposerVo> proposerList = billMngMapper.selectProposerMemberList(param);
     	//List<BillMngVo> cmtList = billMngMapper.selectCmtList(param);
 
     	BillMngResponse billMngResponse = new BillMngResponse();
     	billMngResponse.setBillMngVo(billMngVo);
     	billMngResponse.setBilllegalReviewVo(billlegalReviewVo);
+    	billMngResponse.setFileList(fileList);
 
         return billMngResponse;
     }
@@ -135,10 +138,13 @@ public class BillMngServiceImpl implements BillMngService {
     	return billMngVo;
 	}
 
-
-
-
-
+    
+    
+	@Override
+	public List<ProposerVo> selectProposerByBillId(HashMap<String, Object> param) {
+		List<ProposerVo> result = billMngMapper.selectProposerByBillId(param);
+		return result;
+	}
 
 
 }

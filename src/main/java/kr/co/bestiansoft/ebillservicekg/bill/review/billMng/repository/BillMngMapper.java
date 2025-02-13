@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.ProposerVo;
+import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 
 @Mapper
 public interface BillMngMapper {
@@ -33,5 +34,12 @@ public interface BillMngMapper {
     void insertProposers(ProposerVo proposerVo);
 
     List<ProposerVo> selectMemberList (HashMap<String, Object> param);
-
+    
+    
+	List<EbsFileVo> selectFileList(BillMngVo argVo);
+	
+//////////
+	
+	List<ProposerVo> selectProposerByBillId(HashMap<String, Object> param);
+	
 }

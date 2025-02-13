@@ -5,6 +5,7 @@ import java.util.List;
 import kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngResponse;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo;
+import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.ProposerVo;
 
 public interface BillMngService {
 	/* 안건 관리 리스트 화면 */
@@ -41,5 +42,8 @@ public interface BillMngService {
 
     /* 안건관리 - 서면 등록 화면 */
     BillMngVo createBill(BillMngVo billMngVo);
+
+    /* 안건관리 발의자목록  */
+    List<ProposerVo> selectProposerByBillId(HashMap<String, Object> param);
 
 }

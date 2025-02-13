@@ -378,5 +378,48 @@
 		AND ep.use_yn='Y'
 		AND ep.bill_id = #{billId}
 	</select>
+	
+    <select id="selectFileList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.selectFileList */
 
+		SELECT
+		    max(seq) as seq
+		    , max(bill_id) as bill_id 
+		    , max(file_kind_cd) as file_kind_cd 
+		    , max(cls_cd) as cls_cd 
+		    , max(org_file_id) as org_file_id 
+		    , max(org_file_nm) as org_file_nm 
+		    , max(pdf_file_id) as pdf_file_id 
+		    , max(pdf_file_nm) as pdf_file_nm 
+		    , max(rmk) as rmk 
+		    , max(opb_yn) as opb_yn 
+		    , max(delete_yn) as delete_yn 
+		    , max(file_size) as file_size 
+		    , max(reg_id) as reg_id 
+		    , max(reg_dt) as reg_dt 
+		    , max(mod_id) as mod_id 
+		    , max(mod_dt) as mod_dt 
+	    	, max(detail_seq) as detail_seq
+		FROM kgst.ebs_file
+		WHERE delete_yn = 'N' 
+			and bill_id = #{billId}
+		group by file_kind_cd, cls_cd
+		order by file_kind_cd
+	</select>
+
+
+    <select id="selectProposerByBillId" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.ProposerVo">
+    	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.selectProposerByBillId */
+		select 
+			row_number() over(order by ep.ord asc) as num
+			, kgst.fngetlangnm(vum.member_nm_kg, vum.member_nm_ru, vum.member_nm_kg, #{lang}) as proposerNm -- 제안자 이름
+			, kgst.fngetlangnm(vum.cmit_nm_kg, vum.cmit_nm_ru, vum.cmit_nm_ko, #{lang}) as cmitNm -- 정당 이름
+		from 
+			kgst.ebs_proposer ep 
+			join kgst.view_user_member vum on vum.member_id = ep.proposer_id 
+		where 1=1 
+			and ep.bill_id = #{billId}
+			and (ep.sign_dt is not null and sign_cnc_dt is null)
+
+	</select>
 </mapper>

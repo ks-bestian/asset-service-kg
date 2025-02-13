@@ -81,9 +81,7 @@ public class BillMngController {
     }
 
 
-
-
-
+    
 
 
 
@@ -116,4 +114,12 @@ public class BillMngController {
 
 
 
+    
+    ///////
+    
+    @ApiOperation(value = "안건 관리 상세 조회", notes = "상세를 조회한다.")
+    @GetMapping("/bill/review/billMng/proposer")
+    public ResponseEntity<CommonResponse> selectProposerByBillId(@RequestParam HashMap<String, Object> param) {
+        return new ResponseEntity<>(new CommonResponse(200, "OK", billMngService.selectProposerByBillId(param)), HttpStatus.OK);
+    }
 }
