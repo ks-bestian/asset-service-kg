@@ -114,4 +114,6 @@ public class BillMngVo extends ComDefaultVO {
     private String deptCd;
     private String lang;
 
+    private List<String> relCmtList;
+    private String cmtNm;
 }

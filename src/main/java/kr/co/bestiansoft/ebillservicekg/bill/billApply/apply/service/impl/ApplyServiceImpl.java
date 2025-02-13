@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +21,7 @@ import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
 import kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper;
 import kr.co.bestiansoft.ebillservicekg.process.service.ProcessService;
 import kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo;
+import kr.co.bestiansoft.ebillservicekg.test.repository2.TestMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,7 +37,8 @@ public class ApplyServiceImpl implements ApplyService {
 	private final ProcessMapper processMapper;
 	private final ComFileService comFileService;
 	private final ProcessService processService;
-
+	private final TestMapper testHomeMapper;
+	
 	@Transactional
 	@Override
 	public ApplyVo createApply(ApplyVo applyVo) {

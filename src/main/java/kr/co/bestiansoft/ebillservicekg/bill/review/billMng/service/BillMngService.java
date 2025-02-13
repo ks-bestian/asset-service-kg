@@ -46,4 +46,6 @@ public interface BillMngService {
     /* 안건관리 발의자목록  */
     List<ProposerVo> selectProposerByBillId(HashMap<String, Object> param);
 
+	BillMngVo insertBillCommitt(BillMngVo billMngVo);
+
 }

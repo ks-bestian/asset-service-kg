@@ -117,9 +117,15 @@ public class BillMngController {
     
     ///////
     
-    @ApiOperation(value = "안건 관리 상세 조회", notes = "상세를 조회한다.")
+    @ApiOperation(value = "공동발의자", notes = "안건에 동의한 의원들을 조회한다")
     @GetMapping("/bill/review/billMng/proposer")
     public ResponseEntity<CommonResponse> selectProposerByBillId(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", billMngService.selectProposerByBillId(param)), HttpStatus.OK);
+    }
+    
+    @ApiOperation(value = "위원회 회부", notes = "위원회를 회부한다.")
+    @PostMapping("/bill/review/billMng/committ")
+    public ResponseEntity<CommonResponse> insertBillCommitt(@RequestBody BillMngVo billMngVo) {
+        return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "bill committ created successfully", billMngService.insertBillCommitt(billMngVo)), HttpStatus.CREATED);
     }
 }

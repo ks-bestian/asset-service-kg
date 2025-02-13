@@ -422,4 +422,34 @@
 			and (ep.sign_dt is not null and sign_cnc_dt is null)
 
 	</select>
+	
+    <insert id="insertBillCmt" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
+		INSERT INTO kgst.ebs_master_cmt (
+			bill_id
+			, cmt_cd
+			, cmt_se_cd
+			, rgtr_id
+			, reg_dt
+		) VALUES (
+            #{billId}
+            , #{cmtCd}
+            , #{cmtSeCd}
+            , #{regId}
+            , now()
+		)
+	</insert>
+	
+	<select id="selectEbsMasterCmtList" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo" 
+		resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
+    	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.selectEbsMasterCmtList */
+		select 
+			kgst.fngetlangnm(cd.dept_nm1 , cd.dept_nm2, cd.dept_nm3, #{lang}) as cmtNm -- 위원회이름
+			, emc.cmt_cd 
+			, emc.cmt_se_cd 
+		from 
+			kgst.ebs_master_cmt emc
+			join kgst.com_dept cd on cd.dept_cd = emc.cmt_cd 
+		where 1=1
+			and emc.bill_id = #{billId}
+	</select>
 </mapper>

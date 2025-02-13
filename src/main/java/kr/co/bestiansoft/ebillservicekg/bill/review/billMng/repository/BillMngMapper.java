@@ -41,5 +41,7 @@ public interface BillMngMapper {
 //////////
 	
 	List<ProposerVo> selectProposerByBillId(HashMap<String, Object> param);
+	void insertBillCmt(BillMngVo billMngVo);
+	List<BillMngVo> selectEbsMasterCmtList(BillMngVo argVo);
 	
 }

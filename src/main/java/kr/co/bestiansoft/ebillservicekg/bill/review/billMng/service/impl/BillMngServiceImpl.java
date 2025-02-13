@@ -12,6 +12,7 @@ import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngResponse;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.ProposerVo;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
+import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.process.service.ProcessService;
 import kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,7 @@ public class BillMngServiceImpl implements BillMngService {
     	BillMngVo billMngVo = billMngMapper.selectOneBill(argVo);
 		BillMngVo billlegalReviewVo = billMngMapper.selectOnelegalReview(argVo);
 		List<EbsFileVo> fileList = billMngMapper.selectFileList(argVo);
+		List<BillMngVo> cmtList = billMngMapper.selectEbsMasterCmtList(argVo);
     	//List<ProposerVo> proposerList = billMngMapper.selectProposerMemberList(param);
     	//List<BillMngVo> cmtList = billMngMapper.selectCmtList(param);
 
@@ -47,6 +49,7 @@ public class BillMngServiceImpl implements BillMngService {
     	billMngResponse.setBillMngVo(billMngVo);
     	billMngResponse.setBilllegalReviewVo(billlegalReviewVo);
     	billMngResponse.setFileList(fileList);
+    	billMngResponse.setCmtList(cmtList);
 
         return billMngResponse;
     }
@@ -146,5 +149,27 @@ public class BillMngServiceImpl implements BillMngService {
 		return result;
 	}
 
+	@Transactional
+	@Override
+	public BillMngVo insertBillCommitt(BillMngVo billMngVo) {
+		String regId = new SecurityInfoUtil().getAccountId();
+		billMngVo.setRegId(regId);
+		billMngVo.setCmtSeCd("M");
+		billMngMapper.insertBillCmt(billMngVo);
+
+		
+		List<String> relCmts = billMngVo.getRelCmtList();
+		
+		if (relCmts != null && !relCmts.isEmpty()) {
+			for(String cmtCd : relCmts) {
+				billMngVo.setCmtCd(cmtCd);
+				billMngVo.setCmtSeCd("R");
+				
+				billMngMapper.insertBillCmt(billMngVo);
+			}
+		}
+		
+		return billMngVo;
+	}
 
 }
