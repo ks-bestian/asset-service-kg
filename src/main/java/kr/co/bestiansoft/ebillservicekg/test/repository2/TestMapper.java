@@ -1,4 +1,4 @@
-package kr.co.bestiansoft.ebillservicekg.test.repository;
+package kr.co.bestiansoft.ebillservicekg.test.repository2;
 
 import java.util.List;
 
