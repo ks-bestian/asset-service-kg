@@ -5,17 +5,19 @@ spring:
   application:
     name: ebill-service-kg
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://3.39.79.144:5432/bestian?currentSchema=kgst&useUnicode=true&characterEncoding=utf8&autoReconnect=true
-#    username: ebsadmin
-#    password: ebspasswd
-    username: best
-    password: best1234
+    kgst:
+      driver-class-name: org.postgresql.Driver
+      jdbcUrl: jdbc:postgresql://3.39.79.144:5432/bestian?currentSchema=kgst&useUnicode=true&characterEncoding=utf8&autoReconnect=true
+#      username: ebsadmin
+#      password: ebspasswd
+      username: best
+      password: best1234
 
-#    driver-class-name: org.postgresql.Driver
-#    url: jdbc:postgresql://43.203.192.251:5432/postgres?currentSchema=homepage&useUnicode=true&characterEncoding=utf8&autoReconnect=true
-#    username: home
-#    password: homepass
+    homepage:
+      driver-class-name: org.postgresql.Driver
+      jdbcUrl: jdbc:postgresql://43.203.192.251:5432/postgres?currentSchema=homepage&useUnicode=true&characterEncoding=utf8&autoReconnect=true
+      username: home
+      password: homepass
 
   mvc:
     pathmatch:
@@ -31,10 +33,10 @@ logging:
     org.hibernate.SQL: info
     org.hibernate.type: info
 
-mybatis:
-  mapper-locations: classpath:mapper/**/*.xml
-  configuration:
-    map-underscore-to-camel-case: true
+#mybatis:
+#  mapper-locations: classpath:mapper/**/*.xml
+#  configuration:
+#    map-underscore-to-camel-case: true
 
 security:
   allow:
