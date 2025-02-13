@@ -25,4 +25,17 @@
 		WHERE 1=1
 	</select>
 	
+	<insert id="insertHomeTest" useGeneratedKeys="true" keyProperty="seq" 
+		parameterType="kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.test.repository.TestMapper.insertHomeTest */
+		INSERT INTO homepage.ebs_table (
+			  title
+			, contents
+		)
+		VALUES (
+			  #{billNameKg}
+			, #{billNameRu}
+		)
+    </insert>
+    
 </mapper>

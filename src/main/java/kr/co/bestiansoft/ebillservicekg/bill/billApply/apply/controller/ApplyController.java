@@ -98,5 +98,11 @@ public class ApplyController {
         return new ResponseEntity<>(new CommonResponse(200, "OK", applyService.selectBillAll(param)), HttpStatus.OK);
     }
     
+    @ApiOperation(value = "홈페이지 게재", notes = "안건을 홈페이지에 게재한다")
+    @PostMapping(value = "/bill/apply/home")
+    public ResponseEntity<CommonResponse> createBillHome(@RequestBody ApplyVo applyVo) {
+        return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "insert homepage successfully", applyService.createBillHome(applyVo)), HttpStatus.CREATED);
+    }
+    
 
 }

@@ -400,4 +400,14 @@
 		WHERE bill_id = #{billId}
 			and cmt_se_cd = 'M'
     </update>
+    
+    <update id="updateBillHome" parameterType="kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo">
+    	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.updateBillHome */
+        update kgst.ebs_master
+		set
+		  scl_dsc_rcp_nmb  = #{sclDscRcpNmb}		-- 상태 사회토론번호
+		  , mod_id = #{modId}
+		  , mod_dt = now()
+		WHERE bill_id = #{billId}
+    </update>
 </mapper>

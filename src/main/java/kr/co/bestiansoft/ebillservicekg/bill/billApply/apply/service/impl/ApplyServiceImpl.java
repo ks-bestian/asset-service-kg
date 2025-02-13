@@ -37,7 +37,7 @@ public class ApplyServiceImpl implements ApplyService {
 	private final ProcessMapper processMapper;
 	private final ComFileService comFileService;
 	private final ProcessService processService;
-	private final TestMapper testHomeMapper;
+	private final TestMapper testMapper;
 	
 	@Transactional
 	@Override
@@ -45,8 +45,9 @@ public class ApplyServiceImpl implements ApplyService {
 	//TODO :: 메세지 알람 적용해야함
 
 		//사회토론번호
-		applyMapper.insertHomeLaws(applyVo);
-		applyVo.setSclDscRcpNmb(String.valueOf(applyVo.getId()));
+//		applyMapper.insertHomeLaws(applyVo);
+//		testMapper.insertHomeTest(applyVo);
+//		applyVo.setSclDscRcpNmb(String.valueOf(applyVo.getId()));
 
 		//안건등록
 		String billId = StringUtil.getEbillId();
@@ -250,6 +251,20 @@ public class ApplyServiceImpl implements ApplyService {
 	@Override
 	public List<ApplyVo> selectBillAll(HashMap<String, Object> param) {
 		return applyMapper.selectBillAll(param);
+	}
+
+	@Transactional
+	@Override
+	public ApplyVo createBillHome(ApplyVo applyVo) {
+		String modId = new SecurityInfoUtil().getAccountId();
+		
+		testMapper.insertHomeTest(applyVo);
+		
+		applyVo.setSclDscRcpNmb(String.valueOf(applyVo.getSeq()));
+		applyVo.setModId(modId);
+		applyMapper.updateBillHome(applyVo);
+		
+		return applyVo;
 	}
 
 }

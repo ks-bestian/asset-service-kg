@@ -12,6 +12,7 @@ public class ApplyVo extends ComDefaultVO {
 
 	//id
 	private int id;
+	private int seq;
 	//등록번호(사회토론번호?)
 	private String sclDscRcpNmb;
 	//안건아이디
