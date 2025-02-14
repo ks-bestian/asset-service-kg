@@ -21,7 +21,7 @@ import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
 import kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper;
 import kr.co.bestiansoft.ebillservicekg.process.service.ProcessService;
 import kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo;
-import kr.co.bestiansoft.ebillservicekg.test.repository2.TestMapper;
+import kr.co.bestiansoft.ebillservicekg.test.repository2.HomePageMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,7 +37,7 @@ public class ApplyServiceImpl implements ApplyService {
 	private final ProcessMapper processMapper;
 	private final ComFileService comFileService;
 	private final ProcessService processService;
-	private final TestMapper testMapper;
+	private final HomePageMapper homePageMapper;
 	
 	@Transactional
 	@Override
@@ -182,7 +182,7 @@ public class ApplyServiceImpl implements ApplyService {
 		result.setProposerList(proposerList);
 		
 		//안건 의견 목록
-		List<ApplyVo> commentList = testMapper.selectBillCommentList(applyDetail.getSclDscRcpNmb());
+		List<ApplyVo> commentList = homePageMapper.selectBillCommentList(applyDetail.getSclDscRcpNmb());
 		result.setCommentList(commentList);
 		
 		//안건 프로세스정보가져오기.
@@ -256,7 +256,7 @@ public class ApplyServiceImpl implements ApplyService {
 	public ApplyVo createBillHome(ApplyVo applyVo) {
 		String modId = new SecurityInfoUtil().getAccountId();
 		
-		testMapper.insertHomeLaws(applyVo);
+		homePageMapper.insertHomeLaws(applyVo);
 		
 		String sclDscRcpNmb = String.valueOf(applyVo.getId());
 		applyVo.setSclDscRcpNmb(sclDscRcpNmb);
