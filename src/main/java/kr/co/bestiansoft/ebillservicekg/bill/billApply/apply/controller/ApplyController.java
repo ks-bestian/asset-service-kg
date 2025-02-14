@@ -104,5 +104,4 @@ public class ApplyController {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "insert homepage successfully", applyService.createBillHome(applyVo)), HttpStatus.CREATED);
     }
     
-
 }

@@ -12,7 +12,6 @@ public class ApplyVo extends ComDefaultVO {
 
 	//id
 	private int id;
-	private int seq;
 	//등록번호(사회토론번호?)
 	private String sclDscRcpNmb;
 	//안건아이디
@@ -85,6 +84,12 @@ public class ApplyVo extends ComDefaultVO {
 	//process stepId
 	private String stepId;
 	private Long taskId;
+	
+	
+	//comment
+	private String lawId;
+	private String parentId;
+	private String content;
 
 
 }

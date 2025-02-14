@@ -44,11 +44,6 @@ public class ApplyServiceImpl implements ApplyService {
 	public ApplyVo createApply(ApplyVo applyVo) {
 	//TODO :: 메세지 알람 적용해야함
 
-		//사회토론번호
-//		applyMapper.insertHomeLaws(applyVo);
-//		testMapper.insertHomeTest(applyVo);
-//		applyVo.setSclDscRcpNmb(String.valueOf(applyVo.getId()));
-
 		//안건등록
 		String billId = StringUtil.getEbillId();
 		applyVo.setBillId(billId);
@@ -185,8 +180,11 @@ public class ApplyServiceImpl implements ApplyService {
 		//발의자 대상
 		List<AgreeVo> proposerList = agreeMapper.selectAgreeProposerList(billId);
 		result.setProposerList(proposerList);
-
-
+		
+		//안건 의견 목록
+		List<ApplyVo> commentList = testMapper.selectBillCommentList(applyDetail.getSclDscRcpNmb());
+		result.setCommentList(commentList);
+		
 		//안건 프로세스정보가져오기.
 		ProcessVo pcParam = new ProcessVo();
 		pcParam.setBillId(billId);
@@ -258,9 +256,9 @@ public class ApplyServiceImpl implements ApplyService {
 	public ApplyVo createBillHome(ApplyVo applyVo) {
 		String modId = new SecurityInfoUtil().getAccountId();
 		
-		testMapper.insertHomeTest(applyVo);
+		testMapper.insertHomeLaws(applyVo);
 		
-		String sclDscRcpNmb = String.valueOf(applyVo.getSeq());
+		String sclDscRcpNmb = String.valueOf(applyVo.getId());
 		applyVo.setSclDscRcpNmb(sclDscRcpNmb);
 		applyVo.setModId(modId);
 		applyMapper.updateBillHome(applyVo);
