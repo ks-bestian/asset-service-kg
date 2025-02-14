@@ -260,7 +260,8 @@ public class ApplyServiceImpl implements ApplyService {
 		
 		testMapper.insertHomeTest(applyVo);
 		
-		applyVo.setSclDscRcpNmb(String.valueOf(applyVo.getSeq()));
+		String sclDscRcpNmb = String.valueOf(applyVo.getSeq());
+		applyVo.setSclDscRcpNmb(sclDscRcpNmb);
 		applyVo.setModId(modId);
 		applyMapper.updateBillHome(applyVo);
 		
