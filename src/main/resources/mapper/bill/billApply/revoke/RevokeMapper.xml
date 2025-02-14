@@ -8,8 +8,6 @@
             resultType="kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.vo.RevokeVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.repository.RevokeMapper.selectRevokeList */
 
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.revokeAgree.repository.RevokeAgreeMapper.selectRevokeAgreeList */
-
 		select
 		    AA.bill_id
 		  , kgst.fngetlangnm(AA.bill_name_kg,AA.bill_name_ru,AA.bill_name_kg,#{lang}) as bill_name -- 안건 이름
@@ -36,7 +34,7 @@
 			 , max(pl.na_term_cd) as na_term_cd
 			 , max(pl.step_id) as step_id
 			 , max(pl.task_id) as task_id
-			 , max(pl.status) as task_status
+			 , max(pl.task_status) as task_status
 			 , max(ebs.stat_cd) as stat_cd
 			 , kgst.fngetcodenm('1010',max(ebs.stat_cd),#{lang}) as stat_nm
 			from kgst.view_bill_process_list pl

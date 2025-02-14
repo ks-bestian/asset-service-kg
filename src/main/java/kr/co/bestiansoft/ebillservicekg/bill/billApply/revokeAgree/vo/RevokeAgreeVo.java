@@ -42,4 +42,13 @@ public class RevokeAgreeVo extends ComDefaultVO {
 	private String agreeYn;
 	
 	private String memberNm;
+	
+    /** process stepId */
+    private String stepId;
+
+    /** process taskId  */
+    private Long taskId;
+
+    /** process taskStatus */
+    private String taskStatus;
 }
