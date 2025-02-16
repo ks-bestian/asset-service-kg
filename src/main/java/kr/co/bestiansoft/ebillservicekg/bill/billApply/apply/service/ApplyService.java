@@ -31,4 +31,6 @@ public interface ApplyService {
 
 	List<ApplyVo> selectBillAll(HashMap<String, Object> param);
 
+	ApplyVo createBillHome(ApplyVo applyVo);
+
 }

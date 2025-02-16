@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +21,7 @@ import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
 import kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper;
 import kr.co.bestiansoft.ebillservicekg.process.service.ProcessService;
 import kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo;
+import kr.co.bestiansoft.ebillservicekg.test.repository2.HomePageMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,15 +37,12 @@ public class ApplyServiceImpl implements ApplyService {
 	private final ProcessMapper processMapper;
 	private final ComFileService comFileService;
 	private final ProcessService processService;
-
+	private final HomePageMapper homePageMapper;
+	
 	@Transactional
 	@Override
 	public ApplyVo createApply(ApplyVo applyVo) {
 	//TODO :: 메세지 알람 적용해야함
-
-		//사회토론번호
-		applyMapper.insertHomeLaws(applyVo);
-		applyVo.setSclDscRcpNmb(String.valueOf(applyVo.getId()));
 
 		//안건등록
 		String billId = StringUtil.getEbillId();
@@ -183,8 +180,11 @@ public class ApplyServiceImpl implements ApplyService {
 		//발의자 대상
 		List<AgreeVo> proposerList = agreeMapper.selectAgreeProposerList(billId);
 		result.setProposerList(proposerList);
-
-
+		
+		//안건 의견 목록
+		List<ApplyVo> commentList = homePageMapper.selectBillCommentList(applyDetail.getSclDscRcpNmb());
+		result.setCommentList(commentList);
+		
 		//안건 프로세스정보가져오기.
 		ProcessVo pcParam = new ProcessVo();
 		pcParam.setBillId(billId);
@@ -249,6 +249,21 @@ public class ApplyServiceImpl implements ApplyService {
 	@Override
 	public List<ApplyVo> selectBillAll(HashMap<String, Object> param) {
 		return applyMapper.selectBillAll(param);
+	}
+
+	@Transactional
+	@Override
+	public ApplyVo createBillHome(ApplyVo applyVo) {
+		String modId = new SecurityInfoUtil().getAccountId();
+		
+		homePageMapper.insertHomeLaws(applyVo);
+		
+		String sclDscRcpNmb = String.valueOf(applyVo.getId());
+		applyVo.setSclDscRcpNmb(sclDscRcpNmb);
+		applyVo.setModId(modId);
+		applyMapper.updateBillHome(applyVo);
+		
+		return applyVo;
 	}
 
 }

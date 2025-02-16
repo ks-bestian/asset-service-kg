@@ -53,4 +53,6 @@ public interface ApplyMapper {
 
 	void updateApplyCmt(ApplyVo applyVo);
 
+	void updateBillHome(ApplyVo applyVo);
+
 }

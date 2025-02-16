@@ -19,4 +19,6 @@ public class ApplyResponse {
 	List<EbsFileVo> fileList;
 
 	ProcessVo processVo;
+	
+	List<ApplyVo> commentList;
 }

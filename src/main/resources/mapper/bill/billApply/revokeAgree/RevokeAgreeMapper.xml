@@ -33,7 +33,7 @@
 			 , max(pl.na_term_cd) as na_term_cd
 			 , max(pl.step_id) as step_id
 			 , max(pl.task_id) as task_id
-			 , max(pl.status) as task_status
+			 , max(pl.task_status) as task_status
 			 , max(ebs.stat_cd) as stat_cd
 			 , kgst.fngetcodenm('1010',max(ebs.stat_cd),#{lang}) as stat_nm
 			from kgst.view_bill_process_list pl

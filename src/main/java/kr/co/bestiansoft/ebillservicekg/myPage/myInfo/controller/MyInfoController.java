@@ -46,7 +46,6 @@ public class MyInfoController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-
         return new ResponseEntity<>(resource, headers, HttpStatus.OK);
     }
 

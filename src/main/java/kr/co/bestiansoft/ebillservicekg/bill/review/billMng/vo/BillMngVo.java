@@ -66,6 +66,7 @@ public class BillMngVo extends ComDefaultVO {
     private String wtCnRu;
 
     // 비고
+    private String etc;
     private String etcKg;
     private String etcRu;
 
@@ -113,4 +114,6 @@ public class BillMngVo extends ComDefaultVO {
     private String deptCd;
     private String lang;
 
+    private List<String> relCmtList;
+    private String cmtNm;
 }

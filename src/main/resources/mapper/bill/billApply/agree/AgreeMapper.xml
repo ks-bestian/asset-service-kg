@@ -7,65 +7,77 @@
     <select id="selectAgreeList" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.vo.AgreeVo">
 
-	select
-	    AA.bill_id
-	  , kgst.fngetlangnm(AA.bill_name_kg,AA.bill_name_ru,AA.bill_name_kg,#{lang}) as bill_name -- 안건 이름
-	  , kgst.fngetlangnm(vum.member_nm_kg,vum.member_nm_ru,vum.member_nm_kg,#{lang}) as ppsr_nm -- 제안자 이름
-      , AA.scl_dsc_rcp_nmb
-      , AA.ppsl_dt
-      , AA.stat_nm
-      , AA.stat_cd
-      , AA.na_term_cd
-	  , case
-			when (ep.sign_dt is not null and ep.sign_cnc_dt is null) then
-				ep.sign_dt
-			else null
-		 end as sign_dt 		-- 동의날짜
-	from (
+		with apply as (
 		select
-		   pl.bill_id
-		 , max(pl.bill_name_kg) as bill_name_kg
-		 , max(pl.bill_name_ru) as bill_name_ru
-		 , max(pl.current_step_id) as current_step_id
-		 , max(pl.ppsr_id) as ppsr_id
-		 , max(pl.ppsl_dt) as ppsl_dt
-		 , max(pl.scl_dsc_rcp_nmb) as scl_dsc_rcp_nmb
-		 , max(pl.reg_dt) as reg_dt
-		 , max(pl.na_term_cd) as na_term_cd
-		 , max(ebs.stat_cd) as stat_cd
-		 , kgst.fngetcodenm('1010',max(ebs.stat_cd),#{lang}) as stat_nm
-		from kgst.view_bill_process_list pl
-		join kgst.ebs_bp_step ebs on (pl.bp_df_id = ebs.bp_df_id and pl.current_step_id = ebs.step_id)
-		group by bill_id
-	) AA
-	join kgst.view_user_member vum on (AA.ppsr_id = vum.user_id)
-	join kgst.ebs_proposer ep on (AA.bill_id = ep.bill_id)
-	where 1=1
-	  and ep.proposer_id = #{loginId}
-	<if test="naTermCd != null and naTermCd != ''">
-		and AA.na_term_cd = #{naTermCd}
-	</if>
-	<if test="billName != null and billName != ''">
-	    <if test="lang == 'lng_type_1' or lang == 'lng_type_3'">
-	    	and AA.bill_name_kg like concat('%', #{billName}, '%')
-	    </if>
-	    <if test="lang == 'lng_type_2'">
-	    	and AA.bill_name_ru like concat('%', #{billName}, '%')
-	    </if>
-	</if>
-	<if test="sclDscRcpNmb != null and sclDscRcpNmb != ''">
-		and AA.scl_dsc_rcp_nmb like concat('%', #{sclDscRcpNmb}, '%')
-	</if>
-	<if test="statCd != null and statCd != ''">
-		and AA.stat_cd = #{statCd}
-	</if>
-	<if test="ppslDt != null and ppslDt != ''">
-		and AA.ppsl_dt = #{ppslDt}
-	</if>
-	order by AA.reg_dt desc
-
+			    AA.bill_id
+			  , kgst.fngetlangnm(AA.bill_name_kg, AA.bill_name_ru, AA.bill_name_kg, #{lang}) as bill_name -- 안건 이름
+			  , kgst.fngetlangnm(vum.member_nm_kg, vum.member_nm_ru, vum.member_nm_kg, #{lang}) as ppsr_nm -- 제안자 이름
+		      , AA.scl_dsc_rcp_nmb
+		      , AA.ppsl_dt
+		      , AA.stat_nm
+		      , AA.stat_cd
+		      , AA.na_term_cd
+			  , case
+					when (ep.sign_dt is not null and ep.sign_cnc_dt is null) then
+						ep.sign_dt
+					else null
+				 end as sign_dt 		-- 동의날짜
+			  , AA.reg_dt
+			from (
+				select
+				   pl.bill_id
+				 , max(pl.bill_name_kg) as bill_name_kg
+				 , max(pl.bill_name_ru) as bill_name_ru
+				 , max(pl.current_step_id) as current_step_id
+				 , max(pl.ppsr_id) as ppsr_id
+				 , max(pl.ppsl_dt) as ppsl_dt
+				 , max(pl.scl_dsc_rcp_nmb) as scl_dsc_rcp_nmb
+				 , max(pl.reg_dt) as reg_dt
+				 , max(pl.na_term_cd) as na_term_cd
+				 , max(ebs.stat_cd) as stat_cd
+				 , kgst.fngetcodenm('1010',max(ebs.stat_cd),#{lang}) as stat_nm
+				from kgst.view_bill_process_list pl
+				join kgst.ebs_bp_step ebs on (pl.bp_df_id = ebs.bp_df_id and pl.current_step_id = ebs.step_id)
+				group by bill_id
+			) AA
+			join kgst.view_user_member vum on (AA.ppsr_id = vum.user_id)
+			join kgst.ebs_proposer ep on (AA.bill_id = ep.bill_id)
+			where 1=1
+			  and ep.proposer_id = #{loginId}
+			  and AA.ppsr_id != #{loginId}
+			<if test="naTermCd != null and naTermCd != ''">
+				and AA.na_term_cd = #{naTermCd}
+			</if>
+			<if test="billName != null and billName != ''">
+			    <if test="lang == 'lng_type_1' or lang == 'lng_type_3'">
+			    	and AA.bill_name_kg like concat('%', #{billName}, '%')
+			    </if>
+			    <if test="lang == 'lng_type_2'">
+			    	and AA.bill_name_ru like concat('%', #{billName}, '%')
+			    </if>
+			</if>
+			<if test="sclDscRcpNmb != null and sclDscRcpNmb != ''">
+				and AA.scl_dsc_rcp_nmb like concat('%', #{sclDscRcpNmb}, '%')
+			</if>
+			<if test="statCd != null and statCd != ''">
+				and AA.stat_cd = #{statCd}
+			</if>
+			<if test="toDate != null and toDate != ''">
+				AND AA.ppsl_dt <![CDATA[>=]]> #{toDate}
+			</if>
+			<if test="fromDate != null and fromDate != ''">
+				AND AA.ppsl_dt <![CDATA[<=]]> #{fromDate}
+			</if>
+		) 
+		select *
+		from apply ap
+		where 1=1
+		<if test="ppsrNm != null and ppsrNm != ''">
+			and ap.ppsr_nm like concat('%', #{ppsrNm}, '%')
+		</if>
+		order by ap.reg_dt desc
     </select>
-
+    
     <select id="selectAgreeDetail" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.vo.AgreeVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.repository.AgreeMapper.selectAgreeDetail */

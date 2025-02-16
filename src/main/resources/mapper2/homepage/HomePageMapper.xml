@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.bestiansoft.ebillservicekg.test.repository2.HomePageMapper">
+
+	<insert id="insertHomeLaws" useGeneratedKeys="true" keyProperty="id" 
+		parameterType="kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.test.repository.TestMapper.insertHomeTest */
+		INSERT INTO homepage.laws (
+			  created_by
+			, title_kg
+			, title_ru
+			, description_kg
+			, description_ru
+			, created_at
+		)
+		VALUES (
+			  #{ppsrNm}
+			, #{billNameKg}
+			, #{billNameRu}
+			, #{etcKg}
+			, #{etcRu}
+			, now()
+		)
+    </insert>
+    
+    <select id="selectBillCommentList" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.test.repository.TestMapper.selectBillCommentList */
+		select
+			c.id 
+			, c."content" 
+			, c.law_id 
+			, c.parent_id 
+		from 
+			homepage."comments" c
+		where 1=1
+			and c.law_id::varchar = #{lawId}
+		order by id 
+	</select>
+</mapper>
