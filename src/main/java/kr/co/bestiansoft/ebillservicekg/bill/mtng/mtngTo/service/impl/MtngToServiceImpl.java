@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.aspose.slides.internal.ax.av;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -54,7 +55,6 @@ public class MtngToServiceImpl implements MtngToService {
     	MtngToVo dto = mtngToMapper.selectMtngTo(param);
 
     	/*회의 결과 문서*/
-
     	List<MtngFileVo> reportList = mtngAllMapper.selectListMtngFile(param);
     	dto.setReportList(reportList);
 
@@ -168,20 +168,31 @@ public class MtngToServiceImpl implements MtngToService {
 	@Override
 	public MtngToVo reportMtngTo(MtngToVo mtngFromVo) throws Exception {
 
+		String userId = new SecurityInfoUtil().getAccountId();
+
 		String jsonString = mtngFromVo.getJsonData();
 		ObjectMapper objectMapper = new ObjectMapper();
 		MtngToVo agendaVo = objectMapper.readValue(jsonString, MtngToVo.class);
+		String deptCd = agendaVo.getDeptCd();//commitee or edt deptCd
+		Long mtngId = agendaVo.getMtngId();
+		String statCd = agendaVo.getStatCd();
 
-		String cmtId = agendaVo.getCmtId();
+		MtngToVo mtParam = new MtngToVo();
+		mtParam.setMtngId(mtngId);
+		mtParam.setModId(userId);
+		mtParam.setStatCd(statCd);
+		mtngToMapper.updateMtngToStatus(mtParam);// commitee meeting status update
 
-		for(AgendaVo aVo :agendaVo.getAgendaList()) {
-
-			System.out.println(aVo.getBillId()+" === "+ aVo.getBillName()+" === "+ cmtId);
-			ProcessVo pVo = new ProcessVo();
-			pVo.setBillId(aVo.getBillId());
-			pVo.setCmtCd(cmtId);
-			processService.handleProcess(pVo);
-		}
+//		for(AgendaVo aVo :agendaVo.getAgendaList()) {
+//
+//			if("M".equals(aVo.getCmtSeCd())) {//소관위
+//				ProcessVo pVo = new ProcessVo();
+//				pVo.setBillId(aVo.getBillId());
+//				processService.handleProcess(pVo);
+//			} else {//관련위
+//
+//			}
+//		}
 
 		return agendaVo;
 	}

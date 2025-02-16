@@ -55,10 +55,10 @@ public class BillMngController {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Bill created successfully", billMngService.billRegisterMng(billMngVo)), HttpStatus.CREATED);
     }
 
-    @ApiOperation(value = "안건 관리 법률검토 목록조회", notes = "안건 관리 법률검토 조회")
-    @GetMapping("/bill/review/billLegalReview")
-    public ResponseEntity<CommonResponse> selectListlegalReview(@RequestParam HashMap<String, Object> param) {
-        return new ResponseEntity<>(new CommonResponse(200, "OK", billMngService.selectListlegalReview(param)), HttpStatus.OK);
+    @ApiOperation(value = "안건 관리 기타정보 목록조회", notes = "안건 관리 기타정보 조회")
+    @GetMapping("/bill/review/billBillEtcInfo")
+    public ResponseEntity<CommonResponse> selectListBillEtcInfo(BillMngVo billMngVo) {
+        return new ResponseEntity<>(new CommonResponse(200, "OK", billMngService.selectListBillEtcInfo(billMngVo)), HttpStatus.OK);
     }
 
 //    @ApiOperation(value = "안건 관리 법률검토 상세조회", notes = "안건 관리 법률검토 상세조회")
@@ -81,11 +81,11 @@ public class BillMngController {
     }
 
 
-
-
-
-
-
+    @ApiOperation(value = "안건위원회 소관위,관련위 심사보고서  조회", notes = " 소관위,관련위 심사보고서 리스트를 조회한다.")
+    @GetMapping("/bill/review/selectListCmtReviewReport")
+    public ResponseEntity<CommonResponse> selectListCmtReviewReport(@RequestParam HashMap<String, Object> param) {
+        return new ResponseEntity<>(new CommonResponse(200, "OK", billMngService.selectListCmtReviewReport(param)), HttpStatus.OK);
+    }
 
 
 

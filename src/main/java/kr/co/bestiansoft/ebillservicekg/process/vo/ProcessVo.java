@@ -29,6 +29,7 @@ public class ProcessVo extends ComDefaultVO {
 	private String completedDt;
 	private String billAprvNo;
 	private String taskStatus;//작업상태 P:진행 및 할당 C:완료
+	private String deptCd;// dept code
 
 	private String srvcCd;
 	private String jobCd;

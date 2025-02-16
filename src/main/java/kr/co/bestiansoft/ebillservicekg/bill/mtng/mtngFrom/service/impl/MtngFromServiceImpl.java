@@ -63,33 +63,27 @@ public class MtngFromServiceImpl implements MtngFromService {
 
 		/*안건*/
 		List<AgendaVo> agendaList = mtngFromVo.getAgendaList();
-		for(int i=0;i<agendaList.size();i++) {
-			log.info("billId : {}", agendaList.get(i).getBillId());
-			log.info("agenda : {}", agendaList.get(i));
+		int idx = 1;
+		for(AgendaVo aVo:agendaList) {
 			AgendaVo agendaVo = new AgendaVo();
-			agendaVo.setBillId(agendaList.get(i).getBillId());
+			agendaVo.setBillId(aVo.getBillId());
 			agendaVo.setMtngId(mtngFromVo.getMtngId());
-			agendaVo.setOrd(i+1);
+			agendaVo.setOrd(idx++);
 			agendaVo.setRegId(regId);
-			agendaList.set(i, agendaVo);
-			mtngFromMapper.insertEbsMtngAgenda(agendaList.get(i));
+			mtngFromMapper.insertEbsMtngAgenda(agendaVo);
 		}
+		idx = 1;
 
 		/*참석자*/
 		List<MemberVo> attendantList = mtngFromVo.getAttendantList();
-		for(int i=0;i<attendantList.size();i++) {
-			log.info("attendant : {}", attendantList.get(i));
-			//attendantList.get(i).setMtngId(mtngId);
+		for(MemberVo memVo:attendantList) {
 			MemberVo memberVo = new MemberVo();
 			memberVo.setMtngId(mtngFromVo.getMtngId());
-			memberVo.setAtdtUserId(attendantList.get(i).getMemberId());
-			memberVo.setAtdtUserNm(attendantList.get(i).getMemberNm());
-
-			//뷰테이블의 사용자 가져와서 쓰라고 하셨는데... 참석자 구분을 할만한 정보가 없음. 내부인지 외부인지 직원인지 의원인지 등등...
-			//memberVo.setAtdtKind("ATT01");// 참석자 구분(의원)
+			memberVo.setAtdtUserId(memVo.getMemberId());
+			memberVo.setAtdtUserNm(memVo.getMemberNm());
+			memberVo.setAtdtKind("ATT01");// 참석자 구분(의원)
 			memberVo.setRegId(regId);
-			attendantList.set(i, memberVo);
-			mtngFromMapper.insertEbsMtngAttendant(attendantList.get(i));
+			mtngFromMapper.insertEbsMtngAttendant(memVo);
 		}
 
 		return mtngFromVo;

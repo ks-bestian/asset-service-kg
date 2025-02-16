@@ -304,32 +304,36 @@ public class ProcessServiceImpl implements ProcessService {
 		/*1차위원회 회의결과등록*/
 		void executeService_1500(ProcessVo argVo) {
 	        //회의결과화면에서 결과정보를 등록한다.
-			//CmttVo cmttVo = processMapper.selectOneCmtt(argVo);
-
+			List<CmttVo> cmttVoList = processMapper.selectListBillCmtt(argVo);
 			ProcessVo taskVo = new ProcessVo();
 			taskVo.setBillId(argVo.getBillId());
 			taskVo.setStepId(argVo.getNextStepId());
 			taskVo.setTaskNm("1차위원회 회의결과등록");
 			taskVo.setStatus("P");
-			taskVo.setAssignedTo(argVo.getCmtCd());//위원회 할당
 			taskVo.setRegId(argVo.getRegId());
-			processMapper.insertBpTask(taskVo);
+
+			for(CmttVo cVo:cmttVoList) {
+				taskVo.setAssignedTo(cVo.getCmtCd());//위원회 할당
+				processMapper.insertBpTask(taskVo);
+			}
 
 		}
 
 		/*1차위원회 회의심사보고*/
 		void executeService_1600(ProcessVo argVo) {
 
+			//prev task complete
+			argVo.setTaskStatus("C");
+			processMapper.updateStepTasks(argVo);
+
 //			위원회권한의 사람이 의안상세화면에서
 //			심사보고서를 등록한다.
-			CmttVo cmttVo = processMapper.selectOneCmtt(argVo);
-
 			ProcessVo taskVo = new ProcessVo();
 			taskVo.setBillId(argVo.getBillId());
 			taskVo.setStepId(argVo.getNextStepId());
 			taskVo.setTaskNm("1차위원회 회의심사보고");
 			taskVo.setStatus("P");
-			taskVo.setAssignedTo(cmttVo.getCmtId());//위원회 할당
+			taskVo.setAssignedTo(argVo.getAssignedTo());//위원회 할당
 			taskVo.setRegId(argVo.getRegId());
 			processMapper.insertBpTask(taskVo);
 
@@ -524,7 +528,6 @@ public class ProcessServiceImpl implements ProcessService {
 			processMapper.updateBpTask(argVo);
 			return argVo;
 		}
-
 
 
 }

@@ -13,6 +13,9 @@ public class MtngFromVo extends ComDefaultVO {
 	private String mtngTypeNm;
 	private String cmtId;
 	private String cmtNm;
+	private String deptCd;
+	private String deptNm;
+
 	private Long dgrCd;
 	private String openDtm;
 	private String closeDtm;
@@ -21,6 +24,7 @@ public class MtngFromVo extends ComDefaultVO {
 	private String rmk;
 	private String statCd;
 	private String dueDtm;
+	private String statNm;
 
     private List<MemberVo> attendantList;
     private List<AgendaVo> agendaList;

@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 public class AgendaVo extends ComDefaultVO {
-	
+
 	private Long mtngId;
 	private String billId;
 	private String billNo;
@@ -17,5 +17,10 @@ public class AgendaVo extends ComDefaultVO {
 	private String rsltCd;
 	private String rsltNm;
 	private String rmk;
-    
+
+
+	private String deptCd;
+	private String cmtCd;
+	private String cmtSeCd;
+
 }

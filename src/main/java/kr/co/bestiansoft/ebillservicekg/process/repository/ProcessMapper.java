@@ -22,13 +22,14 @@ public interface ProcessMapper {
 	void updateBpInstanceCurrentStep(ProcessVo vo);
 	void updateBpInstance(ProcessVo vo);
 
-
 	void insertBpTask(ProcessVo vo);
-
 	void updateStepTasks(ProcessVo vo);
 
 
 	CmttVo selectOneCmtt(ProcessVo vo);
+	List<CmttVo> selectListBillCmtt(ProcessVo vo);
+
+
 
 	void updateBpTask(ProcessVo vo);
 
@@ -36,6 +37,7 @@ public interface ProcessMapper {
 	List<ProposerVo> selectListSrvcJobAuth();
 
 	ProcessVo selectBpTask(ProcessVo vo);
+	List<ProcessVo> selectBpStepTasks(ProcessVo vo);
 
 
 }

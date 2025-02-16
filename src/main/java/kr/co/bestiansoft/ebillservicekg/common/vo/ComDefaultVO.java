@@ -58,7 +58,7 @@ public class ComDefaultVO implements Serializable {
     private String searchKeywordTo = "";
 
 
-
+    private String lang;
 
 
 }

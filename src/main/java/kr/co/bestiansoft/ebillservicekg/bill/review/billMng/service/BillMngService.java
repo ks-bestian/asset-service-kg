@@ -22,9 +22,11 @@ public interface BillMngService {
 
 
 
+	/* 안건 관리 기타정보목록 */
+    List<BillMngVo> selectListBillEtcInfo(BillMngVo billMngVo);
 
 	/* 안건 관리 법률검토 리스트 화면 */
-    List<BillMngVo> selectListlegalReview(HashMap<String, Object> param);
+    //List<BillMngVo> selectListlegalReview(HashMap<String, Object> param);
 
     /* 안건 관리 법률검토 상세 화면 */
     //BillMngResponse selectOnelegalReview(HashMap<String, Object> param);
@@ -34,6 +36,11 @@ public interface BillMngService {
 
     /* 안건관리 법률검토 보고 */
     BillMngVo insertBillLegalReviewReport(BillMngVo billMngVo);
+
+
+	/* 안건위원회 소관위,관련위 심사보고서  조회 */
+    List<BillMngVo> selectListCmtReviewReport(HashMap<String, Object> param);
+
 
 
     ////////////////////////////////////////////////////////////////////

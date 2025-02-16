@@ -17,12 +17,14 @@ public interface MtngToMapper {
     List<AgendaVo> selectListMtngAgenda (HashMap<String, Object> param);
     List<MemberVo> selectListMember(HashMap<String, Object> param);
     void insertEbsMtngAttendant(MemberVo memberVo);
-    
+
     void deleteMtngTo(Long mtngId);
     void deleteMtngToAttendant(Long mtngId);
     void deleteMtngToAgenda(Long mtngId);
-    
+
     Long updateMtngTo(MtngToVo mtngToVo);
+    void updateMtngToStatus(MtngToVo mtngToVo);
+
     void deleteMtngToFile(MtngToVo mtngToVo);
     void deleteMtngToAgenda(MtngToVo mtngToVo);
     void updateMtngToAgenda(AgendaVo agendaVo);

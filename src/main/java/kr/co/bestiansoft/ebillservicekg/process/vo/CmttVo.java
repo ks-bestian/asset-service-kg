@@ -8,6 +8,8 @@ public class CmttVo extends ComDefaultVO {
 
 	private String billId;
 	private String cmtId;
+	private String cmtCd;
+	private String cmtSeCd;
 	private String cmtType;
 
 }

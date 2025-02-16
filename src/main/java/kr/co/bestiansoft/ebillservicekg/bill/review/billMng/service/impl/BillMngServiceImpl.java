@@ -36,17 +36,46 @@ public class BillMngServiceImpl implements BillMngService {
     @Override
     public BillMngResponse getBillById(BillMngVo argVo) {
 
-    	BillMngVo billMngVo = billMngMapper.selectOneBill(argVo);
-		BillMngVo billlegalReviewVo = billMngMapper.selectOnelegalReview(argVo);
+    	BillMngVo billMngVo = billMngMapper.selectOneBill(argVo);//bill basic info
+    	List<BillMngVo> billEtcInfoList = billMngMapper.selectListBillEtcInfo(argVo);
+
+    	BillMngVo billlegalReviewVo = null;//bill legal review department
+    	BillMngVo billLangReview1stVo = null;//bill legal review department
+
+    	for(BillMngVo listVo : billEtcInfoList) {
+
+    		String clsCd = listVo.getClsCd();
+    		if("110".equals(clsCd)) {//법률검토결과
+    			billlegalReviewVo = listVo;
+    		} else if("120".equals(clsCd)) {//위원회1차언어전문파트
+    			billLangReview1stVo = listVo;
+    		}
+
+
+    	}
+
+		//BillMngVo billlegalReviewVo = billMngMapper.selectOnelegalReview(argVo);
     	//List<ProposerVo> proposerList = billMngMapper.selectProposerMemberList(param);
     	//List<BillMngVo> cmtList = billMngMapper.selectCmtList(param);
 
     	BillMngResponse billMngResponse = new BillMngResponse();
     	billMngResponse.setBillMngVo(billMngVo);
+    	billMngResponse.setBillEtcInfoList(billEtcInfoList);
     	billMngResponse.setBilllegalReviewVo(billlegalReviewVo);
+    	billMngResponse.setBillLangReview1stVo(billLangReview1stVo);
 
         return billMngResponse;
     }
+
+
+	@Override
+	public List<BillMngVo> selectListBillEtcInfo(BillMngVo argVo) {
+		List<BillMngVo> billEtcInfoList = billMngMapper.selectListBillEtcInfo(argVo);
+		return billEtcInfoList;
+	}
+
+
+
 
     @Transactional
 	@Override
@@ -74,11 +103,11 @@ public class BillMngServiceImpl implements BillMngService {
 		return null;
 	}
 
-	@Override
-	public List<BillMngVo> selectListlegalReview(HashMap<String, Object> param) {
-        List<BillMngVo> result = billMngMapper.selectListlegalReview(param);
-        return result;
-	}
+//	@Override
+//	public List<BillMngVo> selectListlegalReview(HashMap<String, Object> param) {
+//        List<BillMngVo> result = billMngMapper.selectListlegalReview(param);
+//        return result;
+//	}
 
 
 //	@Override
@@ -119,6 +148,16 @@ public class BillMngServiceImpl implements BillMngService {
 	}
 
 
+	@Override
+	public List<BillMngVo> selectListCmtReviewReport(HashMap<String, Object> param) {
+        List<BillMngVo> result = billMngMapper.selectListCmtReviewReport(param);
+        return result;
+	}
+
+
+
+
+
 	///////////////////////////////////////////////////////////////////
 
 
@@ -134,8 +173,6 @@ public class BillMngServiceImpl implements BillMngService {
 
     	return billMngVo;
 	}
-
-
 
 
 

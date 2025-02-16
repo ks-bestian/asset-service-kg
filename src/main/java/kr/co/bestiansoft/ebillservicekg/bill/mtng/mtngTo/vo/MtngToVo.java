@@ -17,6 +17,8 @@ public class MtngToVo extends ComDefaultVO {
 	private String mtngTypeNm;
 	private String cmtId;
 	private String cmtNm;
+	private String deptCd;
+	private String deptNm;
 	private Long dgrCd;
 	private String openDtm;
 	private String closeDtm;

@@ -133,6 +133,26 @@
 
     </select>
 
+    <select id="selectListBillEtcInfo" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper.selectOnelegalReview */
+        select
+			  emd.seq
+			, emd.bill_id
+			, emd.cls_cd
+			, emd.rmrk_kg
+			, emd.rmrk_ru
+			, emd.mtn_dt
+			, emd.prsd_rjct_dt
+			, emd.lgl_rvw_rslt_code
+			, emd.lgl_act_rslt_code
+			, emd.rslt_dt
+			, emd.reg_id
+			, emd.reg_dt
+		from kgst.ebs_master_detail emd
+		where emd.bill_id = #{billId}
+    </select>
+
     <select id="selectOnelegalReview" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper.selectOnelegalReview */
@@ -199,6 +219,46 @@
 	        <if test="rsltDt != null">, rslt_dt = #{rsltDt}</if>
 	        <if test="rsltCode != null">, rslt_code = #{rsltCode}</if>
     </insert>
+
+    <!-- committee review report main sub -->
+    <select id="selectListCmtReviewReport" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper.selectListCmtReviewReport */
+		select
+		    em.bill_id
+		  , em.bill_no
+		  , kgst.fngetlangnm(em.bill_name_kg,em.bill_name_ru,em.bill_name_kg,#{lang}) as bill_name -- 안건 이름
+		  , kgst.fngetlangnm(vum.member_nm_kg,vum.member_nm_ru,vum.member_nm_kg,#{lang}) as ppsr_nm -- 제안자 이름
+		  , em.bill_name_kg
+		  , em.bill_name_ru
+		  , em.ppsr_id
+		  , em.ppsl_dt
+		  , em.na_term_cd
+		  , emc.cmt_cd
+		  , emc.cmt_se_cd
+		  , ema.mtng_id
+		  , ema.rslt_cd
+		  , emt.mtng_type_cd
+		  , emt.age_cd
+		  , kgst.fngetcodenm('1010',step.stat_cd,#{lang}) as stat_nm
+		from kgst.ebs_master em
+		join kgst.ebs_master_cmt emc on (em.bill_id = emc.bill_id)
+		join kgst.ebs_mtng_agenda ema on (em.bill_id = ema.bill_id)
+		join kgst.ebs_mtng emt on (ema.mtng_id = emt.mtng_id)
+		join kgst.view_user_member vum on (em.ppsr_id = vum.user_id)
+		join kgst.ebs_bp_instance ebi on (em.bill_id = ebi.bill_id)
+		join kgst.ebs_bp_step step on (ebi.bp_df_id = step.bp_df_id and ebi.current_step_id = step.step_id)
+		where 1=1
+		  and  em.na_term_cd = #{naTermCd}
+		  and emc.cmt_cd = #{cmtCd}
+		  and emc.cmt_se_cd = #{cmtSeCd}
+		  and emt.stat_cd = '2'
+		order by ema.mtng_id
+
+    </select>
+
+
+
 
 
 

@@ -375,6 +375,27 @@
 
 	</select>
 
+   <select id="selectBpStepTasks"  parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo"
+    resultType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
+   /* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.selectBpTask */
+	SELECT
+	        TASK_ID
+	     ,  TASK_NM
+	     ,  BILL_ID
+	     ,  STEP_ID
+	     ,  ASSIGNED_TO
+	     ,  STATUS as TASK_STATUS
+	     ,  DUE_DT
+	     ,  COMPLETED_DT
+	     ,  atrz_mng_no
+	     ,  REG_ID
+	     ,  REG_DT
+	  FROM EBS_BP_TASKS
+	 WHERE BILL_ID = #{billId}
+	   and STEP_ID = #{stepId}
+
+	</select>
+
     <update id="updateBpTask" parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
 	/* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.updateBpTask */
 	 UPDATE EBS_BP_TASKS
@@ -421,7 +442,19 @@
 
 	</select>
 
+   <!-- 해당안건의 위원회목록 -->
+   <select id="selectListBillCmtt"  parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo"
+    resultType="kr.co.bestiansoft.ebillservicekg.process.vo.CmttVo">
+   /* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.selectOneCmtt */
 
+	select
+		bill_id
+	  , cmt_cd
+	  , cmt_se_cd
+	from ebs_master_cmt
+	where bill_id = #{billId}
+
+	</select>
 
   <!-- 해당안건의 공동발의자 목록 -->
    <select id="selectListProposerId"  parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo"

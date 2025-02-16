@@ -16,8 +16,13 @@ public interface BillMngMapper {
 
 
 	void insertBillDetail(BillMngVo billMngVo);
-	List<BillMngVo> selectListlegalReview(HashMap<String, Object> param);
-	BillMngVo selectOnelegalReview(BillMngVo argVo);
+	List<BillMngVo> selectListBillEtcInfo(BillMngVo billMngVo);
+
+	//List<BillMngVo> selectListlegalReview(HashMap<String, Object> param);
+	//BillMngVo selectOnelegalReview(BillMngVo argVo);
+	List<BillMngVo> selectListCmtReviewReport(HashMap<String, Object> param);
+
+
 
 
 /////////////////////////////
