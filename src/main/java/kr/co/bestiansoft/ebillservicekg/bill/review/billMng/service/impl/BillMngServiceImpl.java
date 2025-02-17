@@ -190,7 +190,9 @@ public class BillMngServiceImpl implements BillMngService {
 	@Transactional
 	@Override
 	public BillMngVo insertBillCommitt(BillMngVo billMngVo) {
-
+		
+		billMngMapper.deleteBillCmtByBillId(billMngVo);
+		
 		String regId = new SecurityInfoUtil().getAccountId();
 		billMngVo.setRegId(regId);
 		billMngVo.setCmtSeCd("M");

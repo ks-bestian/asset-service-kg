@@ -512,4 +512,10 @@
 		where 1=1
 			and emc.bill_id = #{billId}
 	</select>
+	
+	<delete id="deleteBillCmtByBillId" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo"> 
+    	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.deleteBillCmtByBillId */
+		delete from kgst.ebs_master_cmt
+	    where bill_id = #{billId}
+	</delete>
 </mapper>
