@@ -12,5 +12,6 @@ public class CcofVo extends ComDefaultVO {
     private Integer ord;
     private String deptNm;
     private String shrtNm;
-
+    private String uprDeptCd;
+    
 }

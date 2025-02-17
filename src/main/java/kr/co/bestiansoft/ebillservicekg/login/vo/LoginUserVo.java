@@ -43,6 +43,7 @@ public class LoginUserVo extends ComDefaultVO {
 	private String polyCd;
 	private String polyNm;
 	private String rsdnRgstNmbr;
+	private String uprDeptCd;
 	
 	private String password = "best1234"; //임시 비밀번호
 	

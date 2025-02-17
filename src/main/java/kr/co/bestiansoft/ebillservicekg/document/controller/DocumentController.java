@@ -33,6 +33,7 @@ import kr.co.bestiansoft.ebillservicekg.document.service.DocumentService;
 import kr.co.bestiansoft.ebillservicekg.document.vo.FileShareVo;
 import kr.co.bestiansoft.ebillservicekg.document.vo.FileVo;
 import kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo;
+import kr.co.bestiansoft.ebillservicekg.document.vo.UserMemberAuthMappVo;
 import lombok.RequiredArgsConstructor;
 
 @Api(tags = "문서관리 API")
@@ -272,6 +273,19 @@ public class DocumentController {
     @GetMapping("/document/files/diskspace")
     public ResponseEntity<CommonResponse> selectUseCpct() {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.selectUseCpct()), HttpStatus.OK);
+    }
+    
+    @ApiOperation(value = "사용자별 폴더권한 조회", notes = "사용자별 폴더권한 조회")
+    @GetMapping("/document/files/authmapp")
+    public ResponseEntity<CommonResponse> selectListUserAuthMapp(@RequestParam HashMap<String, Object> param) {
+    	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.selectListUserAuthMapp(param)), HttpStatus.OK);
+    }
+    
+    @ApiOperation(value = "사용자별 폴더권한 저장", notes = "사용자별 폴더권한 저장")
+    @PostMapping("/document/files/authmapp")
+    public ResponseEntity<CommonResponse> saveFolderAuthMapp(@RequestBody List<UserMemberAuthMappVo> list) {
+    	documentService.saveFolderAuthMapp(list);
+    	return new ResponseEntity<>(new CommonResponse(200, "OK", null), HttpStatus.OK);
     }
     
 }

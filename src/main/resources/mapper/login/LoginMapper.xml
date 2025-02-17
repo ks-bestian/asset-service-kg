@@ -6,33 +6,36 @@
 	<select id="selectUser" resultType="kr.co.bestiansoft.ebillservicekg.login.vo.LoginUserVo">
 		/* QueryID : kr.co.bestiansoft.ebillservicekg.login.repository.LoginMapper.selectUser */
 		SELECT 
-			  user_id
-			, user_nm_kg
-			, user_nm_ru
-			, member_id
-			, member_nm_kg
-			, member_nm_ru
-			, dept_cd
-			, dept_nm_kg
-			, dept_nm_ru
-			, dept_nm_ko
-			, email
-			, gen_cd
-			, profile_img_path
-			, msg_rcv_yn
-			, doc_mgr_yn
-			, dept_head_yn
-			, job_cd
-			, pos_cd
-			, age_cd
-			, cmit_cd
-			, cmit_nm_kg
-			, cmit_nm_ru
-			, cmit_nm_ko
-			, poly_cd
-			, poly_nm
-			, rsdn_rgst_nmbr
-		FROM kgst.view_user_member
+			  vum.user_id
+			, vum.user_nm_kg
+			, vum.user_nm_ru
+			, vum.member_id
+			, vum.member_nm_kg
+			, vum.member_nm_ru
+			, vum.dept_cd
+			, vum.dept_nm_kg
+			, vum.dept_nm_ru
+			, vum.dept_nm_ko
+			, vum.email
+			, vum.gen_cd
+			, vum.profile_img_path
+			, vum.msg_rcv_yn
+			, vum.doc_mgr_yn
+			, vum.dept_head_yn
+			, vum.job_cd
+			, vum.pos_cd
+			, vum.age_cd
+			, vum.cmit_cd
+			, vum.cmit_nm_kg
+			, vum.cmit_nm_ru
+			, vum.cmit_nm_ko
+			, vum.poly_cd
+			, vum.poly_nm
+			, vum.rsdn_rgst_nmbr
+			, cd.upr_dept_cd
+		FROM kgst.view_user_member vum
+		inner join kgst.com_dept cd 
+		on vum.dept_cd = cd.dept_cd
 		WHERE user_id = #{userId}
 	</select>
 	

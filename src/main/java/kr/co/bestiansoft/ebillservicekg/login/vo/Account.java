@@ -38,6 +38,7 @@ public class Account extends User {
 	private String polyCd;
 	private String polyNm;
 	private String rsdnRgstNmbr;
+	private String uprDeptCd;
 	
 	public Account(LoginUserVo user, List<GrantedAuthority> grantedAuthorities) {
 		super(user.getUserId(), user.getPassword(), grantedAuthorities);
@@ -68,6 +69,7 @@ public class Account extends User {
 		this.polyCd = user.getPolyCd();
 		this.polyNm = user.getPolyNm();
 		this.rsdnRgstNmbr = user.getRsdnRgstNmbr();
+		this.uprDeptCd = user.getUprDeptCd();
 	}
 	
 }

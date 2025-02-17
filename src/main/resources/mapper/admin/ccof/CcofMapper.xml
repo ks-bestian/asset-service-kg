@@ -14,6 +14,7 @@
             , cc.mod_dt
             , kgst.fngetlangnm(cd.dept_nm1, cd.dept_nm2, cd.dept_nm3, #{lang}) as dept_nm
             , cd.shrt_nm1 as shrt_nm
+            , cd.upr_dept_cd
         from com_ccof cc
         left join com_user cu on cu.user_id = cc.user_id
         inner join com_dept cd on cd.dept_cd = cc.dept_cd

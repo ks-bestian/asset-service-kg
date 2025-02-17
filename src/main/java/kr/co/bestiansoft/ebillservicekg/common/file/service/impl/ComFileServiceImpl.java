@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import kr.co.bestiansoft.ebillservicekg.common.file.repository.ComFileMapper;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
@@ -19,6 +20,7 @@ import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Mono;
 
 
 @Slf4j
@@ -31,6 +33,9 @@ public class ComFileServiceImpl implements ComFileService {
     private final EDVHelper edv;
     private final ComFileMapper fileMapper;
 	private final ExecutorService executorService;
+	private final WebClient webClient;
+	
+	private final String PDF_CONVERT_URL = "http://localhost:8082/converttopdf";
 
 	@Override
 	public String saveFile(MultipartFile[] files) {
@@ -96,7 +101,34 @@ public class ComFileServiceImpl implements ComFileService {
 			fileMapper.insertFileEbs(fileVo);
 		}
 	}
-
+	
+	@Override
+	public Mono<String> convertDocToPdf(String fileId) {
+		return webClient
+    			.post()
+    			.uri(PDF_CONVERT_URL + "/doc/" + fileId)
+    			.retrieve()
+    			.bodyToMono(String.class);
+	}
+	
+	@Override
+	public Mono<String> convertPptToPdf(String fileId) {
+		return webClient
+    			.post()
+    			.uri(PDF_CONVERT_URL + "/ppt/" + fileId)
+    			.retrieve()
+    			.bodyToMono(String.class);
+	}
+	
+	@Override
+	public Mono<String> convertXlsToPdf(String fileId) {
+		return webClient
+    			.post()
+    			.uri(PDF_CONVERT_URL + "/xls/" + fileId)
+    			.retrieve()
+    			.bodyToMono(String.class);
+	}
+	
 	@Override
 	public List<ComFileVo> getFileList(String fileGroupId) {
 		return fileMapper.findByFileGroupId(fileGroupId);

@@ -104,11 +104,36 @@
     
 	<select id="selectDeptFolderListAll" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo">
 		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectDeptFolderListAll */
-		<include refid="selectFolder" />
+		select 
+			  d.*
+			, (case when vum.dept_cd = #{deptCd} and vum.dept_head_yn = 'Y' then true
+					when d.reg_id = #{userId} then true 
+					else coalesce(bam.search_yn, true)  
+				end) as searchYn
+			, (case when vum.dept_cd = #{deptCd} and vum.dept_head_yn = 'Y' then true
+					when d.reg_id = #{userId} then true 
+					else coalesce(bam.create_yn, false)  
+				end) as createYn
+			, (case when vum.dept_cd = #{deptCd} and vum.dept_head_yn = 'Y' then true
+					when d.reg_id = #{userId} then true 
+					else coalesce(bam.update_yn, false)  
+				end) as updateYn
+			, (case when vum.dept_cd = #{deptCd} and vum.dept_head_yn = 'Y' then true
+					when d.reg_id = #{userId} then true 
+					else coalesce(bam.delete_yn, false)  
+				end) as deleteYn
+		from (
+			<include refid="selectFolder" />
+		) d
+		left outer join kgst.bs_auth_mapp bam 
+			on bam.folder_id = d.folder_id
+			and bam.user_id = #{userId}
+		left outer join kgst.view_user_member vum 
+			on vum.user_id = #{userId}
 		where 1=1
-			and c.del_yn = 'N'
-			and c.dept_folder_yn = 'Y'
-			and c.dept_cd = #{deptCd}
+			and d.del_yn = 'N'
+			and d.dept_folder_yn = 'Y'
+			and d.dept_cd = #{deptCd}
 	</select>
 	
 	<select id="selectMyFolderListAll" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo">
@@ -329,6 +354,22 @@
 				, (select user_nm_kg 
 				from kgst.view_user_member vcm
 				where vcm.user_id = b.mod_id) as mod_nm
+				, (case when d.dept_folder_yn = 'Y' and d.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
+						when vum.user_id = d.reg_id then true 
+						else coalesce(bam.search_yn, true)  
+					end) as searchYn
+				, (case when d.dept_folder_yn = 'Y' and d.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
+						when vum.user_id = d.reg_id then true 
+						else coalesce(bam.create_yn, true)  
+					end) as createYn
+				, (case when d.dept_folder_yn = 'Y' and d.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
+						when vum.user_id = d.reg_id then true 
+						else coalesce(bam.update_yn, true)  
+					end) as updateYn
+				, (case when d.dept_folder_yn = 'Y' and d.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
+						when vum.user_id = d.reg_id then true 
+						else coalesce(bam.delete_yn, true)  
+					end) as deleteYn
 			from (
 				select
 					<include refid="fileColumns"></include>
@@ -344,6 +385,11 @@
 				and c.user_id = #{userId}
 			left outer join kgst.bs_folder_info d
 				on d.folder_id = b.folder_id
+			left outer join kgst.view_user_member vum 
+				on vum.user_id = #{userId}
+			left outer join kgst.bs_auth_mapp bam 
+				on bam.folder_id = b.folder_id
+				and bam.user_id = #{userId}
 		) x
 		where 1=1
 			<if test="title != null and title != ''">
@@ -355,7 +401,7 @@
 	</select>
 	
 	<select id="selectMyFileList" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo">
-		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectDeptFileList */
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectMyFileList */
 		select * from (
 			select 
 				  b.*
@@ -785,6 +831,99 @@
         </if>
     </select>
     
+    
+    <select id="selectListUserAuthMapp" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.document.vo.UserMemberAuthMappVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectListUserAuthMapp */
+    	select * from (
+			select
+				  vum.user_id
+				, kgst.fngetlangnm(vum.user_nm_kg, vum.user_nm_ru, vum.user_nm_kg, #{lang}) as user_nm
+				, vum.member_id
+				, kgst.fngetlangnm(vum.member_nm_kg, vum.member_nm_ru, vum.member_nm_kg, #{lang}) as member_nm
+				, vum.dept_cd
+				, kgst.fngetlangnm(vum.dept_nm_kg, vum.dept_nm_ru, vum.dept_nm_ko, #{lang}) as dept_nm
+				, vum.email
+				, vum.gen_cd
+				, vum.profile_img_path
+				, vum.msg_rcv_yn
+				, vum.doc_mgr_yn
+				, vum.dept_head_yn
+				, vum.job_cd
+				, vum.pos_cd
+				, vum.age_cd
+				, vum.cmit_cd
+				, kgst.fngetlangnm(vum.cmit_nm_kg, vum.cmit_nm_ru, vum.cmit_nm_ko, #{lang}) as cmit_nm
+				, vum.poly_cd
+				, vum.poly_nm
+				, vum.rsdn_rgst_nmbr
+				, (case when bfi.dept_folder_yn = 'Y' and bfi.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
+						when vum.user_id = bfi.reg_id then true 
+						else coalesce(bam.search_yn, true)  
+					end) as searchYn
+				, (case when bfi.dept_folder_yn = 'Y' and bfi.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
+						when vum.user_id = bfi.reg_id then true 
+						else coalesce(bam.create_yn, false)  
+					end) as createYn
+				, (case when bfi.dept_folder_yn = 'Y' and bfi.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
+						when vum.user_id = bfi.reg_id then true 
+						else coalesce(bam.update_yn, false)  
+					end) as updateYn
+				, (case when bfi.dept_folder_yn = 'Y' and bfi.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
+						when vum.user_id = bfi.reg_id then true 
+						else coalesce(bam.delete_yn, false)  
+					end) as deleteYn
+			from kgst.view_user_member vum 
+			left outer join kgst.bs_auth_mapp bam 
+				on
+					bam.user_id = vum.user_id
+					and bam.folder_id = #{folderId}
+			left outer join (
+				select reg_id, dept_cd, dept_folder_yn
+				from kgst.bs_folder_info
+				where folder_id = #{folderId}
+			) bfi
+				on 1=1
+			where 1=1
+				and vum.dept_cd = #{deptCd}
+		) a
+		where 1=1
+			<if test="userNm != null and userNm != ''">
+				and a.user_nm like '%' || #{userNm} || '%'
+			</if>
+    </select>
+    
+    <insert id="saveFolderAuthMapp" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.UserMemberAuthMappVo">
+        INSERT INTO kgst.bs_auth_mapp (
+			  folder_id
+			, user_id
+			, search_yn
+			, create_yn
+			, update_yn
+			, delete_yn
+			, reg_id
+			, reg_dt
+		)
+		VALUES (
+			  #{folderId}
+			, #{userId}
+			, #{searchYn}
+			, #{createYn}
+			, #{updateYn}
+			, #{deleteYn}
+			, #{regId}
+			, now()
+		)
+		ON CONFLICT (folder_id, user_id)
+		DO UPDATE 
+		SET   mod_dt = now()
+			, mod_id = #{modId}
+			, search_yn = #{searchYn}
+			, create_yn = #{createYn}
+			, update_yn = #{updateYn}
+			, delete_yn = #{deleteYn}
+    </insert>
+    
     <update id="addUseCpct">
     /* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.addUseCpct */
     	INSERT INTO kgst.bs_use_cpct (
@@ -811,6 +950,39 @@
         select coalesce(sum(use_cpct), 0)
 		from kgst.bs_use_cpct
 		where user_id = #{userId}
+    </select>
+    
+    <select id="selectUserAuthMapp" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.UserMemberAuthMappVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectUserAuthMapp */
+        select 
+			  (case when #{folderId} = -1 then true
+					when bfi.dept_folder_yn = 'Y' and bfi.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
+					when vum.user_id = bfi.reg_id then true 
+					else coalesce(bam.search_yn, true)  
+				end) as searchYn
+			, (case when #{folderId} = -1 then true
+					when bfi.dept_folder_yn = 'Y' and bfi.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
+					when vum.user_id = bfi.reg_id then true 
+					else coalesce(bam.create_yn, false)  
+				end) as createYn
+			, (case when #{folderId} = -1 then false
+					when bfi.dept_folder_yn = 'Y' and bfi.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
+					when vum.user_id = bfi.reg_id then true 
+					else coalesce(bam.update_yn, false)  
+				end) as updateYn
+			, (case when #{folderId} = -1 then false
+					when bfi.dept_folder_yn = 'Y' and bfi.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
+					when vum.user_id = bfi.reg_id then true 
+					else coalesce(bam.delete_yn, false)  
+				end) as deleteYn
+		from kgst.view_user_member vum 
+		left outer join kgst.bs_folder_info bfi
+		on bfi.folder_id = #{folderId}
+		left outer join kgst.bs_auth_mapp bam
+		on bam.folder_id = bfi.folder_id 
+		and bam.user_id = vum.user_id 
+		where 1=1
+		and vum.user_id = #{userId}
     </select>
     
 </mapper>

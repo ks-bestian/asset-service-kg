@@ -48,4 +48,9 @@ public class FileVo extends ComDefaultVO {
 	
 	private String deptFileYn;
 	private String ownerId;
+	
+	private Boolean searchYn;
+	private Boolean createYn;
+	private Boolean deleteYn;
+	private Boolean updateYn;
 }

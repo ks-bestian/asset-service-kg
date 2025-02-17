@@ -5,6 +5,7 @@ import java.util.List;
 
 import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo;
 import kr.co.bestiansoft.ebillservicekg.document.vo.UseCpctVo;
+import kr.co.bestiansoft.ebillservicekg.document.vo.UserMemberAuthMappVo;
 import kr.co.bestiansoft.ebillservicekg.document.vo.FileShareVo;
 import kr.co.bestiansoft.ebillservicekg.document.vo.FileVo;
 import kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo;
@@ -60,4 +61,7 @@ public interface DocumentService {
     void saveFavorite(FileVo vo);
     
     UseCpctVo selectUseCpct();
+    
+    List<UserMemberAuthMappVo> selectListUserAuthMapp(HashMap<String, Object> param);
+    void saveFolderAuthMapp(List<UserMemberAuthMappVo> list);
 }

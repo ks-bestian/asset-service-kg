@@ -11,6 +11,7 @@ import kr.co.bestiansoft.ebillservicekg.document.vo.FileShareVo;
 import kr.co.bestiansoft.ebillservicekg.document.vo.FileVo;
 import kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo;
 import kr.co.bestiansoft.ebillservicekg.document.vo.UseCpctVo;
+import kr.co.bestiansoft.ebillservicekg.document.vo.UserMemberAuthMappVo;
 
 @Mapper
 public interface DocumentMapper {
@@ -64,4 +65,9 @@ public interface DocumentMapper {
     
     Long selectTotalUseCpct(String userId);
     void addUseCpct(String userId, Long cpct);
+    
+    List<UserMemberAuthMappVo> selectListUserAuthMapp(HashMap<String, Object> param);
+    void saveFolderAuthMapp(UserMemberAuthMappVo vo);
+    
+    UserMemberAuthMappVo selectUserAuthMapp(Long folderId, String userId);
 }
