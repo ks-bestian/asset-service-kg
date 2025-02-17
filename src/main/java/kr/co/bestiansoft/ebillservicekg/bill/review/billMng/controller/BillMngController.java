@@ -1,10 +1,13 @@
 package kr.co.bestiansoft.ebillservicekg.bill.review.billMng.controller;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +21,7 @@ import io.swagger.annotations.ApiOperation;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.service.BillMngService;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
+import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 import lombok.RequiredArgsConstructor;
 
 @Api(tags = "안건 관리 API")
@@ -130,4 +134,18 @@ public class BillMngController {
     public ResponseEntity<CommonResponse> insertBillCommitt(@RequestBody BillMngVo billMngVo) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "bill committ created successfully", billMngService.insertBillCommitt(billMngVo)), HttpStatus.CREATED);
     }
+    
+    @ApiOperation(value = "파일첨부", notes = "안건심사에 관련된 파일을 첨부한다")
+    @PostMapping(value = "/bill/review/billMng/file", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+	public ResponseEntity<CommonResponse> insertBillMngFile(EbsFileVo ebsfileVo){
+        return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "apply create successfully", billMngService.insertBillMngFile(ebsfileVo)), HttpStatus.CREATED);
+	}
+    
+    @ApiOperation(value = "파일삭제", notes = "파일을 삭제한다")
+    @PutMapping(value = "/bill/review/billMng/delete/file")
+    public ResponseEntity<CommonResponse> deleteEbsFile(@RequestBody EbsFileVo ebsFileVo) {
+    	return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "ebs file updated successfully", billMngService.updateEbsFileDelYn(ebsFileVo)), HttpStatus.OK);
+    }
+    
+
 }

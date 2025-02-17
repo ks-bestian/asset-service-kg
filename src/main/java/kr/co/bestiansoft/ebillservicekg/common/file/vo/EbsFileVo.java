@@ -1,5 +1,7 @@
 package kr.co.bestiansoft.ebillservicekg.common.file.vo;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
 
@@ -22,4 +24,6 @@ public class EbsFileVo extends ComDefaultVO {
 	private String clsCd;
 	private int detailSeq;
 	
+	private MultipartFile[] files;
+	private String ppsrNm;
 }

@@ -48,5 +48,7 @@ public interface BillMngMapper {
 	List<ProposerVo> selectProposerByBillId(HashMap<String, Object> param);
 	void insertBillCmt(BillMngVo billMngVo);
 	List<BillMngVo> selectEbsMasterCmtList(BillMngVo argVo);
+	void deleteBillCmtByBillId(BillMngVo billMngVo);
+	void updateEbsFileDelYn(EbsFileVo ebsFileVo);
 	
 }
