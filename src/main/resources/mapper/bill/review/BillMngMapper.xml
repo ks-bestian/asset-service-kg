@@ -443,28 +443,29 @@
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.selectFileList */
 
 		SELECT
-		    max(seq) as seq
-		    , max(bill_id) as bill_id 
-		    , max(file_kind_cd) as file_kind_cd 
-		    , max(cls_cd) as cls_cd 
-		    , max(org_file_id) as org_file_id 
-		    , max(org_file_nm) as org_file_nm 
-		    , max(pdf_file_id) as pdf_file_id 
-		    , max(pdf_file_nm) as pdf_file_nm 
-		    , max(rmk) as rmk 
-		    , max(opb_yn) as opb_yn 
-		    , max(delete_yn) as delete_yn 
-		    , max(file_size) as file_size 
-		    , max(reg_id) as reg_id 
-		    , max(reg_dt) as reg_dt 
-		    , max(mod_id) as mod_id 
-		    , max(mod_dt) as mod_dt 
-	    	, max(detail_seq) as detail_seq
-		FROM kgst.ebs_file
-		WHERE delete_yn = 'N' 
-			and bill_id = #{billId}
-		group by file_kind_cd, cls_cd
-		order by file_kind_cd
+		    ef.seq
+		    , ef.bill_id
+		    , ef.file_kind_cd
+		    , ef.cls_cd
+		    , ef.org_file_id
+		    , ef.org_file_nm
+		    , ef.pdf_file_id
+		    , ef.pdf_file_nm
+		    , ef.rmk 
+		    , ef.opb_yn
+		    , ef.delete_yn
+		    , ef.file_size
+		    , ef.reg_id
+		    , ef.reg_dt
+		    , ef.mod_id
+		    , ef.mod_dt
+			, ef.detail_seq
+			, kgst.fngetlangnm(vum.member_nm_kg, vum.member_nm_ru, vum.member_nm_kg, #{lang}) as ppsr_nm -- 제안자 이름
+		FROM kgst.ebs_file ef
+			left join view_user_member vum on vum.user_id = ef.reg_id
+		WHERE ef.delete_yn = 'N' 
+			and ef.bill_id = #{billId}
+		order by ef.file_kind_cd, ef.reg_dt
 	</select>
 
 
@@ -518,4 +519,17 @@
 		delete from kgst.ebs_master_cmt
 	    where bill_id = #{billId}
 	</delete>
+	
+	<update id="updateEbsFileDelYn" parameterType="kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo"> 
+    	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.updateEbsFileDelYn */
+		update 
+			kgst.ebs_file
+		set 
+			delete_yn = 'Y'
+			, mod_id = #{modId}
+			, mod_dt = now()
+	    where bill_id = #{billId}
+	    	and org_file_id = #{orgFileId}
+	</update>
+	
 </mapper>

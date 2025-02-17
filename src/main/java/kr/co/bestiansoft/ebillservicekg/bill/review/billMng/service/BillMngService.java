@@ -6,6 +6,7 @@ import kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngResponse;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.ProposerVo;
+import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 
 public interface BillMngService {
 	/* 안건 관리 리스트 화면 */
@@ -54,5 +55,9 @@ public interface BillMngService {
     List<ProposerVo> selectProposerByBillId(HashMap<String, Object> param);
 
 	BillMngVo insertBillCommitt(BillMngVo billMngVo);
+
+	EbsFileVo insertBillMngFile(EbsFileVo ebsfileVo);
+
+	EbsFileVo updateEbsFileDelYn(EbsFileVo ebsFileVo);
 
 }

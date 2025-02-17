@@ -179,5 +179,37 @@ public class ComFileServiceImpl implements ComFileService {
 		
 	}
 
+	@Override
+	public void saveFileBillMng(EbsFileVo ebsFileVo) {
+		if(ebsFileVo.getFiles() == null) return;
+		
+		for(MultipartFile file : ebsFileVo.getFiles()) {
+			String orgFileId = StringUtil.getUUUID();
+    		String orgFileNm = file.getOriginalFilename();
+    		
+    		////////////////////////
+			try (InputStream edvIs = file.getInputStream()){
+				edv.save(orgFileId, edvIs);
+			} catch (Exception edvEx) {
+				throw new RuntimeException("EDV_NOT_WORK", edvEx);
+			}
+    		////////////////////////
+			
+			String regId = new SecurityInfoUtil().getAccountId();
+			EbsFileVo fileVo = new EbsFileVo();
+			fileVo.setBillId(ebsFileVo.getBillId());
+
+			fileVo.setOrgFileId(orgFileId);
+			fileVo.setOrgFileNm(orgFileNm);
+			fileVo.setFileSize(file.getSize());
+			fileVo.setFileKindCd("200");
+			fileVo.setClsCd("120");
+			fileVo.setOpbYn("N");
+			fileVo.setRegId(regId);
+			fileVo.setRmk(ebsFileVo.getRmk());
+			fileMapper.insertFileEbs(fileVo);
+		}
+	}
+
 
 }

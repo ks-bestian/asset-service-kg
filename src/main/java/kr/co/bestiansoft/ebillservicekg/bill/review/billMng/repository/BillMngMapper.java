@@ -49,5 +49,6 @@ public interface BillMngMapper {
 	void insertBillCmt(BillMngVo billMngVo);
 	List<BillMngVo> selectEbsMasterCmtList(BillMngVo argVo);
 	void deleteBillCmtByBillId(BillMngVo billMngVo);
+	void updateEbsFileDelYn(EbsFileVo ebsFileVo);
 	
 }

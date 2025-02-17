@@ -93,6 +93,7 @@
 			, file_size
 			, reg_id
 			, reg_dt
+			<if test="clsCd != null"> , cls_cd </if>
 		)
 		values (
 			  #{billId}
@@ -107,6 +108,7 @@
 			, #{fileSize}
 			, #{regId}
 			, now()
+			<if test="clsCd != null"> , #{clsCd} </if>
 		)
     </insert>
     

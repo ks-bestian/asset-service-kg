@@ -1,18 +1,22 @@
 package kr.co.bestiansoft.ebillservicekg.bill.review.billMng.service.impl;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.service.BillMngService;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngResponse;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.ProposerVo;
+import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
+import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
 import kr.co.bestiansoft.ebillservicekg.process.service.ProcessService;
 import kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +31,7 @@ public class BillMngServiceImpl implements BillMngService {
 
     private final BillMngMapper billMngMapper;
     private final ProcessService processService;
+    private final ComFileService comFileService;
 
     @Override
     public List<BillMngVo> getBillList(HashMap<String, Object> param) {
@@ -210,6 +215,24 @@ public class BillMngServiceImpl implements BillMngService {
 		}
 
 		return billMngVo;
+	}
+
+	@Transactional
+	@Override
+	public EbsFileVo insertBillMngFile(EbsFileVo ebsFileVo) {
+		//파일등록
+		comFileService.saveFileBillMng(ebsFileVo);
+		//파일 정보를 가지고 있어서 null처리
+		ebsFileVo.setFiles(null);
+		
+		return ebsFileVo;
+	}
+
+	@Override
+	public EbsFileVo updateEbsFileDelYn(EbsFileVo ebsFileVo) {
+		billMngMapper.updateEbsFileDelYn(ebsFileVo);
+		
+		return ebsFileVo;
 	}
 
 

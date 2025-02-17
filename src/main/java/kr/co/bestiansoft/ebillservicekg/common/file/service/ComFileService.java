@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.ComFileVo;
+import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 
 public interface ComFileService {
 
@@ -15,5 +16,6 @@ public interface ComFileService {
 //	void saveFileEbs(MultipartFile[] files, String billId);
 	void saveFileEbs(MultipartFile[] files, String[] fileKindCd, String billId);
 	void saveFileEbsMtng(MultipartFile[] files, String[] fileKindCdList, Long mtngId);
+	void saveFileBillMng(EbsFileVo ebsFileVo);
 
 }
