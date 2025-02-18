@@ -11,7 +11,7 @@
     <groupId>ko.co.bestiansoft</groupId>
     <artifactId>ebill-service-kg</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <name>ebill-service-kg</name>
     <description>ebill-service-kg</description>
     <url/>

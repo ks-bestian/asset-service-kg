@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.vo.MtngAllVo;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.ProposerVo;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
@@ -18,6 +19,9 @@ public interface BillMngMapper {
 
 	void insertBillDetail(BillMngVo billMngVo);
 	List<BillMngVo> selectListBillEtcInfo(BillMngVo billMngVo);
+	List<MtngAllVo> selectListCmtMeetingList(BillMngVo billMngVo);
+
+
 
 	//List<BillMngVo> selectListlegalReview(HashMap<String, Object> param);
 	//BillMngVo selectOnelegalReview(BillMngVo argVo);
@@ -39,16 +43,16 @@ public interface BillMngMapper {
     void insertProposers(ProposerVo proposerVo);
 
     List<ProposerVo> selectMemberList (HashMap<String, Object> param);
-    
-    
+
+
 	List<EbsFileVo> selectFileList(BillMngVo argVo);
-	
+
 //////////
-	
+
 	List<ProposerVo> selectProposerByBillId(HashMap<String, Object> param);
 	void insertBillCmt(BillMngVo billMngVo);
 	List<BillMngVo> selectEbsMasterCmtList(BillMngVo argVo);
 	void deleteBillCmtByBillId(BillMngVo billMngVo);
 	void updateEbsFileDelYn(EbsFileVo ebsFileVo);
-	
+
 }

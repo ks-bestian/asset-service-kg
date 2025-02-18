@@ -2,6 +2,7 @@ package kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo;
 
 import java.util.List;
 
+import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.vo.MtngAllVo;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 import kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo;
 import lombok.Data;
@@ -19,8 +20,7 @@ public class BillMngResponse {
 
     private List<BillMngVo> billEtcInfoList;
     private List<EbsFileVo> fileList;
-
-
+    private List<MtngAllVo> cmtMeetingList;
 
 
 }

@@ -12,12 +12,14 @@ import lombok.Data;
 
 @Data
 public class MtngAllVo extends ComDefaultVO {
-	
+
 	private Long mtngId;
 	private String mtngTypeCd;
 	private String mtngTypeNm;
 	private String cmtId;
 	private String cmtNm;
+	private String deptCd;
+	private String deptNm;
 	private Long dgrCd;
 	private String openDtm;
 	private String closeDtm;
@@ -25,20 +27,21 @@ public class MtngAllVo extends ComDefaultVO {
 	private String ageCd;
 	private String rmk;
 	private String statCd;
+	private String statNm;
 	private String dueDtm;
-	
+
 	/* 참석자 관련 */
     private List<MemberVo> attendantList;
-    
+
     /* 안건 관련 */
     private String billId;
     private String rsltCd;
     private String rsltNm;
     private List<AgendaVo> agendaList;
-    
+
     /* 파일 관련*/
     private List<MtngFileVo> reportList;
     private MultipartFile[] files;
     private String[] fileKindCds;
-    
+
 }
