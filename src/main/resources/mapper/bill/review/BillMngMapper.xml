@@ -280,13 +280,31 @@
 		where 1=1
 		group by A.bill_id
 		order by ppsl_dt
-
-
-
-
     </select>
 
 
+    <select id="selectListCmtMeetingList" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.vo.MtngAllVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper.selectListCmtMeetingList */
+		select
+		    em.mtng_id
+		  , em.mtng_type_cd
+		  , em.dept_cd
+		  , em.dept_nm
+		  , em.open_dtm
+		  , em.close_dtm
+		  , em.due_dtm
+		  , em.mtng_plc
+		  , em.stat_cd
+		  , kgst.fngetcodenm('1007',em.stat_cd,#{lang}) as stat_nm
+		  , ema.bill_id
+		  , ema.rslt_cd
+		from ebs_mtng em
+		join ebs_mtng_agenda ema on (em.mtng_id = ema.mtng_id)
+		where ema.bill_id = #{billId}
+		  and em.dept_cd = #{deptCd}
+		order by em.open_dtm
+    </select>
 
 
 
@@ -480,7 +498,7 @@
 		    , ef.org_file_nm
 		    , ef.pdf_file_id
 		    , ef.pdf_file_nm
-		    , ef.rmk 
+		    , ef.rmk
 		    , ef.opb_yn
 		    , ef.delete_yn
 		    , ef.file_size
@@ -492,7 +510,7 @@
 			, kgst.fngetlangnm(vum.member_nm_kg, vum.member_nm_ru, vum.member_nm_kg, #{lang}) as ppsr_nm -- 제안자 이름
 		FROM kgst.ebs_file ef
 			left join view_user_member vum on vum.user_id = ef.reg_id
-		WHERE ef.delete_yn = 'N' 
+		WHERE ef.delete_yn = 'N'
 			and ef.bill_id = #{billId}
 		order by ef.file_kind_cd, ef.reg_dt
 	</select>
@@ -542,23 +560,23 @@
 		where 1=1
 			and emc.bill_id = #{billId}
 	</select>
-	
-	<delete id="deleteBillCmtByBillId" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo"> 
+
+	<delete id="deleteBillCmtByBillId" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
     	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.deleteBillCmtByBillId */
 		delete from kgst.ebs_master_cmt
 	    where bill_id = #{billId}
 	</delete>
-	
-	<update id="updateEbsFileDelYn" parameterType="kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo"> 
+
+	<update id="updateEbsFileDelYn" parameterType="kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo">
     	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.updateEbsFileDelYn */
-		update 
+		update
 			kgst.ebs_file
-		set 
+		set
 			delete_yn = 'Y'
 			, mod_id = #{modId}
 			, mod_dt = now()
 	    where bill_id = #{billId}
 	    	and org_file_id = #{orgFileId}
 	</update>
-	
+
 </mapper>
