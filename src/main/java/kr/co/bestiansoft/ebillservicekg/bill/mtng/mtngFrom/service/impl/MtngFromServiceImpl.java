@@ -83,7 +83,7 @@ public class MtngFromServiceImpl implements MtngFromService {
 			memberVo.setAtdtUserNm(memVo.getMemberNm());
 			memberVo.setAtdtKind("ATT01");// 참석자 구분(의원)
 			memberVo.setRegId(regId);
-			mtngFromMapper.insertEbsMtngAttendant(memVo);
+			mtngFromMapper.insertEbsMtngAttendant(memberVo);
 		}
 
 		return mtngFromVo;
