@@ -5,11 +5,10 @@ spring:
   application:
     name: ebill-service-kg
   datasource:
+      
     kgst:
       driver-class-name: org.postgresql.Driver
       jdbcUrl: jdbc:postgresql://3.39.79.144:5432/bestian?currentSchema=kgst&useUnicode=true&characterEncoding=utf8&autoReconnect=true
-#      username: ebsadmin
-#      password: ebspasswd
       username: best
       password: best1234
 

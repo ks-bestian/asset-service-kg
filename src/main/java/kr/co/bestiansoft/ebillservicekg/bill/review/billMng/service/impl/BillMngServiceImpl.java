@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.vo.MtngAllVo;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.service.BillMngService;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngResponse;
@@ -47,6 +48,9 @@ public class BillMngServiceImpl implements BillMngService {
     	List<BillMngVo> billEtcInfoList = billMngMapper.selectListBillEtcInfo(argVo);
     	List<EbsFileVo> fileList = billMngMapper.selectFileList(argVo);
     	List<BillMngVo> cmtList = billMngMapper.selectEbsMasterCmtList(argVo);
+    	List<MtngAllVo> cmtMeetingList = billMngMapper.selectListCmtMeetingList(argVo);//committee meeting list
+
+
 
     	BillMngVo billlegalReviewVo = null;//bill legal review department
     	BillMngVo billLangReview1stVo = null;//bill legal review department
@@ -73,6 +77,7 @@ public class BillMngServiceImpl implements BillMngService {
     	billMngResponse.setBillLangReview1stVo(billLangReview1stVo);
     	billMngResponse.setFileList(fileList);
     	billMngResponse.setCmtList(cmtList);
+    	billMngResponse.setCmtMeetingList(cmtMeetingList);
 
         return billMngResponse;
     }
@@ -195,9 +200,9 @@ public class BillMngServiceImpl implements BillMngService {
 	@Transactional
 	@Override
 	public BillMngVo insertBillCommitt(BillMngVo billMngVo) {
-		
+
 		billMngMapper.deleteBillCmtByBillId(billMngVo);
-		
+
 		String regId = new SecurityInfoUtil().getAccountId();
 		billMngVo.setRegId(regId);
 		billMngVo.setCmtSeCd("M");
@@ -224,14 +229,14 @@ public class BillMngServiceImpl implements BillMngService {
 		comFileService.saveFileBillMng(ebsFileVo);
 		//파일 정보를 가지고 있어서 null처리
 		ebsFileVo.setFiles(null);
-		
+
 		return ebsFileVo;
 	}
 
 	@Override
 	public EbsFileVo updateEbsFileDelYn(EbsFileVo ebsFileVo) {
 		billMngMapper.updateEbsFileDelYn(ebsFileVo);
-		
+
 		return ebsFileVo;
 	}
 
