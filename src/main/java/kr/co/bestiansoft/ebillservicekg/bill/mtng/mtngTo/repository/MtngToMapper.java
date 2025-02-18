@@ -30,4 +30,5 @@ public interface MtngToMapper {
     void updateMtngToAgenda(AgendaVo agendaVo);
     void deleteMtngToAttendant(MtngToVo mtngToVo);
     void updateMtngToAttendant(MemberVo memberVo);
+	int updateMtngFileDel(HashMap<String, Object> param);
 }

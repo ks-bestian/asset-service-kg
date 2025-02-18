@@ -45,6 +45,7 @@
 	    <if test="searchToDate != null and searchToDate != ''">
 	    	AND TO_TIMESTAMP(em.due_dtm, 'YYYYMMDDHH24MI') &lt;= TO_TIMESTAMP(concat(#{searchToDate}, ' 23:59:59'), 'YYYY-MM-DD HH24:MI:SS')
 	    </if>
+		order by em.reg_dt desc
 
     </select>
 

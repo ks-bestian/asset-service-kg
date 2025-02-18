@@ -315,4 +315,15 @@
 	    MOD_DT = now(),
 	    ATDT_DIV_CD = EXCLUDED.ATDT_DIV_CD
     </update>
+    
+    <update id="updateMtngFileDel" parameterType="java.util.HashMap">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.repository.MtngToMapper.updateMtngFileDel */
+		update kgst.ebs_mtng_file
+		SET mod_dt = now()
+		  , mod_id = #{modId}
+		  , delete_yn = 'Y'
+		where
+			mtng_id = #{mtngId}::integer 
+			and org_file_id = #{orgFileId}
+    </update>
 </mapper>

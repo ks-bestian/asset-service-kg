@@ -72,6 +72,4 @@ public class MtngFromController {
         return new ResponseEntity<>(new CommonResponse(200, "ok", mtngFromService.selectListMtngBill(param)), HttpStatus.OK);
     }
 
-
-
 }

@@ -218,5 +218,12 @@ public class MtngToServiceImpl implements MtngToService {
 
 	}
 
+	@Override
+	public int updateMtngFileDel(HashMap<String, Object> param) {
+		String modId = new SecurityInfoUtil().getAccountId();
+		param.put("modId", modId);
+		return mtngToMapper.updateMtngFileDel(param);
+	}
+
 
 }
