@@ -102,6 +102,8 @@
             , mod_id
         from com_code_detail
         where code_id = #{codeId}
+
+
     </select>
 
 
@@ -188,13 +190,15 @@
               code_nm1 = #{codeNm1}
             , code_nm2 = #{codeNm2}
             , code_nm3 = #{codeNm3}
-            , grp_code = #{grpCode}
             , use_yn = #{useYn}
             , ord = #{ord}
             , rmk = #{rmk}
             , mod_id = #{modId}
             , mod_dt = now()
         WHERE code_id = #{codeId}
+          and grp_code = #{grpCode}
+
+
     </update>
 
     <delete id="deleteGrpCode" parameterType="java.lang.Long">
@@ -206,7 +210,8 @@
     <delete id="deleteComCode" parameterType="java.lang.String">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.comCode.repository.ComCodeMapper.deleteComCode */
         delete from com_code_detail
-        where code_id = #{codeId}
+        WHERE code_id = #{codeId}
+          and grp_code = #{grpCode}
     </delete>
 
 </mapper>
