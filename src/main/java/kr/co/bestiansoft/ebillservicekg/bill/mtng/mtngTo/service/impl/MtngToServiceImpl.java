@@ -99,7 +99,8 @@ public class MtngToServiceImpl implements MtngToService {
 		                                  .allMatch(file -> file != null && !file.isEmpty());
 
 		    if (allValidFiles) {
-				mtngToMapper.deleteMtngToFile(mtngToVo);
+		    	//파일이 여러개 들어갈 수 있음
+				//mtngToMapper.deleteMtngToFile(mtngToVo);
 
 				comFileService.saveFileEbsMtng(mtngToVo.getFiles(), mtngToVo.getFileKindCds(), mtngToVo.getMtngId());
 		    }

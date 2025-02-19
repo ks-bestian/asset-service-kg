@@ -2,6 +2,7 @@ package kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo;
 
 import java.util.List;
 
+import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.vo.MtngFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
 
@@ -28,6 +29,7 @@ public class MtngFromVo extends ComDefaultVO {
 
     private List<MemberVo> attendantList;
     private List<AgendaVo> agendaList;
+    private List<MtngFileVo> reportList;
 
 
 

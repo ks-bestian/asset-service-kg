@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -70,6 +71,12 @@ public class MtngFromController {
     @GetMapping("/bill/mtng/from/selectListMtngBill")
     public ResponseEntity<CommonResponse> selectListMtngBill(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "ok", mtngFromService.selectListMtngBill(param)), HttpStatus.OK);
+    }
+    
+    @ApiOperation(value = "회의 예정 수정", notes = "예정된 회의를 수정한다")
+    @PutMapping("/bill/mtng/from/update")
+    public ResponseEntity<CommonResponse> updateMtngBill(@RequestBody MtngFromVo mtngFromVo){
+    	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "mtng update successfully", mtngFromService.updateMtngBill(mtngFromVo)), HttpStatus.OK);
     }
 
 }
