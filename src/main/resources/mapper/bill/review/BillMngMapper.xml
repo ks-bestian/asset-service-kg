@@ -235,6 +235,7 @@
 		  , max(A.na_term_cd) as na_term_cd
 		  , max(A.cmt_cd) as cmt_cd
 		  , max(A.cmt_se_cd) as cmt_se_cd
+		  , max(A.cmt_se_nm) as cmt_se_nm
 		  , max(A.mtng_id) as mtng_id
 		  , max(A.rslt_cd) as rslt_cd
 		  , max(A.mtng_type_cd) as mtng_type_cd
@@ -254,6 +255,7 @@
 			  , em.na_term_cd
 			  , emc.cmt_cd
 			  , emc.cmt_se_cd
+			  , kgst.fngetcodenm('1018',emc.cmt_se_cd,#{lang}) as cmt_se_nm
 			  , ema.mtng_id
 			  , ema.rslt_cd
 			  , emt.mtng_type_cd
@@ -269,7 +271,11 @@
 			where 1=1
 			  and  em.na_term_cd =  #{naTermCd}
 			  and emc.cmt_cd =  #{cmtCd}
-			  and emc.cmt_se_cd = #{cmtSeCd}
+
+
+		  <if test="cmtSeCd != null and cmtSeCd != ''">
+		  	and emc.cmt_se_cd = #{cmtSeCd}
+		  </if>
 
 		  <if test="statCd != null and statCd != ''">
 		  	and emt.stat_cd = #{statCd}

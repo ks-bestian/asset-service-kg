@@ -6,8 +6,6 @@ import org.springframework.web.multipart.MultipartFile;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.ComFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 
-import reactor.core.publisher.Mono;
-
 public interface ComFileService {
 
 	String saveFile(MultipartFile[] files);
@@ -20,7 +18,4 @@ public interface ComFileService {
 	void saveFileEbsMtng(MultipartFile[] files, String[] fileKindCdList, Long mtngId);
 	void saveFileBillMng(EbsFileVo ebsFileVo);
 
-	Mono<String> convertDocToPdf(String fileId);
-	Mono<String> convertPptToPdf(String fileId);
-	Mono<String> convertXlsToPdf(String fileId);
 }

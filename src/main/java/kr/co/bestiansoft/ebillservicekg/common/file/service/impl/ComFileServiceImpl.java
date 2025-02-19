@@ -1,26 +1,34 @@
 package kr.co.bestiansoft.ebillservicekg.common.file.service.impl;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import kr.co.bestiansoft.ebillservicekg.common.file.repository.ComFileMapper;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
+import kr.co.bestiansoft.ebillservicekg.common.file.service.PdfService;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.ComFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import reactor.core.publisher.Mono;
 
 
 @Slf4j
@@ -33,14 +41,14 @@ public class ComFileServiceImpl implements ComFileService {
     private final EDVHelper edv;
     private final ComFileMapper fileMapper;
 	private final ExecutorService executorService;
-	private final WebClient webClient;
+	private final PdfService pdfService;
 	
-	private final String PDF_CONVERT_URL = "http://localhost:8082/converttopdf";
-
 	@Override
 	public String saveFile(MultipartFile[] files) {
 		String fileGroupId = StringUtil.getUUUID();
 
+		List<Map<String, Object>> pdfJobs = new ArrayList<>();
+		
 		for(MultipartFile file:files) {
 
 			String fileId = StringUtil.getUUUID();
@@ -63,8 +71,59 @@ public class ComFileServiceImpl implements ComFileService {
 			fileVo.setDeleteYn("N");
 
 			fileMapper.insertFile(fileVo);
+			
+			// pdf변환작업
+			Map<String, Object> pdfJob = new HashMap<>();
+			pdfJob.put("file", file);
+			pdfJobs.add(pdfJob);
 		}
+		
+		// pdf변환
+		for(Map<String, Object> job : pdfJobs) {
+			MultipartFile file = (MultipartFile)job.get("file");
+			convertToPdf(file);
+		}
+		
+		
 		return fileGroupId;
+	}
+	
+	void convertToPdf(MultipartFile mpf) {
+		try {
+			String filename = mpf.getOriginalFilename();
+			File tmpFile = File.createTempFile("tmp", null);
+			mpf.transferTo(tmpFile);
+			
+			executorService.submit(() -> {
+				File pdfFile = null;
+				try {
+					pdfFile = File.createTempFile("tmp", null);
+					boolean success = pdfService.convertToPdf(tmpFile.getAbsolutePath(), filename, pdfFile.getAbsolutePath());
+					
+					if(success) {
+//						try (InputStream edvIs = new FileInputStream(pdfFile)) {
+//							edv.save(fileId, edvIs);
+//						} catch (Exception edvEx) {
+//							throw new RuntimeException("EDV_NOT_WORK", edvEx);
+//						}
+						
+						
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+					if(tmpFile != null) {
+						tmpFile.delete();
+					}
+					if(pdfFile != null) {
+						pdfFile.delete();
+					}
+				}
+			});	
+		}
+		catch(IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -100,33 +159,6 @@ public class ComFileServiceImpl implements ComFileService {
 			idx++;
 			fileMapper.insertFileEbs(fileVo);
 		}
-	}
-	
-	@Override
-	public Mono<String> convertDocToPdf(String fileId) {
-		return webClient
-    			.post()
-    			.uri(PDF_CONVERT_URL + "/doc/" + fileId)
-    			.retrieve()
-    			.bodyToMono(String.class);
-	}
-	
-	@Override
-	public Mono<String> convertPptToPdf(String fileId) {
-		return webClient
-    			.post()
-    			.uri(PDF_CONVERT_URL + "/ppt/" + fileId)
-    			.retrieve()
-    			.bodyToMono(String.class);
-	}
-	
-	@Override
-	public Mono<String> convertXlsToPdf(String fileId) {
-		return webClient
-    			.post()
-    			.uri(PDF_CONVERT_URL + "/xls/" + fileId)
-    			.retrieve()
-    			.bodyToMono(String.class);
 	}
 	
 	@Override
