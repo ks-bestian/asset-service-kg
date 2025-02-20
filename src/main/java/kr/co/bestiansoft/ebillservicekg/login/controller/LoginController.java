@@ -168,5 +168,13 @@ public class LoginController {
 		return new ResponseEntity<>(rep, HttpStatus.OK);
 	}
 
-
+	@PostMapping("/token")
+	public ResponseEntity<?> token() {
+		Authentication authentication = new SecurityInfoUtil().getAuthentication();
+		String token = tokenProvider.createToken(authentication);
+		
+		LoginResponse rep = new LoginResponse();
+		rep.setToken(token);
+		return new ResponseEntity<>(rep, HttpStatus.OK);
+	}
 }

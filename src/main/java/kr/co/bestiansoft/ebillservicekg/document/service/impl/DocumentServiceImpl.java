@@ -94,9 +94,29 @@ public class DocumentServiceImpl implements DocumentService {
     
     @Override
     public List<FolderVo> selectDeleteFolderList(FolderVo vo) {
-    	String userId = new SecurityInfoUtil().getAccountId();
-    	vo.setUserId(userId);
-        return documentMapper.selectDeleteFolderList(vo);
+    	vo.setUserId(new SecurityInfoUtil().getAccountId());
+    	vo.setDeptCd(new SecurityInfoUtil().getDeptCd());
+    	
+    	String deptHeadYn = new SecurityInfoUtil().getDeptHeadYn();
+    	if("Y".equals(deptHeadYn)) {
+    		List<FolderVo> deletedDeptFolderList = documentMapper.selectDeletedDeptFolderList(vo);
+    		List<FolderVo> deletedMyFolderList = documentMapper.selectDeletedMyFolderList(vo);
+    		List<FolderVo> ret = new ArrayList<>();
+    		for(FolderVo folder : deletedDeptFolderList) {
+    			ret.add(folder);
+    		}
+       		for(FolderVo folder : deletedMyFolderList) {
+    			ret.add(folder);
+    		}
+       		return ret;
+    	}
+    	else {
+    		return documentMapper.selectDeletedMyFolderList(vo);
+    	}
+    	
+//    	String userId = new SecurityInfoUtil().getAccountId();
+//    	vo.setUserId(userId);
+//        return documentMapper.selectDeleteFolderList(vo);
     }
 
     @Transactional
@@ -155,9 +175,9 @@ public class DocumentServiceImpl implements DocumentService {
     	int ret = 0;
     	if(folderIds != null) {
     		for(Long folderId : folderIds) {
-//    			if( !isAuthorizedDeleteRecursive(folderId, userId) ) {
-//    				throw new ForbiddenException("forbidden");
-//    			}
+    			if( !isAuthorizedDeleteRecursive(folderId, userId) ) {
+    				throw new ForbiddenException("forbidden");
+    			}
         		FolderVo vo = new FolderVo();
             	vo.setFolderId(folderId);
             	vo.setDelYn("Y");
@@ -177,7 +197,7 @@ public class DocumentServiceImpl implements DocumentService {
     	if(fileGroupIds != null) {
     		for(String fileGroupId : fileGroupIds) {
     			FileVo file = documentMapper.selectFile(fileGroupId);
-    			if(!isAuthorized(file)) {
+    			if(!isAuthorizedDelete(file.getFolderId(), userId)) {
     				throw new ForbiddenException("forbidden");
     			}
         		FileVo vo = new FileVo();
@@ -566,13 +586,34 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     public List<FileVo> selectStarFileList(FileVo vo) {
     	vo.setUserId(new SecurityInfoUtil().getAccountId());
+    	vo.setDeptCd(new SecurityInfoUtil().getDeptCd());
     	return documentMapper.selectStarFileList(vo);
     }
     
     @Override
     public List<FileVo> selectDeleteFileList(FileVo vo) {
     	vo.setUserId(new SecurityInfoUtil().getAccountId());
-    	return documentMapper.selectDeleteFileList(vo);
+    	vo.setDeptCd(new SecurityInfoUtil().getDeptCd());
+    	
+    	String deptHeadYn = new SecurityInfoUtil().getDeptHeadYn();
+    	if("Y".equals(deptHeadYn)) {
+    		List<FileVo> deletedDeptFileList = documentMapper.selectDeletedDeptFileList(vo);
+    		List<FileVo> deletedMyFileList = documentMapper.selectDeletedMyFileList(vo);
+    		List<FileVo> ret = new ArrayList<>();
+    		for(FileVo file : deletedDeptFileList) {
+    			ret.add(file);
+    		}
+       		for(FileVo file : deletedMyFileList) {
+    			ret.add(file);
+    		}
+       		return ret;
+    	}
+    	else {
+    		return documentMapper.selectDeletedMyFileList(vo);
+    	}
+    	
+//    	vo.setUserId(new SecurityInfoUtil().getAccountId());
+//    	return documentMapper.selectDeleteFileList(vo);
     }
     
     @Override
@@ -602,14 +643,34 @@ public class DocumentServiceImpl implements DocumentService {
     }
     
     private boolean isAuthorizedCreate(Long folderId, String userId) {
+    	if(folderId == -1) {
+    		return true;
+    	}
+    	FolderVo folder = documentMapper.selectFolderByFolderId(folderId);
+    	if(folder == null) {
+    		return false;
+    	}
+    	if("N".equals(folder.getDeptFolderYn())) {
+    		return folder.getUserId().equals(userId);
+    	}
     	UserMemberAuthMappVo userAuth = documentMapper.selectUserAuthMapp(folderId, userId);
     	if(userAuth == null) {
     		return false;
     	}
-    	return userAuth.getCreateYn();
+    	return userAuth.getCreateYn();    	
     }
     
     private boolean isAuthorizedRead(Long folderId, String userId) {
+    	if(folderId == -1) {
+    		return true;
+    	}
+    	FolderVo folder = documentMapper.selectFolderByFolderId(folderId);
+    	if(folder == null) {
+    		return false;
+    	}
+    	if("N".equals(folder.getDeptFolderYn())) {
+    		return folder.getUserId().equals(userId);
+    	}
     	UserMemberAuthMappVo userAuth = documentMapper.selectUserAuthMapp(folderId, userId);
     	if(userAuth == null) {
     		return false;
@@ -618,6 +679,16 @@ public class DocumentServiceImpl implements DocumentService {
     }
     
     private boolean isAuthorizedUpdate(Long folderId, String userId) {
+    	if(folderId == -1) {
+    		return true;
+    	}
+    	FolderVo folder = documentMapper.selectFolderByFolderId(folderId);
+    	if(folder == null) {
+    		return false;
+    	}
+    	if("N".equals(folder.getDeptFolderYn())) {
+    		return folder.getUserId().equals(userId);
+    	}
     	UserMemberAuthMappVo userAuth = documentMapper.selectUserAuthMapp(folderId, userId);
     	if(userAuth == null) {
     		return false;
@@ -626,6 +697,16 @@ public class DocumentServiceImpl implements DocumentService {
     }
     
     private boolean isAuthorizedDelete(Long folderId, String userId) {
+    	if(folderId == -1) {
+    		return true;
+    	}
+    	FolderVo folder = documentMapper.selectFolderByFolderId(folderId);
+    	if(folder == null) {
+    		return false;
+    	}
+    	if("N".equals(folder.getDeptFolderYn())) {
+    		return folder.getUserId().equals(userId);
+    	}
     	UserMemberAuthMappVo userAuth = documentMapper.selectUserAuthMapp(folderId, userId);
     	if(userAuth == null) {
     		return false;
@@ -633,18 +714,31 @@ public class DocumentServiceImpl implements DocumentService {
     	return userAuth.getDeleteYn();
     }
     
-    // 내부폴더 포함한 폴더 삭제 권한 체크
- 	private boolean isAuthorizedDeleteRecursive(Long folderId) {
- 		List<FolderVo> list = this.selectDeptFolderListAll(new FolderVo());
- 		
+    private boolean isAuthorizedDeleteRecursive(Long folderId, String userId) {
+    	if(folderId == -1) {
+    		return false;
+    	}
+    	FolderVo folder = documentMapper.selectFolderByFolderId(folderId);
+    	if(folder == null) {
+    		return false;
+    	}
+    	if("N".equals(folder.getDeptFolderYn())) {
+    		return folder.getUserId().equals(userId);
+    	}
+    	
+    	FolderVo vo = new FolderVo();
+    	vo.setUserId(userId);
+    	vo.setDeptCd(folder.getDeptCd());
+    	List<FolderVo> list = documentMapper.selectDeptFolderListAll(vo);
+    	
  		ArrayDeque<Long> dq = new ArrayDeque<>();
  		Set<Long> set = new HashSet<>(); // not allowed set
  		Map<Long, FolderVo> map = new HashMap<>();
  		
- 		for(FolderVo folder : list) {
- 			Long id = folder.getFolderId();
- 			map.put(id, folder);
- 			if(!folder.getDeleteYn()) {
+ 		for(FolderVo f : list) {
+ 			Long id = f.getFolderId();
+ 			map.put(id, f);
+ 			if(!f.getDeleteYn()) {
  				dq.add(id);
  				set.add(id);
  			}
@@ -652,8 +746,8 @@ public class DocumentServiceImpl implements DocumentService {
  		
  		while(!dq.isEmpty()) {
  			Long id = dq.pollFirst();
- 			FolderVo folder = map.get(id);
- 			Long upId = folder.getUpperFolderId();
+ 			FolderVo f = map.get(id);
+ 			Long upId = f.getUpperFolderId();
  			if(upId == -1) {
  				continue;
  			}
@@ -667,9 +761,9 @@ public class DocumentServiceImpl implements DocumentService {
  			set.add(upId);
  		}
  		return !set.contains(folderId);
- 	}
+    }
     
-    private boolean isAuthorized(FolderVo folder) {
+    private boolean isAuthorizedShare(FolderVo folder) {
     	String userId = new SecurityInfoUtil().getAccountId();
     	String deptCd = new SecurityInfoUtil().getDeptCd();
     	String deptHeadYn = new SecurityInfoUtil().getDeptHeadYn();
@@ -680,7 +774,7 @@ public class DocumentServiceImpl implements DocumentService {
     	return folder != null && folder.getRegId().equals(userId);
     }
     
-    private boolean isAuthorized(FileVo file) {
+    private boolean isAuthorizedShare(FileVo file) {
     	String userId = new SecurityInfoUtil().getAccountId();
     	String deptCd = new SecurityInfoUtil().getDeptCd();
     	String deptHeadYn = new SecurityInfoUtil().getDeptHeadYn();
@@ -760,13 +854,13 @@ public class DocumentServiceImpl implements DocumentService {
     	
     	if("Y".equals(vo.getFolderYn())) {
     		FolderVo folder = documentMapper.selectFolderByFolderId(vo.getFolderId());
-    		if(!isAuthorized(folder)) {
+    		if(!isAuthorizedShare(folder)) {
     			throw new ForbiddenException("forbidden");
     		}	
     	}
     	else {
     		FileVo file = documentMapper.selectFile(vo.getFileGroupId());
-			if(!isAuthorized(file)) {
+			if(!isAuthorizedShare(file)) {
 				throw new ForbiddenException("forbidden");
 			}   		
     	}
@@ -783,13 +877,13 @@ public class DocumentServiceImpl implements DocumentService {
     	
     	if("Y".equals(vo.getFolderYn())) {
     		FolderVo folder = documentMapper.selectFolderByFolderId(vo.getFolderId());
-    		if(!isAuthorized(folder)) {
+    		if(!isAuthorizedShare(folder)) {
     			throw new ForbiddenException("forbidden");
     		}	
     	}
     	else {
     		FileVo file = documentMapper.selectFile(vo.getFileGroupId());
-			if(!isAuthorized(file)) {
+			if(!isAuthorizedShare(file)) {
 				throw new ForbiddenException("forbidden");
 			}   		
     	}
@@ -813,34 +907,106 @@ public class DocumentServiceImpl implements DocumentService {
     
     private boolean isSharedFolder(Long folderId) {
     	
-    	if(folderId == null || folderId == -1) {
-    		return false;
-    	}
+    	String userId = new SecurityInfoUtil().getAccountId();
+    	String deptCd = new SecurityInfoUtil().getDeptCd();
+    	
+    	FileShareVo vo = new FileShareVo();
+    	vo.setFolderId(folderId);
+    	vo.setUserId(userId);
+    	vo.setDeptCd(deptCd);
+    	List<String> list = documentMapper.selectListSharingUserId(vo);
+    	
+    	return list != null && !list.isEmpty();
+    	
+//    	if(folderId == null || folderId == -1) {
+//    		return false;
+//    	}
+//    	
+//    	String userId = new SecurityInfoUtil().getAccountId();
+//    	String deptCd = new SecurityInfoUtil().getDeptCd();
+//    	
+//    	FileShareVo fileShareVo = new FileShareVo();
+//    	fileShareVo.setFolderYn("Y");
+//    	fileShareVo.setFolderId(folderId);
+//    	fileShareVo.setTargetKind("DEPT");
+//    	fileShareVo.setTargetId(deptCd);
+//    	List<FileShareVo> share1 = documentMapper.selectShare(fileShareVo);
+//    	
+//    	if(share1 != null && !share1.isEmpty()) {
+//    		return true;
+//    	}
+//    	
+//    	fileShareVo.setTargetKind("INDV");
+//    	fileShareVo.setTargetId(userId);
+//    	List<FileShareVo> share2 = documentMapper.selectShare(fileShareVo);
+//    	
+//    	if(share2 != null && !share2.isEmpty()) {
+//    		return true;
+//    	}
+//    	
+//    	FolderVo folder = documentMapper.selectFolderByFolderId(folderId);
+//    	return isSharedFolder(folder.getUpperFolderId());
+    }
+    
+    private boolean isSharedAndReadAuthorizedFolder(Long folderId) {
     	
     	String userId = new SecurityInfoUtil().getAccountId();
     	String deptCd = new SecurityInfoUtil().getDeptCd();
     	
-    	FileShareVo fileShareVo = new FileShareVo();
-    	fileShareVo.setFolderYn("Y");
-    	fileShareVo.setFolderId(folderId);
-    	fileShareVo.setTargetKind("DEPT");
-    	fileShareVo.setTargetId(deptCd);
-    	FileShareVo share1 = documentMapper.selectShare(fileShareVo);
+    	FileShareVo vo = new FileShareVo();
+    	vo.setFolderId(folderId);
+    	vo.setUserId(userId);
+    	vo.setDeptCd(deptCd);
+    	List<String> list = documentMapper.selectListSharingUserId(vo);
     	
-    	if(share1 != null) {
-    		return true;
+    	if(list != null) {
+    		for(String id : list) {
+    			if(isAuthorizedRead(folderId, id)) {
+    				return true;
+    			}
+    		}
     	}
+    	return false;
     	
-    	fileShareVo.setTargetKind("INDV");
-    	fileShareVo.setTargetId(userId);
-    	FileShareVo share2 = documentMapper.selectShare(fileShareVo);
-    	
-    	if(share2 != null) {
-    		return true;
-    	}
-    	
-    	FolderVo folder = documentMapper.selectFolderByFolderId(folderId);
-    	return isSharedFolder(folder.getUpperFolderId());
+//    	if(folderId == null || folderId == -1) {
+//    		return false;
+//    	}
+//    	
+//    	String userId = new SecurityInfoUtil().getAccountId();
+//    	String deptCd = new SecurityInfoUtil().getDeptCd();
+//    	
+//    	FileShareVo fileShareVo = new FileShareVo();
+//    	fileShareVo.setFolderYn("Y");
+//    	fileShareVo.setFolderId(folderId);
+//    	fileShareVo.setTargetKind("DEPT");
+//    	fileShareVo.setTargetId(deptCd);
+//    	List<FileShareVo> share1 = documentMapper.selectShare(fileShareVo);
+//    	
+//    	if(share1 != null) {
+//    		for(FileShareVo share : share1) {
+//    			if(isAuthorizedRead(targetFolderId, share.getOwnerId())) {
+//    				return true;
+//    			}
+//    		}
+//    	}
+//    	
+//    	fileShareVo.setTargetKind("INDV");
+//    	fileShareVo.setTargetId(userId);
+//    	List<FileShareVo> share2 = documentMapper.selectShare(fileShareVo);
+//    	
+//    	if(share2 != null) {
+//    		for(FileShareVo share : share2) {
+//    			if(isAuthorizedRead(targetFolderId, share.getOwnerId())) {
+//    				return true;
+//    			}
+//    		}
+//    	}
+//    	
+//    	FolderVo folder = documentMapper.selectFolderByFolderId(folderId);
+//    	if(folder == null) {
+//    		return false;
+//    	}
+//    	return isSharedAndReadAuthorizedFolder(folder.getUpperFolderId(), targetFolderId);
     }
     
     @Override
@@ -855,8 +1021,9 @@ public class DocumentServiceImpl implements DocumentService {
  
     @Override
     public List<FileVo> selectShareFileListByFolderId(FileVo vo) {
-    	if( !isSharedFolder(vo.getFolderId()) ) {
-    		throw new ForbiddenException("forbidden");
+    	if( !isSharedAndReadAuthorizedFolder(vo.getFolderId()) ) {
+//    		throw new ForbiddenException("forbidden");
+    		return new ArrayList<>();
     	}
     	String userId = new SecurityInfoUtil().getAccountId();
     	vo.setUserId(userId);
@@ -911,51 +1078,56 @@ public class DocumentServiceImpl implements DocumentService {
     	String deptCd = new SecurityInfoUtil().getDeptCd();
     	vo.setUserId(userId);
     	vo.setDeptCd(deptCd);
-        List<FolderVo> list = documentMapper.selectDeptFolderListAll(vo);
-        
-		ArrayDeque<Long> dq = new ArrayDeque<>();
-		Set<Long> set = new HashSet<>();
-		Map<Long, FolderVo> map = new HashMap<>();
-		
-		for(FolderVo folder : list) {
-			Long folderId = folder.getFolderId();
-			map.put(folderId, folder);
-			if(folder.getSearchYn()) {
-				dq.add(folderId);
-				set.add(folderId);
-			}
-		}
-		
-		while(!dq.isEmpty()) {
-			Long id = dq.pollFirst();
-			FolderVo folder = map.get(id);
-			Long upId = folder.getUpperFolderId();
-			if(upId == -1) {
-				continue;
-			}
-			if(!map.containsKey(upId)) {
-				continue;
-			}
-			if(set.contains(upId)) {
-				continue;
-			}
-			dq.add(upId);
-			set.add(upId);
-		}
+    	return documentMapper.selectDeptFolderList(vo);
 
-		List<FolderVo> ret = new ArrayList<>();
-		for(FolderVo folder : list) {
-			if(folder.getUpperFolderId().equals(vo.getUpperFolderId()) && set.contains(folder.getFolderId())) {
-				ret.add(folder);
-			}
-		}
-		Collections.sort(ret, new Comparator<FolderVo>() {
-			@Override
-			public int compare(FolderVo a, FolderVo b) {
-				return a.getFolderNm().compareTo(b.getFolderNm());
-			}
-		});
-		return ret;
+    	
+//    	vo.setUserId(userId);
+//    	vo.setDeptCd(deptCd);
+//        List<FolderVo> list = documentMapper.selectDeptFolderListAll(vo);
+//        
+//		ArrayDeque<Long> dq = new ArrayDeque<>();
+//		Set<Long> set = new HashSet<>();
+//		Map<Long, FolderVo> map = new HashMap<>();
+//		
+//		for(FolderVo folder : list) {
+//			Long folderId = folder.getFolderId();
+//			map.put(folderId, folder);
+//			if(folder.getSearchYn()) {
+//				dq.add(folderId);
+//				set.add(folderId);
+//			}
+//		}
+//		
+//		while(!dq.isEmpty()) {
+//			Long id = dq.pollFirst();
+//			FolderVo folder = map.get(id);
+//			Long upId = folder.getUpperFolderId();
+//			if(upId == -1) {
+//				continue;
+//			}
+//			if(!map.containsKey(upId)) {
+//				continue;
+//			}
+//			if(set.contains(upId)) {
+//				continue;
+//			}
+//			dq.add(upId);
+//			set.add(upId);
+//		}
+//
+//		List<FolderVo> ret = new ArrayList<>();
+//		for(FolderVo folder : list) {
+//			if(folder.getUpperFolderId().equals(vo.getUpperFolderId()) && set.contains(folder.getFolderId())) {
+//				ret.add(folder);
+//			}
+//		}
+//		Collections.sort(ret, new Comparator<FolderVo>() {
+//			@Override
+//			public int compare(FolderVo a, FolderVo b) {
+//				return a.getFolderNm().compareTo(b.getFolderNm());
+//			}
+//		});
+//		return ret;
 	}
     
 }

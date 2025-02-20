@@ -147,17 +147,42 @@
 	
 	<select id="selectDeptFolderList" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo">
 		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectDeptFolderList */
-		<include refid="selectFolder" />
+		select 
+			  d.*
+			, (case when vum.dept_cd = #{deptCd} and vum.dept_head_yn = 'Y' then true
+					when d.reg_id = #{userId} then true 
+					else coalesce(bam.search_yn, true)  
+				end) as searchYn
+			, (case when vum.dept_cd = #{deptCd} and vum.dept_head_yn = 'Y' then true
+					when d.reg_id = #{userId} then true 
+					else coalesce(bam.create_yn, false)  
+				end) as createYn
+			, (case when vum.dept_cd = #{deptCd} and vum.dept_head_yn = 'Y' then true
+					when d.reg_id = #{userId} then true 
+					else coalesce(bam.update_yn, false)  
+				end) as updateYn
+			, (case when vum.dept_cd = #{deptCd} and vum.dept_head_yn = 'Y' then true
+					when d.reg_id = #{userId} then true 
+					else coalesce(bam.delete_yn, false)  
+				end) as deleteYn
+		from (
+			<include refid="selectFolder" />
+		) d
+		left outer join kgst.bs_auth_mapp bam 
+			on bam.folder_id = d.folder_id
+			and bam.user_id = #{userId}
+		left outer join kgst.view_user_member vum 
+			on vum.user_id = #{userId}
 		where 1=1
-			and c.del_yn = 'N'
-			and c.dept_folder_yn = 'Y'
-			and c.dept_cd = #{deptCd}
-			and c.upper_folder_id = #{upperFolderId}
+			and d.del_yn = 'N'
+			and d.dept_folder_yn = 'Y'
+			and d.dept_cd = #{deptCd}
+			and d.upper_folder_id = #{upperFolderId}
 			<if test="title != null and title != ''">
-			and c.folder_nm like '%' || #{title} || '%'
+			and d.folder_nm like '%' || #{title} || '%'
 			</if>
 			<if test="regNm != null and regNm != ''">
-			and c.reg_nm like '%' || #{regNm} || '%'
+			and d.reg_nm like '%' || #{regNm} || '%'
 			</if>
 	</select>
 	
@@ -208,10 +233,14 @@
 			left outer join kgst.bs_folder_info b
 				on a.upper_folder_id = b.folder_id
 		) c
-		inner join kgst.bs_share sh
+		inner join (
+			select distinct folder_id, owner_id
+			from kgst.bs_share
+			where 1=1
+			and folder_yn = 'Y'
+			and ((target_kind = 'INDV' and target_id = #{userId}) or (target_kind = 'DEPT' and target_id = #{deptCd}))
+		) sh
 			on sh.folder_id = c.folder_id
-			and sh.folder_yn = 'Y'
-			and ((sh.target_kind = 'INDV' and sh.target_id = #{userId}) or (sh.target_kind = 'DEPT' and sh.target_id = #{deptCd}))
 		where 1=1
 			and c.del_yn = 'N'
 			<if test="title != null and title != ''">
@@ -228,6 +257,36 @@
 		where 1=1
 			and c.del_yn = 'Y'
 			and c.mod_id = #{userId}
+			<if test="title != null and title != ''">
+			and c.folder_nm like '%' || #{title} || '%'
+			</if>
+			<if test="regNm != null and regNm != ''">
+			and c.reg_nm like '%' || #{regNm} || '%'
+			</if>
+	</select>
+	
+	<select id="selectDeletedDeptFolderList" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectDeletedDeptFolderList */
+		<include refid="selectFolder" />
+		where 1=1
+			and c.del_yn = 'Y'
+			and c.dept_cd = #{deptCd}
+			and c.dept_folder_yn = 'Y'
+			<if test="title != null and title != ''">
+			and c.folder_nm like '%' || #{title} || '%'
+			</if>
+			<if test="regNm != null and regNm != ''">
+			and c.reg_nm like '%' || #{regNm} || '%'
+			</if>
+	</select>
+	
+	<select id="selectDeletedMyFolderList" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectDeletedMyFolderList */
+		<include refid="selectFolder" />
+		where 1=1
+			and c.del_yn = 'Y'
+			and c.user_id = #{userId}
+			and c.dept_folder_yn = 'N'
 			<if test="title != null and title != ''">
 			and c.folder_nm like '%' || #{title} || '%'
 			</if>
@@ -461,10 +520,14 @@
 				where 1=1
 					and a.del_yn = 'N'
 			) b
-			inner join kgst.bs_share sh
+			inner join (
+				select distinct file_group_id, owner_id
+				from kgst.bs_share
+				where 1=1
+				and folder_yn = 'N'
+				and ((target_kind = 'INDV' and target_id = #{userId}) or (target_kind = 'DEPT' and target_id = #{deptCd}))
+			) sh
 				on b.file_group_id = sh.file_group_id
-				and sh.folder_yn = 'N'
-				and ((sh.target_kind = 'INDV' and sh.target_id = #{userId}) or (sh.target_kind = 'DEPT' and sh.target_id = #{deptCd}))				
 			left outer join kgst.bs_favorite c
 				on b.file_group_id = c.file_group_id
 				and c.user_id = #{userId}
@@ -538,6 +601,82 @@
 				where 1=1
 					and a.del_yn = 'Y'
 					and a.mod_id = #{userId}
+			) b
+			left outer join kgst.bs_favorite c
+				on b.file_group_id = c.file_group_id
+				and c.user_id = #{userId}
+			left outer join kgst.bs_folder_info d
+				on d.folder_id = b.folder_id
+		) x
+		where 1=1
+			<if test="title != null and title != ''">
+			and x.title like '%' || #{title} || '%'
+			</if>
+			<if test="regNm != null and regNm != ''">
+			and x.reg_nm like '%' || #{regNm} || '%'
+			</if>
+	</select>
+	
+	<select id="selectDeletedDeptFileList" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectDeletedDeptFileList */
+		select * from (
+			select 
+				  b.*
+				, b.file_title as title
+				, coalesce(c.favorite_yn, 'N') as favorite_yn
+				, d.folder_nm as folder_nm
+				, (select user_nm_kg 
+				from kgst.view_user_member vcm
+				where vcm.user_id = b.reg_id) as reg_nm
+				, (select user_nm_kg 
+				from kgst.view_user_member vcm
+				where vcm.user_id = b.mod_id) as mod_nm
+			from (
+				select
+					<include refid="fileColumns"></include>
+				from kgst.bs_file_info a
+				where 1=1
+					and a.del_yn = 'Y'
+					and a.dept_cd = #{deptCd}
+					and a.dept_file_yn = 'Y'
+			) b
+			left outer join kgst.bs_favorite c
+				on b.file_group_id = c.file_group_id
+				and c.user_id = #{userId}
+			left outer join kgst.bs_folder_info d
+				on d.folder_id = b.folder_id
+		) x
+		where 1=1
+			<if test="title != null and title != ''">
+			and x.title like '%' || #{title} || '%'
+			</if>
+			<if test="regNm != null and regNm != ''">
+			and x.reg_nm like '%' || #{regNm} || '%'
+			</if>
+	</select>
+	
+	<select id="selectDeletedMyFileList" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectDeletedMyFileList */
+		select * from (
+			select 
+				  b.*
+				, b.file_title as title
+				, coalesce(c.favorite_yn, 'N') as favorite_yn
+				, d.folder_nm as folder_nm
+				, (select user_nm_kg 
+				from kgst.view_user_member vcm
+				where vcm.user_id = b.reg_id) as reg_nm
+				, (select user_nm_kg 
+				from kgst.view_user_member vcm
+				where vcm.user_id = b.mod_id) as mod_nm
+			from (
+				select
+					<include refid="fileColumns"></include>
+				from kgst.bs_file_info a
+				where 1=1
+					and a.del_yn = 'Y'
+					and a.user_id = #{userId}
+					and a.dept_file_yn = 'N'
 			) b
 			left outer join kgst.bs_favorite c
 				on b.file_group_id = c.file_group_id
@@ -641,6 +780,13 @@
 			, mod_id = #{modId}
 			, favorite_yn = #{favoriteYn}
     </update>
+    
+    <delete id="deleteFavorite" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo">
+    /* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.deleteFavorite */
+    	delete from kgst.bs_favorite
+    	where user_id = #{userId}
+    	and file_group_id = #{fileGroupId}
+    </delete>
     
     <sql id="fileColumns">
     	  a.file_id
@@ -955,23 +1101,19 @@
     <select id="selectUserAuthMapp" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.UserMemberAuthMappVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectUserAuthMapp */
         select 
-			  (case when #{folderId} = -1 then true
-					when bfi.dept_folder_yn = 'Y' and bfi.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
+			  (case when bfi.dept_folder_yn = 'Y' and bfi.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
 					when vum.user_id = bfi.reg_id then true 
 					else coalesce(bam.search_yn, true)  
 				end) as searchYn
-			, (case when #{folderId} = -1 then true
-					when bfi.dept_folder_yn = 'Y' and bfi.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
+			, (case when bfi.dept_folder_yn = 'Y' and bfi.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
 					when vum.user_id = bfi.reg_id then true 
 					else coalesce(bam.create_yn, false)  
 				end) as createYn
-			, (case when #{folderId} = -1 then false
-					when bfi.dept_folder_yn = 'Y' and bfi.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
+			, (case when bfi.dept_folder_yn = 'Y' and bfi.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
 					when vum.user_id = bfi.reg_id then true 
 					else coalesce(bam.update_yn, false)  
 				end) as updateYn
-			, (case when #{folderId} = -1 then false
-					when bfi.dept_folder_yn = 'Y' and bfi.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
+			, (case when bfi.dept_folder_yn = 'Y' and bfi.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
 					when vum.user_id = bfi.reg_id then true 
 					else coalesce(bam.delete_yn, false)  
 				end) as deleteYn
@@ -983,6 +1125,48 @@
 		and bam.user_id = vum.user_id 
 		where 1=1
 		and vum.user_id = #{userId}
+    </select>
+    
+    <select id="selectListSharingUserId">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectListSharingUserId */
+        with recursive folders as (
+			select
+				a.folder_id,
+				a.folder_nm,
+				a.upper_folder_id,
+				a.del_yn,
+				a.reg_dt,
+				a.reg_id,
+				a.mod_dt,
+				a.mod_id
+			from kgst.bs_folder_info a
+			where a.folder_id = #{folderId}
+			and a.del_yn = 'N'
+			
+			union all
+			
+			select 
+				a.folder_id,
+				a.folder_nm,
+				a.upper_folder_id,
+				a.del_yn,
+				a.reg_dt,
+				a.reg_id,
+				a.mod_dt,
+				a.mod_id
+			from kgst.bs_folder_info a
+			inner join folders f
+			on a.folder_id = f.upper_folder_id
+			where f.upper_folder_id != -1
+			and a.del_yn = 'N'
+		)
+		select distinct bs.owner_id
+		from folders f
+		inner join kgst.bs_share bs
+		on f.folder_id = bs.folder_id
+		where 1=1
+		and bs.folder_yn = 'Y'
+		and (bs.target_kind = 'INDV' and bs.target_id = #{userId} or bs.target_kind = 'DEPT' and bs.target_id = #{deptCd})
     </select>
     
 </mapper>
