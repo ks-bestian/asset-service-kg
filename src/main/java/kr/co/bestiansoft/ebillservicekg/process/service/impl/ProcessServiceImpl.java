@@ -200,7 +200,7 @@ public class ProcessServiceImpl implements ProcessService {
 			taskVo.setTaskNm("안건등록");
 			taskVo.setBillId(argVo.getBillId());
 			taskVo.setStepId(argVo.getStepId());
-			taskVo.setStatus("C");
+			taskVo.setStatus("P");
 			taskVo.setTrgtUserId(argVo.getRegId());
 			taskVo.setRegId(argVo.getRegId());
 

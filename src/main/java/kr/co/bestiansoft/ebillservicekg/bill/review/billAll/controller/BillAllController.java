@@ -28,17 +28,12 @@ public class BillAllController {
         return new ResponseEntity<>(new CommonResponse(200, "OK", billAllService.getBillList(param)), HttpStatus.OK);
     }
 
-
     @ApiOperation(value = "안건 전체 상세 조회", notes = "상세를 조회한다.")
     @GetMapping("/bill/review/all/detail/{billId}")
     public ResponseEntity<CommonResponse> getBillById(@PathVariable String billId, @RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", billAllService.getBillById(billId, param)), HttpStatus.OK);
     }
-    
-    @ApiOperation(value = "안건 전체 상세 조회 - 기타정보", notes = "상세(기타정보)를 조회한다.")
-    @GetMapping("/bill/review/all/sub/{billId}")
-    public ResponseEntity<CommonResponse> getBillDetailById(@PathVariable String billId, @RequestParam HashMap<String, Object> param) {
-        return new ResponseEntity<>(new CommonResponse(200, "OK", billAllService.getBillDetailById(billId, param)), HttpStatus.OK);
-    }
+
+
 
 }

@@ -65,7 +65,7 @@ public class LoginController {
 
 	private final BaseCodeService basecodeService;
 	private final CcofService ccofService;
-	
+
 	private final CustomUserDetailsService customUserDetailsService;
 
 	@PostMapping("/login")
@@ -109,7 +109,6 @@ public class LoginController {
 
 	        List<ComCodeDetailVo> comCodes = loginMapper.selectListComCodeAll();
 	        List<BaseCodeVo> baseCodes = basecodeService.getBaseCodeList(new HashMap<>());
-	        List<ProposerVo> srvcJobs = processMapper.selectListSrvcJobAuth();
 	        HashMap<String, Object> param = new HashMap<>();
 	        param.put("userId", account.getUserId());
 	        List<CcofVo> ccofList = ccofService.getCcofList(param);
@@ -120,7 +119,6 @@ public class LoginController {
 	        rep.setLoginInfo(account);
 	        rep.setComCodes(comCodes);
 	        rep.setBaseCodes(baseCodes);
-	        rep.setSrvcJobs(srvcJobs);
 	        rep.setCcofList(ccofList);
 
 	        return new ResponseEntity<>(rep, httpHeaders, HttpStatus.OK);
@@ -139,13 +137,13 @@ public class LoginController {
         }
 
 	}
-	
+
 	@PostMapping("/changedept")
 	public ResponseEntity<?> changedept(@RequestBody LoginUserVo loginUserVo) {
 		String userId = new SecurityInfoUtil().getAccountId();
 		Account account = (Account)customUserDetailsService.loadUserByUsername(userId);
 		String orgDeptCd = account.getDeptCd();
-		
+
 		HashMap<String, Object> param = new HashMap<>();
         param.put("userId", userId);
 		List<CcofVo> ccofList = ccofService.getCcofList(param);
@@ -159,10 +157,10 @@ public class LoginController {
 			return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
 		}
 		new SecurityInfoUtil().getAccount().setDeptCd(loginUserVo.getDeptCd());
-		
+
 		Authentication authentication = new SecurityInfoUtil().getAuthentication();
 		String token = tokenProvider.createToken(authentication);
-		
+
 		LoginResponse rep = new LoginResponse();
 		rep.setToken(token);
 		return new ResponseEntity<>(rep, HttpStatus.OK);
