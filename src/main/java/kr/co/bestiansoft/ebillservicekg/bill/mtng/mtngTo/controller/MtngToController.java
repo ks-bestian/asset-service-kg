@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -69,6 +70,12 @@ public class MtngToController {
     public ResponseEntity<CommonResponse> deleteMtngTo(@RequestBody List<Long> mtngIds) {
     	mtngToService.deleteMtng(mtngIds);
         return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "OK", "meeting deleted successfully"), HttpStatus.OK);
+    }
+    
+    @ApiOperation(value = "파일 삭제", notes = "회의 결과 보고서를 삭제한다")
+    @PutMapping(value = "/bill/mtng/to/report/delete")
+    public ResponseEntity<CommonResponse> updateMtngFileDel(@RequestBody HashMap<String, Object> param) {
+    	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "mtng report delete successfully", mtngToService.updateMtngFileDel(param)), HttpStatus.OK);
     }
 
 }

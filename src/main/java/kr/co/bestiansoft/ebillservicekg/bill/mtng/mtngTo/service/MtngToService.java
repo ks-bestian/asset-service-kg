@@ -16,5 +16,6 @@ public interface MtngToService {
 
     List<MemberVo> getMemberList(HashMap<String, Object> param);
     void deleteMtng(List<Long> mtngIds);
+	int updateMtngFileDel(HashMap<String, Object> param);
 
 }

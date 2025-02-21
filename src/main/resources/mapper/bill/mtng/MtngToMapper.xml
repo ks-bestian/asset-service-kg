@@ -86,7 +86,7 @@
 		join kgst.com_dept cd on (em.dept_cd = cd.dept_cd)
 		WHERE em.MTNG_ID = #{mtngId}
     </select>
-    <select id="selectListMtngAttendant" parameterType="java.util.HashMap"
+    <select id="selectListMtngAttendant_bak" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MemberVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.repository.MtngToMapper.selectListMtngAttendant */
 		SELECT
@@ -105,6 +105,30 @@
         ORDER BY dept_nm, member_nm
 
     </select>
+    <select id="selectListMtngAttendant" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MemberVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.repository.MtngToMapper.selectListMtngAttendant */
+		select 
+			  ema.atdt_user_id as member_id
+			, ema.atdt_user_nm as member_nm
+			, vum.dept_cd 
+			, case 
+				when ema.atdt_kind = 'ATT01' then '국회의원'
+				else '장관'
+			end dept_nm
+			, vum.poly_cd  
+			, vum.poly_nm 
+			, ema.atdt_div_cd 
+			, vum.cmit_cd 
+		from kgst.ebs_mtng_attendant ema 
+		left join kgst.view_user_member vum on vum.user_id = ema.atdt_user_id 
+		where 1=1
+			and ema.mtng_id = #{mtngId}
+		order by dept_nm, atdt_user_nm
+
+    </select>
+    
+    
     <select id="selectListMtngAgenda" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.AgendaVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.repository.MtngToMapper.selectListMtngAgenda */
 
@@ -314,5 +338,16 @@
 	    MOD_ID = EXCLUDED.REG_ID, -- 삽입 값 참조
 	    MOD_DT = now(),
 	    ATDT_DIV_CD = EXCLUDED.ATDT_DIV_CD
+    </update>
+    
+    <update id="updateMtngFileDel" parameterType="java.util.HashMap">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.repository.MtngToMapper.updateMtngFileDel */
+		update kgst.ebs_mtng_file
+		SET mod_dt = now()
+		  , mod_id = #{modId}
+		  , delete_yn = 'Y'
+		where
+			mtng_id = #{mtngId}::integer 
+			and org_file_id = #{orgFileId}
     </update>
 </mapper>

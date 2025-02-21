@@ -36,6 +36,7 @@ public interface DocumentMapper {
     int insertFavorite(FileVo vo);
     int updateFavorite(FileVo vo);
     int saveFavorite(FileVo vo);
+    int deleteFavorite(FileVo vo);
     
     List<FolderVo> selectMyFolderListAll(FolderVo vo);
     List<FolderVo> selectMyFolderList(FolderVo vo);
@@ -44,7 +45,11 @@ public interface DocumentMapper {
     
     List<FileVo> selectStarFileList(FileVo vo);
     List<FolderVo> selectDeleteFolderList(FolderVo vo);
+    List<FolderVo> selectDeletedDeptFolderList(FolderVo vo);
+    List<FolderVo> selectDeletedMyFolderList(FolderVo vo);
     List<FileVo> selectDeleteFileList(FileVo vo);
+    List<FileVo> selectDeletedDeptFileList(FileVo vo);
+    List<FileVo> selectDeletedMyFileList(FileVo vo);
     
     List<Long> selectFolderIdsByUpperFolderId(Long upperFolderId);
     List<String> selectFileIdsByFolderId(Long folderId);
@@ -61,7 +66,7 @@ public interface DocumentMapper {
     List<FolderVo> selectFolderList(FolderVo vo);
     List<FileVo> selectFileList(FileVo vo);
     
-    FileShareVo selectShare(FileShareVo vo);
+    List<FileShareVo> selectShare(FileShareVo vo);
     
     Long selectTotalUseCpct(String userId);
     void addUseCpct(String userId, Long cpct);
@@ -70,4 +75,6 @@ public interface DocumentMapper {
     void saveFolderAuthMapp(UserMemberAuthMappVo vo);
     
     UserMemberAuthMappVo selectUserAuthMapp(Long folderId, String userId);
+    
+    List<String> selectListSharingUserId(FileShareVo vo);
 }

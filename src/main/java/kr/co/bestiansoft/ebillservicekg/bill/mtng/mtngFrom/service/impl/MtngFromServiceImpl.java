@@ -11,6 +11,7 @@ import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.service.MtngFromServi
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.AgendaVo;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MemberVo;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MtngFromVo;
+import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.vo.MtngFileVo;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import lombok.RequiredArgsConstructor;
@@ -46,10 +47,15 @@ public class MtngFromServiceImpl implements MtngFromService {
     	/* 참석자 - selectListMtngAttendant */
     	List<MemberVo> attendantList = mtngFromMapper.selectListMtngAttendant(param);
     	dto.setAttendantList(attendantList);
+    	
+    	/*회의 결과 문서*/
+    	List<MtngFileVo> reportList = mtngFromMapper.selectListMtngFile(param);
+    	dto.setReportList(reportList);
 
         return dto;
     }
 
+    @Transactional
 	@Override
 	public MtngFromVo createMtngFrom(MtngFromVo mtngFromVo) {
 
@@ -81,9 +87,9 @@ public class MtngFromServiceImpl implements MtngFromService {
 			memberVo.setMtngId(mtngFromVo.getMtngId());
 			memberVo.setAtdtUserId(memVo.getMemberId());
 			memberVo.setAtdtUserNm(memVo.getMemberNm());
-			memberVo.setAtdtKind("ATT01");// 참석자 구분(의원)
+			memberVo.setAtdtKind(memVo.getAtdtKind());
 			memberVo.setRegId(regId);
-			mtngFromMapper.insertEbsMtngAttendant(memVo);
+			mtngFromMapper.insertEbsMtngAttendant(memberVo);
 		}
 
 		return mtngFromVo;
@@ -116,6 +122,51 @@ public class MtngFromServiceImpl implements MtngFromService {
 
 		List<BillMngVo> list = mtngFromMapper.selectListMtngBill(param);
 		return list;
+	}
+
+	@Transactional
+	@Override
+	public MtngFromVo updateMtngBill(MtngFromVo mtngFromVo) {
+		String userId = new SecurityInfoUtil().getAccountId();
+		mtngFromVo.setModId(userId);
+		mtngFromMapper.updateFromMtngBill(mtngFromVo);
+		
+		//존재하는 행인 경우 업데이트 존재하지 않으면 인서트
+		
+		//참석자 수정
+		mtngFromMapper.deleteMtngFromBillAttendant(mtngFromVo);
+
+		List<MemberVo> attendantList = mtngFromVo.getAttendantList();
+		if(attendantList!=null) {
+			for(int i=0;i<attendantList.size();i++) {
+				MemberVo memberVo = new MemberVo();
+				memberVo.setMtngId(mtngFromVo.getMtngId());
+				memberVo.setAtdtUserId(attendantList.get(i).getMemberId());
+				memberVo.setAtdtUserNm(attendantList.get(i).getMemberNm());
+				memberVo.setAtdtKind(attendantList.get(i).getAtdtKind());
+				memberVo.setRegId(userId);
+				attendantList.set(i, memberVo);
+				mtngFromMapper.updateMtngFromAttendant(attendantList.get(i));
+			}
+		}
+		
+		//안건 수정
+		mtngFromMapper.deleteMtngFromBillAgenda(mtngFromVo);
+
+		List<AgendaVo> agendaList = mtngFromVo.getAgendaList();
+		if(agendaList!=null) {
+			for(int i=0;i<agendaList.size();i++) {
+				AgendaVo agendaVo = new AgendaVo();
+				agendaVo.setBillId(agendaList.get(i).getBillId());
+				agendaVo.setMtngId(mtngFromVo.getMtngId());
+				agendaVo.setOrd(i+1);
+				agendaVo.setRegId(userId);
+				agendaList.set(i, agendaVo);
+				mtngFromMapper.updateMtngFromAgenda(agendaList.get(i));
+			}
+		}
+		
+		return mtngFromVo;
 	}
 
 
