@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.repository.AgreeMapper;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.vo.AgreeVo;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.vo.MtngAllVo;
+import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.vo.MtngFileVo;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billAll.service.BillAllService;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billAll.vo.BillAllResponse;
@@ -56,14 +57,28 @@ public class BillAllServiceImpl implements BillAllService {
     	/*committee list*/
     	List<BillAllVo> cmtList = billAllMapper.selectListBillCmt(param);
 
+    	//  selectListMettingResultFile
+
     	/* committee meeting list*/
     	List<MtngAllVo> cmtMtList = billAllMapper.selectListCmtMeeting(param);
+    	for(MtngAllVo vo : cmtMtList) {
+    		List<MtngFileVo> mtFileList = billAllMapper.selectListMettingResultFile(vo.getMtngId());
+    		vo.setReportList(mtFileList);
+    	}
 
     	/* main meeting list*/
     	List<MtngAllVo> mainMtList = billAllMapper.selectListMainMeeting(param);
+    	for(MtngAllVo vo : mainMtList) {
+    		List<MtngFileVo> mtFileList = billAllMapper.selectListMettingResultFile(vo.getMtngId());
+    		vo.setReportList(mtFileList);
+    	}
 
     	/* Party meeting list*/
     	List<MtngAllVo> partyMtList = billAllMapper.selectListPartyMeeting(param);
+    	for(MtngAllVo vo : partyMtList) {
+    		List<MtngFileVo> mtFileList = billAllMapper.selectListMettingResultFile(vo.getMtngId());
+    		vo.setReportList(mtFileList);
+    	}
 
     	/* Bill etc info */
     	List<BillAllVo> etcInfoList = billAllMapper.selectListBillEtcInfo(param);

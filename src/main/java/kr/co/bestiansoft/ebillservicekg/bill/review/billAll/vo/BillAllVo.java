@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.vo.MtngAllVo;
+import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.vo.MtngFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
@@ -89,8 +90,9 @@ public class BillAllVo extends ComDefaultVO {
     private String clsCd;
     private String rmrk;
     private String mtnDt;
-    private String lglRvwRsltCode;
-    private String lglActRsltCode;
+    private String lglRvwRsltCode;//법류검토결과
+    private String lglRvwRsltNm;//법류검토결과
+    private String lglActRsltCode;//법적행위결과코드
     private String rsltDt;
     private String rsltCode;
     private String rsltNm;

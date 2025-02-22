@@ -146,6 +146,9 @@ public class BillMngServiceImpl implements BillMngService {
 	@Transactional
 	@Override
 	public BillMngVo insertBillDetail(BillMngVo billMngVo) {
+
+		String loginId = new SecurityInfoUtil().getAccountId();
+		billMngVo.setRegId(loginId);
 		billMngMapper.insertBillDetail(billMngVo);
 		return billMngVo;
 	}

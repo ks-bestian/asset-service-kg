@@ -130,7 +130,7 @@
 		   em.mtng_id
 		 , em.mtng_type_cd
 		 , em.dept_cd
-		 , em.dept_nm
+		 , kgst.fngetdeptnm(em.dept_cd,#{lang}) as dept_nm
 		 , em.open_dtm
 		 , em.close_dtm
 		 , em.mtng_plc
@@ -142,6 +142,13 @@
 		 , ema.bill_id
 		 , ema.rslt_cd
 		 , kgst.fngetcodenm('1008',ema.rslt_cd,#{lang}) as rslt_nm
+		 , (
+			select
+			   kgst.fngetcodenm('1018',cmt_se_cd,#{lang})
+			from ebs_master_cmt
+			where bill_id = ema.bill_id
+			  and cmt_cd = em.dept_cd
+		  ) as cmt_se_nm
 		from ebs_mtng em
 		join ebs_mtng_agenda ema on (em.mtng_id = ema.mtng_id)
 		where ema.bill_id = #{billId}
@@ -158,7 +165,7 @@
 		   em.mtng_id
 		 , em.mtng_type_cd
 		 , em.dept_cd
-		 , em.dept_nm
+		 , kgst.fngetdeptnm(em.dept_cd,#{lang}) as dept_nm
 		 , em.open_dtm
 		 , em.close_dtm
 		 , em.mtng_plc
@@ -184,7 +191,7 @@
 		   em.mtng_id
 		 , em.mtng_type_cd
 		 , em.dept_cd
-		 , em.dept_nm
+		 , kgst.fngetdeptnm(em.dept_cd,#{lang}) as dept_nm
 		 , em.open_dtm
 		 , em.close_dtm
 		 , em.mtng_plc
@@ -208,7 +215,6 @@
     <select id="selectListBillEtcInfo" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billAll.vo.BillAllVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper.selectListBillEtcInfo */
-
 		select
 		    emd.seq
 		  , emd.bill_id
@@ -219,19 +225,39 @@
 		  , emd.mtn_dt
 		  , emd.prsd_rjct_dt
 		  , emd.lgl_rvw_rslt_code
+		  , kgst.fngetcodenm('1019',emd.lgl_rvw_rslt_code,#{lang}) as lgl_rvw_rslt_nm
 		  , emd.lgl_act_rslt_code
 		  , emd.rslt_dt
 		  , emd.reg_id
 		  , emd.reg_dt
 		  , emd.rslt_code
-		from ebs_master_detail emd
+		  , emd.reg_id
+		  , kgst.fngetlangnm(vum.user_nm_kg,vum.user_nm_ru,vum.user_nm_kg,#{lang}) as regNm
+		from kgst.ebs_master_detail emd
+		join kgst.view_user_member vum on (emd.reg_id = vum.user_id)
 		where bill_id = #{billId}
 
     </select>
 
-
-
-
+    <select id="selectListMettingResultFile" parameterType="Long"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.vo.MtngFileVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper.selectListMettingResultFile */
+		select
+		    emf.seq
+		  , emf.mtng_id
+		  , emf.org_file_id
+		  , emf.org_file_nm
+		  , emf.pdf_file_id
+		  , emf.pdf_file_nm
+		  , emf.file_kind_cd
+		  , emf.file_size
+		  , emf.reg_id
+		  , emf.reg_dt
+		from ebs_mtng_file emf
+		where delete_yn = 'N'
+		  and mtng_id = #{mtngId}
+		order by seq
+   </select>
 
 
 
