@@ -50,8 +50,6 @@ public class BillMngServiceImpl implements BillMngService {
     	List<BillMngVo> cmtList = billMngMapper.selectEbsMasterCmtList(argVo);
     	List<MtngAllVo> cmtMeetingList = billMngMapper.selectListCmtMeetingList(argVo);//committee meeting list
 
-
-
     	BillMngVo billlegalReviewVo = null;//bill legal review department
     	BillMngVo billLangReview1stVo = null;//bill legal review department
 
@@ -96,13 +94,17 @@ public class BillMngServiceImpl implements BillMngService {
 	@Override
 	public BillMngVo billRegisterMng(BillMngVo billMngVo) {
 
+    	String loginId = new SecurityInfoUtil().getAccountId();
+    	billMngVo.setModId(loginId);
+    	billMngMapper.updateBillno(billMngVo);// New billno create update
+
 		ProcessVo pVo = new ProcessVo();
 		pVo.setBillId(billMngVo.getBillId());
 		pVo.setStepId(billMngVo.getStepId());
 		pVo.setTaskId(billMngVo.getTaskId());
 		processService.handleProcess(pVo);
 
-		return null;
+		return billMngVo;
 	}
 
 	@Override
@@ -144,6 +146,9 @@ public class BillMngServiceImpl implements BillMngService {
 	@Transactional
 	@Override
 	public BillMngVo insertBillDetail(BillMngVo billMngVo) {
+
+		String loginId = new SecurityInfoUtil().getAccountId();
+		billMngVo.setRegId(loginId);
 		billMngMapper.insertBillDetail(billMngVo);
 		return billMngVo;
 	}

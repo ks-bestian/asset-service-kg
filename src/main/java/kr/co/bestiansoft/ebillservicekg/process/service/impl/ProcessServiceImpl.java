@@ -35,7 +35,6 @@ public class ProcessServiceImpl implements ProcessService {
 		ProcessVo stepVo = new ProcessVo();
 
 		if("PC_START".equals(argVo.getStepId())) {// 시작점 bp instance 생성
-			// BpDfId 를 접수시 할지? 등록시 할지?
 			ProcessVo pVo = new ProcessVo();
 			pVo.setBillId(argVo.getBillId());
 			pVo.setBpDfId("1");//일단은 하나로 설정 여러개라면 안건유형에 따라서
@@ -200,7 +199,7 @@ public class ProcessServiceImpl implements ProcessService {
 			taskVo.setTaskNm("안건등록");
 			taskVo.setBillId(argVo.getBillId());
 			taskVo.setStepId(argVo.getStepId());
-			taskVo.setStatus("C");
+			taskVo.setStatus("P");
 			taskVo.setTrgtUserId(argVo.getRegId());
 			taskVo.setRegId(argVo.getRegId());
 
@@ -210,10 +209,6 @@ public class ProcessServiceImpl implements ProcessService {
 
 		/*안건접수관리*/
 		void executeService_1000(ProcessVo argVo) {
-
-			// BpDfId 를 접수시 할지? 등록시 할지?
-			//argVo.setBpDfId("1");//일단은 하나로 설정 여러개라면 안건유형에 따라서
-			//processMapper.updateBpInstance(argVo);
 
 			ProcessVo taskVo = new ProcessVo();
 			taskVo.setTaskNm("안건접수");

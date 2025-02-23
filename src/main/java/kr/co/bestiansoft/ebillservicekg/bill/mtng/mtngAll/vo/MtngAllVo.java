@@ -29,6 +29,8 @@ public class MtngAllVo extends ComDefaultVO {
 	private String statCd;
 	private String statNm;
 	private String dueDtm;
+	private String cmtSeNm;
+
 
 	/* 참석자 관련 */
     private List<MemberVo> attendantList;

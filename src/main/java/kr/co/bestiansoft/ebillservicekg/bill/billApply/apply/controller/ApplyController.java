@@ -58,8 +58,8 @@ public class ApplyController {
 
     @ApiOperation(value = "안건 상세 조회", notes = "안건의 상세를 조회한다")
     @GetMapping("/bill/apply/{billId}")
-    public ResponseEntity<CommonResponse> getBillDetail(@PathVariable String billId, @RequestParam String lang) {
-    	return new ResponseEntity<>(new CommonResponse(200, "OK", applyService.getApplyDetail(billId, lang)), HttpStatus.OK);
+    public ResponseEntity<CommonResponse> getBillDetail(@PathVariable String billId, @RequestParam HashMap<String, Object> param) {
+    	return new ResponseEntity<>(new CommonResponse(200, "OK", applyService.getApplyDetail(billId, param)), HttpStatus.OK);
     }
 
 //    @ApiOperation(value = "안건접수", notes = "안건을 접수한다.")
@@ -91,17 +91,17 @@ public class ApplyController {
     public ResponseEntity<CommonResponse> deleteBillFile(@RequestBody EbsFileVo ebsFileVo){
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill file delete successfully", applyService.deleteBillFile(ebsFileVo)), HttpStatus.OK);
     }
-    
+
     @ApiOperation(value = "안건 전체 조회", notes = "안건전체를 조회한다")
     @GetMapping("/bill/all")
     public ResponseEntity<CommonResponse> selectBillAll(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", applyService.selectBillAll(param)), HttpStatus.OK);
     }
-    
+
     @ApiOperation(value = "홈페이지 게재", notes = "안건을 홈페이지에 게재한다")
     @PostMapping(value = "/bill/apply/home")
     public ResponseEntity<CommonResponse> createBillHome(@RequestBody ApplyVo applyVo) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "insert homepage successfully", applyService.createBillHome(applyVo)), HttpStatus.CREATED);
     }
-    
+
 }

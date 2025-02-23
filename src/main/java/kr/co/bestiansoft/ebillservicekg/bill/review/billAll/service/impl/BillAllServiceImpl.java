@@ -10,8 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.repository.AgreeMapper;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.vo.AgreeVo;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.vo.MtngAllVo;
+import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.vo.MtngFileVo;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billAll.service.BillAllService;
+import kr.co.bestiansoft.ebillservicekg.bill.review.billAll.vo.BillAllResponse;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billAll.vo.BillAllVo;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 import lombok.RequiredArgsConstructor;
@@ -30,87 +32,68 @@ public class BillAllServiceImpl implements BillAllService {
     @Override
     public List<BillAllVo> getBillList(HashMap<String, Object> param) {
 
-        List<BillAllVo> result = billAllMapper.selectBillList(param);
+        List<BillAllVo> result = billAllMapper.selectListBill(param);
         return result;
     }
 
     @Override
-    public BillAllVo getBillById(String billId, HashMap<String, Object> param) {
+    public BillAllResponse getBillById(String billId, HashMap<String, Object> param) {
+
+    	BillAllResponse billRespanse = new BillAllResponse();
     	param.put("billId", billId);
-    	/* 기본정보 */
-    	BillAllVo dto = billAllMapper.selectBillById(param);
 
-        // Null 체크 추가
-        if (dto == null) {
-            dto = new BillAllVo(); // Null일 경우 기본 객체로 초기화
-        }
+    	/* Bill basic info */
+    	BillAllVo billBasicInfo = billAllMapper.selectBill(param);
+
+    	/* Proposer List */
     	List<AgreeVo> proposerList = agreeMapper.selectAgreeProposerList(billId);
-    	StringBuilder proposerItems = new StringBuilder(); // StringBuilder 사용 권장
-    	for(int i=0; i<proposerList.size();i++) {
-    		if("lng_type_1".equals(param.get("lang"))) {
-    			proposerItems.append(proposerList.get(i).getMemberNmKg());
-    		}else if("lng_type_2".equals(param.get("lang"))) {
-    			proposerItems.append(proposerList.get(i).getMemberNmRu());
-    		}else {
-    			proposerItems.append(proposerList.get(i).getMemberNmKg());
-    		}
+    	/* Proposer String */
+    	String proposerItem = proposerList.stream().map(AgreeVo::getMemberNm).collect(Collectors.joining(", "));
+    	billBasicInfo.setProposerItems(proposerItem);
 
-    	    // 마지막 항목이 아니라면 콤마 추가
-    	    if (i < proposerList.size() - 1) {
-    	        proposerItems.append(", ");
-    	    }
+    	/* Bill doc list*/
+    	List<EbsFileVo> billFileList = billAllMapper.selectListBillFile(param);
+
+    	/*committee list*/
+    	List<BillAllVo> cmtList = billAllMapper.selectListBillCmt(param);
+
+    	//  selectListMettingResultFile
+
+    	/* committee meeting list*/
+    	List<MtngAllVo> cmtMtList = billAllMapper.selectListCmtMeeting(param);
+    	for(MtngAllVo vo : cmtMtList) {
+    		List<MtngFileVo> mtFileList = billAllMapper.selectListMettingResultFile(vo.getMtngId());
+    		vo.setReportList(mtFileList);
     	}
-    	dto.setProposerItems(proposerItems.toString());
 
-    	/* 문서 */
-    	List<EbsFileVo> fileList = billAllMapper.selectBillFile(param);
-    	dto.setFileList(fileList);
+    	/* main meeting list*/
+    	List<MtngAllVo> mainMtList = billAllMapper.selectListMainMeeting(param);
+    	for(MtngAllVo vo : mainMtList) {
+    		List<MtngFileVo> mtFileList = billAllMapper.selectListMettingResultFile(vo.getMtngId());
+    		vo.setReportList(mtFileList);
+    	}
 
-    	/*소관위 기본정보*/
-    	BillAllVo cmtData = billAllMapper.selectBillCmtInfo(param);
-    	dto.setCmtData(cmtData);
+    	/* Party meeting list*/
+    	List<MtngAllVo> partyMtList = billAllMapper.selectListPartyMeeting(param);
+    	for(MtngAllVo vo : partyMtList) {
+    		List<MtngFileVo> mtFileList = billAllMapper.selectListMettingResultFile(vo.getMtngId());
+    		vo.setReportList(mtFileList);
+    	}
 
-    	/*소관위 회의정보*/
-    	List<MtngAllVo> cmtAgendaList = billAllMapper.selectBillCmtMtng(param);
-    	dto.setCmtAgendaList(cmtAgendaList);
+    	/* Bill etc info */
+    	List<BillAllVo> etcInfoList = billAllMapper.selectListBillEtcInfo(param);
 
-    	/*관련위 기본정보*/
-    	BillAllVo relCmtData = billAllMapper.selectBillRelCmtInfo(param);
-    	dto.setRelData(relCmtData);
-    	/*관련위 회의정보*/
-    	List<MtngAllVo> relCmtAgendaList = billAllMapper.selectBillRelCmtMtng(param);
-    	dto.setRelAgendaList(relCmtAgendaList);
+    	billRespanse.setBillBasicInfo(billBasicInfo);
+    	billRespanse.setProposerList(proposerList);
+    	billRespanse.setBillFileList(billFileList);
+    	billRespanse.setCmtList(cmtList);
+    	billRespanse.setCmtMtList(cmtMtList);
+    	billRespanse.setMainMtList(mainMtList);
+    	billRespanse.setPartyMtList(partyMtList);
+    	billRespanse.setEtcInfoList(etcInfoList);
 
-    	/*본회의 회의정보 - 1,2,3차*/
-    	List<BillAllVo> masterDetailList = billAllMapper.selectBillMastarDetail(param);
-    	List<BillAllVo> plenaryList = masterDetailList.stream()
-    		    .filter(item -> "370".equals(item.getClsCd()) ||
-    		                    "380".equals(item.getClsCd()) ||
-    		                    "390".equals(item.getClsCd()))
-    		    .collect(Collectors.toList());
-
-    	dto.setPlenaryList(plenaryList);
-
-    	/*정부 이송*/
-
-        return dto;
+        return billRespanse;
     }
 
-	@Override
-	public BillAllVo getBillDetailById(String billId, HashMap<String, Object> param) {
-    	param.put("billId", billId);
 
-    	BillAllVo dto = new BillAllVo();
-    	dto.setBillId(billId);
-
-    	/* 문서 */
-    	List<EbsFileVo> fileList = billAllMapper.selectBillFile(param);
-    	dto.setFileList(fileList);
-
-    	/* ebs_masgter_detail 정보 */
-    	List<BillAllVo> masterDetailList = billAllMapper.selectBillMastarDetail(param);
-    	dto.setMasterDetailList(masterDetailList);
-
-        return dto;
-	}
 }

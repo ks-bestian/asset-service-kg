@@ -11,7 +11,7 @@ import kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo;
 @Mapper
 public interface ProcessMapper {
 
-	ProcessVo selectBpInstance(ProcessVo vo);
+	ProcessVo selectBpTaskInfo(ProcessVo vo);
 
 
 	List<ProcessVo> selectListBpStep(ProcessVo vo);
@@ -34,7 +34,6 @@ public interface ProcessMapper {
 	void updateBpTask(ProcessVo vo);
 
 	List<ProposerVo> selectListProposerId(ProcessVo vo);
-	List<ProposerVo> selectListSrvcJobAuth();
 
 	ProcessVo selectBpTask(ProcessVo vo);
 	List<ProcessVo> selectBpStepTasks(ProcessVo vo);

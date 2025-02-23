@@ -21,7 +21,7 @@ public interface ApplyMapper {
 
 	int insertProposerList(ApplyVo applyVo);
 
-	ApplyVo selectApplyDetail(String billId, String lang);
+	ApplyVo selectApplyDetail(HashMap<String, Object> param);
 
 	void deleteProposerByBillId(String billId);
 
@@ -54,5 +54,8 @@ public interface ApplyMapper {
 	void updateApplyCmt(ApplyVo applyVo);
 
 	void updateBillHome(ApplyVo applyVo);
+
+	void updateBillRecptnDt(ApplyVo applyVo);
+
 
 }

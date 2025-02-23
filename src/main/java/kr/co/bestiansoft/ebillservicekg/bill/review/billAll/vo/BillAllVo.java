@@ -5,13 +5,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.vo.MtngAllVo;
+import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.vo.MtngFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
 
 @Data
 public class BillAllVo extends ComDefaultVO {
-	
+
     private String billId;// 안건아이디
     // 안건번호
     private String billNo;
@@ -27,6 +28,7 @@ public class BillAllVo extends ComDefaultVO {
     private String billNameRu;
     // 제안자종류(정부/의원)
     private String ppslKndCd;
+    private String ppslKndNm;
     // 발의자
     private String ppsrNm;
     // 발의자아이디
@@ -65,57 +67,55 @@ public class BillAllVo extends ComDefaultVO {
     private Long lawId;
     // 철회 사유
     private String wtCn;
-    
+
     // 비고
     private String etc;
     private String etcKg;
     private String etcRu;
-    
+
     // 목록 검색용 : 넘버링
-    private String num; 
+    private String num;
     // 목록 검색용 : 의안명 검색
-    private String searchBillName; 
-    // 언어 구분에 따른 상태코드명 
-    private String statNm; 
-    
+    private String searchBillName;
+    // 언어 구분에 따른 상태코드명
+    private String statNm;
+
     // 안건 접수일자
-    private String rcpDt; 
+    private String rcpDt;
     // 발의자 명단 - 문자열로
-    private String proposerItems; 
-    
+    private String proposerItems;
+
     /* ebs_master_detail 관련 */
-    private String clsCd; 
-    private String rmrk; 
-    private String mtnDt; 
-    private String lglRvwRsltCode; 
-    private String lglActRsltCode;
+    private Long seq;
+    private String clsCd;
+    private String rmrk;
+    private String mtnDt;
+    private String lglRvwRsltCode;//법류검토결과
+    private String lglRvwRsltNm;//법류검토결과
+    private String lglActRsltCode;//법적행위결과코드
     private String rsltDt;
     private String rsltCode;
     private String rsltNm;
     private List<BillAllVo> masterDetailList; //회의정보
+    private String prsdRjctDt;
+
+
 
     /* 소관위 관련 */
     private BillAllVo cmtData;
     private List<MtngAllVo> cmtAgendaList; //회의정보
-    
+
     /* 관련위 관련 */
     private BillAllVo relData;
     private List<MtngAllVo> relAgendaList;
-    
+
     /* 본회의 관련 */
     private List<BillAllVo> plenaryList;
-    
+
     /* 파일 관련*/
     private List<EbsFileVo> fileList;
-    
-    
-    
-    
-
-    
 
 
 
 
-    
 }

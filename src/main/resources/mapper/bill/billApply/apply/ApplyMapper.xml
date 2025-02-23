@@ -22,6 +22,8 @@
 			, reg_dt		-- 등록 날짜
 			<if test="billNo != null"> , bill_no </if> -- 안건번호
 			<if test="ppslDt != null"> , ppsl_dt </if> -- 제안날짜
+			, bill_year_seq		-- 년도별순번
+
 		)
 		values (
 			  #{billId}
@@ -38,7 +40,12 @@
 			, now()
 			<if test="billNo != null">, #{billNo} </if>
 			<if test="ppslDt != null">, #{ppslDt} </if>
-		)
+			, (
+			    select
+	       		  max(coalesce(bill_year_seq,0))+1
+			    from ebs_master
+			    where DATE_PART('year', reg_dt) = DATE_PART('year', now()) )
+		      )
     </insert>
 
     <select id="selectListApply" parameterType="java.util.HashMap"
@@ -400,7 +407,7 @@
 		WHERE bill_id = #{billId}
 			and cmt_se_cd = 'M'
     </update>
-    
+
     <update id="updateBillHome" parameterType="kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo">
     	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.updateBillHome */
         update kgst.ebs_master
@@ -410,4 +417,16 @@
 		  , mod_dt = now()
 		WHERE bill_id = #{billId}
     </update>
+
+    <!-- Reception request date update -->
+    <update id="updateBillRecptnDt" parameterType="kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo">
+    	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.updateBillHome */
+        update kgst.ebs_master
+		set
+		    rcp_req_dt  = to_char(now(),'YYYYMMDD')		-- Reception request date
+		  , mod_id = #{modId}
+		  , mod_dt = now()
+		WHERE bill_id = #{billId}
+    </update>
+
 </mapper>

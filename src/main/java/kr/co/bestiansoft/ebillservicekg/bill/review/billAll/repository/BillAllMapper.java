@@ -6,24 +6,37 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.vo.MtngAllVo;
+import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.vo.MtngFileVo;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billAll.vo.BillAllVo;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 
 @Mapper
 public interface BillAllMapper {
-    List<BillAllVo> selectBillList (HashMap<String, Object> param);
+
+    List<BillAllVo> selectListBill(HashMap<String, Object> param);
     /* 기본정보 */
-    BillAllVo selectBillById(HashMap<String, Object> param);
-    /* 문서(회의별이 아니고 안건별 문서이므로 ebs_file에서 가져와야한다. */
-    List<EbsFileVo> selectBillFile(HashMap<String, Object> param);
-    /* 소관위 기본정보 */
-    BillAllVo selectBillCmtInfo(HashMap<String, Object> param);
-    /* 소관위 회의정보 */
-    List<MtngAllVo> selectBillCmtMtng(HashMap<String, Object> param);
-    /* 관련위 기본정보 */
-    BillAllVo selectBillRelCmtInfo(HashMap<String, Object> param);
-    /* 관련위 회의정보 */
-    List<MtngAllVo> selectBillRelCmtMtng(HashMap<String, Object> param);
-    /* ebs_master_detail 정보 */
-    List<BillAllVo> selectBillMastarDetail(HashMap<String, Object> param);
+    BillAllVo selectBill(HashMap<String, Object> param);
+    /* 문서 */
+    List<EbsFileVo> selectListBillFile(HashMap<String, Object> param);
+
+    List<BillAllVo> selectListBillCmt(HashMap<String, Object> param);
+
+    /* committee meeting list*/
+    List<MtngAllVo> selectListCmtMeeting(HashMap<String, Object> param);
+
+    /* Main meeting list*/
+    List<MtngAllVo> selectListMainMeeting(HashMap<String, Object> param);
+
+    /* Party meeting list*/
+    List<MtngAllVo> selectListPartyMeeting(HashMap<String, Object> param);
+
+    /* meeting result file list*/
+    List<MtngFileVo> selectListMettingResultFile(Long mtngId);
+
+    List<BillAllVo> selectListBillEtcInfo(HashMap<String, Object> param);
+
+
+
+
+
 }

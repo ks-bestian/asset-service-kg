@@ -38,7 +38,7 @@ public class ApplyServiceImpl implements ApplyService {
 	private final ComFileService comFileService;
 	private final ProcessService processService;
 	private final HomePageMapper homePageMapper;
-	
+
 	@Transactional
 	@Override
 	public ApplyVo createApply(ApplyVo applyVo) throws Exception {
@@ -73,7 +73,7 @@ public class ApplyServiceImpl implements ApplyService {
 			ApplyVo member = applyMapper.getProposerInfo(memberId);
 
 			if(member == null) break;
-			
+
 			applyVo.setOrd(++ord);
 			applyVo.setPolyCd(member.getPolyCd());
 			applyVo.setPolyNm(member.getPolyNm());
@@ -169,12 +169,13 @@ public class ApplyServiceImpl implements ApplyService {
 	}
 
 	@Override
-	public ApplyResponse getApplyDetail(String billId, String lang) {
+	public ApplyResponse getApplyDetail(String billId, HashMap<String, Object> param) {
 
 		ApplyResponse result = new ApplyResponse();
 
 		//안건 상세
-		ApplyVo applyDetail = applyMapper.selectApplyDetail(billId, lang);
+		param.put("billId", billId);
+		ApplyVo applyDetail = applyMapper.selectApplyDetail(param);
 		result.setApplyDetail(applyDetail);
 
 		//파일 리스트
@@ -184,15 +185,17 @@ public class ApplyServiceImpl implements ApplyService {
 		//발의자 대상
 		List<AgreeVo> proposerList = agreeMapper.selectAgreeProposerList(billId);
 		result.setProposerList(proposerList);
-		
+
 		//안건 의견 목록
 		List<ApplyVo> commentList = homePageMapper.selectBillCommentList(applyDetail.getSclDscRcpNmb());
 		result.setCommentList(commentList);
-		
+
 		//안건 프로세스정보가져오기.
 		ProcessVo pcParam = new ProcessVo();
 		pcParam.setBillId(billId);
-		ProcessVo pcVo = processMapper.selectBpInstance(pcParam);
+		pcParam.setStepId(String.valueOf(param.get("stepId")));
+		pcParam.setTrgtUserId(String.valueOf(param.get("trgtUserId")));
+		ProcessVo pcVo = processMapper.selectBpTaskInfo(pcParam);
 		result.setProcessVo(pcVo);
 
 		return result;
@@ -234,6 +237,10 @@ public class ApplyServiceImpl implements ApplyService {
 	@Override
 	public ApplyVo saveBillAccept(String billId, ApplyVo applyVo) {
 
+		String userId = new SecurityInfoUtil().getAccountId();
+		applyVo.setBillId(billId);
+		applyVo.setModId(userId);
+		applyMapper.updateBillRecptnDt(applyVo);
 
 		ProcessVo pVo = new ProcessVo();
 		pVo.setBillId(billId);
@@ -259,14 +266,14 @@ public class ApplyServiceImpl implements ApplyService {
 	@Override
 	public ApplyVo createBillHome(ApplyVo applyVo) {
 		String modId = new SecurityInfoUtil().getAccountId();
-		
+
 		homePageMapper.insertHomeLaws(applyVo);
-		
+
 		String sclDscRcpNmb = String.valueOf(applyVo.getId());
 		applyVo.setSclDscRcpNmb(sclDscRcpNmb);
 		applyVo.setModId(modId);
 		applyMapper.updateBillHome(applyVo);
-		
+
 		return applyVo;
 	}
 

@@ -3,6 +3,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper">
 
+
+
     <select id="selectListBillMng" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper.selectListBillMng */
@@ -313,7 +315,18 @@
     </select>
 
 
+	<update id="updateBillno" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
+	    /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.updateBillno */
+		UPDATE kgst.ebs_master
+		SET
+			  bill_no = kgst.fngetbillno(#{billId})
+			, rcp_dt = to_char(now(),'YYYYMMDD')
+			, rcp_usr_id = #{modId}
+			, mod_id = #{modId}
+			, mod_dt = now()
+		WHERE	bill_id = #{billId}
 
+	</update>
 
 
     <!-- jjjjjjjjjjjjjjjjjjj -->
@@ -417,6 +430,8 @@
             now()
 		)
 	</insert>
+
+	<!--
 	<update id="updateProcess" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.ProposerVo">
 		/* 프로세스 처리 - 접수자가 업무 처리 했을때. (단순 수정 아님.)*/
 		UPDATE
@@ -447,6 +462,9 @@
 			AND proc_id = #{procId}
 
 	</update>
+
+	 -->
+
     <select id="selectMemberList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.ProposerVo">
     	/* 발의자 선택 팝업용 의원 명단 조회 */
 		SELECT

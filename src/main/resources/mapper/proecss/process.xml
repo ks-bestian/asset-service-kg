@@ -89,22 +89,32 @@
 	    )
 	</insert>
 
-   <select id="selectBpInstance"  parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo"
+   <select id="selectBpTaskInfo"  parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo"
    resultType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
-   /* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.selectBpInstance */
-	SELECT
-	        BILL_ID
-	     ,  BP_DF_ID
-	     ,  START_DT
-	     ,  END_DT
-	     ,  STATUS
-	     ,  CURRENT_STEP_ID
-	     ,  REG_ID
-	     ,  REG_DT
-	     ,  MOD_ID
-	     ,  MOD_DT
-	  FROM EBS_BP_INSTANCE
-	 WHERE BILL_ID = #{billId}
+   /* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.selectBpTaskInfo */
+
+	select
+	    task_id
+	  , task_nm
+	  , status as task_status
+	  , step_id
+	  , assigned_to
+	  , trgt_user_id
+	  , completed_dt
+	  , reg_dt
+	  , reg_id
+	  , mod_id
+	  , mod_dt
+	from ebs_bp_tasks
+	where bill_id = #{billId}
+	  and step_id = #{stepId}
+	  <if test="assignedTo != null and assignedTo != ''">
+	    and assigned_to = #{assignedTo}
+	  </if>
+	  <if test="trgtUserId != null and trgtUserId != ''">
+	    and trgt_user_id = #{trgtUserId}
+	  </if>
+
 
 	</select>
 
@@ -469,16 +479,6 @@
 	</select>
 
 
-  <!-- 서비스별 버튼권한 목록 -->
-   <select id="selectListSrvcJobAuth"  parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo"
-   	    resultType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
-   	    /* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.selectListSrvcJobAuth */
-		select
-		    srvc_cd
-		  , job_cd
-		from ebs_bp_srvc_job
-		where use_yn = 'Y'
-	</select>
 
 
 
