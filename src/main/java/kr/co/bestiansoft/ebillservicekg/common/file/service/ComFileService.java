@@ -15,6 +15,7 @@ public interface ComFileService {
 	
 //	void saveFileEbs(MultipartFile[] files, String billId);
 	void saveFileEbs(MultipartFile[] files, String[] fileKindCd, String billId);
+	void saveFileEbs(String[] myFileIds, String[] fileKindCdList, String billId) throws Exception;
 	void saveFileEbsMtng(MultipartFile[] files, String[] fileKindCdList, Long mtngId);
 	void saveFileBillMng(EbsFileVo ebsFileVo);
 

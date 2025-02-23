@@ -34,7 +34,7 @@ public class ApplyController {
 
     @ApiOperation(value = "안건제출", notes = "안건을 생성한다")
     @PostMapping(value = "/bill/apply", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<CommonResponse> createBillApply(ApplyVo applyVo) {
+    public ResponseEntity<CommonResponse> createBillApply(ApplyVo applyVo) throws Exception {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "apply create successfully", applyService.createApply(applyVo)), HttpStatus.CREATED);
     }
 
