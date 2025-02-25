@@ -13,4 +13,5 @@ public class QuickMenuVo extends ComDefaultVO {
     private Long menuId;
     private Boolean isFavorite;
     private String menuNm;
+    private String menuPath;
 }

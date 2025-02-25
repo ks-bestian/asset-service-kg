@@ -136,8 +136,8 @@
             , cq.reg_dt
             , cq.mod_id
             , cq.mod_dt
-            , cm.menu_nm1 as menu_nm
-            . kgst.fngetlangnm(cm.menu_nm1, cm.menu_nm2, cm.menu_nm3, #{lang}) as menu_nm
+            , kgst.fngetlangnm(cm.menu_nm1, cm.menu_nm2, cm.menu_nm3, #{lang}) as menu_nm
+            , cm.menu_path
         from com_quick_menu cq
         inner join com_menu cm on cm.menu_id = cq.menu_id
         where cq.user_id = #{userId}
