@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo;
 import kr.co.bestiansoft.ebillservicekg.common.file.repository.ComFileMapper;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.PdfService;
@@ -42,7 +43,7 @@ public class ComFileServiceImpl implements ComFileService {
     private final ComFileMapper fileMapper;
 	private final ExecutorService executorService;
 	private final PdfService pdfService;
-	
+
 	@Override
 	public String saveFile(MultipartFile[] files) {
 		String fileGroupId = StringUtil.getUUUID();
@@ -70,22 +71,22 @@ public class ComFileServiceImpl implements ComFileService {
 
 			fileMapper.insertFile(fileVo);
 		}
-		
+
 		return fileGroupId;
 	}
-	
+
 	void convertToPdfEbs(MultipartFile mpf, String orgFileId) {
 		try {
 			String filename = mpf.getOriginalFilename();
 			File tmpFile = File.createTempFile("tmp", null);
 			mpf.transferTo(tmpFile);
-			
+
 			executorService.submit(() -> {
 				File pdfFile = null;
 				try {
 					pdfFile = File.createTempFile("tmp", null);
 					boolean success = pdfService.convertToPdf(tmpFile.getAbsolutePath(), filename, pdfFile.getAbsolutePath());
-					
+
 					if(success) {
 						String pdfFileId = StringUtil.getUUUID();
 						try (InputStream edvIs = new FileInputStream(pdfFile)) {
@@ -96,7 +97,7 @@ public class ComFileServiceImpl implements ComFileService {
 
 						int idx = filename.lastIndexOf(".");
 						String pdfFileNm = filename.substring(0, idx) + ".pdf";
-						
+
 						EbsFileVo fileVo = new EbsFileVo();
 						fileVo.setOrgFileId(orgFileId);
 						fileVo.setPdfFileId(pdfFileId);
@@ -113,7 +114,7 @@ public class ComFileServiceImpl implements ComFileService {
 						pdfFile.delete();
 					}
 				}
-			});	
+			});
 		}
 		catch(IOException e) {
 			e.printStackTrace();
@@ -124,7 +125,7 @@ public class ComFileServiceImpl implements ComFileService {
 	public void saveFileEbs(MultipartFile[] files, String[] fileKindCdList, String billId) {
 
 		if(files == null) return;
-		
+
 		List<Map<String, Object>> pdfJobs = new ArrayList<>();
 
 		String[] fileKindCds = fileKindCdList;
@@ -154,14 +155,14 @@ public class ComFileServiceImpl implements ComFileService {
 			fileVo.setFileKindCd(fileKindCd);
 			idx++;
 			fileMapper.insertFileEbs(fileVo);
-			
+
 			// pdf변환작업
 			Map<String, Object> pdfJob = new HashMap<>();
 			pdfJob.put("file", file);
 			pdfJob.put("orgFileId", orgFileId);
 			pdfJobs.add(pdfJob);
 		}
-		
+
 		// pdf변환
 		for(Map<String, Object> job : pdfJobs) {
 			MultipartFile file = (MultipartFile)job.get("file");
@@ -169,7 +170,7 @@ public class ComFileServiceImpl implements ComFileService {
 			convertToPdfEbs(file, orgFileId);
 		}
 	}
-	
+
 	@Override
 	public List<ComFileVo> getFileList(String fileGroupId) {
 		return fileMapper.findByFileGroupId(fileGroupId);
@@ -224,7 +225,7 @@ public class ComFileServiceImpl implements ComFileService {
 
 			String orgFileId = StringUtil.getUUUID();
     		String orgFileNm = file.getOriginalFilename();
-    		
+
 
     		////////////////////////
 			try (InputStream edvIs = file.getInputStream()){
@@ -245,21 +246,21 @@ public class ComFileServiceImpl implements ComFileService {
 				String fileKindCd = fileKindCds[idx];
 				fileVo.setFileKindCd(fileKindCd);
 			}
-			
+
 			idx++;
 			fileMapper.insertFileEbsMtng(fileVo);
 		}
-		
+
 	}
 
 	@Override
 	public void saveFileBillMng(EbsFileVo ebsFileVo) {
 		if(ebsFileVo.getFiles() == null) return;
-		
+
 		for(MultipartFile file : ebsFileVo.getFiles()) {
 			String orgFileId = StringUtil.getUUUID();
     		String orgFileNm = file.getOriginalFilename();
-    		
+
     		////////////////////////
 			try (InputStream edvIs = file.getInputStream()){
 				edv.save(orgFileId, edvIs);
@@ -267,7 +268,7 @@ public class ComFileServiceImpl implements ComFileService {
 				throw new RuntimeException("EDV_NOT_WORK", edvEx);
 			}
     		////////////////////////
-			
+
 			String regId = new SecurityInfoUtil().getAccountId();
 			EbsFileVo fileVo = new EbsFileVo();
 			fileVo.setBillId(ebsFileVo.getBillId());
@@ -282,6 +283,57 @@ public class ComFileServiceImpl implements ComFileService {
 			fileVo.setRmk(ebsFileVo.getRmk());
 			fileMapper.insertFileEbs(fileVo);
 		}
+	}
+
+	@Override
+	public void saveFileBillDetailMng(BillMngVo billMngVo) {
+
+		if(billMngVo.getFiles() == null) return;
+
+		List<Map<String, Object>> pdfJobs = new ArrayList<>();
+		Long detailSeq = billMngVo.getSeq();
+		String billId = billMngVo.getBillId();
+		String clsCd = billMngVo.getClsCd();
+
+		for(MultipartFile file:billMngVo.getFiles()) {
+
+			String orgFileId = StringUtil.getUUUID();
+    		String orgFileNm = file.getOriginalFilename();
+
+    		////////////////////////
+			try (InputStream edvIs = file.getInputStream()){
+				edv.save(orgFileId, edvIs);
+			} catch (Exception edvEx) {
+				throw new RuntimeException("EDV_NOT_WORK", edvEx);
+			}
+    		////////////////////////
+
+			EbsFileVo fileVo = new EbsFileVo();
+			fileVo.setBillId(billId);
+
+			fileVo.setOrgFileId(orgFileId);
+			fileVo.setOrgFileNm(orgFileNm);
+			fileVo.setFileSize(file.getSize());
+			fileVo.setDeleteYn("N");
+			fileVo.setOpbYn("N");
+			fileVo.setDetailSeq(detailSeq);
+			fileVo.setClsCd(clsCd);
+			fileMapper.insertFileEbs(fileVo);
+
+			// pdf변환작업
+			Map<String, Object> pdfJob = new HashMap<>();
+			pdfJob.put("file", file);
+			pdfJob.put("orgFileId", orgFileId);
+			pdfJobs.add(pdfJob);
+		}
+
+		// pdf변환
+		for(Map<String, Object> job : pdfJobs) {
+			MultipartFile file = (MultipartFile)job.get("file");
+			String orgFileId = (String)job.get("orgFileId");
+			convertToPdfEbs(file, orgFileId);
+		}
+
 	}
 
 

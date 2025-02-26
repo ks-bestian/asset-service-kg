@@ -16,17 +16,20 @@ public interface BillMngMapper {
 	List<BillMngVo> selectListBillMng(HashMap<String, Object> param);
 	BillMngVo selectOneBill(BillMngVo argVo);
 
-
 	void insertBillDetail(BillMngVo billMngVo);
+	void updateBillDetail(BillMngVo billMngVo);
+
 	void updateBillno(BillMngVo billMngVo);
 	List<BillMngVo> selectListBillEtcInfo(BillMngVo billMngVo);
 	List<MtngAllVo> selectListCmtMeetingList(BillMngVo billMngVo);
 
 	//List<BillMngVo> selectListlegalReview(HashMap<String, Object> param);
-	//BillMngVo selectOnelegalReview(BillMngVo argVo);
+	BillMngVo selectOnelegalReview(BillMngVo argVo);
 	List<BillMngVo> selectListCmtReviewReport(HashMap<String, Object> param);
 
-
+	void insertCmtMeetingRvReport(BillMngVo billMngVo);
+	void deleteCmtReview(BillMngVo billMngVo);
+	void deleteCmtReviewEbsFile(BillMngVo billMngVo);
 
 
 /////////////////////////////

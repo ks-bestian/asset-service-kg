@@ -7,7 +7,7 @@
 
     <select id="selectListBillMng" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper.selectListBillMng */
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.selectListBillMng */
 		select
 		    pl.bill_id
 		  , kgst.fngetlangnm(pl.bill_name_kg,pl.bill_name_ru,pl.bill_name_kg,#{lang}) as bill_name -- 안건 이름
@@ -60,7 +60,7 @@
     <select id="selectOneBill" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
         /* 안건 관리 상세 화면 */
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper.selectOneBill */
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.selectOneBill */
 		select
 		    pl.bill_id
 		  , kgst.fngetlangnm(pl.bill_name_kg,pl.bill_name_ru,pl.bill_name_kg,#{lang}) as bill_name -- 안건 이름
@@ -96,7 +96,7 @@
 
     <select id="selectListlegalReview" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper.selectListlegalReview */
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.selectListlegalReview */
 		select
 		    pl.bill_id
 		  , kgst.fngetlangnm(pl.bill_name_kg,pl.bill_name_ru,pl.bill_name_kg,#{lang}) as bill_name -- 안건 이름
@@ -137,7 +137,7 @@
 
     <select id="selectListBillEtcInfo" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper.selectOnelegalReview */
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.selectListBillEtcInfo */
         select
 			  emd.seq
 			, emd.bill_id
@@ -149,15 +149,19 @@
 			, emd.lgl_rvw_rslt_code
 			, emd.lgl_act_rslt_code
 			, emd.rslt_dt
+			, emd.rslt_code
 			, emd.reg_id
 			, emd.reg_dt
+			, kgst.fngetlangnm(vum.member_nm_kg,vum.member_nm_ru,vum.member_nm_kg,#{lang}) as reg_nm -- 등록자 이름
+			, emd.dept_cd
 		from kgst.ebs_master_detail emd
+		join kgst.view_user_member vum on (emd.reg_id = vum.user_id)
 		where emd.bill_id = #{billId}
     </select>
 
     <select id="selectOnelegalReview" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper.selectOnelegalReview */
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.selectOnelegalReview */
         select
 			  emd.seq
 			, emd.bill_id
@@ -169,16 +173,17 @@
 			, emd.lgl_rvw_rslt_code
 			, emd.lgl_act_rslt_code
 			, emd.rslt_dt
+			, emd.rslt_code
+			, emd.dept_cd
 			, emd.reg_id
 			, emd.reg_dt
 		from kgst.ebs_master_detail emd
-		where emd.bill_id = #{billId}
-			and emd.cls_cd = #{clsCd}
+		where emd.seq = #{seq}
     </select>
 
     <insert id="insertBillDetail" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo"
      useGeneratedKeys="true" keyProperty="seq">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper.insertBillDetail */
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.insertBillDetail */
 		insert into kgst.ebs_master_detail (
 		      bill_id
 		    , cls_cd
@@ -190,10 +195,10 @@
 		    <if test="lglActRsltCode != null">, lgl_act_rslt_code</if>
 		    <if test="rsltDt != null">, rslt_dt</if>
 		    <if test="rsltCode != null">, rslt_code</if>
+		    , dept_cd
 		    , reg_id
 		    , reg_dt
-		)
-		values (
+		) values (
 		      #{billId}
 		    , #{clsCd}
 		    <if test="rmrkKg != null">, #{rmrkKg}</if>
@@ -204,28 +209,35 @@
 		    <if test="lglActRsltCode != null">, #{lglActRsltCode}</if>
 		    <if test="rsltDt != null">, #{rsltDt}</if>
 		    <if test="rsltCode != null">, #{rsltCode}</if>
+		    , #{deptCd}
 		    , #{regId}
 		    , now()
 		)
-
-		ON CONFLICT (bill_id,cls_cd) -- Specify the unique key or constraint here
-        DO UPDATE SET
-	          mod_id = #{modId}
-	        , mod_dt = now()
-    	    <if test="rmrkKg != null">, rmrk_kg = #{rmrkKg}</if>
-	        <if test="rmrkRu != null">, rmrk_ru = #{rmrkRu}</if>
-	        <if test="mtnDt != null">, mtn_dt = #{mtnDt}</if>
-	        <if test="prsdRjctDt != null">, prsd_rjct_dt = #{prsdRjctDt}</if>
-	        <if test="lglRvwRsltCode != null">, lgl_rvw_rslt_code = #{lglRvwRsltCode}</if>
-	        <if test="lglActRsltCode != null">, lgl_act_rslt_code = #{lglActRsltCode}</if>
-	        <if test="rsltDt != null">, rslt_dt = #{rsltDt}</if>
-	        <if test="rsltCode != null">, rslt_code = #{rsltCode}</if>
     </insert>
+
+    <update id="updateBillDetail" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.updateBillDetail */
+		UPDATE kgst.ebs_master_detail
+		SET
+			  mod_id = #{modId}
+			, mod_dt = now()
+			<if test="clsCd != null">, cls_cd = #{clsCd}</if>
+		    <if test="rmrkKg != null">, rmrk_kg = #{rmrkKg}</if>
+		    <if test="rmrkRu != null">, rmrk_ru = #{rmrkRu}</if>
+		    <if test="mtnDt != null">, mtn_dt = #{mtnDt}</if>
+		    <if test="prsdRjctDt != null">, prsd_rjct_dt = #{prsdRjctDt}</if>
+		    <if test="lglRvwRsltCode != null">, lgl_rvw_rslt_code = #{lglRvwRsltCode}</if>
+		    <if test="lglActRsltCode != null">, lgl_act_rslt_code = #{lglActRsltCode}</if>
+		    <if test="rsltDt != null">, rslt_dt = #{rsltDt}</if>
+		    <if test="rsltCode != null">, rslt_code = #{rsltCode}</if>
+		    <if test="deptCd != null">, dept_cd = #{deptCd}</if>
+		WHERE seq = #{seq}
+    </update>
 
     <!-- committee review report main sub -->
     <select id="selectListCmtReviewReport" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper.selectListCmtReviewReport */
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.selectListCmtReviewReport */
 
 		select
 		    A.bill_id
@@ -293,7 +305,7 @@
 
     <select id="selectListCmtMeetingList" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.vo.MtngAllVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper.selectListCmtMeetingList */
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.selectListCmtMeetingList */
 		select
 		    em.mtng_id
 		  , em.mtng_type_cd
@@ -329,6 +341,57 @@
 	</update>
 
 
+
+    <insert id="insertCmtMeetingRvReport" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo"
+    	useGeneratedKeys="true" keyProperty="seq">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.insertCmtMeetingRvReport */
+		insert into kgst.ebs_master_detail (
+		      bill_id
+		    , cls_cd
+		    <if test="rmrkKg != null">, rmrk_kg</if>
+		    <if test="rmrkRu != null">, rmrk_ru</if>
+		    <if test="mtnDt != null">, mtn_dt</if>
+		    <if test="prsdRjctDt != null">, prsd_rjct_dt</if>
+		    <if test="lglRvwRsltCode != null">, lgl_rvw_rslt_code</if>
+		    <if test="lglActRsltCode != null">, lgl_act_rslt_code</if>
+		    <if test="rsltDt != null">, rslt_dt</if>
+		    <if test="rsltCode != null">, rslt_code</if>
+		    <if test="deptCd != null">, dept_cd</if>
+		    , reg_id
+		    , reg_dt
+		)
+		values (
+		      #{billId}
+		    , #{clsCd}
+		    <if test="rmrkKg != null">, #{rmrkKg}</if>
+		    <if test="rmrkRu != null">, #{rmrkRu}</if>
+		    <if test="mtnDt != null">, #{mtnDt}</if>
+		    <if test="prsdRjctDt != null">, #{prsdRjctDt}</if>
+		    <if test="lglRvwRsltCode != null">, #{lglRvwRsltCode}</if>
+		    <if test="lglActRsltCode != null">, #{lglActRsltCode}</if>
+		    <if test="rsltDt != null">, #{rsltDt}</if>
+		    <if test="rsltCode != null">, #{rsltCode}</if>
+		    <if test="deptCd != null">, #{deptCd}</if>
+		    , #{regId}
+		    , now()
+		)
+    </insert>
+
+	<delete id="deleteCmtReview" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
+    	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.deleteCmtReview */
+		delete from kgst.ebs_master_detail
+	    where seq = #{seq}
+	</delete>
+
+	<update id="deleteCmtReviewEbsFile" parameterType="kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo">
+    	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.deleteCmtReviewEbsFile */
+		update kgst.ebs_file
+		set   delete_yn = 'Y'
+			, mod_id = #{modId}
+			, mod_dt = now()
+	    where bill_id = #{billId}
+	      and detail_seq = #{detailSeq}
+	</update>
     <!-- jjjjjjjjjjjjjjjjjjj -->
 
 
@@ -431,39 +494,6 @@
 		)
 	</insert>
 
-	<!--
-	<update id="updateProcess" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.ProposerVo">
-		/* 프로세스 처리 - 접수자가 업무 처리 했을때. (단순 수정 아님.)*/
-		UPDATE
-			kgst.ebs_process
-		SET
-			proc_usr_id = #{procUsrId}
-			, proc_dt = now()
-			, proc_yn = 'Y'
-			<if test="rsltCd != null and rsltCd != ''">
-				, rslt_cd = #{rsltCd}
-			</if>
-			<if test="rsltDt != null and rsltDt != ''">
-				, rslt_dt = #{rsltDt}
-			</if>
-			<if test="rmk != null and rmk != ''">
-				, rmk = #{rmk}
-			</if>
-			<if test="prsntDt != null and prsntDt != ''">
-				, prsnt_dt = #{prsntDt}
-			</if>
-			<if test="billAprvNo != null and billAprvNo != ''">
-				, bill_aprv_no = #{billAprvNo}
-			</if>
-			, mod_id = #{modId}
-			, mod_dt = now()
-		WHERE
-			bill_id = #{billId}
-			AND proc_id = #{procId}
-
-	</update>
-
-	 -->
 
     <select id="selectMemberList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.ProposerVo">
     	/* 발의자 선택 팝업용 의원 명단 조회 */
@@ -514,7 +544,7 @@
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.selectFileList */
 
 		SELECT
-		    ef.seq
+		      ef.seq
 		    , ef.bill_id
 		    , ef.file_kind_cd
 		    , ef.cls_cd
@@ -533,7 +563,7 @@
 			, ef.detail_seq
 			, kgst.fngetlangnm(vum.member_nm_kg, vum.member_nm_ru, vum.member_nm_kg, #{lang}) as ppsr_nm -- 제안자 이름
 		FROM kgst.ebs_file ef
-			left join view_user_member vum on vum.user_id = ef.reg_id
+		left join view_user_member vum on vum.user_id = ef.reg_id
 		WHERE ef.delete_yn = 'N'
 			and ef.bill_id = #{billId}
 		order by ef.file_kind_cd, ef.reg_dt
@@ -593,14 +623,12 @@
 
 	<update id="updateEbsFileDelYn" parameterType="kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo">
     	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.updateEbsFileDelYn */
-		update
-			kgst.ebs_file
-		set
-			delete_yn = 'Y'
+		update kgst.ebs_file
+		set   delete_yn = 'Y'
 			, mod_id = #{modId}
 			, mod_dt = now()
 	    where bill_id = #{billId}
-	    	and org_file_id = #{orgFileId}
+	      and org_file_id = #{orgFileId}
 	</update>
 
 </mapper>

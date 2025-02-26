@@ -1,6 +1,7 @@
 package kr.co.bestiansoft.ebillservicekg.bill.review.billMng.service.impl;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -47,22 +48,42 @@ public class BillMngServiceImpl implements BillMngService {
     	BillMngVo billMngVo = billMngMapper.selectOneBill(argVo);//bill basic info
     	List<BillMngVo> billEtcInfoList = billMngMapper.selectListBillEtcInfo(argVo);
     	List<EbsFileVo> fileList = billMngMapper.selectFileList(argVo);
+    	billMngVo.setEbsfileList(fileList);
+
     	List<BillMngVo> cmtList = billMngMapper.selectEbsMasterCmtList(argVo);
     	List<MtngAllVo> cmtMeetingList = billMngMapper.selectListCmtMeetingList(argVo);//committee meeting list
 
-    	BillMngVo billlegalReviewVo = null;//bill legal review department
-    	BillMngVo billLangReview1stVo = null;//bill legal review department
+    	BillMngVo billlegalReviewVo = new BillMngVo();//bill legal review department
+    	List<BillMngVo> billLangReviewVoList = new ArrayList<BillMngVo>();//bill Language review department
+    	List<BillMngVo> billCmtReviewList = new ArrayList<BillMngVo>();//bill Committee review department
 
     	for(BillMngVo listVo : billEtcInfoList) {
 
     		String clsCd = listVo.getClsCd();
-    		if("110".equals(clsCd)) {//법률검토결과
-    			billlegalReviewVo = listVo;
-    		} else if("120".equals(clsCd)) {//위원회1차언어전문파트
-    			billLangReview1stVo = listVo;
+    		//if(argVo.getDeptCd().equals(listVo.getDeptCd())) {
+
+        		if("110".equals(clsCd)) {//법률검토결과
+        			billlegalReviewVo = listVo;
+        		} else if("120".equals(clsCd)) {//위원언어전문파트
+        			billLangReviewVoList.add(listVo);
+        		} else if("140".equals(clsCd)) {// Bill detail info Committee Review
+        			billCmtReviewList.add(listVo);
+        		}
+    		//}
+    	}
+
+    	for(BillMngVo vo : billCmtReviewList) {
+    		Long seq = vo.getSeq();
+    		List<EbsFileVo> cmtFileList = new ArrayList<EbsFileVo>();
+
+    		if(argVo.getDeptCd().equals(vo.getDeptCd())) {
+        		for(EbsFileVo fvo:fileList) {
+        			if(seq.equals(fvo.getDetailSeq())) {
+        				cmtFileList.add(fvo);
+        			}
+        		}
+        		vo.setEbsfileList(cmtFileList);
     		}
-
-
     	}
 
     	//List<ProposerVo> proposerList = billMngMapper.selectProposerMemberList(param);
@@ -72,8 +93,8 @@ public class BillMngServiceImpl implements BillMngService {
     	billMngResponse.setBillMngVo(billMngVo);
     	billMngResponse.setBillEtcInfoList(billEtcInfoList);
     	billMngResponse.setBilllegalReviewVo(billlegalReviewVo);
-    	billMngResponse.setBillLangReview1stVo(billLangReview1stVo);
-    	billMngResponse.setFileList(fileList);
+    	billMngResponse.setBillLangReviewVoList(billLangReviewVoList);
+    	billMngResponse.setBillCmtReviewVoList(billCmtReviewList);
     	billMngResponse.setCmtList(cmtList);
     	billMngResponse.setCmtMeetingList(cmtMeetingList);
 
@@ -149,7 +170,15 @@ public class BillMngServiceImpl implements BillMngService {
 
 		String loginId = new SecurityInfoUtil().getAccountId();
 		billMngVo.setRegId(loginId);
-		billMngMapper.insertBillDetail(billMngVo);
+		billMngVo.setModId(loginId);
+
+		BillMngVo billDetailVo = billMngMapper.selectOnelegalReview(billMngVo);
+		if(billDetailVo == null) {
+			billMngMapper.insertBillDetail(billMngVo);
+		} else {
+			billMngMapper.updateBillDetail(billMngVo);
+		}
+
 		return billMngVo;
 	}
 
@@ -175,8 +204,34 @@ public class BillMngServiceImpl implements BillMngService {
 	}
 
 
+	@Override
+	public BillMngVo insertCmtMeetingRvReport(BillMngVo billMngVo) {
 
+		BillMngVo resultVo = new BillMngVo();
+		String loginId = new SecurityInfoUtil().getAccountId();
+		billMngVo.setRegId(loginId);
+		/*bill detail info insert*/
+		billMngMapper.insertCmtMeetingRvReport(billMngVo);
 
+		/*bill detail file info insert*/
+		comFileService.saveFileBillDetailMng(billMngVo);
+
+		resultVo.setSeq(billMngVo.getSeq());
+		resultVo.setBillId(billMngVo.getBillId());
+
+		return resultVo;
+	}
+
+	@Override
+	public BillMngVo deleteCmtReview(BillMngVo billMngVo) {
+
+		String loginId = new SecurityInfoUtil().getAccountId();
+		billMngVo.setModId(loginId);
+		billMngMapper.deleteCmtReview(billMngVo);
+		billMngMapper.deleteCmtReviewEbsFile(billMngVo);
+
+		return billMngVo;
+	}
 
 	///////////////////////////////////////////////////////////////////
 
@@ -244,6 +299,9 @@ public class BillMngServiceImpl implements BillMngService {
 
 		return ebsFileVo;
 	}
+
+
+
 
 
 }
