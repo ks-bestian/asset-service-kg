@@ -25,7 +25,7 @@ public class FileScheduledTasks {
 
 	//@Scheduled(cron = "0 0/5 * * * ?") // 매 5분마다
     ///@Scheduled(fixedRate = 300000) // 300000 밀리초 = 5분  5 60 1000
-    @Scheduled(fixedRate = 3600000) // 300000 밀리초 = 5분  5 60 1000  60 60 1000
+    @Scheduled(fixedRate = 1000 * 60 * 5) // 300000 밀리초 = 5분  5 60 1000  60 60 1000
     public void edvFileDeleteTask() {
     	String formattedDate = dateFormat.format(new Date(System.currentTimeMillis()));
         logger.info("배치 작업이 실행됩니다: " + formattedDate);

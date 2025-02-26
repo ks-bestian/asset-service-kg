@@ -49,7 +49,8 @@ jwt:
 edv:
 #  rmi: http://localhost:7000/rmi
   #rmi: http://192.168.0.212:7000/rmi
-  rmi: http://3.39.79.144:7000/rmi
+#  rmi: http://3.39.79.144:7000/rmi
+  rmi: http://43.203.192.251:7000/rmi
   root-folder: edv
 #  property-path: C:/proj/edv_postgre/edv-bestian/repository/datastore/directory.properties
 #  property-path: /home/eBill/edv-bestian/repository/datastore/directory.properties
