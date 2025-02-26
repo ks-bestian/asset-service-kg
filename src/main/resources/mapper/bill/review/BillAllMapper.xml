@@ -87,12 +87,13 @@
 			, emc.reg_dt as submit_dt -- 회부일
 			, emc.cmt_cd
 			, emc.cmt_se_cd
-			, kgst.fngetcodenm('1018',emc.cmt_se_cd,#{lang}) as dept_nm
+			, kgst.fngetcodenm('1018',emc.cmt_se_cd,#{lang}) as cmt_se_nm
 			, kgst.fngetlangnm(cd.dept_nm1,cd.dept_nm2,cd.dept_nm3,#{lang}) as dept_nm
 		from kgst.ebs_master em
 		join kgst.ebs_master_cmt emc on (em.bill_id = emc.bill_id)
 		join kgst.com_dept cd on (emc.cmt_cd = cd.dept_cd)
 		where em.bill_id = #{billId}
+		order by emc.cmt_se_cd, emc.cmt_cd
 
 
     </select>
@@ -113,10 +114,13 @@
 			, ef.file_size
 			, ef.reg_dt
 			, ef.reg_id
+			, ef.detail_seq
 		FROM kgst.ebs_file ef
 		WHERE 1=1
 		  AND ef.delete_yn = 'N'
 		  AND ef.bill_id = #{billId}
+		  AND ef.detail_seq is null
+		  AND ef.file_kind_cd in ('110','120','130')
 		order by ef.seq
 
     </select>
@@ -260,12 +264,30 @@
    </select>
 
 
+    <select id="selectListBillEtcFile" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper.selectListBillEtcFile */
+		select
+		    emc.bill_id
+		  , emd.dept_cd
+		  , emd.cls_cd
+		  , ef.org_file_id
+		  , ef.org_file_nm
+		  , ef.pdf_file_id
+		  , ef.pdf_file_nm
+		  , ef.detail_seq
+		from ebs_master_cmt emc
+		join ebs_master_detail emd on (emc.bill_id = emd.bill_id)
+		join ebs_file ef on (emd.seq = ef.detail_seq)
+		where emc.bill_id =  #{billId}
+		  and emc.cmt_cd = emd.dept_cd
+    	<if test="clsCd != null and clsCd != ''">
+    		and emd.cls_cd = #{clsCd}
+    	</if>
+		  and ef.delete_yn = 'N'
+		order by cmt_se_cd, cmt_cd
 
-
-
-
-
-
+		</select>
 
 
 

@@ -44,6 +44,11 @@ public interface BillMngService {
     List<BillMngVo> selectListCmtReviewReport(HashMap<String, Object> param);
 
 
+    /* Bill meeting review */
+    BillMngVo insertCmtMeetingRvReport(BillMngVo billMngVo);
+
+    /* Bill meeting review */
+    BillMngVo deleteCmtReview(BillMngVo billMngVo);
 
     ////////////////////////////////////////////////////////////////////
 

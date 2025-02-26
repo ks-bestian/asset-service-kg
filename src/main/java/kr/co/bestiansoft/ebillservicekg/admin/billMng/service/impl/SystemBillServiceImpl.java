@@ -427,7 +427,7 @@ public class SystemBillServiceImpl implements SystemBillService {
 		param.put("billId", systemBillVo.getBillId());
 		param.put("clsCd", systemBillVo.getClsCd());
 
-		int seq = 0;
+		Long seq = 0L;
 		SystemBillVo billDetail = systemBillMapper.selectBillDetail(param);
 		if(billDetail == null) {
 			systemBillMapper.createBillDetail(systemBillVo);

@@ -3,6 +3,7 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.ComFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 
@@ -12,11 +13,13 @@ public interface ComFileService {
 	List<ComFileVo> getFileList(String fileGroupId);
 	ComFileVo getFile(String fileId);
 	void batchFileDelete();
-	
+
 //	void saveFileEbs(MultipartFile[] files, String billId);
 	void saveFileEbs(MultipartFile[] files, String[] fileKindCd, String billId);
 	void saveFileEbs(String[] myFileIds, String[] fileKindCdList, String billId) throws Exception;
 	void saveFileEbsMtng(MultipartFile[] files, String[] fileKindCdList, Long mtngId);
 	void saveFileBillMng(EbsFileVo ebsFileVo);
+
+	void saveFileBillDetailMng(BillMngVo billMngVo);
 
 }

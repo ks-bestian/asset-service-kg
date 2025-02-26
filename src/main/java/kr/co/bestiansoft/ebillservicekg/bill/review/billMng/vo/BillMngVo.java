@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
 
@@ -11,6 +14,8 @@ import lombok.Data;
 public class BillMngVo extends ComDefaultVO {
 
 	private Long seq;
+
+	private Long detailSeq;
 
     private String billId;// 안건아이디
     // 안건번호
@@ -117,4 +122,10 @@ public class BillMngVo extends ComDefaultVO {
 
     private List<String> relCmtList;
     private String cmtNm;
+
+    private List<EbsFileVo> ebsfileList;
+
+
+	//파일
+    private MultipartFile[] files;
 }

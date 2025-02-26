@@ -27,7 +27,7 @@
 			, now()
 		)
     </insert>
-    
+
     <select id="findByFileGroupId" resultType="kr.co.bestiansoft.ebillservicekg.common.file.vo.ComFileVo">
 		/* QueryID : kr.co.bestiansoft.ebillservicekg.common.file.repository.FileMapper.findByFileGroupId */
 		select
@@ -45,9 +45,9 @@
 		from
 			kgst.com_file
 		where 1=1
-		and file_group_id = #{fileGroupId} 
+		and file_group_id = #{fileGroupId}
 	</select>
-	
+
 	<select id="findByFileId" resultType="kr.co.bestiansoft.ebillservicekg.common.file.vo.ComFileVo">
 		/* QueryID : kr.co.bestiansoft.ebillservicekg.common.file.repository.FileMapper.findByFileId */
 		select
@@ -65,19 +65,19 @@
 		from
 			kgst.com_file
 		where 1=1
-		and file_id = #{fileId} 
+		and file_id = #{fileId}
 	</select>
-	
+
 	<select id="batchGetDeleteFileList" resultType="kr.co.bestiansoft.ebillservicekg.common.file.vo.ComFileVo">
 		/* QueryID : kr.co.bestiansoft.ebillservicekg.common.file.repository.FileMapper.batchGetDeleteFileList */
 		select * from com_file where delete_yn = 'Y'
 	</select>
-	
+
 	<delete id="deleteServerFile">
 		/* QueryID : kr.co.bestiansoft.ebillservicekg.common.file.repository.FileMapper.deleteServerFile */
-		delete from com_file where file_id = #{fileId} 
+		delete from com_file where file_id = #{fileId}
 	</delete>
-	
+
 	<insert id="insertFileEbs" parameterType="kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo">
 		/* QueryID : kr.co.bestiansoft.ebillservicekg.common.file.repository.FileMapper.insertFileEbs */
 		insert into kgst.ebs_file (
@@ -94,6 +94,7 @@
 			, reg_id
 			, reg_dt
 			<if test="clsCd != null"> , cls_cd </if>
+			<if test="detailSeq != null"> , detail_seq </if>
 		)
 		values (
 			  #{billId}
@@ -109,9 +110,10 @@
 			, #{regId}
 			, now()
 			<if test="clsCd != null"> , #{clsCd} </if>
+			<if test="detailSeq != null"> , #{detailSeq} </if>
 		)
     </insert>
-    
+
     <update id="updateFileEbs" parameterType="kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo">
 		/* QueryID : kr.co.bestiansoft.ebillservicekg.common.file.repository.FileMapper.updateFileEbs */
 		update kgst.ebs_file
@@ -156,5 +158,5 @@
 			, now()
 		)
     </insert>
-    
+
 </mapper>

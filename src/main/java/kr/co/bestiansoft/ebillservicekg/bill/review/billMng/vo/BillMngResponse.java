@@ -14,8 +14,11 @@ public class BillMngResponse {
     private List<BillMngVo> cmtList;
     private BillMngVo billMngVo;//안건기본
     private BillMngVo billlegalReviewVo;//법률검토
-    private BillMngVo billLangReview1stVo;//위원회1차언어전문파트
-    private BillMngVo billLangReview2stVo;//위원회2차언어전문파트
+    private BillMngVo billLangReviewVo;//위원회언어전문파트
+    private List<BillMngVo> billLangReviewVoList;//위원회언어전문파트
+
+    private BillMngVo billCmtReviewVo;//위원회심사
+    private List<BillMngVo> billCmtReviewVoList;//위원회심사
     private ProcessVo processVo;
 
     private List<BillMngVo> billEtcInfoList;

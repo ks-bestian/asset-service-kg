@@ -9,7 +9,7 @@ import lombok.Data;
 public class SystemBillVo extends ComDefaultVO {
 
 	//순번
-	private int seq;
+	private Long seq;
 	//안건아이디
 	private String billId;
 	//안건관련기타정보구분
@@ -28,12 +28,12 @@ public class SystemBillVo extends ComDefaultVO {
 	private String lglActRsltCode;
 	//결과처리일자
 	private String rsltDt;
-	
+
 	//파일
     private MultipartFile[] files;
 	private String[] fileKindCds;
 	private String[] clsCds;
-	
+
 	//위원회 코드
 	private String cmtCd;
 	//회의 아이디
@@ -58,11 +58,11 @@ public class SystemBillVo extends ComDefaultVO {
 	private String rsltCode;
 	//코드명
 	private String codeNm;
-	
-	
+
+
 	private String[] rmks;
 	private String[] orgFileIds;
-	
-	
-	
+
+
+
 }

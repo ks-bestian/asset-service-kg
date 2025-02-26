@@ -20,10 +20,13 @@ public class EbsFileVo extends ComDefaultVO {
 	private String deleteYn;
 	private Long fileSize;
 	private Long mtngId;
-	
+
+	private String deptCd;
 	private String clsCd;
-	private int detailSeq;
-	
+	private Long detailSeq;
+
+
+
 	private MultipartFile[] files;
 	private String ppsrNm;
 }

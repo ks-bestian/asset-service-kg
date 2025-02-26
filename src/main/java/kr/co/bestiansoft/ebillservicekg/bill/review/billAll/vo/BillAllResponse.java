@@ -22,6 +22,8 @@ public class BillAllResponse {
     private List<MtngAllVo> partyMtList;
     private List<BillAllVo> etcInfoList;
 
-
+    private BillAllVo billlegalReviewVo;
+    private List<BillAllVo> billLangReviewVoList;//위원회언어전문파트
+    private List<BillAllVo> billCmtReviewVoList;//위원회심사
 
 }

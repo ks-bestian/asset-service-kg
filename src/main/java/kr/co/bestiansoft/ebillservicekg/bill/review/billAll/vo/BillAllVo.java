@@ -115,7 +115,23 @@ public class BillAllVo extends ComDefaultVO {
     /* 파일 관련*/
     private List<EbsFileVo> fileList;
 
+    /* 위원회 구분*/
+    private String cmtSeCd;
+    private String cmtSeNm;
+
+    /* ETC */
+    private String rmrkKg;
+    private String rmrkRu;
+    private String deptCd;
 
 
+    /* File id */
+    private String orgFileId;
+    private String orgFileNm;
+
+    /* PDF File id */
+    private String pdfFileId;
+    private String pdfFileNm;
+    private String detailSeq;
 
 }

@@ -44,9 +44,6 @@ public class BillMngController {
         return new ResponseEntity<>(new CommonResponse(200, "OK", billMngService.getBillById(param)), HttpStatus.OK);
     }
 
-
-
-
     @ApiOperation(value = "안건 관리 - 안건접수", notes = "안건접수")
     @PostMapping(value = "/bill/review/billRegisterMng")
     public ResponseEntity<CommonResponse> billRegisterMng(@RequestBody BillMngVo billMngVo) {
@@ -84,20 +81,24 @@ public class BillMngController {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Bill created successfully", billMngService.insertBillLegalReviewReport(billMngVo)), HttpStatus.CREATED);
     }
 
-
     @ApiOperation(value = "안건위원회 소관위,관련위 심사보고서  조회", notes = " 소관위,관련위 심사보고서 리스트를 조회한다.")
     @GetMapping("/bill/review/selectListCmtReviewReport")
     public ResponseEntity<CommonResponse> selectListCmtReviewReport(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", billMngService.selectListCmtReviewReport(param)), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Bill meeting review", notes = "Bill meeting review")
+    @PostMapping(value = "/bill/review/cmtMeetingRvReport", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<CommonResponse> insertCmtMeetingRvReport(BillMngVo billMngVo) {
+        return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Bill meeting review create successfully", billMngService.insertCmtMeetingRvReport(billMngVo)), HttpStatus.CREATED);
+    }
 
 
-
-
-
-
-
+    @ApiOperation(value = "안건관리 심사보고서 삭제", notes = "심사보고서 삭제")
+    @PutMapping(value = "/bill/review/deleteCmtReview")
+    public ResponseEntity<CommonResponse> deleteCmtReview(@RequestBody BillMngVo billMngVo) {
+        return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Bill Cmt review delete successfully", billMngService.deleteCmtReview(billMngVo)), HttpStatus.CREATED);
+    }
 
     ////////////////////////////////////////////////////////////////////////
 
@@ -134,18 +135,18 @@ public class BillMngController {
     public ResponseEntity<CommonResponse> insertBillCommitt(@RequestBody BillMngVo billMngVo) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "bill committ created successfully", billMngService.insertBillCommitt(billMngVo)), HttpStatus.CREATED);
     }
-    
+
     @ApiOperation(value = "파일첨부", notes = "안건심사에 관련된 파일을 첨부한다")
     @PostMapping(value = "/bill/review/billMng/file", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<CommonResponse> insertBillMngFile(EbsFileVo ebsfileVo){
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "apply create successfully", billMngService.insertBillMngFile(ebsfileVo)), HttpStatus.CREATED);
 	}
-    
+
     @ApiOperation(value = "파일삭제", notes = "파일을 삭제한다")
     @PutMapping(value = "/bill/review/billMng/delete/file")
     public ResponseEntity<CommonResponse> deleteEbsFile(@RequestBody EbsFileVo ebsFileVo) {
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "ebs file updated successfully", billMngService.updateEbsFileDelYn(ebsFileVo)), HttpStatus.OK);
     }
-    
+
 
 }

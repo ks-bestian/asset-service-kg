@@ -1,5 +1,6 @@
 package kr.co.bestiansoft.ebillservicekg.bill.review.billAll.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,8 +55,25 @@ public class BillAllServiceImpl implements BillAllService {
     	/* Bill doc list*/
     	List<EbsFileVo> billFileList = billAllMapper.selectListBillFile(param);
 
+    	/* Bill Etc doc list*/
+    	List<EbsFileVo> etcFileList = billAllMapper.selectListBillEtcFile(param);
+
+
     	/*committee list*/
     	List<BillAllVo> cmtList = billAllMapper.selectListBillCmt(param);
+
+    	for(BillAllVo cmtVo: cmtList) {
+
+    		List<EbsFileVo> cmtReviewFileList = new ArrayList<EbsFileVo>();
+    		for(EbsFileVo fileVo:etcFileList) {
+
+    			if(    cmtVo.getCmtCd().equals(fileVo.getDeptCd())
+    				&& "140".equals(fileVo.getClsCd())	) {//Bill Committee Review
+    				cmtReviewFileList.add(fileVo);
+    			}
+    		}
+    		cmtVo.setFileList(cmtReviewFileList);
+    	}
 
     	//  selectListMettingResultFile
 
@@ -83,6 +101,37 @@ public class BillAllServiceImpl implements BillAllService {
     	/* Bill etc info */
     	List<BillAllVo> etcInfoList = billAllMapper.selectListBillEtcInfo(param);
 
+
+
+    	BillAllVo billlegalReviewVo = new BillAllVo();//bill legal review department
+    	List<BillAllVo> billLangReviewVoList = new ArrayList<BillAllVo>();//bill Language review department
+    	List<BillAllVo> billCmtReviewList = new ArrayList<BillAllVo>();//bill Committee review department
+
+    	for(BillAllVo listVo : etcInfoList) {
+
+    		String clsCd = listVo.getClsCd();
+    		if("110".equals(clsCd)) {//법률검토결과
+    			billlegalReviewVo = listVo;
+    		} else if("120".equals(clsCd)) {//위원언어전문파트
+    			billLangReviewVoList.add(listVo);
+    		} else if("140".equals(clsCd)) {// Bill detail info Committee Review
+    			billCmtReviewList.add(listVo);
+    		}
+    	}
+
+
+    	for(BillAllVo vo : billCmtReviewList) {
+    		Long seq = vo.getSeq();
+    		List<EbsFileVo> cmtFileList = new ArrayList<EbsFileVo>();
+    		for(EbsFileVo fvo:billFileList) {
+    			if(seq.equals(fvo.getDetailSeq())) {
+    				cmtFileList.add(fvo);
+    			}
+    		}
+    		vo.setFileList(cmtFileList);
+    	}
+
+
     	billRespanse.setBillBasicInfo(billBasicInfo);
     	billRespanse.setProposerList(proposerList);
     	billRespanse.setBillFileList(billFileList);
@@ -90,6 +139,9 @@ public class BillAllServiceImpl implements BillAllService {
     	billRespanse.setCmtMtList(cmtMtList);
     	billRespanse.setMainMtList(mainMtList);
     	billRespanse.setPartyMtList(partyMtList);
+    	billRespanse.setBillLangReviewVoList(billLangReviewVoList);
+    	billRespanse.setBillCmtReviewVoList(billCmtReviewList);
+    	billRespanse.setBilllegalReviewVo(billlegalReviewVo);
     	billRespanse.setEtcInfoList(etcInfoList);
 
         return billRespanse;
