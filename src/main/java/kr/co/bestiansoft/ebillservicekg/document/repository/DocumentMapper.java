@@ -28,6 +28,7 @@ public interface DocumentMapper {
     void removeFile(String fileId);
     List<FileVo> selectDeptFileList(FileVo vo);
     List<FileVo> selectFileGroup(FileVo vo);
+    FileVo selectMyFile(String userId, String fileId);
     FileVo selectFile(String fileId);
     FileVo selectFile2(String fileId);
     

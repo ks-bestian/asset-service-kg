@@ -75,11 +75,14 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public List<QuickMenuVo> getQuickMenuList(HashMap<String, Object> param) {
+    	param.put("userId", new SecurityInfoUtil().getAccountId());
         return menuMapper.selectListQuickMenu(param);
     }
 
     @Override
     public QuickMenuVo createQuickMenu(QuickMenuVo quickMenuVo) {
+    	quickMenuVo.setUserId(new SecurityInfoUtil().getAccountId());
+    	quickMenuVo.setRegId(new SecurityInfoUtil().getAccountId());
 //        if (quickMenuVo.getIsFavorite()) {
             menuMapper.insertQuickMenu(quickMenuVo);
 //        }
@@ -88,6 +91,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public void deleteQuickMenu(QuickMenuVo quickMenuVo) {
+    	quickMenuVo.setUserId(new SecurityInfoUtil().getAccountId());
         menuMapper.deleteQuickMenu(quickMenuVo.getMenuId(), quickMenuVo.getUserId());
     }
 }

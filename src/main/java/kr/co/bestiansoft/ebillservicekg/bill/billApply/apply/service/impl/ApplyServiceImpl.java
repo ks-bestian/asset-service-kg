@@ -41,7 +41,7 @@ public class ApplyServiceImpl implements ApplyService {
 
 	@Transactional
 	@Override
-	public ApplyVo createApply(ApplyVo applyVo) {
+	public ApplyVo createApply(ApplyVo applyVo) throws Exception {
 	//TODO :: 메세지 알람 적용해야함
 
 		//안건등록
@@ -57,6 +57,10 @@ public class ApplyServiceImpl implements ApplyService {
 
 		//파일등록
 		comFileService.saveFileEbs(applyVo.getFiles(), applyVo.getFileKindCds(), billId);
+		
+		//추가 - 내 문서함에서 파일 업로드(20250221 조진호)
+		comFileService.saveFileEbs(applyVo.getMyFileIds(), applyVo.getFileKindCds2(), billId);
+		
 		//파일 정보를 가지고 있어서 null처리
 		applyVo.setFiles(null);
 

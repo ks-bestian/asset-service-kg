@@ -810,6 +810,17 @@
 		, a.user_id
     </sql>
     
+    <select id="selectMyFile" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo">
+    	/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectMyFile */
+		select 
+			<include refid="fileColumns"></include>
+		from kgst.bs_file_info a
+		where a.file_id = #{fileId}
+			and a.dept_file_yn = 'N'
+			and a.user_id = #{userId}
+			and a.del_yn = 'N'
+    </select>
+    
     <select id="selectFile" parameterType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.FileVo">
     	/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectFile */
 		select 
