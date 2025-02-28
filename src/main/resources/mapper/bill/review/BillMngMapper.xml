@@ -147,6 +147,7 @@
 			, emd.mtn_dt
 			, emd.prsd_rjct_dt
 			, emd.lgl_rvw_rslt_code
+			, kgst.fngetcodenm('1019',emd.lgl_rvw_rslt_code,#{lang}) as lgl_rvw_rslt_nm
 			, emd.lgl_act_rslt_code
 			, emd.rslt_dt
 			, emd.rslt_code

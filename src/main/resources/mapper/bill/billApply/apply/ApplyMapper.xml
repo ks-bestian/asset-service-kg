@@ -42,10 +42,11 @@
 			<if test="ppslDt != null">, #{ppslDt} </if>
 			, (
 			    select
-	       		  max(coalesce(bill_year_seq,0))+1
+	       		  coalesce( max(bill_year_seq),0)+1
 			    from ebs_master
-			    where DATE_PART('year', reg_dt) = DATE_PART('year', now()) )
+			    where DATE_PART('year', reg_dt) = DATE_PART('year', now())
 		      )
+	   )
     </insert>
 
     <select id="selectListApply" parameterType="java.util.HashMap"
@@ -375,38 +376,7 @@
 
     </select>
 
-    <insert id="insertApplyCmt" parameterType="kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.insertApplyCmt */
 
-       insert into kgst.ebs_process_cmt (
-			  bill_id 		-- 안건아이디
-			, cmt_cd		-- 위원회코드
-			, cmt_se_cd		-- 위원회구분코드(M:소관위,R:관련위)
-			, rgtr_id		-- 등록자 아이디
-			, reg_dt		-- 등록 날짜
-		)
-		values (
-			  #{billId}
-			, #{cmtCd}
-			, 'M'
-			, #{polyCd}
-			, #{polyNm}
-			, 'admin'		-- todo:: 아이디 정의 필요!!
-			, now()
-			<if test="signDt != null"> , now() </if>
-		)
-    </insert>
-
-    <update id="updateApplyCmt" parameterType="kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo">
-    	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.updateApplyCmt */
-        update kgst.ebs_process_cmt
-		set
-		  cmt_cd = #{cmtCd}
-		  , mdfr_id = 'admin'
-		  , mdfcn_dt = now()
-		WHERE bill_id = #{billId}
-			and cmt_se_cd = 'M'
-    </update>
 
     <update id="updateBillHome" parameterType="kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo">
     	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.updateBillHome */

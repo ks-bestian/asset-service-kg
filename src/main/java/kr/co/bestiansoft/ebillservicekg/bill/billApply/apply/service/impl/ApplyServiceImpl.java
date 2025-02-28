@@ -51,16 +51,12 @@ public class ApplyServiceImpl implements ApplyService {
 		applyVo.setPpsrId(ppsrId);
 		applyMapper.insertApplyBill(applyVo);
 
-		if (applyVo.getCmtCd() != null && !applyVo.getCmtCd().isEmpty()) {
-			applyMapper.insertApplyCmt(applyVo);
-		}
-
 		//파일등록
 		comFileService.saveFileEbs(applyVo.getFiles(), applyVo.getFileKindCds(), billId);
-		
+
 		//추가 - 내 문서함에서 파일 업로드(20250221 조진호)
 		comFileService.saveFileEbs(applyVo.getMyFileIds(), applyVo.getFileKindCds2(), billId);
-		
+
 		//파일 정보를 가지고 있어서 null처리
 		applyVo.setFiles(null);
 
@@ -150,10 +146,6 @@ public class ApplyServiceImpl implements ApplyService {
 		if (applyVo.getFiles() != null) {
 			comFileService.saveFileEbs(applyVo.getFiles(), applyVo.getFileKindCds(), billId);
 			applyVo.setFiles(null);
-		}
-
-		if (applyVo.getCmtCd() != null && !applyVo.getCmtCd().isEmpty()) {
-			applyMapper.updateApplyCmt(applyVo);
 		}
 
 		//bill update

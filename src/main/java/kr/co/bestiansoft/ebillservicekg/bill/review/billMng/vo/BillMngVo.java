@@ -95,8 +95,11 @@ public class BillMngVo extends ComDefaultVO {
     private String mtnDt;
     private String prsdRjctDt;
     private String lglRvwRsltCode;
+    private String lglRvwRsltNm;
     private String lglActRsltCode;
+    private String lglActRsltNm;
     private String rsltCode;
+    private String rsltNm;
     private String rsltDt;
     private String clsCd;
 
