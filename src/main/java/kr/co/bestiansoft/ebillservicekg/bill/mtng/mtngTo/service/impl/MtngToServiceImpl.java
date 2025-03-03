@@ -3,6 +3,7 @@ package kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.service.impl;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,6 +65,8 @@ public class MtngToServiceImpl implements MtngToService {
 
     	/* 참석자 - selectListMtngAttendant */
     	List<MemberVo> attendantList = mtngToMapper.selectListMtngAttendant(param);
+    	String names = attendantList.stream().map(MemberVo::getMemberNm).collect(Collectors.joining(", "));
+    	dto.setAttendants(names);
     	dto.setAttendantList(attendantList);
 
         return dto;

@@ -30,11 +30,15 @@ public class MtngAllController {
         return new ResponseEntity<>(new CommonResponse(200, "OK", mtngAllService.getMtngList(param)), HttpStatus.OK);
     }
 
-
     @ApiOperation(value = "회의 전체 상세 조회", notes = "상세를 조회한다.")
     @GetMapping("/bill/mtng/all/detail/{mtngId}")
     public ResponseEntity<CommonResponse> getMtngById(@PathVariable Long mtngId, @RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", mtngAllService.getMtngById(mtngId, param)), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "회의 참가자 조회", notes = "참가자 조회한다.")
+    @GetMapping("/bill/mtng/all/participants")
+    public ResponseEntity<CommonResponse> getMtngParticipants(@RequestParam HashMap<String, Object> param) {
+        return new ResponseEntity<>(new CommonResponse(200, "OK", mtngAllService.getMtngParticipants(param)), HttpStatus.OK);
+    }
 }

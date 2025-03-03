@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 public class MemberVo extends ComDefaultVO {
+
     private String memberId;
     private String memberNm;
     private String memberNmKg;
@@ -22,13 +23,13 @@ public class MemberVo extends ComDefaultVO {
     private String mblNo;
     private String msgRcvYn;
     private String docMgrYn;
-    
-    
+
+
     private String deptCd;
     private String deptNm;
     private String uprDeptCd;
-    
-    
+
+
     /* 회의관련 */
     private Long mtngId;
     private String atdtUserId;
@@ -36,6 +37,6 @@ public class MemberVo extends ComDefaultVO {
     private String atdtKind;
     private String atdtDivCd;
     private String atdtDivNm;
-    
-    
+    private String atdtDeptNm;
+
 }

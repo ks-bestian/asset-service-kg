@@ -47,7 +47,7 @@ public class MtngFromServiceImpl implements MtngFromService {
     	/* 참석자 - selectListMtngAttendant */
     	List<MemberVo> attendantList = mtngFromMapper.selectListMtngAttendant(param);
     	dto.setAttendantList(attendantList);
-    	
+
     	/*회의 결과 문서*/
     	List<MtngFileVo> reportList = mtngFromMapper.selectListMtngFile(param);
     	dto.setReportList(reportList);
@@ -88,6 +88,7 @@ public class MtngFromServiceImpl implements MtngFromService {
 			memberVo.setAtdtUserId(memVo.getMemberId());
 			memberVo.setAtdtUserNm(memVo.getMemberNm());
 			memberVo.setAtdtKind(memVo.getAtdtKind());
+			memberVo.setAtdtDeptNm(memVo.getPolyNm());
 			memberVo.setRegId(regId);
 			mtngFromMapper.insertEbsMtngAttendant(memberVo);
 		}
@@ -127,45 +128,45 @@ public class MtngFromServiceImpl implements MtngFromService {
 	@Transactional
 	@Override
 	public MtngFromVo updateMtngBill(MtngFromVo mtngFromVo) {
+
 		String userId = new SecurityInfoUtil().getAccountId();
 		mtngFromVo.setModId(userId);
 		mtngFromMapper.updateFromMtngBill(mtngFromVo);
-		
-		//존재하는 행인 경우 업데이트 존재하지 않으면 인서트
-		
+
 		//참석자 수정
 		mtngFromMapper.deleteMtngFromBillAttendant(mtngFromVo);
 
 		List<MemberVo> attendantList = mtngFromVo.getAttendantList();
 		if(attendantList!=null) {
-			for(int i=0;i<attendantList.size();i++) {
+			for(MemberVo vo:attendantList) {
 				MemberVo memberVo = new MemberVo();
 				memberVo.setMtngId(mtngFromVo.getMtngId());
-				memberVo.setAtdtUserId(attendantList.get(i).getMemberId());
-				memberVo.setAtdtUserNm(attendantList.get(i).getMemberNm());
-				memberVo.setAtdtKind(attendantList.get(i).getAtdtKind());
+				memberVo.setAtdtUserId(vo.getMemberId());
+				memberVo.setAtdtUserNm(vo.getMemberNm());
+				memberVo.setAtdtKind(vo.getAtdtKind());
 				memberVo.setRegId(userId);
-				attendantList.set(i, memberVo);
-				mtngFromMapper.updateMtngFromAttendant(attendantList.get(i));
+				memberVo.setAtdtDeptNm(vo.getPolyNm());
+				mtngFromMapper.insertEbsMtngAttendant(memberVo);
 			}
 		}
-		
+
 		//안건 수정
 		mtngFromMapper.deleteMtngFromBillAgenda(mtngFromVo);
 
 		List<AgendaVo> agendaList = mtngFromVo.getAgendaList();
+		int idx = 1;
 		if(agendaList!=null) {
-			for(int i=0;i<agendaList.size();i++) {
+
+			for(AgendaVo vo:agendaList) {
 				AgendaVo agendaVo = new AgendaVo();
-				agendaVo.setBillId(agendaList.get(i).getBillId());
+				agendaVo.setBillId(vo.getBillId());
 				agendaVo.setMtngId(mtngFromVo.getMtngId());
-				agendaVo.setOrd(i+1);
+				agendaVo.setOrd(idx++);
 				agendaVo.setRegId(userId);
-				agendaList.set(i, agendaVo);
-				mtngFromMapper.updateMtngFromAgenda(agendaList.get(i));
+				mtngFromMapper.insertEbsMtngAgenda(agendaVo);
 			}
 		}
-		
+
 		return mtngFromVo;
 	}
 

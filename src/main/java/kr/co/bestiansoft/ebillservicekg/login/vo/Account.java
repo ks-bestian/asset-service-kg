@@ -5,11 +5,9 @@ import java.util.List;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class Account extends User {
 
 	private String userId;
@@ -19,6 +17,7 @@ public class Account extends User {
 	private String memberNmKg;
 	private String memberNmRu;
 	private String deptCd;
+	private String deptNm;
 	private String deptNmKg;
 	private String deptNmRu;
 	private String deptNmKo;
@@ -39,10 +38,10 @@ public class Account extends User {
 	private String polyNm;
 	private String rsdnRgstNmbr;
 	private String uprDeptCd;
-	
+
 	public Account(LoginUserVo user, List<GrantedAuthority> grantedAuthorities) {
 		super(user.getUserId(), user.getPassword(), grantedAuthorities);
-		
+
 		this.userId = user.getUserId();
 		this.userNmKg = user.getUserNmKg();
 		this.userNmRu = user.getUserNmRu();
@@ -71,5 +70,5 @@ public class Account extends User {
 		this.rsdnRgstNmbr = user.getRsdnRgstNmbr();
 		this.uprDeptCd = user.getUprDeptCd();
 	}
-	
+
 }

@@ -19,6 +19,8 @@ public class LoginRequest {
 	@ApiModelProperty(value = "사용자 패스워드")
     private String pswd;
 
+	private String lang;
+
     @Builder
 	public LoginRequest(String userId, String pswd) {
 		this.userId = userId;

@@ -30,6 +30,7 @@ public class MtngToVo extends ComDefaultVO {
 
 	/* 참석자 관련 */
     private List<MemberVo> attendantList;
+    private String attendants;
 
     /* 안건 관련 */
     private List<AgendaVo> agendaList;

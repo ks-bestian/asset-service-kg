@@ -67,10 +67,7 @@
 		  , em.mtng_type_cd
 		  , kgst.fngetcodenm('1014',em.mtng_type_cd,#{lang}) as mtng_type_nm
 		  , em.dept_cd
-		  , cd.dept_nm1
-		  , cd.dept_nm1
-		  , cd.dept_nm1
-		  , kgst.fngetlangnm(cd.dept_nm1,cd.dept_nm2,cd.dept_nm3,#{lang}) as dept_nm
+		  , kgst.fngetdeptnm(em.dept_cd,#{lang}) as dept_nm
 		  , em.excn_cycl
 		  , em.due_dtm
 		  , em.open_dtm
@@ -83,7 +80,6 @@
 		  , em.reg_id
 		  , em.reg_dt
 		FROM kgst.ebs_mtng em
-		join kgst.com_dept cd on (em.dept_cd = cd.dept_cd)
 		WHERE em.MTNG_ID = #{mtngId}
     </select>
     <select id="selectListMtngAttendant_bak" parameterType="java.util.HashMap"
@@ -108,52 +104,45 @@
     <select id="selectListMtngAttendant" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MemberVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.repository.MtngToMapper.selectListMtngAttendant */
-		select 
+		select
 			  ema.atdt_user_id as member_id
 			, ema.atdt_user_nm as member_nm
-			, vum.dept_cd 
-			, case 
+			, vum.dept_cd
+			, case
 				when ema.atdt_kind = 'ATT01' then '국회의원'
 				else '장관'
 			end dept_nm
-			, vum.poly_cd  
-			, vum.poly_nm 
-			, ema.atdt_div_cd 
-			, vum.cmit_cd 
-		from kgst.ebs_mtng_attendant ema 
-		left join kgst.view_user_member vum on vum.user_id = ema.atdt_user_id 
+			, vum.poly_cd
+			, vum.poly_nm
+			, ema.atdt_div_cd
+			, vum.cmit_cd
+		from kgst.ebs_mtng_attendant ema
+		left join kgst.view_user_member vum on vum.user_id = ema.atdt_user_id
 		where 1=1
 			and ema.mtng_id = #{mtngId}
 		order by dept_nm, atdt_user_nm
 
     </select>
-    
-    
+
+
     <select id="selectListMtngAgenda" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.AgendaVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.repository.MtngToMapper.selectListMtngAgenda */
-
-         SELECT
-			  ema.mtng_id
-		    , em.bill_id                -- 안건 ID
-		    , em.bill_no                -- 안건 번호
-		    , kgst.fngetlangnm(em.bill_name_kg,em.bill_name_ru,em.bill_name_kg,#{lang}) as bill_name
-		    , kgst.fngetlangnm(cm.member_nm_kg,cm.member_nm_ru,cm.member_nm_kg,#{lang}) as ppsr_nm
-		    , em.ppsr_id                -- 발의자 아이디
-		    , em.ppsl_dt                -- 제안일
-		    , ema.rslt_cd               -- 처리결과
-		    , ema.ord
-		    , emt.dept_cd
-		    , emc.cmt_cd
-		    , emc.cmt_se_cd
-		 FROM kgst.EBS_MASTER em
-		 join kgst.EBS_MTNG_AGENDA ema on (em.bill_id = ema.bill_id)
-		 join kgst.ebs_mtng emt on (ema.mtng_id = emt.mtng_id)
-		 join kgst.view_user_member cm on (em.ppsr_id = cm.member_id)
-		 join kgst.ebs_master_cmt emc on (em.bill_id = emc.bill_id)
-		 WHERE 1=1
-		   AND ema.mtng_id = #{mtngId}
-		   and emc.cmt_cd = emt.dept_cd
-		 order by ema.ord
+		select
+		    emt.mtng_id
+		  , emt.mtng_type_cd
+		  , emt.dept_cd
+		  , ema.bill_id
+		  , ema.rslt_cd
+		  , kgst.fngetlangnm(em.bill_name_kg,em.bill_name_ru,em.bill_name_kg,#{lang}) as bill_name
+		  , kgst.fngetlangnm(vum.member_nm_kg,vum.member_nm_ru,vum.member_nm_kg,#{lang}) as ppsr_nm
+		  , em.bill_no
+		  , em.bill_kind
+		from kgst.ebs_mtng emt
+		join kgst.EBS_MTNG_AGENDA ema on (emt.mtng_id = ema.mtng_id)
+		join kgst.EBS_MASTER em on (ema.bill_id = em.bill_id)
+		join kgst.view_user_member vum on (em.ppsr_id = vum.member_id)
+		where emt.mtng_id = #{mtngId}
+		order by ema.ord
 
     </select>
 
@@ -161,43 +150,28 @@
     <select id="selectListMember" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MemberVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.repository.MtngToMapper.selectListMember */
-        SELECT
-              cm.member_id --국회의원아이디
-            , cm.member_nm_kg --이름(키르키즈어)
-            , cm.member_nm_ru --이름(러시아어)
-            , cm.age_cd --대수
-            , cm.cmit_cd --소속위원회코드
-           	, CASE
-			  	WHEN #{lang} = 'lng_type_1' then cd.dept_nm1
-			  	WHEN #{lang} = 'lng_type_2' then cd.dept_nm2
-		      	ELSE cd.dept_nm3
-		      	END AS cmitNm
-            , cm.dept_id --부서
-            , cm.poly_cd --정당코드
-            , cm.poly_nm --정당명
-            , cm.rsdn_rgst_nmbr --주민번호 본인을 구분하는 번호
-            , cm.email -- 이메일주소
-            , cm.gen_cd --성별(M,F)
-            , cm.profile_img_path --프로필이미지경로
-            , cm.mbl_no --이동전화번호
-            , cm.msg_rcv_yn --메세지수신여부
-            , cm.doc_mgr_yn --문서관리자여부
-            , cm.reg_id
-            , cm.reg_dt
-            , cm.mod_id
-            , cm.mod_dt
-        FROM com_member cm
-        , com_dept cd
-        , ebs_base_code ebc
-        WHERE 1=1
-        AND cm.cmit_cd = cd.dept_cd
-        AND (cm.age_cd = ebc.code_id AND ebc.curr_yn = 'Y')
-        <if test="memberNmKg != null and memberNmKg != ''">
-            AND cm.member_nm_kg LIKE CONCAT('%', #{memberNmKg}, '%')
+		select
+			  vum.member_id
+			, kgst.fngetlangnm(vum.member_nm_kg,vum.member_nm_ru,vum.member_nm_kg,#{lang})  as member_nm
+			, vum.age_cd
+			, vum.dept_cd
+			, kgst.fngetlangnm(vum.dept_nm_kg,vum.dept_nm_ru,vum.dept_nm_kg,#{lang})  as dept_nm
+			, vum.cmit_cd
+			, kgst.fngetlangnm(vum.cmit_nm_kg,vum.cmit_nm_ru,vum.cmit_nm_kg,#{lang})  as cmit_nm
+			, vum.poly_cd
+			, vum.poly_nm
+		from view_user_member vum
+		where vum.is_member = 'Y'
+        <if test="memberNm != null and memberNm != ''">
+            AND kgst.fngetlangnm(vum.member_nm_kg,vum.member_nm_ru,vum.member_nm_kg,#{lang}) LIKE CONCAT('%', #{memberNm}, '%')
         </if>
-        ORDER BY cm.poly_nm, cm.member_nm_kg
-
+        <if test="polyCd != null and polyCd != ''">
+            AND vum.poly_cd = #{polyCd}
+        </if>
+        ORDER BY vum.poly_nm
     </select>
+
+
     <insert id="insertEbsMtngAttendant" parameterType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MemberVo">
 		INSERT INTO EBS_MTNG_ATTENDANT
 		     (
@@ -339,7 +313,7 @@
 	    MOD_DT = now(),
 	    ATDT_DIV_CD = EXCLUDED.ATDT_DIV_CD
     </update>
-    
+
     <update id="updateMtngFileDel" parameterType="java.util.HashMap">
 		/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.repository.MtngToMapper.updateMtngFileDel */
 		update kgst.ebs_mtng_file
@@ -347,7 +321,7 @@
 		  , mod_id = #{modId}
 		  , delete_yn = 'Y'
 		where
-			mtng_id = #{mtngId}::integer 
+			mtng_id = #{mtngId}::integer
 			and org_file_id = #{orgFileId}
     </update>
 </mapper>

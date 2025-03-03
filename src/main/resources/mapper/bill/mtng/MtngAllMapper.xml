@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<!-- 
-selectListBbs  
-selectCountBbs 
-selectBbs       
+<!--
+selectListBbs
+selectCountBbs
+selectBbs
 insertBbs
 updateBbs
 deleteBbs
- -->        
+ -->
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.repository.MtngAllMapper">
 
     <select id="selectListMtngAll" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.vo.MtngAllVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.repository.MtngAllMapper.selectListMtngAll */
-		SELECT 
+		SELECT
 				MTNG_ID
 		     ,  MTNG_TYPE_CD
 		     , (
-			     select 
-		           	CASE 
+			     select
+		           	CASE
 					  	WHEN #{lang} = 'lng_type_1' then ccd.code_nm1
 					  	WHEN #{lang} = 'lng_type_2' then ccd.code_nm2
 				      	ELSE ccd.code_nm3
 			      		END AS mtngTypeNm
-			     from com_code_detail ccd 
-			     where ccd.code_id = em.mtng_type_cd 
+			     from com_code_detail ccd
+			     where ccd.code_id = em.mtng_type_cd
 			     AND ccd.grp_code = 1014
 		     )
 		     ,  CMT_ID
 		     , (
-			     select 
-		           	CASE 
+			     select
+		           	CASE
 					  	WHEN #{lang} = 'lng_type_1' then cd.dept_nm1
 					  	WHEN #{lang} = 'lng_type_2' then cd.dept_nm2
 				      	ELSE cd.dept_nm3
 			      		END AS CMT_NM
-			     from com_dept cd 
-			     where cd.dept_cd = em.CMT_ID 
+			     from com_dept cd
+			     where cd.dept_cd = em.CMT_ID
 			     AND cd.upr_dept_cd = 'CMT'
 		     )
 		     ,  DGR_CD
@@ -70,30 +70,30 @@ deleteBbs
 
     <select id="selectMtngAll" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.vo.MtngAllVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.repository.MtngAllMapper.selectMtngAll */    
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.repository.MtngAllMapper.selectMtngAll */
 		SELECT MTNG_ID
 		     ,  MTNG_TYPE_CD
 		     , (
-			     select 
-		           	CASE 
+			     select
+		           	CASE
 					  	WHEN #{lang} = 'lng_type_1' then ccd.code_nm1
 					  	WHEN #{lang} = 'lng_type_2' then ccd.code_nm2
 				      	ELSE ccd.code_nm3
 			      		END AS mtngTypeNm
-			     from com_code_detail ccd 
-			     where ccd.code_id = em.mtng_type_cd 
+			     from com_code_detail ccd
+			     where ccd.code_id = em.mtng_type_cd
 			     AND ccd.grp_code = 1014
 		     )
 		     ,  CMT_ID
 		     , (
-			     select 
-		           	CASE 
+			     select
+		           	CASE
 					  	WHEN #{lang} = 'lng_type_1' then cd.dept_nm1
 					  	WHEN #{lang} = 'lng_type_2' then cd.dept_nm2
 				      	ELSE cd.dept_nm3
 			      		END AS CMT_NM
-			     from com_dept cd 
-			     where cd.dept_cd = em.CMT_ID 
+			     from com_dept cd
+			     where cd.dept_cd = em.CMT_ID
 			     AND cd.upr_dept_cd = 'CMT'
 		     )
 		     ,  DGR_CD
@@ -113,30 +113,30 @@ deleteBbs
     </select>
     <select id="selectListMtngAttendant" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MemberVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.repository.MtngAllMapper.selectListMtngAttendant */    
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.repository.MtngAllMapper.selectListMtngAttendant */
         SELECT
-              ema.atdt_user_id 
-           		, CASE 
-		  		WHEN #{lang} = 'lng_type_1' then cm.member_nm_kg 
-		  		WHEN #{lang} = 'lng_type_2' then cm.member_nm_ru 
+              ema.atdt_user_id
+           		, CASE
+		  		WHEN #{lang} = 'lng_type_1' then cm.member_nm_kg
+		  		WHEN #{lang} = 'lng_type_2' then cm.member_nm_ru
 	      		ELSE cm.member_nm_kg
 	      		END AS atdtUserNm
 	      	  , ema.atdt_div_cd
 	      	  , (
-			     select 
-		           	CASE 
+			     select
+		           	CASE
 					  	WHEN #{lang} = 'lng_type_1' then ccd.code_nm1
 					  	WHEN #{lang} = 'lng_type_2' then ccd.code_nm2
 				      	ELSE ccd.code_nm3
 			      		END AS atdtDivNm
-			     from com_code_detail ccd 
+			     from com_code_detail ccd
 			     where ccd.code_id = ema.atdt_div_cd
 			     AND ccd.grp_code = 1017
 		     )
               , cm.poly_cd
               , cm.poly_nm
         FROM ebs_mtng_attendant ema
-        , com_member cm 
+        , com_member cm
         WHERE 1=1
         AND ema.atdt_user_id = cm.member_id
         AND ema.mtng_id = #{mtngId}
@@ -144,39 +144,39 @@ deleteBbs
     </select>
     <select id="selectListMtngAgenda" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.AgendaVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.repository.MtngAllMapper.selectListMtngAgenda */    
-       	SELECT 
-			  ema.mtng_id  
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.repository.MtngAllMapper.selectListMtngAgenda */
+       	SELECT
+			  ema.mtng_id
 		    , em.bill_id                -- 안건 ID
 		    , em.bill_no                -- 안건 번호
-	        , CASE 
-		  		WHEN #{lang} = 'lng_type_1' then em.bill_name_kg 
-		  		WHEN #{lang} = 'lng_type_2' then em.bill_name_ru 
+	        , CASE
+		  		WHEN #{lang} = 'lng_type_1' then em.bill_name_kg
+		  		WHEN #{lang} = 'lng_type_2' then em.bill_name_ru
 	      		ELSE em.bill_name_kg
 	      		END AS billName
-      		, CASE 
-		  		WHEN #{lang} = 'lng_type_1' then cm.member_nm_kg 
-		  		WHEN #{lang} = 'lng_type_2' then cm.member_nm_ru 
+      		, CASE
+		  		WHEN #{lang} = 'lng_type_1' then cm.member_nm_kg
+		  		WHEN #{lang} = 'lng_type_2' then cm.member_nm_ru
 	      		ELSE cm.member_nm_kg
 	      		END AS ppsrNm
 		    , em.ppsr_id                -- 발의자 아이디
 		    , em.ppsl_dt                -- 제안일
 		    , ema.rslt_cd               -- 처리결과
 		    , (
-			     select 
-		           	CASE 
+			     select
+		           	CASE
 					  	WHEN #{lang} = 'lng_type_1' then ccd.code_nm1
 					  	WHEN #{lang} = 'lng_type_2' then ccd.code_nm2
 				      	ELSE ccd.code_nm3
 			      		END AS rsltNm
-			     from com_code_detail ccd 
-			     where ccd.code_id = ema.rslt_cd 
+			     from com_code_detail ccd
+			     where ccd.code_id = ema.rslt_cd
 			     AND ccd.grp_code = 1008
 		     )
 		    , ema.ord
-		 FROM 
+		 FROM
 		 kgst.EBS_MASTER em
-		 , kgst.EBS_MTNG_AGENDA ema 
+		 , kgst.EBS_MTNG_AGENDA ema
 		 , com_member cm
 		 WHERE 1=1
 		 AND ema.bill_id = em.bill_id
@@ -186,8 +186,8 @@ deleteBbs
     </select>
     <select id="selectListMtngFile" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.vo.MtngFileVo">
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.repository.MtngAllMapper.selectListMtngFile */    
-		 SELECT 
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.repository.MtngAllMapper.selectListMtngFile */
+		 SELECT
 				SEQ
 		     ,  MTNG_ID
 		     ,  ORG_FILE_ID
@@ -198,11 +198,10 @@ deleteBbs
 		     ,  FILE_SIZE
 		     ,  DELETE_YN
 		  FROM EBS_MTNG_FILE
-		  WHERE 1=1
-		  AND DELETE_YN = 'N'
-		  AND MTNG_ID = #{mtngId}
-	   
+		  WHERE DELETE_YN = 'N'
+		    AND MTNG_ID = #{mtngId}
+
     </select>
 
-	
+
 </mapper>

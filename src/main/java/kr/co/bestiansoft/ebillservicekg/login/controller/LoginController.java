@@ -116,6 +116,15 @@ public class LoginController {
 	        rep.setResult(result);
 	        rep.setMsg(msg);
 	        rep.setToken(token);
+
+	        String lang = loginRead.getLang();
+	        if("lng_type_1".equals(lang)) {
+	        	account.setDeptNm(account.getDeptNmKg());
+	        } else if("lng_type_2".equals(lang)) {
+	        	account.setDeptNm(account.getDeptNmRu());
+	        } else {
+	        	account.setDeptNm(account.getDeptNmKo());
+	        }
 	        rep.setLoginInfo(account);
 	        rep.setComCodes(comCodes);
 	        rep.setBaseCodes(baseCodes);
@@ -170,7 +179,7 @@ public class LoginController {
 	public ResponseEntity<?> token() {
 		Authentication authentication = new SecurityInfoUtil().getAuthentication();
 		String token = tokenProvider.createToken(authentication);
-		
+
 		LoginResponse rep = new LoginResponse();
 		rep.setToken(token);
 		return new ResponseEntity<>(rep, HttpStatus.OK);
