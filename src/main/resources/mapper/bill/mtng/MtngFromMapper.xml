@@ -85,6 +85,7 @@
 			, vum.poly_cd
 			, vum.poly_nm
 			, ema.atdt_div_cd
+			, emas.mtng_id
 			, vum.cmit_cd
 			, kgst.fngetlangnm(vum.dept_nm_kg,vum.dept_nm_ru,vum.dept_nm_kg,#{lang}) as dept_nm
 		from kgst.ebs_mtng_attendant ema
