@@ -46,6 +46,7 @@ public class BillMngServiceImpl implements BillMngService {
     public BillMngResponse getBillById(BillMngVo argVo) {
 
     	BillMngVo billMngVo = billMngMapper.selectOneBill(argVo);//bill basic info
+
     	List<BillMngVo> billEtcInfoList = billMngMapper.selectListBillEtcInfo(argVo);
     	List<EbsFileVo> fileList = billMngMapper.selectFileList(argVo);
     	billMngVo.setEbsfileList(fileList);
@@ -298,6 +299,12 @@ public class BillMngServiceImpl implements BillMngService {
 		billMngMapper.updateEbsFileDelYn(ebsFileVo);
 
 		return ebsFileVo;
+	}
+
+	@Override
+	public List<BillMngVo> selectListMainMtSubmit(HashMap<String, Object> param) {
+        List<BillMngVo> result = billMngMapper.selectListMainMtSubmit(param);
+        return result;
 	}
 
 

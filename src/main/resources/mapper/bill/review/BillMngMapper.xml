@@ -57,7 +57,37 @@
 
     </select>
 
-    <select id="selectOneBill" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo"
+     <select id="selectOneBill" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
+        /* 안건 관리 상세 화면 */
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.selectOneBill */
+		SELECT
+		      em.bill_id                -- 안건 ID
+		    , em.bill_no                -- 안건 번호
+		    , em.bill_kind              -- 의안 종류 (법률안/예산안 등)
+		    , em.na_term_cd             -- 대수 코드
+		    , em.bill_name_kg           -- 의안명 - kg
+		    , em.bill_name_ru           -- 의안명 - ru
+		    , kgst.fngetlangnm(em.bill_name_kg,em.bill_name_ru,em.bill_name_kg,#{lang}) as bill_name -- 안건 이름
+		    , kgst.fngetlangnm(vum.member_nm_kg,vum.member_nm_ru,vum.member_nm_kg,#{lang}) as ppsr_nm -- 제안자 이름
+		    , em.ppsl_knd_cd            -- 제안자 종류 (정부/의원)
+		    , kgst.fngetcodenm('1005',em.ppsl_knd_cd,#{lang}) as ppsl_knd_nm
+		    , em.ppsr_id                -- 발의자 아이디
+		    , em.ppsl_dt                -- 제안일
+		    , em.gvrn_trsf_dt           -- 정부 이송일
+		    , em.prmg_dt                -- 공포일자
+		    , em.prmg_no                -- 공포 번호
+		    , em.reg_id                 -- 등록자 아이디
+		    , em.reg_dt                 -- 등록 일자
+		    , em.rcp_dt                 -- 안건접수일자
+		    , kgst.fngetlangnm(em.etc_kg,em.etc_ru,em.etc_kg,#{lang}) as etc -- 비고
+		    , em.scl_dsc_rcp_nmb
+		FROM ebs_master em
+		join view_user_member vum on (em.ppsr_id = vum.user_id)
+		where em.bill_id = #{billId}
+	</select>
+
+    <select id="selectOneBill_bak" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
         /* 안건 관리 상세 화면 */
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.selectOneBill */
@@ -392,7 +422,53 @@
 			, mod_dt = now()
 	    where bill_id = #{billId}
 	      and detail_seq = #{detailSeq}
+
 	</update>
+
+     <select id="selectListMainMtSubmit" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
+        /* 본회의장 부의할 안건목록 */
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.selectListMainMtSubmit */
+		select
+		      em.bill_id                -- 안건 ID
+		    , em.bill_no                -- 안건 번호
+		    , em.bill_kind              -- 의안 종류 (법률안/예산안 등)
+		    , em.na_term_cd             -- 대수 코드
+		    , kgst.fngetlangnm(em.bill_name_kg,em.bill_name_ru,em.bill_name_kg,#{lang}) as bill_name -- 안건 이름
+		    , kgst.fngetlangnm(vum.member_nm_kg,vum.member_nm_ru,vum.member_nm_kg,#{lang}) as ppsr_nm -- 제안자 이름
+		    , em.ppsl_knd_cd            -- 제안자 종류 (정부/의원)
+		    , kgst.fngetcodenm('1005',em.ppsl_knd_cd,#{lang}) as ppsl_knd_nm
+		    , em.ppsr_id                -- 발의자 아이디
+		    , em.ppsl_dt                -- 제안일
+		    , em.gvrn_trsf_dt           -- 정부 이송일
+		    , em.prmg_dt                -- 공포일자
+		    , em.prmg_no                -- 공포 번호
+		    , em.reg_id                 -- 등록자 아이디
+		    , em.reg_dt                 -- 등록 일자
+		    , em.rcp_dt                 -- 안건접수일자
+		    , kgst.fngetlangnm(em.etc_kg,em.etc_ru,em.etc_kg,#{lang}) as etc -- 비고
+		    , em.scl_dsc_rcp_nmb
+		    , step.stat_cd
+		    , kgst.fngetcodenm('1010',step.stat_cd,#{lang}) as stat_nm
+		from ebs_bp_instance ebi
+		join ebs_master em on (ebi.bill_id = em.bill_id)
+		join view_user_member vum on (em.ppsr_id = vum.user_id)
+		join ebs_bp_step step on (ebi.current_step_id = step.step_id)
+		where ebi.current_step_id in ('1400','1500','1600')
+		  AND em.na_term_cd = #{naTermCd}
+
+		<if test="billName != null and billName != ''">
+		    and kgst.fngetlangnm(em.bill_name_kg,em.bill_name_ru,em.bill_name_kg,#{lang}) like concat('%', #{billName}, '%')
+		</if>
+
+		<if test="billNo != null and billNo != ''">
+		    and  em.bill_no  like concat('%', #{billNo}, '%')
+		</if>
+
+	</select>
+
+
+
     <!-- jjjjjjjjjjjjjjjjjjj -->
 
 

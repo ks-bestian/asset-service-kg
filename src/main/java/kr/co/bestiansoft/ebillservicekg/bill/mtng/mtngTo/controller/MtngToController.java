@@ -45,12 +45,12 @@ public class MtngToController {
         return new ResponseEntity<>(new CommonResponse(200, "OK", mtngToService.getMtngToById(mtngId, param)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "회의 결과 등록", notes = "회의 결과 등록")
-    @PostMapping(value = "/bill/mtng/to", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<CommonResponse> createMtngTo(@ModelAttribute MtngToVo mtngToVo) {
-        return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Mtng created successfully", mtngToService.createMtngTo(mtngToVo)), HttpStatus.CREATED);
-    }
 
+    @ApiOperation(value = "회의 결과 등록", notes = "회의 결과 등록")
+    @PostMapping(value = "/bill/mtng/result", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<CommonResponse> createMtngResult(@ModelAttribute MtngToVo mtngToVo) throws Exception {
+        return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Mtng created successfully", mtngToService.createMtngResult(mtngToVo)), HttpStatus.CREATED);
+    }
 
     @ApiOperation(value = "회의 결과 등록 프로세스진행", notes = "회의 결과 등록 프로세스진행")
     @PostMapping(value = "/bill/mtng/to/report", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
@@ -71,7 +71,7 @@ public class MtngToController {
     	mtngToService.deleteMtng(mtngIds);
         return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "OK", "meeting deleted successfully"), HttpStatus.OK);
     }
-    
+
     @ApiOperation(value = "파일 삭제", notes = "회의 결과 보고서를 삭제한다")
     @PutMapping(value = "/bill/mtng/to/report/delete")
     public ResponseEntity<CommonResponse> updateMtngFileDel(@RequestBody HashMap<String, Object> param) {

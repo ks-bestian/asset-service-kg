@@ -72,101 +72,58 @@ public class MtngToServiceImpl implements MtngToService {
         return dto;
     }
 
+    @Transactional
 	@Override
-	public MtngToVo createMtngTo(MtngToVo mtngToVo) {
+	public MtngToVo createMtngResult(MtngToVo paramVo) throws Exception {
 
-		/*
-		 * 1. 결과 등록 메뉴에서 결과 등록을 하면 회의 예정에 대한 회의결과 를 '임시저장(수정)' 한다는 개념으로 가야할듯.
-		 * 		회의 결과 보고 처리가 최종.
-		 * 2. 등록(수정)처리 여러번 할 경우 기존 파일 deleteYn 'Y'처리하고 입력하면 되지 않을까
-		 * 3. 안건, 참석자의 경우 기존에 등록했던 행들은 결과만 업데이트 하고 신규 추가, 삭제된 내용은 바로바로 추가/삭제 할수 있게 해야할듯.
-		 * 		기존 항목이었는지 구분 필요.
-		 *
-		 * */
+		String loginUserId = new SecurityInfoUtil().getAccountId();
 
-		/* 등록자 아이디 세팅 */
-		String regId = new SecurityInfoUtil().getAccountId();
-		mtngToVo.setRegId(regId);
-		mtngToVo.setModId(regId);
-		/*회의 - ebs_mtng*/
-		mtngToMapper.updateMtngTo(mtngToVo);
-		log.info("mtngId2 : {}", mtngToVo.getMtngId());
-
-
-		MultipartFile[] files = mtngToVo.getFiles();
-		/*회의결과 보고서 등록 - ebs_mtng_file*/
-		if(files != null && files.length>0) {
-
-		    // 유효성 검사: 하나라도 파일이 유효하지 않으면 중단
-		    boolean allValidFiles = Arrays.stream(files)
-		                                  .allMatch(file -> file != null && !file.isEmpty());
-
-		    if (allValidFiles) {
-		    	//파일이 여러개 들어갈 수 있음
-				//mtngToMapper.deleteMtngToFile(mtngToVo);
-
-				comFileService.saveFileEbsMtng(mtngToVo.getFiles(), mtngToVo.getFileKindCds(), mtngToVo.getMtngId());
-		    }
-
-
-		}else {
-		    log.info("파일이 존재하지 않습니다. 파일을 첨부해주세요.");
-		}
-
-
-
-		//파일 정보를 가지고 있어서 null처리
-		mtngToVo.setFiles(null);
-
-		/*안건 ebs_mtng_agenda*/
-
-		// 삭제 대상 추출 및 삭제
-		mtngToMapper.deleteMtngToAgenda(mtngToVo);
+		String jsonString = paramVo.getJsonData();
+		ObjectMapper objectMapper = new ObjectMapper();
+		MtngToVo mtngToVo = objectMapper.readValue(jsonString, MtngToVo.class);
 
 		List<AgendaVo> agendaList = mtngToVo.getAgendaList();
-		if(agendaList!=null) {
-			for(int i=0;i<agendaList.size();i++) {
-				log.info("billId : {}", agendaList.get(i).getBillId());
-				log.info("agenda : {}", agendaList.get(i));
-				AgendaVo agendaVo = new AgendaVo();
-				agendaVo.setBillId(agendaList.get(i).getBillId());
-				agendaVo.setMtngId(mtngToVo.getMtngId());
-				agendaVo.setOrd(i+1);
-				agendaVo.setRegId(regId);
-				agendaVo.setRsltCd(agendaList.get(i).getRsltCd());
-				agendaList.set(i, agendaVo);
-				//존재하는 행인 경우 업데이트. 아닌경우 인서트
-				mtngToMapper.updateMtngToAgenda(agendaList.get(i));
-			}
-		}
+		List<MemberVo> attendantList = mtngToVo.getAttendantList();
 
+		mtngToVo.setRegId(loginUserId);
+		mtngToVo.setModId(loginUserId);
+		mtngToMapper.updateMtngTo(mtngToVo);
 
-		/*참석자 ebs_mtng_attendant*/
-
-		// 삭제 대상 추출 및 삭제
+		//참석자 수정
 		mtngToMapper.deleteMtngToAttendant(mtngToVo);
 
-		List<MemberVo> attendantList = mtngToVo.getAttendantList();
-		if(attendantList!=null) {
-			for(int i=0;i<attendantList.size();i++) {
-				log.info("attendant : {}", attendantList.get(i));
-				MemberVo memberVo = new MemberVo();
-				memberVo.setMtngId(mtngToVo.getMtngId());
-				memberVo.setAtdtUserId(attendantList.get(i).getAtdtUserId());
-				memberVo.setAtdtUserNm(attendantList.get(i).getAtdtUserNm());
-				//뷰테이블의 사용자 가져와서 쓰라고 하셨는데... 참석자 구분을 할만한 정보가 없음. 내부인지 외부인지 직원인지 의원인지 등등...
-				//memberVo.setAtdtKind("ATT01");// 참석자 구분(의원)
-				memberVo.setRegId(regId);
-				memberVo.setAtdtDivCd(attendantList.get(i).getAtdtDivCd());
-				attendantList.set(i, memberVo);
-				//존재하는 행인 경우 업데이트. 아닌경우 인서트
-				mtngToMapper.updateMtngToAttendant(attendantList.get(i));
-			}
+		for(MemberVo vo:attendantList) {
+			vo.setRegId(loginUserId);
+			vo.setMtngId(mtngToVo.getMtngId());
+			vo.setAtdtDeptNm(vo.getDeptNm());
+			vo.setAtdtUserId(vo.getMemberId());
+			vo.setAtdtUserNm(vo.getMemberNm());
+			mtngToMapper.insertEbsMtngAttendant(vo);
 		}
 
+		//안건 수정
+		mtngToMapper.deleteMtngToAgenda(mtngToVo);
+
+		int idx = 1;
+		for(AgendaVo vo:agendaList) {
+			vo.setMtngId(mtngToVo.getMtngId());
+			vo.setOrd(idx++);
+			vo.setRegId(loginUserId);
+			mtngToMapper.insertMtngToAgenda(vo);
+		}
+
+		//회의 결과파일등록
+		comFileService.saveFileEbsMtng(paramVo.getFiles(), paramVo.getFileKindCds(), mtngToVo.getMtngId());
+
+		//추가 - 내 문서함에서 파일 업로드(20250221 조진호)
+		//comFileService.saveFileEbs(mtngToVo.getMyFileIds(), applyVo.getFileKindCds2(), billId);
+		//formData.append("myFileIds", myFileItems.value[i].fileId);
+		//formData.append("fileKindCds2", myFileItems.value[i].kind);
 
 		return mtngToVo;
 	}
+
+
 
 
 	@Override
@@ -228,6 +185,8 @@ public class MtngToServiceImpl implements MtngToService {
 		param.put("modId", modId);
 		return mtngToMapper.updateMtngFileDel(param);
 	}
+
+
 
 
 }

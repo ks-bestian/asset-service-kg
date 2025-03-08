@@ -11,6 +11,16 @@ import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.vo.MtngToVo;
 
 @Mapper
 public interface MtngToMapper {
+
+
+	void insertMtngToAgenda(AgendaVo agendaVo);
+
+
+
+
+
+
+
     List<MtngToVo> selectListMtngTo (HashMap<String, Object> param);
     MtngToVo selectMtngTo(HashMap<String, Object> param);
     List<MemberVo> selectListMtngAttendant (HashMap<String, Object> param);
@@ -27,7 +37,7 @@ public interface MtngToMapper {
 
     void deleteMtngToFile(MtngToVo mtngToVo);
     void deleteMtngToAgenda(MtngToVo mtngToVo);
-    void updateMtngToAgenda(AgendaVo agendaVo);
+
     void deleteMtngToAttendant(MtngToVo mtngToVo);
     void updateMtngToAttendant(MemberVo memberVo);
 	int updateMtngFileDel(HashMap<String, Object> param);

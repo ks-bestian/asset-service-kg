@@ -50,6 +50,11 @@ public interface BillMngService {
     /* Bill meeting review */
     BillMngVo deleteCmtReview(BillMngVo billMngVo);
 
+
+	/* 안건 본회의장 부의할 목록 */
+    List<BillMngVo> selectListMainMtSubmit(HashMap<String, Object> param);
+
+
     ////////////////////////////////////////////////////////////////////
 
 

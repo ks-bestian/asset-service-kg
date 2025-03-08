@@ -337,14 +337,14 @@ public class ProcessServiceImpl implements ProcessService {
 		/*1차본회의 심사요청*/
 		void executeService_1700(ProcessVo argVo) {
 
-			CmttVo cmttVo = processMapper.selectOneCmtt(argVo);
+			//CmttVo cmttVo = processMapper.selectOneCmtt(argVo);
 
 			ProcessVo taskVo = new ProcessVo();
 			taskVo.setBillId(argVo.getBillId());
 			taskVo.setStepId(argVo.getNextStepId());
-			taskVo.setTaskNm("1차본회의 심사요청");
+			taskVo.setTaskNm("본회의 심사요청");
 			taskVo.setStatus("C");
-			taskVo.setAssignedTo(cmttVo.getCmtId());//위원회 할당
+			//taskVo.setAssignedTo(cmttVo.getCmtId());//위원회 할당
 			taskVo.setRegId(argVo.getRegId());
 			processMapper.insertBpTask(taskVo);
 

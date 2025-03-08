@@ -85,9 +85,9 @@
 			, vum.poly_cd
 			, vum.poly_nm
 			, ema.atdt_div_cd
-			, emas.mtng_id
+			, kgst.fngetcodenm('1017',ema.atdt_div_cd,#{lang}) as atdt_div_nm
+			, ema.mtng_id
 			, vum.cmit_cd
-			, kgst.fngetlangnm(vum.dept_nm_kg,vum.dept_nm_ru,vum.dept_nm_kg,#{lang}) as dept_nm
 		from kgst.ebs_mtng_attendant ema
 		left outer join kgst.view_user_member vum on (ema.atdt_user_id = vum.user_id )
 		where ema.mtng_id = #{mtngId}::BIGINT

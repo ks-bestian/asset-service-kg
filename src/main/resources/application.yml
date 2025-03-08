@@ -43,8 +43,8 @@ security:
 
 jwt:
   secret: 2fdd12003e9607e97e71e0076daea1ec542430ac32a24c16bb322025e36f79d6
-  expiration: 3600000
-  token-validity-in-seconds: 3600
+  expiration: 86400000
+  token-validity-in-seconds: 86400000
 
 edv:
 #  rmi: http://localhost:7000/rmi

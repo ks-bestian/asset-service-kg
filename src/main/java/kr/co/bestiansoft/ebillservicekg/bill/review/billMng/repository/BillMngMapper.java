@@ -31,6 +31,9 @@ public interface BillMngMapper {
 	void deleteCmtReview(BillMngVo billMngVo);
 	void deleteCmtReviewEbsFile(BillMngVo billMngVo);
 
+	List<BillMngVo> selectListMainMtSubmit(HashMap<String, Object> param);
+
+
 
 /////////////////////////////
 

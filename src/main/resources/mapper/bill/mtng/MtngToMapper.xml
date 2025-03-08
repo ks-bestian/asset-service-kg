@@ -179,6 +179,8 @@
 		     , ATDT_USER_ID
 		     , ATDT_USER_NM
 		     , ATDT_KIND
+		     , atdt_div_cd
+		     , atdt_dept_nm
 		     , REG_ID
 		     , REG_DT
 		     )
@@ -188,6 +190,8 @@
 		     ,  #{atdtUserId}
 		     ,  #{atdtUserNm}
 		     ,  #{atdtKind}
+		     ,  #{atdtDivCd}
+		     ,  #{atdtDeptNm}
 		     ,  #{regId}
 		     ,  now()
 		    )
@@ -214,9 +218,13 @@
 
     <update id="updateMtngTo" parameterType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.vo.MtngToVo">
 		UPDATE EBS_MTNG
-		     SET OPEN_DTM = #{openDtm}
+		SET    OPEN_DTM = #{openDtm}
+
 		     , CLOSE_DTM = #{closeDtm}
 		     , MTNG_PLC = #{mtngPlc}
+		     <if test="statCd != null and statCd != ''">
+		     , stat_cd = #{statCd}
+		     </if>
 		     , RMK = #{rmk}
 		     , MOD_ID = #{modId}
 		     , MOD_DT = now()
@@ -245,14 +253,8 @@
     <delete id="deleteMtngToAgenda" parameterType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.vo.MtngToVo">
 	    DELETE FROM ebs_mtng_agenda
 	    WHERE mtng_id = #{mtngId}
-	    <if test="agendaList != null and agendaList.size() > 0">
-	      AND bill_id NOT IN
-		    <foreach collection="agendaList" item="agenda" index="index" open="(" separator="," close=")">
-		        #{agenda.billId}
-		    </foreach>
-	    </if>
 	</delete>
-    <insert id="updateMtngToAgenda" parameterType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.AgendaVo">
+    <insert id="insertMtngToAgenda" parameterType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.AgendaVo">
 		INSERT INTO EBS_MTNG_AGENDA
 		     (
 		       MTNG_ID
@@ -264,28 +266,17 @@
 		     )
 		VALUES
 		     (
-		       #{mtngId}
+		        #{mtngId}
 		     ,  #{billId}
 		     ,  #{ord}
 		     ,  #{rsltCd}
 		     ,  #{regId}
 		     ,  now()
 		    )
-		ON CONFLICT (MTNG_ID, BILL_ID) DO UPDATE SET
-	    ORD = EXCLUDED.ORD,
-	    MOD_ID = EXCLUDED.REG_ID, -- 삽입 값 참조
-	    MOD_DT = now(),
-	    RSLT_CD = EXCLUDED.RSLT_CD
     </insert>
     <delete id="deleteMtngToAttendant" parameterType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.vo.MtngToVo">
 	    DELETE FROM ebs_mtng_attendant
 	    WHERE mtng_id = #{mtngId}
-	    <if test="attendantList != null and attendantList.size() > 0">
-	      AND atdt_user_id NOT IN
-	      <foreach collection="attendantList" item="attendant" index="index" open="(" separator="," close=")">
-	        #{attendant.atdtUserId}
-	      </foreach>
-	    </if>
 	</delete>
     <update id="updateMtngToAttendant" parameterType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.AgendaVo">
 		INSERT INTO EBS_MTNG_ATTENDANT

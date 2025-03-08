@@ -100,6 +100,16 @@ public class BillMngController {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Bill Cmt review delete successfully", billMngService.deleteCmtReview(billMngVo)), HttpStatus.CREATED);
     }
 
+
+
+    @ApiOperation(value = "안건 본회의장 부의할 목록", notes = "리스트를 조회한다.")
+    @GetMapping("/bill/review/selectListMainMtSubmit")
+    public ResponseEntity<CommonResponse> selectListMainMtSubmit(@RequestParam HashMap<String, Object> param) {
+        return new ResponseEntity<>(new CommonResponse(200, "OK", billMngService.selectListMainMtSubmit(param)), HttpStatus.OK);
+    }
+
+
+
     ////////////////////////////////////////////////////////////////////////
 
 
