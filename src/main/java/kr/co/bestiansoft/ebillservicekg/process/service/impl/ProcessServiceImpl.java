@@ -48,8 +48,8 @@ public class ProcessServiceImpl implements ProcessService {
 			stepVo.setNextStepId("0");
 		} else {
 			stepVo = processMapper.selectBpStep(argVo);
+			stepVo.setBillId(argVo.getBillId());
 		}
-
 
 		if(argVo.getTaskId() != null && !"".equals(argVo.getTaskId())) {//taskId 가 존재시 타스크만 완료업뎃
 
@@ -73,11 +73,11 @@ public class ProcessServiceImpl implements ProcessService {
 	public void executeServiceTasks(ProcessVo argVo)  {
 
 		String stepId = argVo.getStepId();
-		String nextStepId = argVo.getNextStepId();
+		//String nextStepId = argVo.getNextStepId();
 
 		if(stepId == null || "".equals(stepId)) return;
 
-		switch (nextStepId) {
+		switch (stepId) {
 	        case "0":
 	        	executeService_0(argVo);
 	            break;
@@ -121,53 +121,53 @@ public class ProcessServiceImpl implements ProcessService {
 	        	executeService_1900(argVo);
 	            break;
 
-	        case "2000":
-	        	executeService_2000(argVo);
-	            break;
-
-	        case "2100":
-	        	executeService_2100(argVo);
-	            break;
-
-	        case "2200":
-	        	executeService_2200(argVo);
-	            break;
-
-	        case "2300":
-	        	executeService_2300(argVo);
-	            break;
-
-	        case "2400":
-	        	executeService_2400(argVo);
-	            break;
-
-	        case "2500":
-	        	executeService_2500(argVo);
-	            break;
-
-	        case "2600":
-	        	executeService_2600(argVo);
-	            break;
-
-	        case "2700":
-	        	executeService_2700(argVo);
-	            break;
-
-	        case "2800":
-	        	executeService_2800(argVo);
-	            break;
-
-	        case "2900":
-	        	executeService_2900(argVo);
-	            break;
-
-	        case "3000":
-	        	executeService_3000(argVo);
-	            break;
-
-	        case "3100":
-	        	executeService_3100(argVo);
-	            break;
+//	        case "2000":
+//	        	executeService_2000(argVo);
+//	            break;
+//
+//	        case "2100":
+//	        	executeService_2100(argVo);
+//	            break;
+//
+//	        case "2200":
+//	        	executeService_2200(argVo);
+//	            break;
+//
+//	        case "2300":
+//	        	executeService_2300(argVo);
+//	            break;
+//
+//	        case "2400":
+//	        	executeService_2400(argVo);
+//	            break;
+//
+//	        case "2500":
+//	        	executeService_2500(argVo);
+//	            break;
+//
+//	        case "2600":
+//	        	executeService_2600(argVo);
+//	            break;
+//
+//	        case "2700":
+//	        	executeService_2700(argVo);
+//	            break;
+//
+//	        case "2800":
+//	        	executeService_2800(argVo);
+//	            break;
+//
+//	        case "2900":
+//	        	executeService_2900(argVo);
+//	            break;
+//
+//	        case "3000":
+//	        	executeService_3000(argVo);
+//	            break;
+//
+//	        case "3100":
+//	        	executeService_3100(argVo);
+//	            break;
 
 	        case "3200":
 	        	executeService_3200(argVo);
@@ -213,7 +213,7 @@ public class ProcessServiceImpl implements ProcessService {
 			ProcessVo taskVo = new ProcessVo();
 			taskVo.setTaskNm("안건접수");
 			taskVo.setBillId(argVo.getBillId());
-			taskVo.setStepId(argVo.getNextStepId());
+			taskVo.setStepId(argVo.getStepId());
 			taskVo.setStatus("P");
 			taskVo.setAssignedTo(AuthConstants.AUTH_GD);//GD부서에 할당
 			taskVo.setRegId(argVo.getRegId());
@@ -250,7 +250,7 @@ public class ProcessServiceImpl implements ProcessService {
 
 			ProcessVo taskVo = new ProcessVo();
 			taskVo.setBillId(argVo.getBillId());
-			taskVo.setStepId(argVo.getNextStepId());
+			taskVo.setStepId(argVo.getStepId());
 			taskVo.setTaskNm("법률부서검토");
 			taskVo.setStatus("P");
 			taskVo.setAssignedTo(AuthConstants.AUTH_LGRV);//법률부서에 할당
@@ -264,7 +264,7 @@ public class ProcessServiceImpl implements ProcessService {
 
 			ProcessVo taskVo = new ProcessVo();
 			taskVo.setBillId(argVo.getBillId());
-			taskVo.setStepId(argVo.getNextStepId());
+			taskVo.setStepId(argVo.getStepId());
 			taskVo.setTaskNm("위원회회부");
 			taskVo.setStatus("P");
 			taskVo.setAssignedTo(AuthConstants.AUTH_GD);//GD 할당
@@ -282,7 +282,7 @@ public class ProcessServiceImpl implements ProcessService {
 
 			ProcessVo taskVo = new ProcessVo();
 			taskVo.setBillId(argVo.getBillId());
-			taskVo.setStepId(argVo.getNextStepId());
+			taskVo.setStepId(argVo.getStepId());
 			taskVo.setTaskNm("언어전문파트의견서등록");
 			taskVo.setStatus("P");
 			taskVo.setAssignedTo(AuthConstants.AUTH_LGGSPLZ);//언어전문파트 할당
@@ -302,7 +302,7 @@ public class ProcessServiceImpl implements ProcessService {
 			List<CmttVo> cmttVoList = processMapper.selectListBillCmtt(argVo);
 			ProcessVo taskVo = new ProcessVo();
 			taskVo.setBillId(argVo.getBillId());
-			taskVo.setStepId(argVo.getNextStepId());
+			taskVo.setStepId(argVo.getStepId());
 			taskVo.setTaskNm("1차위원회 회의결과등록");
 			taskVo.setStatus("P");
 			taskVo.setRegId(argVo.getRegId());
@@ -325,7 +325,7 @@ public class ProcessServiceImpl implements ProcessService {
 //			심사보고서를 등록한다.
 			ProcessVo taskVo = new ProcessVo();
 			taskVo.setBillId(argVo.getBillId());
-			taskVo.setStepId(argVo.getNextStepId());
+			taskVo.setStepId(argVo.getStepId());
 			taskVo.setTaskNm("1차위원회 회의심사보고");
 			taskVo.setStatus("P");
 			taskVo.setAssignedTo(argVo.getAssignedTo());//위원회 할당
@@ -341,7 +341,7 @@ public class ProcessServiceImpl implements ProcessService {
 
 			ProcessVo taskVo = new ProcessVo();
 			taskVo.setBillId(argVo.getBillId());
-			taskVo.setStepId(argVo.getNextStepId());
+			taskVo.setStepId(argVo.getStepId());
 			taskVo.setTaskNm("본회의 심사요청");
 			taskVo.setStatus("C");
 			//taskVo.setAssignedTo(cmttVo.getCmtId());//위원회 할당
@@ -359,7 +359,7 @@ public class ProcessServiceImpl implements ProcessService {
 //			심사보고서등록
 			ProcessVo taskVo = new ProcessVo();
 			taskVo.setBillId(argVo.getBillId());
-			taskVo.setStepId(argVo.getNextStepId());
+			taskVo.setStepId(argVo.getStepId());
 			taskVo.setTaskNm("본회의 심사요청");
 			taskVo.setStatus("P");
 			taskVo.setAssignedTo(cmttVo.getCmtId());//위원회 할당
@@ -381,7 +381,7 @@ public class ProcessServiceImpl implements ProcessService {
 
 			ProcessVo taskVo = new ProcessVo();
 			taskVo.setBillId(argVo.getBillId());
-			taskVo.setStepId(argVo.getNextStepId());
+			taskVo.setStepId(argVo.getStepId());
 			taskVo.setTaskNm("법적행위 검토 보고서");
 			taskVo.setStatus("P");
 			taskVo.setAssignedTo(AuthConstants.AUTH_LGACT);//법적행위 할당
@@ -410,65 +410,68 @@ public class ProcessServiceImpl implements ProcessService {
 
 		}
 
-		/*2차위원회 회의예정*/
-		void executeService_2000(ProcessVo argVo) {
-			executeService_1400(argVo);
-		}
 
-		/*2차위원회 회의결과등록*/
-		void executeService_2100(ProcessVo argVo) {
-			executeService_1500(argVo);
-		}
 
-		/*2차위원회 회의심사보고*/
-		void executeService_2200(ProcessVo argVo) {
-			executeService_1600(argVo);
-		}
-
-		/*2차본회의 심사요청*/
-		void executeService_2300(ProcessVo argVo) {
-			executeService_1700(argVo);
-		}
-
-		/*2차본회의 심사*/
-		void executeService_2400(ProcessVo argVo) {
-			executeService_1800(argVo);
-		}
-
-		/*2차 법적행위관리*/
-		void executeService_2500(ProcessVo argVo) {
-			executeService_1900(argVo);
-		}
-
-		/*3차위원회 회의예정*/
-		void executeService_2600(ProcessVo argVo) {
-			executeService_1400(argVo);
-		}
-
-		/*3차위원회 회의결과등록*/
-		void executeService_2700(ProcessVo argVo) {
-			executeService_1500(argVo);
-		}
-
-		/*3차위원회 회의심사보고*/
-		void executeService_2800(ProcessVo argVo) {
-			executeService_1600(argVo);
-		}
-
-		/*3차본회의 심사요청*/
-		void executeService_2900(ProcessVo argVo) {
-			executeService_1700(argVo);
-		}
-
-		/*3차본회의 심사*/
-		void executeService_3000(ProcessVo argVo) {
-			executeService_1800(argVo);
-		}
-
-		/*3차 법적행위관리*/
-		void executeService_3100(ProcessVo argVo) {
-			executeService_1900(argVo);
-		}
+//
+//		/*2차위원회 회의예정*/
+//		void executeService_2000(ProcessVo argVo) {
+//			executeService_1400(argVo);
+//		}
+//
+//		/*2차위원회 회의결과등록*/
+//		void executeService_2100(ProcessVo argVo) {
+//			executeService_1500(argVo);
+//		}
+//
+//		/*2차위원회 회의심사보고*/
+//		void executeService_2200(ProcessVo argVo) {
+//			executeService_1600(argVo);
+//		}
+//
+//		/*2차본회의 심사요청*/
+//		void executeService_2300(ProcessVo argVo) {
+//			executeService_1700(argVo);
+//		}
+//
+//		/*2차본회의 심사*/
+//		void executeService_2400(ProcessVo argVo) {
+//			executeService_1800(argVo);
+//		}
+//
+//		/*2차 법적행위관리*/
+//		void executeService_2500(ProcessVo argVo) {
+//			executeService_1900(argVo);
+//		}
+//
+//		/*3차위원회 회의예정*/
+//		void executeService_2600(ProcessVo argVo) {
+//			executeService_1400(argVo);
+//		}
+//
+//		/*3차위원회 회의결과등록*/
+//		void executeService_2700(ProcessVo argVo) {
+//			executeService_1500(argVo);
+//		}
+//
+//		/*3차위원회 회의심사보고*/
+//		void executeService_2800(ProcessVo argVo) {
+//			executeService_1600(argVo);
+//		}
+//
+//		/*3차본회의 심사요청*/
+//		void executeService_2900(ProcessVo argVo) {
+//			executeService_1700(argVo);
+//		}
+//
+//		/*3차본회의 심사*/
+//		void executeService_3000(ProcessVo argVo) {
+//			executeService_1800(argVo);
+//		}
+//
+//		/*3차 법적행위관리*/
+//		void executeService_3100(ProcessVo argVo) {
+//			executeService_1900(argVo);
+//		}
 
 		/*정부이송 요청*/
 		void executeService_3200(ProcessVo argVo) {

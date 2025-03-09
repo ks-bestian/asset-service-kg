@@ -14,13 +14,10 @@ import kr.co.bestiansoft.ebillservicekg.admin.billMng.vo.SystemBillResponse;
 import kr.co.bestiansoft.ebillservicekg.admin.billMng.vo.SystemBillVo;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.repository.AgreeMapper;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.vo.AgreeVo;
-import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyResponse;
-import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.impl.EDVHelper;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
-import kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

@@ -87,10 +87,10 @@
 		where em.bill_id = #{billId}
 	</select>
 
-    <select id="selectOneBill_bak" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo"
+    <select id="selectOneBillByGd" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
         /* 안건 관리 상세 화면 */
-        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.selectOneBill */
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.selectOneBillByGd */
 		select
 		    pl.bill_id
 		  , kgst.fngetlangnm(pl.bill_name_kg,pl.bill_name_ru,pl.bill_name_kg,#{lang}) as bill_name -- 안건 이름
@@ -174,6 +174,7 @@
 			, emd.cls_cd
 			, emd.rmrk_kg
 			, emd.rmrk_ru
+			, kgst.fngetlangnm(emd.rmrk_kg,emd.rmrk_ru,emd.rmrk_kg,#{lang}) as rmrk
 			, emd.mtn_dt
 			, emd.prsd_rjct_dt
 			, emd.lgl_rvw_rslt_code
@@ -188,6 +189,11 @@
 		from kgst.ebs_master_detail emd
 		join kgst.view_user_member vum on (emd.reg_id = vum.user_id)
 		where emd.bill_id = #{billId}
+		<if test="clsCd != null and clsCd != ''">
+			and emd.cls_cd = #{clsCd}
+		</if>
+
+		order by emd.seq
     </select>
 
     <select id="selectOnelegalReview" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo"

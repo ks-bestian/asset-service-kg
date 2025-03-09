@@ -144,16 +144,17 @@ public class MtngToServiceImpl implements MtngToService {
 		mtParam.setStatCd(statCd);
 		mtngToMapper.updateMtngToStatus(mtParam);// commitee meeting status update
 
-//		for(AgendaVo aVo :agendaVo.getAgendaList()) {
-//
-//			if("M".equals(aVo.getCmtSeCd())) {//소관위
-//				ProcessVo pVo = new ProcessVo();
-//				pVo.setBillId(aVo.getBillId());
-//				processService.handleProcess(pVo);
-//			} else {//관련위
-//
-//			}
-//		}
+		for(AgendaVo aVo :agendaVo.getAgendaList()) {
+
+			if("M".equals(aVo.getCmtSeCd())) {//소관위
+				ProcessVo pVo = new ProcessVo();
+				pVo.setBillId(aVo.getBillId());
+				pVo.setStepId("1500");//위원회 회의결과등록
+				processService.handleProcess(pVo);
+			} else {//관련위
+
+			}
+		}
 
 		return agendaVo;
 	}

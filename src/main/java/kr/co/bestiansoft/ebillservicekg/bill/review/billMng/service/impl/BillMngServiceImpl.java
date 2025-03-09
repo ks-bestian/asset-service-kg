@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +21,7 @@ import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
+import kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper;
 import kr.co.bestiansoft.ebillservicekg.process.service.ProcessService;
 import kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +37,8 @@ public class BillMngServiceImpl implements BillMngService {
     private final BillMngMapper billMngMapper;
     private final ProcessService processService;
     private final ComFileService comFileService;
+	private static final Logger LOGGER = LoggerFactory.getLogger(BillMngServiceImpl.class);
+	private final ProcessMapper processMapper;
 
     @Override
     public List<BillMngVo> getBillList(HashMap<String, Object> param) {
@@ -42,10 +47,30 @@ public class BillMngServiceImpl implements BillMngService {
         return result;
     }
 
+	@Override
+	public BillMngResponse selectOneBill(BillMngVo param) {
+
+		BillMngVo billMngVo = billMngMapper.selectOneBillByGd(param);//bill basic info
+		List<EbsFileVo> fileList = billMngMapper.selectFileList(param);
+		billMngVo.setEbsfileList(fileList);
+    	BillMngResponse billMngResponse = new BillMngResponse();
+    	billMngResponse.setBillMngVo(billMngVo);
+
+		return billMngResponse;
+	}
+
+
+
+
+
     @Override
     public BillMngResponse getBillById(BillMngVo argVo) {
 
     	BillMngVo billMngVo = billMngMapper.selectOneBill(argVo);//bill basic info
+
+		ProcessVo param = new ProcessVo();
+		param.setTaskId(argVo.getTaskId());
+		ProcessVo processVo = processMapper.selectBpTask(param);
 
     	List<BillMngVo> billEtcInfoList = billMngMapper.selectListBillEtcInfo(argVo);
     	List<EbsFileVo> fileList = billMngMapper.selectFileList(argVo);
@@ -98,18 +123,36 @@ public class BillMngServiceImpl implements BillMngService {
     	billMngResponse.setBillCmtReviewVoList(billCmtReviewList);
     	billMngResponse.setCmtList(cmtList);
     	billMngResponse.setCmtMeetingList(cmtMeetingList);
+    	billMngResponse.setProcessVo(processVo);
 
         return billMngResponse;
     }
 
 
 	@Override
-	public List<BillMngVo> selectListBillEtcInfo(BillMngVo argVo) {
+	public BillMngResponse selectListBillEtcInfo(BillMngVo argVo) {
+
+		BillMngResponse billMngResponse = new BillMngResponse();
+		BillMngVo billlegalReviewVo = null;//bill legal review department
 		List<BillMngVo> billEtcInfoList = billMngMapper.selectListBillEtcInfo(argVo);
-		return billEtcInfoList;
+		ProcessVo param = new ProcessVo();
+		param.setTaskId(argVo.getTaskId());
+		ProcessVo processVo = processMapper.selectBpTask(param);
+
+    	for(BillMngVo listVo : billEtcInfoList) {
+
+    		String clsCd = listVo.getClsCd();
+
+        		if("110".equals(clsCd)) {//법률검토결과
+        			billlegalReviewVo = listVo;
+        		}
+    	}
+
+		billMngResponse.setProcessVo(processVo);
+		billMngResponse.setBilllegalReviewVo(billlegalReviewVo);
+
+		return billMngResponse;
 	}
-
-
 
 
     @Transactional
@@ -133,7 +176,6 @@ public class BillMngServiceImpl implements BillMngService {
 	public BillMngVo billCmtRegMng(BillMngVo billMngVo) {
 
         //위원회 생성
-
 		ProcessVo pVo = new ProcessVo();
 		pVo.setBillId(billMngVo.getBillId());
 		pVo.setStepId(billMngVo.getStepId());
@@ -142,40 +184,27 @@ public class BillMngServiceImpl implements BillMngService {
 		return null;
 	}
 
-//	@Override
-//	public List<BillMngVo> selectListlegalReview(HashMap<String, Object> param) {
-//        List<BillMngVo> result = billMngMapper.selectListlegalReview(param);
-//        return result;
-//	}
-
-
-//	@Override
-//	public BillMngResponse selectOnelegalReview(HashMap<String, Object> param) {
-//
-//		BillMngResponse billMngResponse = new BillMngResponse();
-//		BillMngVo billMngVo = billMngMapper.selectOnelegalReview(param);
-//		billMngResponse.setBillMngVo(billMngVo);
-//
-//		//////////////////////////
-//		ProcessVo pvo = new ProcessVo();
-//		pvo.setTaskId(Long.valueOf(String.valueOf(param.get("taskId"))));
-//		ProcessVo taskVo = processService.selectBpTask(pvo);
-//		billMngResponse.setProcessVo(taskVo);
-//
-//		return billMngResponse;
-//	}
 
 	@Transactional
 	@Override
 	public BillMngVo insertBillDetail(BillMngVo billMngVo) {
 
 		String loginId = new SecurityInfoUtil().getAccountId();
+		String clsCd = "";
 		billMngVo.setRegId(loginId);
 		billMngVo.setModId(loginId);
 
 		BillMngVo billDetailVo = billMngMapper.selectOnelegalReview(billMngVo);
 		if(billDetailVo == null) {
 			billMngMapper.insertBillDetail(billMngVo);
+
+			if("340".equals(clsCd)) {//본회의 부의
+				ProcessVo pVo = new ProcessVo();
+				pVo.setBillId(billMngVo.getBillId());
+				pVo.setStepId("1800");//본회의 심사
+				processService.handleProcess(pVo);
+			}
+
 		} else {
 			billMngMapper.updateBillDetail(billMngVo);
 		}
@@ -306,8 +335,6 @@ public class BillMngServiceImpl implements BillMngService {
         List<BillMngVo> result = billMngMapper.selectListMainMtSubmit(param);
         return result;
 	}
-
-
 
 
 

@@ -118,9 +118,17 @@
 
 	</select>
 
-
-
     <update id="updateBpInstanceCurrentStep" parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
+	/* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.updateBpInstanceCurrentStep */
+	UPDATE EBS_BP_INSTANCE
+	   SET
+	       CURRENT_STEP_ID = #{stepId}
+	     , MOD_ID = #{modId}
+	     , MOD_DT = now()
+	 WHERE BILL_ID = #{billId}
+    </update>
+
+    <update id="updateBpInstanceCurrentStep_bak" parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
 	/* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.updateBpInstanceCurrentStep */
 	UPDATE EBS_BP_INSTANCE
 	   SET
@@ -276,6 +284,21 @@
 	     , A.RMK
 	     , A.REQ_AUTH_ID
 	     , A.STEP_ORD
+	FROM EBS_BP_STEP A
+	WHERE A.STEP_ID = #{stepId}
+	</select>
+
+   <select id="selectBpStep_bak"  parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo"
+   resultType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
+   /* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.selectBpStep */
+	SELECT
+           A.STEP_ID
+	     , A.BP_DF_ID
+	     , A.STEP_NM
+	     , A.NEXT_STEP_ID
+	     , A.RMK
+	     , A.REQ_AUTH_ID
+	     , A.STEP_ORD
 	     , B.bill_id
 	FROM EBS_BP_STEP A, ebs_bp_instance B
 	WHERE A.BP_DF_ID = B.BP_DF_ID
@@ -387,7 +410,7 @@
 
    <select id="selectBpStepTasks"  parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo"
     resultType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
-   /* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.selectBpTask */
+   /* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.selectBpStepTasks */
 	SELECT
 	        TASK_ID
 	     ,  TASK_NM

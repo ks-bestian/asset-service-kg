@@ -15,6 +15,8 @@ public interface BillMngMapper {
 
 	List<BillMngVo> selectListBillMng(HashMap<String, Object> param);
 	BillMngVo selectOneBill(BillMngVo argVo);
+	BillMngVo selectOneBillByGd(BillMngVo argVo);
+
 
 	void insertBillDetail(BillMngVo billMngVo);
 	void updateBillDetail(BillMngVo billMngVo);
