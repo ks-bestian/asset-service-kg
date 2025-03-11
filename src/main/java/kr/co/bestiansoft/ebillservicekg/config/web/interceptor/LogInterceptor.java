@@ -3,6 +3,9 @@ package kr.co.bestiansoft.ebillservicekg.config.web.interceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import kr.co.bestiansoft.ebillservicekg.admin.acsHist.service.AcsHistService;
@@ -38,7 +41,10 @@ public class LogInterceptor implements HandlerInterceptor {
                 &&!reqServletPath.contains("/api/menus/menuBreadcrumbs")
         ) {//로그조회는 제외
             if(!reqServletPath.contains("/login")) {
-                userId = new SecurityInfoUtil().getAccountId();
+            	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            	if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            		userId = new SecurityInfoUtil().getAccountId();	
+            	}
             }
 
             ahVo = new AcsHistVo();

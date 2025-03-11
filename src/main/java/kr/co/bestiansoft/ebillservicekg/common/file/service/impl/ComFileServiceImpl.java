@@ -123,42 +123,57 @@ public class ComFileServiceImpl implements ComFileService {
 			File tmpFile = File.createTempFile("tmp", null);
 			mpf.transferTo(tmpFile);
 
-			executorService.submit(() -> {
-				File pdfFile = null;
-				try {
-					pdfFile = File.createTempFile("tmp", null);
-					boolean success = pdfService.convertToPdf(tmpFile.getAbsolutePath(), filename, pdfFile.getAbsolutePath());
-
-					if(success) {
-						String pdfFileId = StringUtil.getUUUID();
-						try (InputStream edvIs = new FileInputStream(pdfFile)) {
-							edv.save(pdfFileId, edvIs);
-						} catch (Exception edvEx) {
-							throw new RuntimeException("EDV_NOT_WORK", edvEx);
-						}
-
-						int idx = filename.lastIndexOf(".");
-						String pdfFileNm = filename.substring(0, idx) + ".pdf";
-
-						EbsFileVo fileVo = new EbsFileVo();
-						fileVo.setOrgFileId(orgFileId);
-						fileVo.setPdfFileId(pdfFileId);
-						fileVo.setPdfFileNm(pdfFileNm);
-						fileMapper.updateFileEbs(fileVo);
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				} finally {
-					if(tmpFile != null) {
-						tmpFile.delete();
-					}
-					if(pdfFile != null) {
-						pdfFile.delete();
-					}
-				}
-			});
-
 			convertToPdfEbs(tmpFile, filename, orgFileId);
+		}
+		catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	void convertToPdfEbsMtng(File tmpFile, String filename, String orgFileId) {
+		executorService.submit(() -> {
+			File pdfFile = null;
+			try {
+				pdfFile = File.createTempFile("tmp", null);
+				boolean success = pdfService.convertToPdf(tmpFile.getAbsolutePath(), filename, pdfFile.getAbsolutePath());
+
+				if(success) {
+					String pdfFileId = StringUtil.getUUUID();
+					try (InputStream edvIs = new FileInputStream(pdfFile)) {
+						edv.save(pdfFileId, edvIs);
+					} catch (Exception edvEx) {
+						throw new RuntimeException("EDV_NOT_WORK", edvEx);
+					}
+
+					int idx = filename.lastIndexOf(".");
+					String pdfFileNm = filename.substring(0, idx) + ".pdf";
+
+					EbsFileVo fileVo = new EbsFileVo();
+					fileVo.setOrgFileId(orgFileId);
+					fileVo.setPdfFileId(pdfFileId);
+					fileVo.setPdfFileNm(pdfFileNm);
+					fileMapper.updateFileEbsMtng(fileVo);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if(tmpFile != null) {
+					tmpFile.delete();
+				}
+				if(pdfFile != null) {
+					pdfFile.delete();
+				}
+			}
+		});
+	}
+
+	void convertToPdfEbsMtng(MultipartFile mpf, String orgFileId) {
+		try {
+			String filename = mpf.getOriginalFilename();
+			File tmpFile = File.createTempFile("tmp", null);
+			mpf.transferTo(tmpFile);
+
+			convertToPdfEbsMtng(tmpFile, filename, orgFileId);
 		}
 		catch(IOException e) {
 			e.printStackTrace();
@@ -327,6 +342,8 @@ public class ComFileServiceImpl implements ComFileService {
 	@Override
 	public void saveFileEbsMtng(MultipartFile[] files, String[] fileKindCdList, Long mtngId) {
 		if(files == null) return;
+		
+		List<Map<String, Object>> pdfJobs = new ArrayList<>();
 
 		String[] fileKindCds = fileKindCdList;
 		int idx = 0;
@@ -358,8 +375,89 @@ public class ComFileServiceImpl implements ComFileService {
 
 			idx++;
 			fileMapper.insertFileEbsMtng(fileVo);
+			
+			// pdf변환작업
+			Map<String, Object> pdfJob = new HashMap<>();
+			pdfJob.put("file", file);
+			pdfJob.put("orgFileId", orgFileId);
+			pdfJobs.add(pdfJob);
+		}
+		
+		// pdf변환
+		for(Map<String, Object> job : pdfJobs) {
+			MultipartFile file = (MultipartFile)job.get("file");
+			String orgFileId = (String)job.get("orgFileId");
+			convertToPdfEbsMtng(file, orgFileId);
 		}
 
+	}
+	
+	@Override
+	public void saveFileEbsMtng(String[] myFileIds, String[] fileKindCdList, Long mtngId) throws Exception {
+
+		if(myFileIds == null) return;
+		
+		List<Map<String, Object>> pdfJobs = new ArrayList<>();
+
+		String[] fileKindCds = fileKindCdList;
+		int idx = 0;
+		for(String myFileId : myFileIds) {
+
+			String userId = new SecurityInfoUtil().getAccountId();
+			FileVo myFile = documentMapper.selectMyFile(userId, myFileId);
+
+			String orgFileId = StringUtil.getUUUID();
+    		String orgFileNm = myFile.getFileTitle();
+    		String fileType = myFile.getFileType();
+    		if(fileType != null && fileType.length() > 0) {
+    			orgFileNm += "." + fileType;
+    		}
+    		
+    		InputStream myFileIs = edv.download(myFileId);
+    		File tmpFile = File.createTempFile("tmp", null);
+			IOUtils.copy(myFileIs, new FileOutputStream(tmpFile));
+
+    		////////////////////////
+			try (InputStream edvIs = new FileInputStream(tmpFile)){
+				edv.save(orgFileId, edvIs);
+			} catch (Exception edvEx) {
+				throw new RuntimeException("EDV_NOT_WORK", edvEx);
+			}
+    		////////////////////////
+
+			String regId = new SecurityInfoUtil().getAccountId();
+			EbsFileVo fileVo = new EbsFileVo();
+			fileVo.setMtngId(mtngId);
+			fileVo.setRegId(regId);
+			fileVo.setOrgFileId(orgFileId);
+			fileVo.setOrgFileNm(orgFileNm);
+			fileVo.setFileSize(myFile.getFileSize());
+			fileVo.setDeleteYn("N");
+			if(fileKindCds!=null) {
+				String fileKindCd = fileKindCds[idx];
+				fileVo.setFileKindCd(fileKindCd);
+			}
+
+			idx++;
+			fileMapper.insertFileEbsMtng(fileVo);
+			
+			// pdf변환작업
+			Map<String, Object> pdfJob = new HashMap<>();
+			pdfJob.put("tmpFile", tmpFile);
+			pdfJob.put("filename", myFile.getFileNm());
+			pdfJob.put("orgFileId", orgFileId);
+			pdfJobs.add(pdfJob);
+	
+			myFileIs.close();
+		}
+		
+		// pdf변환
+		for(Map<String, Object> job : pdfJobs) {
+			File tmpFile = (File)job.get("tmpFile");
+			String filename = (String)job.get("filename");
+			String orgFileId = (String)job.get("orgFileId");
+			convertToPdfEbsMtng(tmpFile, filename, orgFileId);
+		}
 	}
 
 	@Override

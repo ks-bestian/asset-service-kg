@@ -39,6 +39,9 @@ public class MtngToVo extends ComDefaultVO {
     private List<MtngFileVo> reportList;
     private MultipartFile[] files;
     private String[] fileKindCds;
+    
+    private String[] myFileIds;
+	private String[] fileKindCds2;
 
     private String jsonData;
 

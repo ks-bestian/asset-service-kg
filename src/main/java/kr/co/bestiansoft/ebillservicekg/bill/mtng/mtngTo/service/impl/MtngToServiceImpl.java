@@ -116,9 +116,7 @@ public class MtngToServiceImpl implements MtngToService {
 		comFileService.saveFileEbsMtng(paramVo.getFiles(), paramVo.getFileKindCds(), mtngToVo.getMtngId());
 
 		//추가 - 내 문서함에서 파일 업로드(20250221 조진호)
-		//comFileService.saveFileEbs(mtngToVo.getMyFileIds(), applyVo.getFileKindCds2(), billId);
-		//formData.append("myFileIds", myFileItems.value[i].fileId);
-		//formData.append("fileKindCds2", myFileItems.value[i].kind);
+		comFileService.saveFileEbsMtng(paramVo.getMyFileIds(), paramVo.getFileKindCds2(), mtngToVo.getMtngId());
 
 		return mtngToVo;
 	}

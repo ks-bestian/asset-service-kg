@@ -72,7 +72,7 @@
         from com_code_detail
         where 1=1
         	and use_yn = 'Y'
-        order by reg_dt desc, ord asc
+        order by ord asc, reg_dt desc 
     </select>
     
 </mapper>

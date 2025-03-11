@@ -158,5 +158,21 @@
 			, now()
 		)
     </insert>
+    
+    <update id="updateFileEbsMtng" parameterType="kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.common.file.repository.FileMapper.updateFileEbsMtng */
+		update kgst.ebs_mtng_file
+		SET mod_dt = now()
+		  , mod_id = #{modId}
+		  <if test="mtngId != null"> , mtng_id = #{mtngId} </if>
+		  <if test="fileKindCd != null"> , file_kind_cd = #{fileKindCd} </if>
+		  <if test="orgFileNm != null"> , org_file_nm = #{orgFileNm} </if>
+		  <if test="pdfFileId != null"> , pdf_file_id = #{pdfFileId} </if>
+		  <if test="pdfFileNm != null"> , pdf_file_nm = #{pdfFileNm} </if>
+		  <if test="deleteYn != null"> , delete_yn = #{deleteYn} </if>
+		  <if test="fileSize != null"> , file_size = #{fileSize} </if>
+		where
+			org_file_id = #{orgFileId};
+    </update>
 
 </mapper>

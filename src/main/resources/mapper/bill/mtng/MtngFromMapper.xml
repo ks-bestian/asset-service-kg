@@ -26,8 +26,16 @@
 		  , em.reg_id
 		  , em.reg_dt
 		FROM kgst.ebs_mtng em
-		join kgst.com_dept cd on (em.dept_cd = cd.dept_cd)
+		left outer join kgst.com_dept cd on (em.dept_cd = cd.dept_cd)
 		WHERE 1=1
+		
+		<if test="mtngTypeCd != null and mtngTypeCd != ''">
+	    	AND em.mtng_type_cd = #{mtngTypeCd}
+	    </if>
+	    
+	    <if test="statCd != null and statCd != ''">
+	    	AND em.stat_cd = #{statCd}
+	    </if>
 
 		<if test="deptCd != null and deptCd != ''">
 	    	AND em.dept_cd = #{deptCd}
@@ -69,7 +77,7 @@
 		  , em.reg_id
 		  , em.reg_dt
 		FROM kgst.ebs_mtng em
-		join kgst.com_dept cd on (em.dept_cd = cd.dept_cd)
+		left outer join kgst.com_dept cd on (em.dept_cd = cd.dept_cd)
 		WHERE em.MTNG_ID = #{mtngId}
 
     </select>

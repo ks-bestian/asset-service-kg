@@ -45,6 +45,7 @@ public class SecurityConfig {
 		
         http.authorizeHttpRequests((authorize) -> authorize
                 .antMatchers("/login").permitAll()
+                .antMatchers("/com/file/pdf").permitAll()
                 .anyRequest().authenticated()
         );
         

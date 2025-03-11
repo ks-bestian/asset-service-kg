@@ -1,7 +1,8 @@
 package kr.co.bestiansoft.ebillservicekg.common.file.controller;
 
+import java.io.BufferedOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
-import java.net.URLEncoder;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -57,5 +58,19 @@ public class ComFileController {
 	public ResponseEntity<List<ComFileVo>> getFileList(@PathVariable String fileGroupId) {
 		List<ComFileVo> list = comFileService.getFileList(fileGroupId);
 		return ResponseEntity.ok(list);
+	}
+	
+	@GetMapping("/com/file/pdf")
+	public ResponseEntity<?> pdfFileDownload(@RequestParam String pdfFileId, HttpServletResponse response, HttpServletRequest request) throws Exception {
+
+		InputStream ins = edv.download(pdfFileId);
+		Resource resource = new InputStreamResource(ins);
+
+		if (resource == null) return ResponseEntity.notFound().build();
+
+		return ResponseEntity.ok()
+				.contentType(MediaType.APPLICATION_PDF)
+//				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + orgFileNm + "\"")
+				.body(resource);
 	}
 }
