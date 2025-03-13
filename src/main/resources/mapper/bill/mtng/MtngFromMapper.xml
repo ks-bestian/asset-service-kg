@@ -321,17 +321,17 @@
 		  , vum.user_nm_kg
 		  , vum.user_nm_ru
 		  , em.ppsl_dt
-		  , emc.cmt_cd
-		  , emc.cmt_se_cd
 		from kgst.ebs_master em
 		join kgst.ebs_bp_instance ebi on (em.bill_id = ebi.bill_id)
 		join kgst.view_user_member vum on (em.ppsr_id = vum.user_id)
-		join kgst.ebs_master_cmt emc on (em.bill_id = emc.bill_id)
 		where 1=1
-		  and ebi.current_step_id in ('1700','2300','2900')
-		<if test="deptCd != null and deptCd != ''">
-		    and emc.cmt_cd = #{deptCd}
+		  and ebi.current_step_id in ('1400','1500','1600')
+		<if test="billNo != null and billNo != ''">
+		    and em.bill_no = #{billNo}
 		</if>
+        <if test="billNm != null and billNm != ''">
+            AND kgst.fngetlangnm(em.bill_name_kg,em.bill_name_ru,em.bill_name_kg,#{lang}) LIKE CONCAT('%', #{billNm}, '%')
+        </if>
 		order by em.reg_dt
 
     </select>

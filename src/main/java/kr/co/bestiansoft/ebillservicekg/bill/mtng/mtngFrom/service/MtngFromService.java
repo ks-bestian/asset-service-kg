@@ -16,5 +16,6 @@ public interface MtngFromService {
     void deleteMtng(List<Long> mtngIds);
 
     List<BillMngVo> selectListMtngBill(HashMap<String, Object> param);
+    List<BillMngVo> selectListMainMtngBill(HashMap<String, Object> param);
 	MtngFromVo updateMtngBill(MtngFromVo mtngFromVo);
 }

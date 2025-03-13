@@ -11,6 +11,6 @@ public interface ProcessService {
 
 	ProcessVo selectBpTask(ProcessVo argVo);
 
-
+	void undoProcess(String billId, String stepId);
 }
 

@@ -38,5 +38,5 @@ public interface ProcessMapper {
 	ProcessVo selectBpTask(ProcessVo vo);
 	List<ProcessVo> selectBpStepTasks(ProcessVo vo);
 
-
+	void deleteBpTasks(ProcessVo vo);
 }

@@ -526,6 +526,31 @@ public class ProcessServiceImpl implements ProcessService {
 			processMapper.updateBpTask(argVo);
 			return argVo;
 		}
+		
+		@Transactional
+		@Override
+		public void undoProcess(String billId, String stepId) {
+			
+			if("1700".equals(stepId)) { //본회의심사요청
+				ProcessVo vo = new ProcessVo();
+				vo.setBillId(billId);
+				vo.setStepId(stepId);
+				List<ProcessVo> list = processMapper.selectBpStepTasks(vo);
+				if(list == null || list.isEmpty()) {
+					return;
+				}
+				Long taskId = list.get(0).getTaskId();
+				vo.setTaskId(taskId);
+				processMapper.deleteBpTasks(vo);
+				
+				ProcessVo vo2 = new ProcessVo();
+				vo2.setBillId(billId);
+				vo2.setModId(new SecurityInfoUtil().getAccountId());
+				vo2.setStepId("1400"); //위원회회의예정
+				processMapper.updateBpInstanceCurrentStep(vo2);
+			}
+
+		}
 
 
 }

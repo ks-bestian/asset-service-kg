@@ -118,6 +118,15 @@ public class MtngToServiceImpl implements MtngToService {
 		//추가 - 내 문서함에서 파일 업로드(20250221 조진호)
 		comFileService.saveFileEbsMtng(paramVo.getMyFileIds(), paramVo.getFileKindCds2(), mtngToVo.getMtngId());
 
+		if("2".equals(mtngToVo.getMtngTypeCd())) { //본회의
+			for(AgendaVo aVo:agendaList) {
+				ProcessVo pVo = new ProcessVo();
+				pVo.setBillId(aVo.getBillId());
+				pVo.setStepId("1900");//법적행위관리
+				processService.handleProcess(pVo);	
+			}
+		}
+		
 		return mtngToVo;
 	}
 
