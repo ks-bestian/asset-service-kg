@@ -15,6 +15,8 @@ public class BillAllResponse {
 
     private List<AgreeVo> proposerList;
     private List<EbsFileVo> billFileList;
+    
+    private List<EbsFileVo> langFileList;
 
     private List<BillAllVo> cmtList;
     private List<MtngAllVo> cmtMtList;

@@ -46,7 +46,7 @@
 	        and em.due_dtm <![CDATA[>=]]>   #{searchFromDate}
 	    </if>
 	    <if test="searchToDate != null and searchToDate != ''">
-	        and em.due_dtm <![CDATA[<=]]>  #{searchToDate}
+	        and em.due_dtm <![CDATA[<=]]>  (#{searchToDate} || '9999')
 	    </if>
 		order by em.due_dtm
 

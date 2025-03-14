@@ -29,8 +29,12 @@
 			    , em.reg_dt                 -- 등록 일자
 			    , kgst.fngetlangnm(em.etc_kg,em.etc_ru,em.etc_kg,#{lang}) as etc -- 비고
 			    , em.scl_dsc_rcp_nmb
+			    , ebs.stat_cd
+			    , kgst.fngetcodenm('1010', ebs.stat_cd, #{lang}) as stat_nm
 			FROM ebs_master em
 			join view_user_member vum on (em.ppsr_id = vum.user_id)
+			left outer join ebs_bp_instance ebi on (em.bill_id = ebi.bill_id)
+			join ebs_bp_step ebs on (ebs.step_id = ebi.current_step_id and ebs.bp_df_id = ebi.bp_df_id)
 		) A
 		where 1=1
 	    <if test="searchBillName != null and searchBillName != ''">
@@ -42,7 +46,12 @@
     	<if test="naTermCd != null and naTermCd != ''">
     		AND A.na_term_cd = #{naTermCd}
     	</if>
-        order by A.reg_dt
+    	<if test="statCd != null and statCd != ''">
+    		AND A.stat_cd = #{statCd}
+    	</if>
+    	
+    	
+        order by A.ppsl_dt desc
 
     </select>
 
@@ -124,7 +133,32 @@
 		order by ef.seq
 
     </select>
-
+    
+    
+    <select id="selectListFile" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo">
+    	SELECT
+			  ef.bill_id
+			, ef.cls_cd
+			, ef.file_kind_cd
+			, ef.org_file_id
+			, ef.org_file_nm
+			, ef.pdf_file_id
+			, ef.pdf_file_nm
+			, ef.seq
+			, ef.opb_yn
+			, ef.file_size
+			, ef.reg_dt
+			, ef.reg_id
+			, ef.detail_seq
+		FROM kgst.ebs_file ef
+		WHERE 1=1
+		  AND ef.delete_yn = 'N'
+		  AND ef.bill_id = #{billId}
+		  <if test="fileKindCd != null and fileKindCd != ''">
+		  AND ef.file_kind_cd = #{fileKindCd}
+		  </if>
+	</select>
 
     <!-- committee meeting list -->
     <select id="selectListCmtMeeting" parameterType="java.util.HashMap"

@@ -61,6 +61,12 @@ public class BillAllServiceImpl implements BillAllService {
 
     	/*committee list*/
     	List<BillAllVo> cmtList = billAllMapper.selectListBillCmt(param);
+    	
+    	/* 언어전문파트의견서 파일 */
+    	HashMap<String, Object> param2 = new HashMap<>();
+    	param2.put("billId", billId);
+    	param2.put("fileKindCd", "200"); 
+    	List<EbsFileVo> langFileList = billAllMapper.selectListFile(param2);
 
     	for(BillAllVo cmtVo: cmtList) {
 
@@ -143,6 +149,7 @@ public class BillAllServiceImpl implements BillAllService {
     	billRespanse.setBillCmtReviewVoList(billCmtReviewList);
     	billRespanse.setBilllegalReviewVo(billlegalReviewVo);
     	billRespanse.setEtcInfoList(etcInfoList);
+    	billRespanse.setLangFileList(langFileList);
 
         return billRespanse;
     }
