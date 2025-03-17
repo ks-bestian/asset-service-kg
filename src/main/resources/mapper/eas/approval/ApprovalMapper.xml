@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.bestiansoft.ebillservicekg.eas.approval.repository.ApprovalRepository">
+    <!--  todo test  -->
+    <insert id="insertApproval" parameterType="kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalVo">
+        INSERT INTO kgst.eas_approval
+        (document_id, user_id, user_name, user_dept_cd, user_job_cd, approval_order, received_dt, approval_status)
+        VALUES(#{documentId}, #{userId}, #{userName}, #{userDeptCd}, #{userJobCd}, #{approvalOrder}, #{receivedDt}, #{approvalStatus});
+    </insert>
+
+</mapper>

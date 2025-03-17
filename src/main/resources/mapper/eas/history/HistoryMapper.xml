@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.bestiansoft.ebillservicekg.eas.history.repository.HistoryRepository">
+
+    <insert id="insertHistory" parameterType="kr.co.bestiansoft.ebillservicekg.eas.history.vo.HistoryVo">
+        INSERT INTO kgst.eas_history
+        (history_id, document_id, user_id, user_name, action_type, action_detail, action_dt)
+        VALUES
+        (nextval('kgst.eas_history_history_id_seq'::regclass), #{documentId}, #{userId}, #{userName}, #{actionType}, #{actionDetail}, #{actionDt})
+    </insert>
+
+</mapper>

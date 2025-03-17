@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.repository.OfficialDocumentMapper">
+
+    <select id="getOfficialDocument" resultType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.OfficialDocumentVo">
+        select
+            a.*
+          from kgst.eas_document a
+    </select>
+    <insert id="saveOfficialDocument" parameterType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.OfficialDocumentVo">
+        insert into kgst.eas_document (
+            document_id,
+            draft_id,
+            writer_id,
+            document_type,
+            document_attribute,
+            bill_id,
+            has_deadline,
+            deadline_dt,
+            document_language,
+            document_theme,
+            document_status,
+            digital_yn ,
+            sender_id ,
+            sender_name,
+            sender_dept_cd ,
+            document_num
+        )values (
+           #{documentId},
+           #{draftId},
+           #{writerId},
+           #{documentType},
+           #{documentAttribute},
+           #{billId},
+           #{hasDeadline},
+           #{deadlineDt},
+           #{documentLanguage},
+           #{documentTheme},
+           #{documentStatus},
+           #{digitalYn},
+           #{senderId},
+           #{senderName},
+           #{senderDeptCd},
+           #{documentNum}
+        )
+    </insert>
+</mapper>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.repository.ReceivedInfoRepository">
+
+    <insert id="insertReceivedInfo" parameterType="kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.vo.ReceivedInfoVo">
+        INSERT INTO kgst.eas_received_info
+        (document_id, user_id, user_name, user_dept_cd, external_org_cd, receive_status, received_dt, checked_dt, accept_dt, reject_dt, reject_detail, received_order, is_external)
+        VALUES
+        (#{documentId}, #{userId}, #{userName}, #{userDeptCd}, #{externalOrgCd}, #{receiveStatus}, #{receivedDt}, #{checkedDt}, #{acceptDt}, #{rejectDt}, #{rejectDetail}, #{receivedOrder}, #{isExternal})
+    </insert>
+
+</mapper>
