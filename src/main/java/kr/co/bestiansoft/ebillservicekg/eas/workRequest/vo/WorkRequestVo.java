@@ -16,8 +16,6 @@ public class WorkRequestVo extends ComDefaultVO {
     private LocalDateTime workDeadlineDt;
     private boolean isInformation;
     private String workCycleCd;
-    private LocalDateTime regDt;
-    private String regId;
     private String workStatus;
 
 }

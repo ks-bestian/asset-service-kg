@@ -4,6 +4,8 @@ import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor
 public class ApprovalVo  extends ComDefaultVO {
@@ -14,9 +16,9 @@ public class ApprovalVo  extends ComDefaultVO {
     private String userDeptCd;
     private String userJobCd;
     private int approvalOrder;
-    private String approvalDt;
-    private String receivedDt;
-    private String checkedDt;
+    private LocalDateTime approvalDt;
+    private LocalDateTime receivedDt;
+    private LocalDateTime checkedDt;
     private String approvalFilePath;
     private String opinion;
     private String approvalStatus;

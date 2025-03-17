@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class WorkResponseVo extends ComDefaultVO {
     private int responseId;
-    private String workRequestId;
+    private int workRequestId;
     private String userId;
     private String userDeptCd;
     private String userJobCd;

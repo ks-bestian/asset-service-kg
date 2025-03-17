@@ -8,18 +8,18 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 public class ReceivedInfoVo extends ComDefaultVO {
-    private int received_id;
-    private String document_id;
-    private String user_id;
-    private String user_name;
-    private String user_dept_cd;
-    private String external_org_cd;
-    private String receive_status;
-    private LocalDateTime received_dt;
-    private LocalDateTime checked_dt;
-    private LocalDateTime accept_dt;
-    private LocalDateTime reject_dt;
-    private String reject_detail;
-    private int received_order;
-    private boolean is_external;
+    private int receivedId;
+    private String documentId;
+    private String userId;
+    private String userName;
+    private String userDeptCd;
+    private String externalOrgCd;
+    private String receiveStatus;
+    private LocalDateTime receivedDt;
+    private LocalDateTime checkedDt;
+    private LocalDateTime acceptDt;
+    private LocalDateTime rejectDt;
+    private String rejectDetail;
+    private int receivedOrder;
+    private boolean isExternal;
 }

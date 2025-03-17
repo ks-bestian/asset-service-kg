@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 public class EasFileVo extends ComDefaultVO {
     private String fileId;
     private String documentId;
-    private String filetype;
+    private String fileType;
     private String orgFileId;
     private String orgFileName;
     private String pdfFileId;
@@ -21,7 +21,5 @@ public class EasFileVo extends ComDefaultVO {
     private boolean deleteYn;
     private LocalDateTime deleteDt;
     private String deleteUserId;
-    private String regId;
-    private LocalDateTime regDt;
 
 }

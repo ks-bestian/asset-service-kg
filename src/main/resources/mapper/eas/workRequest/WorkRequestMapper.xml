@@ -5,8 +5,8 @@
 
     <insert id="insertWorkRequest" parameterType="kr.co.bestiansoft.ebillservicekg.eas.workRequest.vo.WorkRequestVo">
         INSERT INTO kgst.eas_work_request
-        (work_detial, has_deadline, work_deadline_dt, is_information, work_cycle_cd, reg_dt, reg_id, work_status)
-        VALUES (#{work_detial}, #{has_deadline}, #{work_deadline_dt}, #{is_information}, #{work_cycle_cd}, #{reg_dt}, #{reg_id}, #{work_status})
+        (work_detail, has_deadline, work_deadline_dt, is_information, work_cycle_cd, reg_dt, reg_id, work_status)
+        VALUES (#{workDetail}, #{hasDeadline}, #{workDeadlineDt}, #{isInformation}, #{workCycleCd}, #{regDt}, #{regId}, #{workStatus})
     </insert>
 
 </mapper>

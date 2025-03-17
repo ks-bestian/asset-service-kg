@@ -17,8 +17,6 @@ public class DraftDocumentVo extends ComDefaultVO {
     private String senderName;
     private String senderDeptName;
     private String senderJobName;
-    private LocalDateTime regDt;
-    private String regId;
     private String filePath;
     private String draftStatus;
 }

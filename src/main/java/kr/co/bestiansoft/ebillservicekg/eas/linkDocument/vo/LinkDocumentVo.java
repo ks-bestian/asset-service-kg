@@ -12,6 +12,4 @@ public class LinkDocumentVo {
     private String fromDocumentId;
     private String toDocumentId;
     private String linkType;
-    private LocalDateTime regDt;
-    private String regId;
 }
