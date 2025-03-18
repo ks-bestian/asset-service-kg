@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MtngFromVo;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
@@ -127,6 +128,8 @@ public class BillMngVo extends ComDefaultVO {
     private String cmtNm;
 
     private List<EbsFileVo> ebsfileList;
+    
+    private List<MtngFromVo> mtngList;
 
 
 	//파일

@@ -426,4 +426,30 @@
 		    AND MTNG_ID = #{mtngId}
 
     </select>
+    
+    
+    <select id="selectListMtngByBillId" resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MtngFromVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.repository.MtngFromMapper.selectListMtngByBillId */
+    	select 
+			  ema.bill_id 
+			, em.mtng_id
+			, em.mtng_type_cd
+			, em.dept_cd
+			, em.excn_cycl
+			, em.due_dtm
+			, em.open_dtm
+			, em.close_dtm
+			, em.mtng_plc
+			, em.age_cd
+			, em.rmk
+			, em.stat_cd
+			, em.reg_id
+			, em.reg_dt
+		from ebs_mtng_agenda ema
+		inner join ebs_mtng em 
+		on ema.mtng_id = em.mtng_id 
+		where ema.bill_id = #{billId}
+		order by em.open_dtm
+    </select>
+    
 </mapper>

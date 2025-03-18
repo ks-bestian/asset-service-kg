@@ -150,6 +150,12 @@ public class MtngFromServiceImpl implements MtngFromService {
 	public List<BillMngVo> selectListMtngBill(HashMap<String, Object> param) {
 
 		List<BillMngVo> list = mtngFromMapper.selectListMtngBill(param);
+		for(BillMngVo bill : list) {
+			String billId = bill.getBillId();
+			List<MtngFromVo> mtngList = mtngFromMapper.selectListMtngByBillId(billId);
+			bill.setMtngList(mtngList);
+		}
+		
 		return list;
 	}
 	
@@ -228,5 +234,10 @@ public class MtngFromServiceImpl implements MtngFromService {
 		return mtngFromVo;
 	}
 
+	@Transactional
+	@Override
+	public List<MtngFromVo> selectListMtngByBillId(String billId) {
+		return mtngFromMapper.selectListMtngByBillId(billId);		
+	}
 
 }

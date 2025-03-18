@@ -18,4 +18,6 @@ public interface MtngFromService {
     List<BillMngVo> selectListMtngBill(HashMap<String, Object> param);
     List<BillMngVo> selectListMainMtngBill(HashMap<String, Object> param);
 	MtngFromVo updateMtngBill(MtngFromVo mtngFromVo);
+	
+	List<MtngFromVo> selectListMtngByBillId(String billId);
 }

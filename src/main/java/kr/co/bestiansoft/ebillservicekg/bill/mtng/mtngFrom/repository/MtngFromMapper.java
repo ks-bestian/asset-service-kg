@@ -35,6 +35,6 @@ public interface MtngFromMapper {
 	void updateMtngFromAgenda(AgendaVo agendaVo);
 	List<MtngFileVo> selectListMtngFile(HashMap<String, Object> param);
 
-
+	List<MtngFromVo> selectListMtngByBillId (String billId);
 
 }
