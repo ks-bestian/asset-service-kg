@@ -20,4 +20,6 @@ public interface MtngFromService {
 	MtngFromVo updateMtngBill(MtngFromVo mtngFromVo);
 	
 	List<MtngFromVo> selectListMtngByBillId(String billId);
+	
+	void submitMtngAgenda(Long mtngId);
 }

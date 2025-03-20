@@ -26,6 +26,9 @@ public class MtngFromVo extends ComDefaultVO {
 	private String statCd;
 	private String dueDtm;
 	private String statNm;
+	
+	private String sessionNo;
+	private Long sessionOrd;
 
     private List<MemberVo> attendantList;
     private List<AgendaVo> agendaList;

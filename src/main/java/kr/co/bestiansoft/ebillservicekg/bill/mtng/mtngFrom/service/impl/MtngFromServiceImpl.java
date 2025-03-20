@@ -1,7 +1,9 @@
 package kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.service.impl;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -96,17 +98,33 @@ public class MtngFromServiceImpl implements MtngFromService {
 			mtngFromMapper.insertEbsMtngAttendant(memberVo);
 		}
 		
-		if("2".equals(mtngFromVo.getMtngTypeCd())) { //본회의
-			for(AgendaVo aVo:agendaList) {
-				ProcessVo pVo = new ProcessVo();
-				pVo.setBillId(aVo.getBillId());
-				pVo.setStepId("1700");//본회의심사요청
-				processService.handleProcess(pVo);	
-			}
-		}
+//		if("2".equals(mtngFromVo.getMtngTypeCd())) { //본회의
+//			for(AgendaVo aVo:agendaList) {
+//				ProcessVo pVo = new ProcessVo();
+//				pVo.setBillId(aVo.getBillId());
+//				pVo.setStepId("1700");//본회의심사요청
+//				processService.handleProcess(pVo);	
+//			}
+//		}
 
 		return mtngFromVo;
 	}
+    
+    @Override
+    public void submitMtngAgenda(Long mtngId) {
+    	HashMap<String, Object> param = new HashMap<>();
+		param.put("mtngId", mtngId);
+    	List<AgendaVo> list = mtngFromMapper.selectListMtngAgenda(param);
+    	for(AgendaVo agenda : list) {
+    		if("1700".equals(agenda.getCurrentStepId())) {
+    			continue;
+    		}
+    		ProcessVo pVo = new ProcessVo();
+			pVo.setBillId(agenda.getBillId());
+			pVo.setStepId("1700");//본회의심사요청
+			processService.handleProcess(pVo);
+    	}
+    }
 
 	@Override
 	public List<MemberVo> getMemberList(HashMap<String, Object> param) {
@@ -132,9 +150,11 @@ public class MtngFromServiceImpl implements MtngFromService {
     		if("2".equals(mtng.getMtngTypeCd())) { //본회의
     			List<AgendaVo> list = mtngFromMapper.selectListMtngAgenda(param);
     			if(list != null) {
-    				String undoStepId = "1700"; //본회의심사요청
-    				for(AgendaVo vo : list) {
-    					processService.undoProcess(vo.getBillId(), undoStepId);
+    				for(AgendaVo agenda : list) {
+    					String undoStepId = "1700"; //본회의심사요청
+    					if(undoStepId.equals(agenda.getCurrentStepId())) {
+    						processService.undoProcess(agenda.getBillId(), undoStepId);	
+    					}
     				}
     			}	
     		}
@@ -192,45 +212,70 @@ public class MtngFromServiceImpl implements MtngFromService {
 		}
 
 		//안건 수정
-		//프로세스 롤백
-		if("2".equals(mtngFromVo.getMtngTypeCd())) { //본회의
-			HashMap<String, Object> param = new HashMap<>();
-			param.put("mtngId", mtngFromVo.getMtngId());
-			param.put("lang", mtngFromVo.getLang());
-			List<AgendaVo> list = mtngFromMapper.selectListMtngAgenda(param);
-			if(list != null) {
-				String undoStepId = "1700"; //본회의심사요청
-				for(AgendaVo vo : list) {
-					processService.undoProcess(vo.getBillId(), undoStepId);
+//		mtngFromMapper.deleteMtngFromBillAgenda(mtngFromVo);
+//
+//		List<AgendaVo> agendaList = mtngFromVo.getAgendaList();
+//		int idx = 1;
+//		if(agendaList!=null) {
+//
+//			for(AgendaVo vo:agendaList) {
+//				AgendaVo agendaVo = new AgendaVo();
+//				agendaVo.setBillId(vo.getBillId());
+//				agendaVo.setMtngId(mtngFromVo.getMtngId());
+//				agendaVo.setOrd(idx++);
+//				agendaVo.setRegId(userId);
+//				mtngFromMapper.insertEbsMtngAgenda(agendaVo);
+//			}
+//		}
+		
+		Set<String> oldset = new HashSet<>();
+		Set<String> newset = new HashSet<>();
+		int ord = 0;
+		
+		HashMap<String, Object> param = new HashMap<>();
+		param.put("mtngId", mtngFromVo.getMtngId());
+		param.put("lang", mtngFromVo.getLang());
+		List<AgendaVo> oldlist = mtngFromMapper.selectListMtngAgenda(param);
+		if(oldlist != null) {
+			for(AgendaVo agenda : oldlist) {
+				oldset.add(agenda.getBillId());
+				ord = Math.max(ord, agenda.getOrd());
+			}	
+		}
+		
+		List<AgendaVo> newlist = mtngFromVo.getAgendaList();
+		if(newlist != null) {
+			for(AgendaVo agenda : newlist) {
+				newset.add(agenda.getBillId());
+			}	
+		}
+		
+		if(newlist != null) {
+			for(AgendaVo vo : newlist) {
+				if(!oldset.contains(vo.getBillId())) {
+					AgendaVo agendaVo = new AgendaVo();
+					agendaVo.setBillId(vo.getBillId());
+					agendaVo.setMtngId(mtngFromVo.getMtngId());
+					agendaVo.setOrd(++ord);
+					agendaVo.setRegId(userId);
+					mtngFromMapper.insertEbsMtngAgenda(agendaVo);	
 				}
 			}	
 		}
-		mtngFromMapper.deleteMtngFromBillAgenda(mtngFromVo);
-
-		List<AgendaVo> agendaList = mtngFromVo.getAgendaList();
-		int idx = 1;
-		if(agendaList!=null) {
-
-			for(AgendaVo vo:agendaList) {
-				AgendaVo agendaVo = new AgendaVo();
-				agendaVo.setBillId(vo.getBillId());
-				agendaVo.setMtngId(mtngFromVo.getMtngId());
-				agendaVo.setOrd(idx++);
-				agendaVo.setRegId(userId);
-				mtngFromMapper.insertEbsMtngAgenda(agendaVo);
-			}
+		
+		if(oldlist != null) {
+			for(AgendaVo agenda : oldlist) {
+				if(!newset.contains(agenda.getBillId())) {
+					mtngFromMapper.deleteMtngAgenda(mtngFromVo.getMtngId(), agenda.getBillId());
+					
+					String undoStepId = "1700"; //본회의심사요청
+					if(undoStepId.equals(agenda.getCurrentStepId())) {
+						processService.undoProcess(agenda.getBillId(), undoStepId);	
+					}
+				}
+			}	
 		}
 		
-		
-		if("2".equals(mtngFromVo.getMtngTypeCd())) { //본회의
-			for(AgendaVo aVo:agendaList) {
-				ProcessVo pVo = new ProcessVo();
-				pVo.setBillId(aVo.getBillId());
-				pVo.setStepId("1700");//본회의심사요청
-				processService.handleProcess(pVo);	
-			}
-		}
-
 		return mtngFromVo;
 	}
 

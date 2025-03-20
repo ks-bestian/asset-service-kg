@@ -22,5 +22,9 @@ public class AgendaVo extends ComDefaultVO {
 	private String deptCd;
 	private String cmtCd;
 	private String cmtSeCd;
+	
+	private String currentStepId;
+	private String statCd;
+	private String statNm;
 
 }

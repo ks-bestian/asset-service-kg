@@ -84,5 +84,12 @@ public class MtngFromController {
     public ResponseEntity<CommonResponse> updateMtngBill(@RequestBody MtngFromVo mtngFromVo){
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "mtng update successfully", mtngFromService.updateMtngBill(mtngFromVo)), HttpStatus.OK);
     }
+    
+    @ApiOperation(value = "회의 안건 부의", notes = "회의 안건을 부의한다")
+    @PutMapping("/bill/mtng/from/submit")
+    public ResponseEntity<CommonResponse> submitMtngAgenda(@RequestBody MtngFromVo mtngFromVo){
+    	mtngFromService.submitMtngAgenda(mtngFromVo.getMtngId());
+        return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "OK", "submission successful"), HttpStatus.OK);
+    }
 
 }

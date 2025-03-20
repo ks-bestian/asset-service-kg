@@ -25,6 +25,8 @@
 		  , kgst.fngetcodenm('1007',em.stat_cd,#{lang}) as stat_nm
 		  , em.reg_id
 		  , em.reg_dt
+		  , em.session_no
+		  , em.session_ord
 		FROM kgst.ebs_mtng em
 		left outer join kgst.com_dept cd on (em.dept_cd = cd.dept_cd)
 		WHERE 1=1
@@ -48,7 +50,7 @@
 	    <if test="searchToDate != null and searchToDate != ''">
 	        and em.due_dtm <![CDATA[<=]]>  (#{searchToDate} || '9999')
 	    </if>
-		order by em.due_dtm
+		order by em.due_dtm desc
 
     </select>
 
@@ -76,6 +78,8 @@
 		  , kgst.fngetcodenm('1007',em.stat_cd,#{lang}) as stat_nm
 		  , em.reg_id
 		  , em.reg_dt
+		  , em.session_no
+		  , em.session_ord
 		FROM kgst.ebs_mtng em
 		left outer join kgst.com_dept cd on (em.dept_cd = cd.dept_cd)
 		WHERE em.MTNG_ID = #{mtngId}
@@ -118,10 +122,15 @@
 			, em.ppsr_id
 			, kgst.fngetlangnm(vum.user_nm_kg ,vum.user_nm_ru ,vum.user_nm_kg ,#{lang}) as ppsr_nm
 			, em.ppsl_dt
+			, ebi.current_step_id
+			, ebs.stat_cd
+			, kgst.fngetcodenm('1010', ebs.stat_cd, #{lang}) as stat_nm
 		from ebs_mtng emt
 		join ebs_mtng_agenda ema on (emt.mtng_id = ema.mtng_id)
 		join ebs_master em on (ema.bill_id = em.bill_id)
 		join kgst.view_user_member vum on (em.ppsr_id = vum.user_id)
+		join ebs_bp_instance ebi on (em.bill_id = ebi.bill_id)
+		join ebs_bp_step ebs on (ebi.current_step_id = ebs.step_id)
 		where emt.mtng_id = #{mtngId}
 		order by em.bill_no
 
@@ -139,6 +148,8 @@
 			, REG_ID
 			, REG_DT
 			, DUE_DTM
+			, SESSION_NO
+			, SESSION_ORD
 		)
 		VALUES
 		(
@@ -151,6 +162,8 @@
 			,  #{regId}
 			,  now()
 			,  #{dueDtm}
+			,  #{sessionNo}
+			,  #{sessionOrd}
 		)
     </insert>
    	<select id="selectListDept" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MemberVo">
@@ -344,6 +357,9 @@
 			, rmk = #{rmk}
 			, mod_id = #{modId}
 			, mod_dt = now()
+			<if test="ageCd != null"> , age_cd = #{ageCd} </if>
+			<if test="sessionNo != null"> , session_no = #{sessionNo} </if>
+			<if test="sessionOrd != null"> , session_ord = #{sessionOrd} </if>
 		where mtng_id = #{mtngId}
 	</update>
 
@@ -451,5 +467,12 @@
 		where ema.bill_id = #{billId}
 		order by em.open_dtm
     </select>
+    
+    <delete id="deleteMtngAgenda">
+    	delete from ebs_mtng_agenda
+    	where 1=1
+    	and mtng_id = #{mtngId}
+    	and bill_id = #{billId}
+    </delete>
     
 </mapper>
