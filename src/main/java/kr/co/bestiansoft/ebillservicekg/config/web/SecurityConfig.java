@@ -24,34 +24,35 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-	
+
 	private final TokenProvider tokenProvider;
     private final TokenBlacklist tokenBlacklist;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
-	
+
 	@Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		
+
 		http.csrf().disable().cors();
-		
+
 		http.exceptionHandling()
 	        .authenticationEntryPoint(jwtAuthenticationEntryPoint)
 	        .accessDeniedHandler(jwtAccessDeniedHandler);
-		
+
 		http.sessionManagement()
         	.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		
+
         http.authorizeHttpRequests((authorize) -> authorize
                 .antMatchers("/login").permitAll()
                 .antMatchers("/com/file/pdf").permitAll()
+                .antMatchers("/ws").permitAll()
                 .anyRequest().authenticated()
         );
-        
+
         http.apply(new JwtSecurityConfig(tokenProvider, tokenBlacklist, authenticationManagerBuilder)); // JwtFilter를 addFilterBefore로 등록했던 JwtSecurityConfig class 적용
 
-        
+
         // 로그아웃 처리
         http.logout()
 	        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
@@ -62,17 +63,17 @@ public class SecurityConfig {
 	            if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
 	            	jwt = bearerToken.substring(7);
 	            }
-	
+
 	            tokenBlacklist.addToBlacklist(jwt);
 	            response.setStatus(HttpServletResponse.SC_OK);
 	        })
 	        .deleteCookies("jwtToken")
 	        .invalidateHttpSession(true)
 	        .permitAll();
-        
+
         return http.build();
     }
-	
+
 	@Bean
     public AuthenticationManager authenticationManager(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
@@ -80,18 +81,18 @@ public class SecurityConfig {
         authenticationProvider.setPasswordEncoder(passwordEncoder);
         return new ProviderManager(authenticationProvider);
     }
-	
+
 	@Bean
     public HttpSessionSecurityContextRepository securityContextRepository() {
         HttpSessionSecurityContextRepository repository = new HttpSessionSecurityContextRepository();
         repository.setSpringSecurityContextKey(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
         return repository;
     }
-	
+
     @Bean
     public PasswordEncoder passwordEncoder() {
 //        return new Sha256PasswordEncoder();
 		return NoOpPasswordEncoder.getInstance();
     }
-	
+
 }

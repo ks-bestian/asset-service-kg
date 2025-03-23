@@ -122,6 +122,20 @@
             <scope>runtime</scope>
         </dependency>
 
+   <!-- Spring Boot WebSocket -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-websocket</artifactId>
+    </dependency>
+
+    <!-- Spring Boot STOMP 메시징 (선택)
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-messaging</artifactId>
+    </dependency>
+
+
+ -->
         <!-- jcr -->
         <dependency>
             <groupId>javax.jcr</groupId>
