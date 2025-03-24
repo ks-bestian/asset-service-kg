@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.repository.MtngToMapper;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.service.MtngToService;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.repository.MtngAllMapper;
+import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.repository.MtngFromMapper;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.AgendaVo;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MemberVo;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.vo.MtngFileVo;
@@ -36,7 +37,8 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class MtngToServiceImpl implements MtngToService {
 
-    private final MtngToMapper mtngToMapper;
+	private final MtngFromMapper mtngFromMapper;
+	private final MtngToMapper mtngToMapper;
     private final MtngAllMapper mtngAllMapper;
     private final ComFileService comFileService;
     private final ProcessService processService;
@@ -118,19 +120,34 @@ public class MtngToServiceImpl implements MtngToService {
 		//추가 - 내 문서함에서 파일 업로드(20250221 조진호)
 		comFileService.saveFileEbsMtng(paramVo.getMyFileIds(), paramVo.getFileKindCds2(), mtngToVo.getMtngId());
 
-		if("2".equals(mtngToVo.getMtngTypeCd())) { //본회의
-			for(AgendaVo aVo:agendaList) {
-				ProcessVo pVo = new ProcessVo();
-				pVo.setBillId(aVo.getBillId());
-				pVo.setStepId("1900");//법적행위관리
-				processService.handleProcess(pVo);	
-			}
-		}
+//		if("2".equals(mtngToVo.getMtngTypeCd())) { //본회의
+//			for(AgendaVo aVo:agendaList) {
+//				ProcessVo pVo = new ProcessVo();
+//				pVo.setBillId(aVo.getBillId());
+//				pVo.setStepId("1900");//법적행위관리
+//				processService.handleProcess(pVo);	
+//			}
+//		}
 		
 		return mtngToVo;
 	}
 
 
+    @Override
+    public void sendLegalActMtngAgenda(Long mtngId) {
+    	HashMap<String, Object> param = new HashMap<>();
+		param.put("mtngId", mtngId);
+    	List<AgendaVo> list = mtngFromMapper.selectListMtngAgenda(param);
+    	for(AgendaVo agenda : list) {
+    		if("1900".equals(agenda.getCurrentStepId())) {
+    			continue;
+    		}
+    		ProcessVo pVo = new ProcessVo();
+			pVo.setBillId(agenda.getBillId());
+			pVo.setStepId("1900");//법적행위관리
+			processService.handleProcess(pVo);
+    	}
+    }
 
 
 	@Override

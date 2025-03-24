@@ -190,6 +190,7 @@
 			, emd.lgl_rvw_rslt_code
 			, kgst.fngetcodenm('1019',emd.lgl_rvw_rslt_code,#{lang}) as lgl_rvw_rslt_nm
 			, emd.lgl_act_rslt_code
+			, kgst.fngetcodenm('1020',emd.lgl_act_rslt_code,#{lang}) as lgl_act_rslt_nm
 			, emd.rslt_dt
 			, emd.rslt_code
 			, emd.reg_id
@@ -225,7 +226,16 @@
 			, emd.reg_id
 			, emd.reg_dt
 		from kgst.ebs_master_detail emd
-		where emd.seq = #{seq}
+		where 1=1
+		<if test="seq != null and seq != ''">
+			and emd.seq = #{seq}
+		</if>
+		<if test="billId != null and billId != ''">
+			and emd.bill_id = #{billId}
+		</if>
+		<if test="clsCd != null and clsCd != ''">
+			and emd.cls_cd = #{clsCd}
+		</if>
     </select>
 
     <insert id="insertBillDetail" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo"

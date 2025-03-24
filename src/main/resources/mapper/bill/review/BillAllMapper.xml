@@ -265,6 +265,7 @@
 		  , emd.lgl_rvw_rslt_code
 		  , kgst.fngetcodenm('1019',emd.lgl_rvw_rslt_code,#{lang}) as lgl_rvw_rslt_nm
 		  , emd.lgl_act_rslt_code
+		  , kgst.fngetcodenm('1020',emd.lgl_act_rslt_code,#{lang}) as lgl_act_rslt_nm
 		  , emd.rslt_dt
 		  , emd.reg_id
 		  , emd.reg_dt
@@ -274,6 +275,9 @@
 		from kgst.ebs_master_detail emd
 		join kgst.view_user_member vum on (emd.reg_id = vum.user_id)
 		where bill_id = #{billId}
+		<if test="clsCd != null and clsCd != ''">
+			and emd.cls_cd = #{clsCd}
+		</if>
 
     </select>
 

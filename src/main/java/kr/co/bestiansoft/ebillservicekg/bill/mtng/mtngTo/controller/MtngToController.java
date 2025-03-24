@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MtngFromVo;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.service.MtngToService;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.vo.MtngToVo;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
@@ -76,6 +77,13 @@ public class MtngToController {
     @PutMapping(value = "/bill/mtng/to/report/delete")
     public ResponseEntity<CommonResponse> updateMtngFileDel(@RequestBody HashMap<String, Object> param) {
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "mtng report delete successfully", mtngToService.updateMtngFileDel(param)), HttpStatus.OK);
+    }
+    
+    @ApiOperation(value = "회의 안건 법적행위부서전송", notes = "회의 안건을 법적행위부서전송한다")
+    @PutMapping("/bill/mtng/to/send")
+    public ResponseEntity<CommonResponse> sendLegalActMtngAgenda(@RequestBody MtngFromVo mtngFromVo){
+    	mtngToService.sendLegalActMtngAgenda(mtngFromVo.getMtngId());
+        return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "OK", "submission successful"), HttpStatus.OK);
     }
 
 }

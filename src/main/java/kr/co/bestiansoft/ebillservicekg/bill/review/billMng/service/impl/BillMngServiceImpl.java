@@ -102,7 +102,7 @@ public class BillMngServiceImpl implements BillMngService {
     		Long seq = vo.getSeq();
     		List<EbsFileVo> cmtFileList = new ArrayList<EbsFileVo>();
 
-    		if(argVo.getDeptCd().equals(vo.getDeptCd())) {
+    		if(argVo.getDeptCd() != null && argVo.getDeptCd().equals(vo.getDeptCd())) {
         		for(EbsFileVo fvo:fileList) {
         			if(seq.equals(fvo.getDetailSeq())) {
         				cmtFileList.add(fvo);
@@ -150,6 +150,7 @@ public class BillMngServiceImpl implements BillMngService {
 
 		billMngResponse.setProcessVo(processVo);
 		billMngResponse.setBilllegalReviewVo(billlegalReviewVo);
+		billMngResponse.setBillEtcInfoList(billEtcInfoList);
 
 		return billMngResponse;
 	}
@@ -197,6 +198,7 @@ public class BillMngServiceImpl implements BillMngService {
 		BillMngVo billDetailVo = billMngMapper.selectOnelegalReview(billMngVo);
 		if(billDetailVo == null) {
 			billMngMapper.insertBillDetail(billMngVo);
+			comFileService.saveFileBillDetailMng(billMngVo);
 
 			if("340".equals(clsCd)) {//본회의 부의
 				ProcessVo pVo = new ProcessVo();
@@ -204,11 +206,12 @@ public class BillMngServiceImpl implements BillMngService {
 				pVo.setStepId("1800");//본회의 심사
 				processService.handleProcess(pVo);
 			}
-
+			
 		} else {
 			billMngMapper.updateBillDetail(billMngVo);
 		}
 
+		billMngVo.setFiles(null);
 		return billMngVo;
 	}
 

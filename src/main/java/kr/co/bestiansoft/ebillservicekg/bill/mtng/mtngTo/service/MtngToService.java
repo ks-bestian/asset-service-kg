@@ -16,4 +16,5 @@ public interface MtngToService {
     void deleteMtng(List<Long> mtngIds);
 	int updateMtngFileDel(HashMap<String, Object> param);
 
+	void sendLegalActMtngAgenda(Long mtngId);
 }

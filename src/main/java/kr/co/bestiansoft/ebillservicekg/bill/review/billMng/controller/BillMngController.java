@@ -79,6 +79,12 @@ public class BillMngController {
     public ResponseEntity<CommonResponse> insertBillDetail(@RequestBody BillMngVo billMngVo) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Bill created successfully", billMngService.insertBillDetail(billMngVo)), HttpStatus.CREATED);
     }
+    
+    @ApiOperation(value = "법적행위부서 결과입력", notes = "법적행위부서 결과입력")
+    @PostMapping(value = "/bill/review/legalAct", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<CommonResponse> insertLegalAct(BillMngVo billMngVo) {
+        return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "legal act review created successfully", billMngService.insertBillDetail(billMngVo)), HttpStatus.CREATED);
+    }
 
     @ApiOperation(value = "안건관리 법률검토 검토보고", notes = "법률검토 검토보고 등록")
     @PostMapping(value = "/bill/review/billLegalReview/report")
