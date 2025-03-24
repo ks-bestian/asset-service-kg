@@ -34,11 +34,12 @@ public class LogInterceptor implements HandlerInterceptor {
         String reqMethod = request.getMethod();
         String reqServletPath = request.getServletPath();
         AcsHistVo ahVo = new AcsHistVo();
-
+        
         if(       !reqServletPath.contains("/api/accessHist")
                 &&!reqServletPath.contains("/api/save-route")
                 &&!reqServletPath.contains("/api/lngCode")
                 &&!reqServletPath.contains("/api/menus/menuBreadcrumbs")
+                &&!reqServletPath.contains("/ws")
         ) {//로그조회는 제외
             if(!reqServletPath.contains("/login")) {
             	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

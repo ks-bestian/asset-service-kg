@@ -10,6 +10,8 @@ import kr.co.bestiansoft.ebillservicekg.myPage.message.vo.MsgRequest;
 import kr.co.bestiansoft.ebillservicekg.myPage.message.vo.MsgVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +23,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional
 public class MsgServiceImpl implements MsgService {
+
+	private final SimpMessagingTemplate messagingTemplate; // WebSocket 메시지 전송
 
     private final MsgMapper msgMapper;
     private final ComFileService comFileService;
@@ -61,6 +65,10 @@ public class MsgServiceImpl implements MsgService {
             msgRequest.setRcvId(rcvId);
             msgRequest.setMsgDiv("R");
             msgMapper.insertMsg(msgRequest);
+
+            // WebSocket을 통해 실시간 알림 전송
+            messagingTemplate.convertAndSend("/topic/messages/" + rcvId, "새 쪽지가 도착했습니다!");
+
         }
 
         for (String rcvId : rcvIds) {
