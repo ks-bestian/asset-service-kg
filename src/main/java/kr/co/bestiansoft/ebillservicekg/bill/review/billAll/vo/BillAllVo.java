@@ -93,6 +93,7 @@ public class BillAllVo extends ComDefaultVO {
     private String lglRvwRsltCode;//법류검토결과
     private String lglRvwRsltNm;//법류검토결과
     private String lglActRsltCode;//법적행위결과코드
+    private String lglActRsltNm;
     private String rsltDt;
     private String rsltCode;
     private String rsltNm;

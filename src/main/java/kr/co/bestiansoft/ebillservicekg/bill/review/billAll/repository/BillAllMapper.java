@@ -37,7 +37,7 @@ public interface BillAllMapper {
 
     /* Bill Etc info file list*/
     List<EbsFileVo> selectListBillEtcFile(HashMap<String, Object> param);
-
     
-    List<EbsFileVo> selectListFile(HashMap<String, Object> param);
+    List<EbsFileVo> selectListBillEtcFile2(HashMap<String, Object> param);
+
 }

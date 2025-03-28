@@ -61,8 +61,16 @@ public class ComFileController {
 	}
 	
 	@GetMapping("/com/file/pdf")
-	public ResponseEntity<?> pdfFileDownload(@RequestParam String pdfFileId, HttpServletResponse response, HttpServletRequest request) throws Exception {
+	public ResponseEntity<?> pdfFileDownload(@RequestParam String pdfFileNm, HttpServletResponse response, HttpServletRequest request) throws Exception {
 
+		int idx = pdfFileNm.lastIndexOf(".pdf");
+		String pdfFileId;
+		if(idx == -1) {
+			pdfFileId = pdfFileNm;
+		}
+		else {
+			pdfFileId = pdfFileNm.substring(0, idx);
+		}
 		InputStream ins = edv.download(pdfFileId);
 		Resource resource = new InputStreamResource(ins);
 
@@ -72,5 +80,10 @@ public class ComFileController {
 				.contentType(MediaType.APPLICATION_PDF)
 //				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + orgFileNm + "\"")
 				.body(resource);
+	}
+	
+	@GetMapping("/com/file/pdf/path")
+	public ResponseEntity<?> getPdfTmpFilepath(@RequestParam String fileId) throws Exception {
+		return ResponseEntity.ok(comFileService.getPdfTmpFilepath(fileId));
 	}
 }

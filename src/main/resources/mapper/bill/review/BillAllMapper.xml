@@ -128,38 +128,15 @@
 		WHERE 1=1
 		  AND ef.delete_yn = 'N'
 		  AND ef.bill_id = #{billId}
-		  AND ef.detail_seq is null
-		  AND ef.file_kind_cd in ('110','120','130')
+		  --AND ef.detail_seq is null
+		  --AND ef.file_kind_cd in ('110','120','130')
+		  <if test="fileKindCd != null and fileKindCd != ''">
+		  AND ef.file_kind_cd = #{fileKindCd}
+		  </if>
 		order by ef.seq
 
     </select>
     
-    
-    <select id="selectListFile" parameterType="java.util.HashMap"
-            resultType="kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo">
-    	SELECT
-			  ef.bill_id
-			, ef.cls_cd
-			, ef.file_kind_cd
-			, ef.org_file_id
-			, ef.org_file_nm
-			, ef.pdf_file_id
-			, ef.pdf_file_nm
-			, ef.seq
-			, ef.opb_yn
-			, ef.file_size
-			, ef.reg_dt
-			, ef.reg_id
-			, ef.detail_seq
-		FROM kgst.ebs_file ef
-		WHERE 1=1
-		  AND ef.delete_yn = 'N'
-		  AND ef.bill_id = #{billId}
-		  <if test="fileKindCd != null and fileKindCd != ''">
-		  AND ef.file_kind_cd = #{fileKindCd}
-		  </if>
-	</select>
-
     <!-- committee meeting list -->
     <select id="selectListCmtMeeting" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.vo.MtngAllVo">
@@ -328,6 +305,23 @@
 		</select>
 
 
+	<select id="selectListBillEtcFile2" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper.selectListBillEtcFile2 */
+		select
+		    emd.bill_id
+		  , emd.dept_cd
+		  , emd.cls_cd
+		  , ef.org_file_id
+		  , ef.org_file_nm
+		  , ef.pdf_file_id
+		  , ef.pdf_file_nm
+		  , ef.detail_seq
+		from ebs_master_detail emd 
+		join ebs_file ef on (emd.seq = ef.detail_seq)
+		where ef.detail_seq = #{detailSeq}
+		  and ef.delete_yn = 'N'
+		</select>
 
 
 </mapper>

@@ -23,5 +23,7 @@ public interface ComFileService {
 	void saveFileBillMng(EbsFileVo ebsFileVo);
 
 	void saveFileBillDetailMng(BillMngVo billMngVo);
+	
+	String getPdfTmpFilepath(String fileId) throws Exception;
 
 }

@@ -33,12 +33,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 		}
 
 		List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-		List<AuthVo> authList = loginMapper.selectUserAuth(username);
-		if(authList != null) {
-			for(AuthVo auth : authList) {
-				grantedAuthorities.add(new SimpleGrantedAuthority(String.valueOf(auth.getAuthId())));
-			}
-		}
+//		List<AuthVo> authList = loginMapper.selectUserAuth(username);
+//		if(authList != null) {
+//			for(AuthVo auth : authList) {
+//				grantedAuthorities.add(new SimpleGrantedAuthority(String.valueOf(auth.getAuthId())));
+//			}
+//		}
 		
 		return new Account(user, grantedAuthorities);
 		

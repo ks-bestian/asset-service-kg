@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,11 +14,15 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo;
@@ -48,6 +53,10 @@ public class ComFileServiceImpl implements ComFileService {
 	private final ExecutorService executorService;
 	private final PdfService pdfService;
 	private final DocumentMapper documentMapper;
+	
+	@Value("${edv.pdf-temp-path}")
+    private String pdfTempPath;
+	
 
 	@Override
 	public String saveFile(MultipartFile[] files) {
@@ -525,6 +534,9 @@ public class ComFileServiceImpl implements ComFileService {
 			fileVo.setOpbYn("N");
 			fileVo.setDetailSeq(detailSeq);
 			fileVo.setClsCd(clsCd);
+			fileVo.setRegId(new SecurityInfoUtil().getAccountId());
+			
+			fileVo.setFileKindCd(billMngVo.getFileKindCd());
 			fileMapper.insertFileEbs(fileVo);
 
 			// pdf변환작업
@@ -541,6 +553,22 @@ public class ComFileServiceImpl implements ComFileService {
 			convertToPdfEbs(file, orgFileId);
 		}
 
+	}
+	
+	@Override
+	public String getPdfTmpFilepath(String fileId) throws Exception {
+		EbsFileVo file = fileMapper.selectEbsFile(fileId);
+		String pdfFileId = file.getPdfFileId();
+		if(pdfFileId == null || "".equals(pdfFileId)) {
+			return null;
+		}
+		InputStream is = edv.download(pdfFileId);
+		
+		String outpath = pdfTempPath + File.separator + pdfFileId + ".pdf";
+		
+		FileCopyUtils.copy(is, new FileOutputStream(outpath));
+		
+		return outpath;
 	}
 
 

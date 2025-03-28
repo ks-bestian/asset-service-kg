@@ -60,4 +60,10 @@ public class MtngAllServiceImpl implements MtngAllService {
     	List<MemberVo> attendantList = mtngFromMapper.selectListMtngAttendant(param);
 		return attendantList;
 	}
+	
+	@Override
+	public List<MtngAllVo> selectMtngByBillId(HashMap<String, Object> param) {
+		List<MtngAllVo> result = mtngAllMapper.selectMtngByBillId(param);
+		return result;
+	}
 }

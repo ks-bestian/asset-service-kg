@@ -197,8 +197,14 @@
 			, emd.reg_dt
 			, kgst.fngetlangnm(vum.member_nm_kg,vum.member_nm_ru,vum.member_nm_kg,#{lang}) as reg_nm -- 등록자 이름
 			, emd.dept_cd
+			, emd.mtng_id
+		    , emt.mtng_type_cd
+		    , emt.age_cd
+		    , emt.session_no
+		    , emt.session_ord
 		from kgst.ebs_master_detail emd
 		join kgst.view_user_member vum on (emd.reg_id = vum.user_id)
+		left outer join kgst.ebs_mtng emt on (emd.mtng_id = emt.mtng_id)
 		where emd.bill_id = #{billId}
 		<if test="clsCd != null and clsCd != ''">
 			and emd.cls_cd = #{clsCd}
@@ -226,16 +232,7 @@
 			, emd.reg_id
 			, emd.reg_dt
 		from kgst.ebs_master_detail emd
-		where 1=1
-		<if test="seq != null and seq != ''">
-			and emd.seq = #{seq}
-		</if>
-		<if test="billId != null and billId != ''">
-			and emd.bill_id = #{billId}
-		</if>
-		<if test="clsCd != null and clsCd != ''">
-			and emd.cls_cd = #{clsCd}
-		</if>
+		where emd.seq = #{seq}
     </select>
 
     <insert id="insertBillDetail" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo"
@@ -252,6 +249,7 @@
 		    <if test="lglActRsltCode != null">, lgl_act_rslt_code</if>
 		    <if test="rsltDt != null">, rslt_dt</if>
 		    <if test="rsltCode != null">, rslt_code</if>
+		    , mtng_id
 		    , dept_cd
 		    , reg_id
 		    , reg_dt
@@ -266,6 +264,7 @@
 		    <if test="lglActRsltCode != null">, #{lglActRsltCode}</if>
 		    <if test="rsltDt != null">, #{rsltDt}</if>
 		    <if test="rsltCode != null">, #{rsltCode}</if>
+		    , #{mtngId}
 		    , #{deptCd}
 		    , #{regId}
 		    , now()
@@ -288,7 +287,16 @@
 		    <if test="rsltDt != null">, rslt_dt = #{rsltDt}</if>
 		    <if test="rsltCode != null">, rslt_code = #{rsltCode}</if>
 		    <if test="deptCd != null">, dept_cd = #{deptCd}</if>
-		WHERE seq = #{seq}
+		WHERE 1=1
+			<if test="seq != null">
+			and seq = #{seq}
+			</if>
+			<if test="billId != null">
+			and bill_id = #{billId}
+			</if>
+			<if test="clsCd != null">
+			and cls_cd = #{clsCd}
+			</if>
     </update>
 
     <!-- committee review report main sub -->

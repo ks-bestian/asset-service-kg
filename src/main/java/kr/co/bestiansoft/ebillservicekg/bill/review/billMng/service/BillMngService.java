@@ -74,4 +74,5 @@ public interface BillMngService {
 
 	EbsFileVo updateEbsFileDelYn(EbsFileVo ebsFileVo);
 
+	BillMngVo insertBillDetailFile(BillMngVo billMngVo);
 }

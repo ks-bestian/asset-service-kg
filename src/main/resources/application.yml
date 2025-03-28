@@ -60,3 +60,4 @@ edv:
 #  datastore-path: /home/eBill/edv-bestian/repository/datastore/${edv.root-folder}
   datastore-path: /home/EDV/edv-bestian/repository/datastore/${edv.root-folder}
   max-use-cpct: 1073741824
+  pdf-temp-path: /home/EDV/pdfTmp

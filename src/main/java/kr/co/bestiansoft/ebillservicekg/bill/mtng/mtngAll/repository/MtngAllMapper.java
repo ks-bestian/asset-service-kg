@@ -17,4 +17,5 @@ public interface MtngAllMapper {
     List<MemberVo> selectListMtngAttendant (HashMap<String, Object> param);
     List<AgendaVo> selectListMtngAgenda (HashMap<String, Object> param);
     List<MtngFileVo> selectListMtngFile (HashMap<String, Object> param);
+    List<MtngAllVo> selectMtngByBillId(HashMap<String, Object> param);
 }

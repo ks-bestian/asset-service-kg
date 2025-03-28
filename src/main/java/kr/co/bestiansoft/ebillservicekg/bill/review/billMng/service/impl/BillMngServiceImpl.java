@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.vo.MtngAllVo;
+import kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.service.BillMngService;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngResponse;
@@ -34,7 +35,8 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class BillMngServiceImpl implements BillMngService {
 
-    private final BillMngMapper billMngMapper;
+	private final BillAllMapper billAllMapper;
+	private final BillMngMapper billMngMapper;
     private final ProcessService processService;
     private final ComFileService comFileService;
 	private static final Logger LOGGER = LoggerFactory.getLogger(BillMngServiceImpl.class);
@@ -84,7 +86,15 @@ public class BillMngServiceImpl implements BillMngService {
     	List<BillMngVo> billCmtReviewList = new ArrayList<BillMngVo>();//bill Committee review department
 
     	for(BillMngVo listVo : billEtcInfoList) {
-
+    		
+    		List<EbsFileVo> detailFileList = new ArrayList<>();
+    		for(EbsFileVo file : fileList) {
+    			if(listVo.getSeq().equals(file.getDetailSeq())) {
+    				detailFileList.add(file);
+    			}
+    		}
+    		listVo.setEbsfileList(detailFileList);
+    		
     		String clsCd = listVo.getClsCd();
     		//if(argVo.getDeptCd().equals(listVo.getDeptCd())) {
 
@@ -143,9 +153,14 @@ public class BillMngServiceImpl implements BillMngService {
 
     		String clsCd = listVo.getClsCd();
 
-        		if("110".equals(clsCd)) {//법률검토결과
-        			billlegalReviewVo = listVo;
-        		}
+    		if("110".equals(clsCd)) {//법률검토결과
+    			billlegalReviewVo = listVo;
+    		}
+    	
+    		HashMap<String, Object> param2 = new HashMap<>();
+        	param2.put("detailSeq", listVo.getSeq());
+    		List<EbsFileVo> etcFileList = billAllMapper.selectListBillEtcFile2(param2);
+    		listVo.setEbsfileList(etcFileList);
     	}
 
 		billMngResponse.setProcessVo(processVo);
@@ -191,25 +206,25 @@ public class BillMngServiceImpl implements BillMngService {
 	public BillMngVo insertBillDetail(BillMngVo billMngVo) {
 
 		String loginId = new SecurityInfoUtil().getAccountId();
-		String clsCd = "";
+//		String clsCd = "";
 		billMngVo.setRegId(loginId);
 		billMngVo.setModId(loginId);
 
 		BillMngVo billDetailVo = billMngMapper.selectOnelegalReview(billMngVo);
 		if(billDetailVo == null) {
 			billMngMapper.insertBillDetail(billMngVo);
-			comFileService.saveFileBillDetailMng(billMngVo);
 
-			if("340".equals(clsCd)) {//본회의 부의
-				ProcessVo pVo = new ProcessVo();
-				pVo.setBillId(billMngVo.getBillId());
-				pVo.setStepId("1800");//본회의 심사
-				processService.handleProcess(pVo);
-			}
+//			if("340".equals(clsCd)) {//본회의 부의
+//				ProcessVo pVo = new ProcessVo();
+//				pVo.setBillId(billMngVo.getBillId());
+//				pVo.setStepId("1800");//본회의 심사
+//				processService.handleProcess(pVo);
+//			}
 			
 		} else {
 			billMngMapper.updateBillDetail(billMngVo);
 		}
+		comFileService.saveFileBillDetailMng(billMngVo);
 
 		billMngVo.setFiles(null);
 		return billMngVo;
@@ -325,7 +340,18 @@ public class BillMngServiceImpl implements BillMngService {
 
 		return ebsFileVo;
 	}
+	
+	@Transactional
+	@Override
+	public BillMngVo insertBillDetailFile(BillMngVo billMngVo) {
+		//파일등록
+		comFileService.saveFileBillDetailMng(billMngVo);
+		//파일 정보를 가지고 있어서 null처리
+		billMngVo.setFiles(null);
 
+		return billMngVo;
+	}
+	
 	@Override
 	public EbsFileVo updateEbsFileDelYn(EbsFileVo ebsFileVo) {
 		billMngMapper.updateEbsFileDelYn(ebsFileVo);

@@ -202,6 +202,40 @@ deleteBbs
 		    AND MTNG_ID = #{mtngId}
 
     </select>
+    
+    <select id="selectMtngByBillId" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.vo.MtngAllVo">
+        select 
+			  em.mtng_id
+			, em.mtng_type_cd
+			, em.dept_cd
+			, em.dept_nm
+			, em.excn_cycl
+			, em.open_dtm
+			, em.close_dtm
+			, em.mtng_plc
+			, em.age_cd
+			, em.rmk
+			, em.stat_cd
+			, em.reg_id
+			, em.reg_dt
+			, em.mod_id
+			, em.mod_dt
+			, em.due_dtm
+			, em.atrz_mng_no
+			, em.session_no
+			, em.session_ord
+			, ema.rslt_cd
+			, ema.rmk
+		from ebs_mtng_agenda ema 
+		inner join ebs_mtng em 
+		on ema.mtng_id = em.mtng_id 
+		where 1=1
+		and ema.bill_id = #{billId}
+		<if test="mtngTypeCd != null and mtngTypeCd != ''">
+		and em.mtng_type_cd = #{mtngTypeCd}
+		</if>
+    </select>
 
 
 </mapper>

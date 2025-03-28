@@ -13,5 +13,6 @@ public interface MtngAllService {
 
     List<MemberVo> getMtngParticipants(HashMap<String, Object> param);
 
+    List<MtngAllVo> selectMtngByBillId(HashMap<String, Object> param);
 
 }

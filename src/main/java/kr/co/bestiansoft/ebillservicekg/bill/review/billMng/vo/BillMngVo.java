@@ -131,7 +131,14 @@ public class BillMngVo extends ComDefaultVO {
     
     private List<MtngFromVo> mtngList;
 
+    private Long mtngId;
+    private String mtngTypeCd;
+    private String ageCd;
+    private String sessionNo;
+    private String sessionOrd;
 
 	//파일
     private MultipartFile[] files;
+    
+    private String fileKindCd;
 }

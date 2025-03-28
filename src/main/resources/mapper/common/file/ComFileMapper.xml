@@ -175,4 +175,29 @@
 			org_file_id = #{orgFileId};
     </update>
 
+	<select id="selectEbsFile" resultType="kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.common.file.repository.FileMapper.selectEbsFile */
+		SELECT 
+			  seq
+			, bill_id
+			, file_kind_cd
+			, cls_cd
+			, org_file_id
+			, org_file_nm
+			, pdf_file_id
+			, pdf_file_nm
+			, rmk
+			, opb_yn
+			, delete_yn
+			, file_size
+			, reg_id
+			, reg_dt
+			, mod_id
+			, mod_dt
+			, detail_seq
+		FROM kgst.ebs_file
+		where 1=1
+		and org_file_id = #{orgFileId}
+	</select>
+
 </mapper>

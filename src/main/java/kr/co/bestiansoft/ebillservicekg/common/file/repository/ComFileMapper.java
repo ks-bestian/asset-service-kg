@@ -20,4 +20,6 @@ public interface ComFileMapper {
 	
 	int insertFileEbsMtng(EbsFileVo vo);
 	int updateFileEbsMtng(EbsFileVo vo);
+	
+	EbsFileVo selectEbsFile(String orgFileId);
 }

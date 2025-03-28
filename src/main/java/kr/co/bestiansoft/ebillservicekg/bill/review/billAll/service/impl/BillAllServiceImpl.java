@@ -58,16 +58,9 @@ public class BillAllServiceImpl implements BillAllService {
     	/* Bill Etc doc list*/
     	List<EbsFileVo> etcFileList = billAllMapper.selectListBillEtcFile(param);
 
-
     	/*committee list*/
     	List<BillAllVo> cmtList = billAllMapper.selectListBillCmt(param);
     	
-    	/* 언어전문파트의견서 파일 */
-    	HashMap<String, Object> param2 = new HashMap<>();
-    	param2.put("billId", billId);
-    	param2.put("fileKindCd", "200"); 
-    	List<EbsFileVo> langFileList = billAllMapper.selectListFile(param2);
-
     	for(BillAllVo cmtVo: cmtList) {
 
     		List<EbsFileVo> cmtReviewFileList = new ArrayList<EbsFileVo>();
@@ -115,6 +108,14 @@ public class BillAllServiceImpl implements BillAllService {
 
     	for(BillAllVo listVo : etcInfoList) {
 
+    		List<EbsFileVo> detailFileList = new ArrayList<>();
+    		for(EbsFileVo file : billFileList) {
+    			if(listVo.getSeq().equals(file.getDetailSeq())) {
+    				detailFileList.add(file);
+    			}
+    		}
+    		listVo.setFileList(detailFileList);
+    		
     		String clsCd = listVo.getClsCd();
     		if("110".equals(clsCd)) {//법률검토결과
     			billlegalReviewVo = listVo;
@@ -126,16 +127,16 @@ public class BillAllServiceImpl implements BillAllService {
     	}
 
 
-    	for(BillAllVo vo : billCmtReviewList) {
-    		Long seq = vo.getSeq();
-    		List<EbsFileVo> cmtFileList = new ArrayList<EbsFileVo>();
-    		for(EbsFileVo fvo:billFileList) {
-    			if(seq.equals(fvo.getDetailSeq())) {
-    				cmtFileList.add(fvo);
-    			}
-    		}
-    		vo.setFileList(cmtFileList);
-    	}
+//    	for(BillAllVo vo : billCmtReviewList) {
+//    		Long seq = vo.getSeq();
+//    		List<EbsFileVo> cmtFileList = new ArrayList<EbsFileVo>();
+//    		for(EbsFileVo fvo:billFileList) {
+//    			if(seq.equals(fvo.getDetailSeq())) {
+//    				cmtFileList.add(fvo);
+//    			}
+//    		}
+//    		vo.setFileList(cmtFileList);
+//    	}
 
 
     	billRespanse.setBillBasicInfo(billBasicInfo);
@@ -149,7 +150,6 @@ public class BillAllServiceImpl implements BillAllService {
     	billRespanse.setBillCmtReviewVoList(billCmtReviewList);
     	billRespanse.setBilllegalReviewVo(billlegalReviewVo);
     	billRespanse.setEtcInfoList(etcInfoList);
-    	billRespanse.setLangFileList(langFileList);
 
         return billRespanse;
     }
