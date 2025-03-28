@@ -2,7 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.eas.draftDocument.repository.DraftDocumentRepository">
-    <!--  todo test -->
     <insert id="insertDraftDocument" parameterType="kr.co.bestiansoft.ebillservicekg.eas.draftDocument.vo.DraftDocumentVo">
         INSERT INTO kgst.eas_draft_document
         (draft_recipients_name, draft_title, draft_detail, draft_file_name, sender_name, sender_dept_name, sender_job_name, reg_dt, reg_id, file_path, draft_status)
