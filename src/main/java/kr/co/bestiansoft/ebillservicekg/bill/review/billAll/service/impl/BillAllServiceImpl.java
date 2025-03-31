@@ -67,7 +67,7 @@ public class BillAllServiceImpl implements BillAllService {
     		for(EbsFileVo fileVo:etcFileList) {
 
     			if(    cmtVo.getCmtCd().equals(fileVo.getDeptCd())
-    				&& "140".equals(fileVo.getClsCd())	) {//Bill Committee Review
+    				&& ("160".equals(fileVo.getClsCd()) || "190".equals(fileVo.getClsCd())) ) {//Bill Committee Review
     				cmtReviewFileList.add(fileVo);
     			}
     		}
@@ -104,7 +104,7 @@ public class BillAllServiceImpl implements BillAllService {
 
     	BillAllVo billlegalReviewVo = new BillAllVo();//bill legal review department
     	List<BillAllVo> billLangReviewVoList = new ArrayList<BillAllVo>();//bill Language review department
-    	List<BillAllVo> billCmtReviewList = new ArrayList<BillAllVo>();//bill Committee review department
+//    	List<BillAllVo> billCmtReviewList = new ArrayList<BillAllVo>();//bill Committee review department
 
     	for(BillAllVo listVo : etcInfoList) {
 
@@ -121,9 +121,10 @@ public class BillAllServiceImpl implements BillAllService {
     			billlegalReviewVo = listVo;
     		} else if("120".equals(clsCd)) {//위원언어전문파트
     			billLangReviewVoList.add(listVo);
-    		} else if("140".equals(clsCd)) {// Bill detail info Committee Review
-    			billCmtReviewList.add(listVo);
-    		}
+    		} 
+//    		else if("140".equals(clsCd)) {// Bill detail info Committee Review
+//    			billCmtReviewList.add(listVo);
+//    		}
     	}
 
 
@@ -147,7 +148,7 @@ public class BillAllServiceImpl implements BillAllService {
     	billRespanse.setMainMtList(mainMtList);
     	billRespanse.setPartyMtList(partyMtList);
     	billRespanse.setBillLangReviewVoList(billLangReviewVoList);
-    	billRespanse.setBillCmtReviewVoList(billCmtReviewList);
+//    	billRespanse.setBillCmtReviewVoList(billCmtReviewList);
     	billRespanse.setBilllegalReviewVo(billlegalReviewVo);
     	billRespanse.setEtcInfoList(etcInfoList);
 

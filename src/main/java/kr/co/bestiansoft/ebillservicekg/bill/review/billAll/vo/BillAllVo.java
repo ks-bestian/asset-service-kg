@@ -124,6 +124,7 @@ public class BillAllVo extends ComDefaultVO {
     private String rmrkKg;
     private String rmrkRu;
     private String deptCd;
+    private String deptNm;
 
 
     /* File id */

@@ -68,6 +68,8 @@ public class BillMngServiceImpl implements BillMngService {
     @Override
     public BillMngResponse getBillById(BillMngVo argVo) {
 
+    	String deptCd = new SecurityInfoUtil().getDeptCd();
+    	
     	BillMngVo billMngVo = billMngMapper.selectOneBill(argVo);//bill basic info
 
 		ProcessVo param = new ProcessVo();
@@ -102,25 +104,25 @@ public class BillMngServiceImpl implements BillMngService {
         			billlegalReviewVo = listVo;
         		} else if("120".equals(clsCd)) {//위원언어전문파트
         			billLangReviewVoList.add(listVo);
-        		} else if("140".equals(clsCd)) {// Bill detail info Committee Review
+        		} else if( ("160".equals(clsCd) || "190".equals(clsCd)) && deptCd.equals(listVo.getDeptCd()) ) {// Bill detail info Committee Review
         			billCmtReviewList.add(listVo);
         		}
     		//}
     	}
 
-    	for(BillMngVo vo : billCmtReviewList) {
-    		Long seq = vo.getSeq();
-    		List<EbsFileVo> cmtFileList = new ArrayList<EbsFileVo>();
-
-    		if(argVo.getDeptCd() != null && argVo.getDeptCd().equals(vo.getDeptCd())) {
-        		for(EbsFileVo fvo:fileList) {
-        			if(seq.equals(fvo.getDetailSeq())) {
-        				cmtFileList.add(fvo);
-        			}
-        		}
-        		vo.setEbsfileList(cmtFileList);
-    		}
-    	}
+//    	for(BillMngVo vo : billCmtReviewList) {
+//    		Long seq = vo.getSeq();
+//    		List<EbsFileVo> cmtFileList = new ArrayList<EbsFileVo>();
+//
+//    		if(argVo.getDeptCd() != null && argVo.getDeptCd().equals(vo.getDeptCd())) {
+//        		for(EbsFileVo fvo:fileList) {
+//        			if(seq.equals(fvo.getDetailSeq())) {
+//        				cmtFileList.add(fvo);
+//        			}
+//        		}
+//        		vo.setEbsfileList(cmtFileList);
+//    		}
+//    	}
 
     	//List<ProposerVo> proposerList = billMngMapper.selectProposerMemberList(param);
     	//List<BillMngVo> cmtList = billMngMapper.selectCmtList(param);
