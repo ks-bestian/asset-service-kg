@@ -42,7 +42,7 @@ public class MtngAllController {
         return new ResponseEntity<>(new CommonResponse(200, "OK", mtngAllService.getMtngParticipants(param)), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "안건별 본회의 리스트 조회", notes = "안건별 본회의 리스트를 조회한다.")
+    @ApiOperation(value = "안건별 회의 리스트 조회", notes = "안건별 회의 리스트를 조회한다.")
     @GetMapping("/bill/mtng/all/bybill")
     public ResponseEntity<CommonResponse> selectMtngByBillId(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", mtngAllService.selectMtngByBillId(param)), HttpStatus.OK);

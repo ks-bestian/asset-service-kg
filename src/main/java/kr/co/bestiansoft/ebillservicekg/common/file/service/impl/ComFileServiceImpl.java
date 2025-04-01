@@ -494,7 +494,7 @@ public class ComFileServiceImpl implements ComFileService {
 			fileVo.setFileSize(file.getSize());
 			fileVo.setFileKindCd("200");
 			fileVo.setClsCd("120");
-			fileVo.setOpbYn("N");
+			fileVo.setOpbYn("Y");
 			fileVo.setRegId(regId);
 			fileVo.setRmk(ebsFileVo.getRmk());
 			fileMapper.insertFileEbs(fileVo);
@@ -531,7 +531,7 @@ public class ComFileServiceImpl implements ComFileService {
 			fileVo.setOrgFileNm(orgFileNm);
 			fileVo.setFileSize(file.getSize());
 			fileVo.setDeleteYn("N");
-			fileVo.setOpbYn("N");
+			fileVo.setOpbYn("Y");
 			fileVo.setDetailSeq(detailSeq);
 			fileVo.setClsCd(clsCd);
 			fileVo.setRegId(new SecurityInfoUtil().getAccountId());

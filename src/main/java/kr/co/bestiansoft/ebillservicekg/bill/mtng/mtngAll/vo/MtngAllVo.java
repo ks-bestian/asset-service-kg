@@ -30,6 +30,8 @@ public class MtngAllVo extends ComDefaultVO {
 	private String statNm;
 	private String dueDtm;
 	private String cmtSeNm;
+	private String sessionNo;
+	private Long sessionOrd;
 
 
 	/* 참석자 관련 */
