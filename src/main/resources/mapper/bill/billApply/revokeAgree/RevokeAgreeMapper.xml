@@ -38,12 +38,13 @@
 			 , kgst.fngetcodenm('1010',max(ebs.stat_cd),#{lang}) as stat_nm
 			from kgst.view_bill_process_list pl
 			join kgst.ebs_bp_step ebs on (pl.bp_df_id = ebs.bp_df_id and pl.current_step_id = ebs.step_id)
-			where pl.current_step_id = '1100'
+			where pl.step_id = '1100'
+			  and pl.task_status = 'P'
 			  and pl.trgt_user_id = #{userId}
 			group by bill_id
 		) AA
 		join kgst.view_user_member vum on (AA.ppsr_id = vum.user_id)
-		join kgst.ebs_proposer ep on (ep.bill_id = AA.bill_id and ep.proposer_id = #{userId})
+		join kgst.ebs_proposer ep on (ep.bill_id = AA.bill_id and ep.proposer_id = #{userId} and ep.sign_dt is not null and ep.sign_cnc_dt is null)
         where 1=1
 		<if test="naTermCd != null and naTermCd != ''">
 			and AA.na_term_cd = #{naTermCd}
@@ -108,6 +109,10 @@
 				when (ep.sign_dt is not null and ep.sign_cnc_dt is null) then 'Y'
 				else 'N'
 			 end as agreeYn 				-- 동의여부
+			, case
+				when (ep.wt_dt is not null and ep.wt_cnc_dt is null) then 'Y'
+				else 'N'
+			  end as revokeYn 				-- 철회동의여부   
 			, view.member_nm_kg					-- 의원이름kg
 			, view.member_nm_ru					-- 의원이름ru
 			, view.poly_nm  					-- 정당이름

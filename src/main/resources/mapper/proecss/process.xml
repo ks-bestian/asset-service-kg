@@ -425,7 +425,10 @@
 	     ,  REG_DT
 	  FROM EBS_BP_TASKS
 	 WHERE BILL_ID = #{billId}
+	 <if test="stepId != null and stepId != ''">
 	   and STEP_ID = #{stepId}
+	   order by reg_dt
+	 </if>
 
 	</select>
 
@@ -498,6 +501,7 @@
 		  , proposer_id
 		from ebs_proposer
 		where bill_id = #{billId}
+		and sign_dt is not null and sign_cnc_dt is null
 
 	</select>
 

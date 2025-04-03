@@ -187,7 +187,9 @@
 			, em.ppsl_dt 						-- 제안일
 			, em.bill_no						-- 안건번호
 			, (select emc.cmt_cd from kgst.ebs_master_cmt emc where emc.bill_id = em.bill_id and emc.cmt_se_cd = 'M') as cmt_cd
+			, ebi.current_step_id
 		from kgst.ebs_master em
+		left join kgst.ebs_bp_instance ebi on (em.bill_id = ebi.bill_id) 
 		left join kgst.view_user_member view on (view.member_id = em.ppsr_id)
 		where em.bill_id = #{billId}
     </select>
@@ -210,7 +212,6 @@
     	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.updateRevokeBill */
         update kgst.ebs_master
 		set
-		  stat_cd = #{statCd}		-- 상태 코드
 		  , wt_cn_kg = #{wtCnKg}	-- 철회 사유kg
 		  , wt_cn_ru = #{wtCnRu}	-- 철회 사유ru
 		WHERE bill_id = #{billId}

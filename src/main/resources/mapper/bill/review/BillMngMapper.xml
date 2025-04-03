@@ -739,7 +739,12 @@
 			, mod_id = #{modId}
 			, mod_dt = now()
 	    where bill_id = #{billId}
+	    <if test="fileKindCd != null and fileKindCd != ''">
+	      and file_kind_cd = #{fileKindCd}
+	    </if>
+	    <if test="orgFileId != null and orgFileId != ''">
 	      and org_file_id = #{orgFileId}
+	    </if>
 	</update>
 
 </mapper>

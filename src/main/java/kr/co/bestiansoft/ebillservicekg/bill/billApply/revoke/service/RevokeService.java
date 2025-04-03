@@ -14,6 +14,8 @@ public interface RevokeService {
 	RevokeResponse getRevokeDetail(String billId, String lang);
 
 	ProcessVo billRevokeRequest(String billId,RevokeVo vo);
+	
+	ProcessVo billRevokeSubmit(String billId,RevokeVo vo);
 
 	int billRevokeCancle(String billId, HashMap<String, Object> param);
 

@@ -88,7 +88,7 @@ public class ApplyVo extends ComDefaultVO {
 	//process stepId
 	private String stepId;
 	private Long taskId;
-	
+	private String currentStepId;
 	
 	//comment
 	private String lawId;

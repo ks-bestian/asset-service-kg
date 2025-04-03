@@ -2,6 +2,8 @@ package kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.vo;
 
 import java.time.LocalDateTime;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
 
@@ -42,6 +44,8 @@ public class RevokeVo extends ComDefaultVO {
 	private String proposerId;
 	//동의여부
 	private String agreeYn;
+	//철회동의여부
+	private String revokeYn;
 	//의원이름
 	private String memberNm;
 	//의원이름kg
@@ -67,5 +71,6 @@ public class RevokeVo extends ComDefaultVO {
     /** process taskStatus */
     private String taskStatus;
 
+    private MultipartFile[] files;
 
 }

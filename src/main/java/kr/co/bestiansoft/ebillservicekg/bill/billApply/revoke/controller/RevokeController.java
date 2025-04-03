@@ -3,6 +3,7 @@ package kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.controller;
 import java.util.HashMap;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,10 +41,16 @@ public class RevokeController {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", revokeService.getRevokeDetail(billId, lang)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "철회접수요청", notes = "철회접수를 요청한다")
-    @PostMapping("/bill/revoke/request/{billId}")
-    public ResponseEntity<CommonResponse> billRevokeRequest(@PathVariable String billId,@RequestBody RevokeVo vo) {
+    @ApiOperation(value = "철회요청", notes = "철회를 요청한다")
+    @PostMapping(value = "/bill/revoke/request/{billId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<CommonResponse> billRevokeRequest(@PathVariable String billId, RevokeVo vo) {
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill revoke request successfully", revokeService.billRevokeRequest(billId,vo)), HttpStatus.OK);
+    }
+    
+    @ApiOperation(value = "철회접수요청", notes = "철회접수를 요청한다")
+    @PostMapping(value = "/bill/revoke/submit/{billId}")
+    public ResponseEntity<CommonResponse> billRevokeSubmit(@PathVariable String billId, RevokeVo vo) {
+    	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill revoke submit successfully", revokeService.billRevokeSubmit(billId,vo)), HttpStatus.OK);
     }
 
     @ApiOperation(value = "철회취소", notes = "철회요청을 취소한다")

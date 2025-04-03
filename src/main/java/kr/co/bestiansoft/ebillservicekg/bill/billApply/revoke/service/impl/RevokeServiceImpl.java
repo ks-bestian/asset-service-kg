@@ -1,5 +1,6 @@
 package kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -11,6 +12,8 @@ import kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.repository.RevokeM
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.service.RevokeService;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.vo.RevokeResponse;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.vo.RevokeVo;
+import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.service.BillMngService;
+import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.process.service.ProcessService;
@@ -27,6 +30,8 @@ public class RevokeServiceImpl implements RevokeService {
 	private final RevokeMapper revokeMapper;
 	private final ApplyMapper applyMapper;
 	private final ProcessService processService;
+	private final ComFileService comFileService;
+	private final BillMngService billMngService;
 
 	@Override
 	public List<RevokeVo> getRevokeList(HashMap<String, Object> param) {
@@ -62,10 +67,32 @@ public class RevokeServiceImpl implements RevokeService {
 	@Override
 	public ProcessVo billRevokeRequest(String billId,RevokeVo vo) {
 
+		this.updateRevoke(billId, vo);
+		
+		if(vo.getFiles() != null) {
+			String[] fileKindCd = new String[vo.getFiles().length];
+			for(int i = 0; i < vo.getFiles().length; ++i) {
+				fileKindCd[i] = "170"; //안건철회
+			}
+			comFileService.saveFileEbs(vo.getFiles(), fileKindCd, billId);	
+		}
+		
 		ProcessVo pVo = new ProcessVo();
 		pVo.setBillId(billId);
-		pVo.setStepId(vo.getStepId());
-		pVo.setTaskId(vo.getTaskId());
+		pVo.setStepId("1100"); //안건철회관리
+//		pVo.setTaskId(vo.getTaskId());
+		processService.handleProcess(pVo);
+
+		return pVo;
+	}
+	
+	@Transactional
+	@Override
+	public ProcessVo billRevokeSubmit(String billId,RevokeVo vo) {
+
+		ProcessVo pVo = new ProcessVo();
+		pVo.setBillId(billId);
+		pVo.setStepId("1150"); //안건철회관리
 		processService.handleProcess(pVo);
 
 		return pVo;
@@ -73,14 +100,21 @@ public class RevokeServiceImpl implements RevokeService {
 
 	@Override
 	public int billRevokeCancle(String billId, HashMap<String, Object> param) {
-		param.put("billId", billId);
-		param.put("statCd", "ST030");
-		return revokeMapper.updateRevokeCancle(param);
+		processService.undoProcess(billId, "1100");
+		
+		EbsFileVo ebsFileVo = new EbsFileVo();
+		ebsFileVo.setBillId(billId);
+		ebsFileVo.setFileKindCd("170"); //안건철회
+		ebsFileVo.setModId(new SecurityInfoUtil().getAccountId());
+		billMngService.updateEbsFileDelYn(ebsFileVo);
+		
+		return 0;
 	}
 
 	@Override
 	public int updateRevoke(String billId, RevokeVo revokeVo) {
 		revokeVo.setBillId(billId);
+		revokeVo.setModId(new SecurityInfoUtil().getAccountId());
 		return revokeMapper.updateRevoke(revokeVo);
 	}
 

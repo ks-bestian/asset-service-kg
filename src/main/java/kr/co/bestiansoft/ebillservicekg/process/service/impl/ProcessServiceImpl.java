@@ -1,5 +1,6 @@
 package kr.co.bestiansoft.ebillservicekg.process.service.impl;
 
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -87,6 +88,10 @@ public class ProcessServiceImpl implements ProcessService {
 
 	        case "1100":
 	        	executeService_1100(argVo);
+	            break;
+	            
+	        case "1150":
+	        	executeService_1150(argVo);
 	            break;
 
 	        case "1200":
@@ -230,7 +235,7 @@ public class ProcessServiceImpl implements ProcessService {
 			ProcessVo taskVo = new ProcessVo();
 			taskVo.setTaskNm("안건철회");
 			taskVo.setBillId(argVo.getBillId());
-			taskVo.setStepId(argVo.getNextStepId());
+			taskVo.setStepId(argVo.getStepId());
 			taskVo.setRegId(argVo.getRegId());
 			for(ProposerVo ppVo:properList) {
 
@@ -242,6 +247,29 @@ public class ProcessServiceImpl implements ProcessService {
 				taskVo.setTrgtUserId(ppVo.getProposerId());//해당국회의원 할당 공동발의자 들에게
 				processMapper.insertBpTask(taskVo);
 			}
+		}
+		
+		/*안건철회접수관리*/
+		void executeService_1150(ProcessVo argVo) {
+
+			String userId = new SecurityInfoUtil().getAccountId();
+			
+			ProcessVo vo = new ProcessVo();
+			vo.setBillId(argVo.getBillId());
+			vo.setStepId("1100"); //안건철회관리
+			vo.setMdfrId(userId);
+			vo.setTaskStatus("C");
+			processMapper.updateStepTasks(vo);
+			
+			
+			ProcessVo taskVo = new ProcessVo();
+			taskVo.setBillId(argVo.getBillId());
+			taskVo.setStepId(argVo.getStepId());
+			taskVo.setTaskNm("안건철회접수관리");
+			taskVo.setStatus("P");
+			taskVo.setAssignedTo(AuthConstants.AUTH_GD);//GD 할당
+			taskVo.setRegId(userId);
+			processMapper.insertBpTask(taskVo);
 		}
 
 		/*법률부서검토관리
@@ -530,7 +558,29 @@ public class ProcessServiceImpl implements ProcessService {
 		@Transactional
 		@Override
 		public void undoProcess(String billId, String stepId) {
-			
+			if("1100".equals(stepId)) { //안건철회관리
+				ProcessVo vo = new ProcessVo();
+				vo.setBillId(billId);
+				List<ProcessVo> taskList = processMapper.selectBpStepTasks(vo);
+				if(taskList == null || taskList.isEmpty()) {
+					return;
+				}
+				String lastStepId = null;
+				for(int i = taskList.size() - 1; i >= 0; --i) {
+					ProcessVo task = taskList.get(i);
+					if("1100".equals(task.getStepId())) {
+						processMapper.deleteBpTasks(task);
+					}
+					else if(lastStepId == null) {
+						lastStepId = task.getStepId();
+					}
+				}
+				ProcessVo vo2 = new ProcessVo();
+				vo2.setBillId(billId);
+				vo2.setModId(new SecurityInfoUtil().getAccountId());
+				vo2.setStepId(lastStepId);
+				processMapper.updateBpInstanceCurrentStep(vo2);
+			}
 			if("1700".equals(stepId)) { //본회의심사요청
 				ProcessVo vo = new ProcessVo();
 				vo.setBillId(billId);
@@ -551,6 +601,5 @@ public class ProcessServiceImpl implements ProcessService {
 			}
 
 		}
-
-
+		
 }
