@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.bestiansoft.ebillservicekg.form.repository.FormMapper">
+
+    <select id="selectFormList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.form.vo.FormVo">
+        select
+              form_id --서식 식별자
+            , file_id --파일 식별자
+            , file_nm --파일명
+            , form_title --서식제목
+            , form_cn --서식내용
+            , reg_id --등록식별자
+            , reg_dt --등록일자
+            , pdf_file_id --pdf식별자
+        from kgst.com_form
+        where 1=1
+        <if  test="formId != null and formId != ''">
+            and form_id::text like concat('%', #{formId}, '%')
+        </if>
+
+    </select>
+
+    <insert id="insertForm" parameterType="kr.co.bestiansoft.ebillservicekg.form.vo.FormWithFieldsVo">
+        <selectKey keyProperty="formId" resultType="java.lang.Integer" order="BEFORE">
+            select coalesce(max(form_id) + 1, 1000) from kgst.com_form
+        </selectKey>
+        insert into kgst.com_form (
+              form_id
+            , file_id
+            , file_nm
+            , form_title
+            , form_cn
+            , reg_id
+            , reg_dt
+            , pdf_file_id
+        )
+        values (
+              #{formId}
+            , #{fileId}
+            , #{fileNm}
+            , #{formTitle}
+            , #{formCn}
+            , #{regId}
+            , now()
+            , #{pdfFileId}
+        )
+    </insert>
+
+    <select id="selectFormDetail" parameterType="int" resultType="kr.co.bestiansoft.ebillservicekg.form.vo.FormWithFieldsVo">
+        select
+              form_id
+            , file_id
+            , file_nm
+            , form_title
+            , form_cn
+            , reg_id
+            , reg_dt
+            , pdf_file_id
+        from kgst.com_form
+        where form_id = #{formId}
+    </select>
+
+</mapper>
