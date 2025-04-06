@@ -1,10 +1,12 @@
 package kr.co.bestiansoft.ebillservicekg.admin.user.vo;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
+@NoArgsConstructor
 @Data
 public class UserMemberVo {
     private String userId;
@@ -33,6 +35,7 @@ public class UserMemberVo {
     private String rsdnRgstNmbr;
     private String type;
     private String mblNo;
+    private String isMember;
 
     private MultipartFile[] files;
 }

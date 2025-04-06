@@ -141,60 +141,84 @@
         where rcv_id = #{rcvId} and msg_group_id = #{msgGroupId}
     </update>
 
+<!--    <select id="selectUserMember" parameterType="kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo">-->
+<!--        select-->
+<!--              um.user_id-->
+<!--            , kgst.fngetlangnm(um.user_nm_kg, um.user_nm_ru, um.user_nm_kg, #{lang}) as user_nm-->
+<!--            , kgst.fngetlangnm(um.dept_nm_kg,um.dept_nm_ru,um.dept_nm_ko,#{lang}) as dept_nm-->
+<!--            , kgst.fngetlangnm(um.cmit_nm_kg,um.cmit_nm_ru,um.cmit_nm_ko,#{lang}) as cmit_nm-->
+<!--            , um.poly_nm-->
+<!--            , (case when um.user_id in (select cu.user_id from com_user cu) then 'user'-->
+<!--                    when um.member_id in (select cm.member_id from com_member cm) then 'member'-->
+<!--              end) as type-->
+<!--        from view_user_member um-->
+<!--        <if test="deptCd != '' and deptCd != null">-->
+<!--            left join com_ccof ccof on ccof.user_id = um.user_id-->
+<!--        </if>-->
+<!--        where (um.msg_rcv_yn != 'N' or um.msg_rcv_yn is null)-->
+<!--        <if test="polyCd != '' and polyCd != null">-->
+<!--            and um.poly_cd = #{polyCd}-->
+<!--        </if>-->
+<!--        <if test="deptCd != '' and deptCd != null">-->
+<!--            and (um.dept_cd = #{deptCd} or ccof.dept_cd = #{deptCd})-->
+<!--        </if>-->
+<!--        <if test="cmitCd != '' and cmitCd != null">-->
+<!--            and um.dept_cd = #{cmitCd}-->
+<!--        </if>-->
+<!--        <if test="lang != null and lang != ''">-->
+<!--            <choose>-->
+<!--                <when test="lang == 'lng_type_2'">-->
+<!--                    and um.user_nm_ru like concat('%', #{searchNm}, '%')-->
+<!--                </when>-->
+<!--                <otherwise>-->
+<!--                    and um.user_nm_kg like concat ('%', #{searchNm}, '%')-->
+<!--                </otherwise>-->
+<!--            </choose>-->
+<!--        </if>-->
+<!--    </select>-->
+
     <select id="selectUserMember" parameterType="kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo">
-        select
-              um.user_id
-            , kgst.fngetlangnm(um.user_nm_kg, um.user_nm_ru, um.user_nm_kg, #{lang}) as user_nm
-            , um.user_nm_kg
-            , um.user_nm_ru
-            , um.member_id
-            , um.member_nm_kg
-            , um.member_nm_ru
-            , um.dept_cd
-            , um.email
-            , um.gen_cd
-            , um.profile_img_path
-            , um.msg_rcv_yn
-            , um.doc_mgr_yn
-            , um.dept_head_yn
-            , um.job_cd
-            , kgst.fngetlangnm(cc.code_nm1,cc.code_nm2,cc.code_nm1,#{lang}) as job_nm
-            , um.pos_cd
-            , um.age_cd
-            , um.cmit_cd
-            , kgst.fngetlangnm(um.dept_nm_kg,um.dept_nm_ru,um.dept_nm_ko,#{lang}) as dept_nm
-            , kgst.fngetlangnm(um.cmit_nm_kg,um.cmit_nm_ru,um.cmit_nm_kg,#{lang}) as cmit_nm
-            , um.cmit_nm_kg
-            , um.cmit_nm_ru
-            , um.cmit_nm_ko
-            , um.poly_cd
-            , um.poly_nm
-            , um.rsdn_rgst_nmbr
-            , (case when um.user_id in (select cu.user_id from com_user cu) then 'user'
-                    when um.member_id in (select cm.member_id from com_member cm) then 'member'
-              end) as type
-        from view_user_member um
-        left join com_code_detail cc on cc.code_id = um.job_cd
-        <if test="deptCd != '' and deptCd != null">
-            left join com_ccof ccof on ccof.user_id = um.user_id
-        </if>
-        where um.msg_rcv_yn != 'N'
-        <if test="polyCd != '' and polyCd != null">
-            and um.poly_cd = #{polyCd}
-        </if>
-        <if test="deptCd != '' and deptCd != null">
-            and (um.dept_cd = #{deptCd} or ccof.dept_cd = #{deptCd})
-        </if>
-        <if test="lang != null and lang != ''">
-            <choose>
-                <when test="lang == 'lng_type_2'">
-                    and um.user_nm_ru like concat('%', #{searchNm}, '%')
-                </when>
-                <otherwise>
-                    and um.user_nm_kg like concat ('%', #{searchNm}, '%')
-                </otherwise>
-            </choose>
-        </if>
+        SELECT
+              user_id
+            , user_nm
+            , STRING_AGG(dept_nm, ',  ') AS dept_nm
+            , cmit_nm
+            , poly_nm
+            , is_member
+        FROM (
+            SELECT
+              user_id
+            , kgst.fngetlangnm(user_nm_kg, user_nm_ru, user_nm_kg, #{lang}) as user_nm
+            , (CASE
+                WHEN is_member = 'Y' THEN kgst.fngetlangnm(cmit_nm_kg, cmit_nm_ru, cmit_nm_ko, #{lang})
+                ELSE kgst.fngetlangnm(dept_nm_kg, dept_nm_ru, dept_nm_ko, #{lang})
+              END) AS dept_nm
+            , kgst.fngetlangnm(cmit_nm_kg, cmit_nm_ru, cmit_nm_ko, #{lang}) as cmit_nm
+            , poly_nm
+            , is_member
+            FROM view_user_member
+            where 1=1
+            <if test="selectTab != '' and selectTab != null">
+                <choose>
+                    <when test="selectTab == 'cmit'">
+                        and is_member = 'Y' or (dept_cd like 'CMT%' and is_member = 'N')
+                    </when>
+                </choose>
+            </if>
+            UNION ALL
+             SELECT
+              cc.user_id
+            , kgst.fngetlangnm(cu.user_nm_kg, cu.user_nm_ru, cu.user_nm_kg, #{lang}) as user_nm
+            , kgst.fngetlangnm(cd.dept_nm1, cd.dept_nm2, cd.dept_nm3, #{lang}) AS dept_nm
+            , '' as cmit_nm_kg
+            , '' as poly_nm
+            , 'N' as is_member
+            FROM com_ccof cc
+            INNER JOIN com_user cu ON cu.user_id = cc.user_id
+            INNER JOIN com_dept cd ON cd.dept_cd = cc.dept_cd
+        ) t
+        GROUP BY
+        user_id, user_nm, cmit_nm, poly_nm, is_member
     </select>
 
     <delete id="deleteMsg" parameterType="java.lang.Long">
