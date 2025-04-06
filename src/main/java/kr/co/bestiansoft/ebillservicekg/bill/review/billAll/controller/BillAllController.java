@@ -34,6 +34,10 @@ public class BillAllController {
         return new ResponseEntity<>(new CommonResponse(200, "OK", billAllService.getBillById(billId, param)), HttpStatus.OK);
     }
 
-
+    @ApiOperation(value = "안건 모니터링 조회", notes = "리스트를 조회한다.")
+    @GetMapping("/bill/search/monitor")
+    public ResponseEntity<CommonResponse> selectListBillMonitor(@RequestParam HashMap<String, Object> param) {
+        return new ResponseEntity<>(new CommonResponse(200, "OK", billAllService.selectListBillMonitor(param)), HttpStatus.OK);
+    }
 
 }

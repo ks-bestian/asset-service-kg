@@ -11,5 +11,7 @@ public interface BillAllService {
     BillAllResponse getBillById(String billId, HashMap<String, Object> param);
 
 
+    List<BillAllVo> selectListBillMonitor(HashMap<String, Object> param);
+
 
 }

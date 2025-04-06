@@ -49,8 +49,8 @@
     	<if test="statCd != null and statCd != ''">
     		AND A.stat_cd = #{statCd}
     	</if>
-    	
-    	
+
+
         order by A.ppsl_dt desc
 
     </select>
@@ -136,7 +136,7 @@
 		order by ef.seq
 
     </select>
-    
+
     <!-- committee meeting list -->
     <select id="selectListCmtMeeting" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.vo.MtngAllVo">
@@ -317,11 +317,75 @@
 		  , ef.pdf_file_id
 		  , ef.pdf_file_nm
 		  , ef.detail_seq
-		from ebs_master_detail emd 
+		from ebs_master_detail emd
 		join ebs_file ef on (emd.seq = ef.detail_seq)
 		where ef.detail_seq = #{detailSeq}
 		  and ef.delete_yn = 'N'
 		</select>
 
+
+
+    <select id="selectListBillMonitor" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billAll.vo.BillAllVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper.selectListBillMonitor */
+
+
+		SELECT
+		    A.bill_id
+		  , A.bill_no
+		  , A.bill_name
+		  , A.ppsr_nm
+		  , A.stat_cd
+		  , A.ppsl_dt
+		  , kgst.fngetbillprogress(A.stat_cd) as progress_value
+		from
+		(
+			SELECT
+			      em.bill_id                -- 안건 ID
+			    , em.bill_no                -- 안건 번호
+			    , em.bill_kind              -- 의안 종류 (법률안/예산안 등)
+			    , em.na_term_cd             -- 대수 코드
+			    , em.bill_name_kg           -- 의안명 - kg
+			    , em.bill_name_ru           -- 의안명 - ru
+			    , kgst.fngetlangnm(em.bill_name_kg,em.bill_name_ru,em.bill_name_kg,#{lang}) as bill_name -- 안건 이름
+			    , kgst.fngetlangnm(vum.member_nm_kg,vum.member_nm_ru,vum.member_nm_kg,#{lang}) as ppsr_nm -- 제안자 이름
+			    , em.ppsl_knd_cd            -- 제안자 종류 (정부/의원)
+			    , em.ppsr_id                -- 발의자 아이디
+			    , em.ppsl_dt                -- 제안일
+			    , em.gvrn_trsf_dt           -- 정부 이송일
+			    , em.prmg_dt                -- 공포일자
+			    , em.prmg_no                -- 공포 번호
+			    , em.reg_id                 -- 등록자 아이디
+			    , em.reg_dt                 -- 등록 일자
+			    , kgst.fngetlangnm(em.etc_kg,em.etc_ru,em.etc_kg,#{lang}) as etc -- 비고
+			    , em.scl_dsc_rcp_nmb
+			    , ebs.stat_cd
+			    , kgst.fngetcodenm('1010', ebs.stat_cd, #{lang}) as stat_nm
+			FROM ebs_master em
+			join view_user_member vum on (em.ppsr_id = vum.user_id)
+			left outer join ebs_bp_instance ebi on (em.bill_id = ebi.bill_id)
+			join ebs_bp_step ebs on (ebs.step_id = ebi.current_step_id and ebs.bp_df_id = ebi.bp_df_id)
+		) A
+		where 1=1
+		  and A.bill_no is not null
+		  and A.stat_cd is not null
+
+	    <if test="searchBillName != null and searchBillName != ''">
+	    	AND A.bill_name like CONCAT('%', #{searchBillName}, '%')
+	    </if>
+		<if test="billNo != null and billNo != ''">
+	    	AND A.bill_no like CONCAT('%', #{billNo}, '%')
+	    </if>
+    	<if test="naTermCd != null and naTermCd != ''">
+    		AND A.na_term_cd = #{naTermCd}
+    	</if>
+    	<if test="statCd != null and statCd != ''">
+    		AND A.stat_cd = #{statCd}
+    	</if>
+
+
+        order by A.ppsl_dt desc
+
+    </select>
 
 </mapper>

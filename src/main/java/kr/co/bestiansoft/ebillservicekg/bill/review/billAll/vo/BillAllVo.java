@@ -37,6 +37,9 @@ public class BillAllVo extends ComDefaultVO {
     private String ppslDt;
     // 상태코드
     private String statCd;
+
+    private int progressValue;
+
     // 위원회아이디
     private String cmtId;
     // 위원회아이디

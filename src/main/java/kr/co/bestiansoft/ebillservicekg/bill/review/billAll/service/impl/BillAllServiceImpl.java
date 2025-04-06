@@ -26,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Service
 public class BillAllServiceImpl implements BillAllService {
+
     private final BillAllMapper billAllMapper;
     private final AgreeMapper agreeMapper;
 
@@ -60,7 +61,7 @@ public class BillAllServiceImpl implements BillAllService {
 
     	/*committee list*/
     	List<BillAllVo> cmtList = billAllMapper.selectListBillCmt(param);
-    	
+
     	for(BillAllVo cmtVo: cmtList) {
 
     		List<EbsFileVo> cmtReviewFileList = new ArrayList<EbsFileVo>();
@@ -115,13 +116,13 @@ public class BillAllServiceImpl implements BillAllService {
     			}
     		}
     		listVo.setFileList(detailFileList);
-    		
+
     		String clsCd = listVo.getClsCd();
     		if("110".equals(clsCd)) {//법률검토결과
     			billlegalReviewVo = listVo;
     		} else if("120".equals(clsCd)) {//위원언어전문파트
     			billLangReviewVoList.add(listVo);
-    		} 
+    		}
 //    		else if("140".equals(clsCd)) {// Bill detail info Committee Review
 //    			billCmtReviewList.add(listVo);
 //    		}
@@ -154,6 +155,13 @@ public class BillAllServiceImpl implements BillAllService {
 
         return billRespanse;
     }
+
+	@Override
+	public List<BillAllVo> selectListBillMonitor(HashMap<String, Object> param) {
+
+        List<BillAllVo> result = billAllMapper.selectListBillMonitor(param);
+        return result;
+	}
 
 
 }
