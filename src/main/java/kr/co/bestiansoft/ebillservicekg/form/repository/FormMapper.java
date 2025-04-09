@@ -9,8 +9,11 @@ import java.util.List;
 
 @Mapper
 public interface FormMapper {
-    List<FormVo> selectFormList(HashMap<String, Object> param);
-    void insertForm(FormWithFieldsVo formWithFieldsVo);
+    //List<FormVo> selectFormList(HashMap<String, Object> param);
+    int insertForm(FormWithFieldsVo formWithFieldsVo);
     FormWithFieldsVo selectFormDetail(Integer formId);
+    List<FormVo> selectFormList();
+
+    void deleteForm(Integer formId);
 }
 

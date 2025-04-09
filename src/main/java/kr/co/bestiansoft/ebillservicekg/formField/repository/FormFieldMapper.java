@@ -6,6 +6,7 @@ import java.util.List;
 
 @Mapper
 public interface FormFieldMapper {
-    void insertFormField(FormFieldVo formFieldVo);
+    int insertFormField(FormFieldVo formFieldVo);
     List<FormFieldVo> selectFormFieldListByFormId(Integer formId);
+    void deleteFormFields(Integer formId);
 }

@@ -1,6 +1,6 @@
 package kr.co.bestiansoft.ebillservicekg.admin.menu.vo;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
 

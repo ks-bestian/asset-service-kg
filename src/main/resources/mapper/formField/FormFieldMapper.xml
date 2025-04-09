@@ -24,6 +24,7 @@
         )
     </insert>
 
+
     <!-- select form_field list by form_id-->
     <select id="selectFormFieldListByFormId" resultType="kr.co.bestiansoft.ebillservicekg.formField.vo.FormFieldVo">
         select
@@ -38,5 +39,11 @@
         on t1.form_id = t2.form_id
         where t2.form_id = #{form_id}
     </select>
+
+    <!--delete form_field by form_id-->
+    <delete id="deleteFormFields" parameterType="java.lang.Integer">
+        delete from kgst.com_form_field
+        where form_id = #{formId}
+    </delete>
 
 </mapper>
