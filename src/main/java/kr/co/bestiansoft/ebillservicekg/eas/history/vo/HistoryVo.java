@@ -1,6 +1,7 @@
 package kr.co.bestiansoft.ebillservicekg.eas.history.vo;
 
 import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,10 +11,21 @@ import java.time.LocalDateTime;
 @Data
 public class HistoryVo extends ComDefaultVO {
     private int historyId;
-    private String documentId;
+    private String docId;
     private String userId;
-    private String userName;
-    private String actionType;
-    private String actionDetail;
-    private LocalDateTime actionDt;
+    private String userNm;
+    private String actType;
+    private String actDetail;
+    private LocalDateTime actDtm;
+
+    @Builder
+    public HistoryVo(int historyId, String docId, String userId, String userNm, String actType, String actDetail, LocalDateTime actDtm) {
+        this.historyId = historyId;
+        this.docId = docId;
+        this.userId = userId;
+        this.userNm = userNm;
+        this.actType = actType;
+        this.actDetail = actDetail;
+        this.actDtm = actDtm;
+    }
 }

@@ -8,13 +8,13 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 public class WorkResponseVo extends ComDefaultVO {
-    private int responseId;
-    private int workRequestId;
+    private int rspnsId;
+    private int workReqId;
     private String userId;
-    private String userDeptCd;
-    private String userJobCd;
-    private LocalDateTime checkedDt;
-    private LocalDateTime postDt;
-    private String responseContent;
-    private String postFileId;
+    private String deptCd;
+    private String jobCd;
+    private LocalDateTime checkDtm;
+    private LocalDateTime rspnsDtm;
+    private String rspnsCn;
+    private String fileId;
 }

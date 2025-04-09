@@ -3,7 +3,9 @@ package kr.co.bestiansoft.ebillservicekg.eas.file.service;
 import kr.co.bestiansoft.ebillservicekg.eas.file.vo.EasFileVo;
 import org.apache.ibatis.annotations.Mapper;
 
-@Mapper
+import java.util.List;
+
 public interface EasFileService {
-    int insertEasFile (EasFileVo vo);
+    EasFileVo uploadEasFile (EasFileVo vo);
+    int saveEasFile(EasFileVo vo);
 }

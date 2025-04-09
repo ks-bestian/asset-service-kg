@@ -1,5 +1,6 @@
 package kr.co.bestiansoft.ebillservicekg.admin.user.service;
 
+import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo;
 import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserVo;
 
 import java.util.HashMap;
@@ -15,4 +16,5 @@ public interface UserService {
     void updatePswd(HashMap<String, Object> param);
     void updateJob(HashMap<String, Object> param);
     List<UserVo> getUserByDept(HashMap<String, Object> param);
+    UserMemberVo getUserMemberDetail(String userId);
 }

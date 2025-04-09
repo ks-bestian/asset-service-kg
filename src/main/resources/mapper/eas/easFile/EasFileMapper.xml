@@ -4,8 +4,9 @@
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.eas.file.repository.EasFileRepository">
 
     <insert id="insertEasFile" parameterType="kr.co.bestiansoft.ebillservicekg.eas.file.vo.EasFileVo">
-        INSERT INTO kgst.eas_file (file_id, document_id, file_type, org_file_id, org_file_name, file_size, file_ext, delete_yn, reg_id, reg_dt)
-        VALUES(#{fileId}, #{documentId}, #{fileType}, #{orgFileId}, #{orgFileName}, #{fileSize}, #{fileExt}, #{deleteYn}, #{regId}, #{regDt})
+        INSERT INTO kgst.eas_file
+        (file_id, doc_id, file_type, org_file_id, org_file_nm, pdf_file_id, pdf_file_nm, file_size, file_ext, delete_yn, delete_dtm, delete_user_id, reg_id, reg_dt)
+        VALUES(#{fileId}, #{docId}, #{fileType}, #{orgFileId}, #{orgFileName}, #{pdfFileId}, #{pdfFileName}, #{fileSize}, #{fileExt}, #{deleteYn}, #{deleteDtm}, #{deleteUserId}, #{regId}, #{regDt});
     </insert>
 
 </mapper>

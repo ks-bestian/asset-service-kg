@@ -4,26 +4,9 @@
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.eas.workResponse.repository.WorkResponseRepository">
 
 <insert id="insertWorkResponse" parameterType="kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.WorkResponseVo">
-    INSERT INTO kgst.eas_work_response (
-        work_request_id,
-        user_id,
-        user_dept_cd,
-        user_job_cd,
-        checked_dt,
-        post_dt,
-        response_content,
-        post_file_id
-    )
-    VALUES (
-        #{workRequestId},
-        #{userId},
-        #{userDeptCd},
-        #{userJobCd},
-        #{checkedDt},
-        #{postDt},
-        #{responseContent},
-        #{postFileId}
-    )
+    INSERT INTO kgst.eas_work_response
+    (work_req_id, user_id, dept_cd, job_cd, check_dtm, rspns_dtm, rspns_cn, file_id, rspns_id)
+    VALUES(#{workReqId}, #{userId}, #{deptCd}, #{jobCd}, #{checkDtm}, #{rspnsDtm}, #{rspnsCn}, #{fileId}, #{rspnsId});
 </insert>
 
 </mapper>

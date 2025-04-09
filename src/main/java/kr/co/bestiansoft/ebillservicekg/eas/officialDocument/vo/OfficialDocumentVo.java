@@ -1,6 +1,7 @@
 package kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo;
 
 import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,20 +10,40 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Data
 public class OfficialDocumentVo extends ComDefaultVO {
-    private String documentId ;
-    private int draftId ;
-    private String writerId ;
-    private String documentType ;
-    private String documentAttribute ;
-    private String billId ;
-    private boolean hasDeadline ;
-    private LocalDateTime deadlineDt ;
-    private String documentLanguage ;
-    private String documentTheme ;
-    private String documentStatus ;
-    private boolean digitalYn ;
-    private String senderId ;
-    private String senderName ;
-    private String senderDeptCd ;
-    private String documentNum ;
+    private String docId;
+    private int aarsDocId;
+    private String userId;
+    private String docTypeCd;
+    private String docAttrbCd;
+    private String billId;
+    private char tmlmtYn;
+    private LocalDateTime tmlmtDtm;
+    private String docLng;
+    private String docSubtle;
+    private String docStatusCd;
+    private char digitalYn;
+    private String senderId;
+    private String senderNm;
+    private String deptCd;
+    private String docNo;
+
+    @Builder
+    public OfficialDocumentVo(String docId, int aarsDocId, String userId, String docTypeCd, String docAttrbCd, String billId, char tmlmtYn, LocalDateTime tmlmtDtm, String docLng, String docSubtle, String docStatusCd, char digitalYn, String senderId, String senderNm, String deptCd, String docNo) {
+        this.docId = docId;
+        this.aarsDocId = aarsDocId;
+        this.userId = userId;
+        this.docTypeCd = docTypeCd;
+        this.docAttrbCd = docAttrbCd;
+        this.billId = billId;
+        this.tmlmtYn = tmlmtYn;
+        this.tmlmtDtm = tmlmtDtm;
+        this.docLng = docLng;
+        this.docSubtle = docSubtle;
+        this.docStatusCd = docStatusCd;
+        this.digitalYn = digitalYn;
+        this.senderId = senderId;
+        this.senderNm = senderNm;
+        this.deptCd = deptCd;
+        this.docNo = docNo;
+    }
 }

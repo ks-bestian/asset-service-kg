@@ -6,43 +6,11 @@
     <select id="getOfficialDocument" resultType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.OfficialDocumentVo">
         select
             a.*
-          from kgst.eas_document a
+          from eas_document a
     </select>
     <insert id="saveOfficialDocument" parameterType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.OfficialDocumentVo">
-        insert into kgst.eas_document (
-            document_id,
-            draft_id,
-            writer_id,
-            document_type,
-            document_attribute,
-            bill_id,
-            has_deadline,
-            deadline_dt,
-            document_language,
-            document_theme,
-            document_status,
-            digital_yn ,
-            sender_id ,
-            sender_name,
-            sender_dept_cd ,
-            document_num
-        )values (
-           #{documentId},
-           #{draftId},
-           #{writerId},
-           #{documentType},
-           #{documentAttribute},
-           #{billId},
-           #{hasDeadline},
-           #{deadlineDt},
-           #{documentLanguage},
-           #{documentTheme},
-           #{documentStatus},
-           #{digitalYn},
-           #{senderId},
-           #{senderName},
-           #{senderDeptCd},
-           #{documentNum}
-        )
+        INSERT INTO eas_document
+        (doc_id, aars_doc_id, user_id, doc_type_cd, doc_attrb_cd, bill_id, tmlmt_yn, tmlmt_dtm, doc_lng, doc_subtle, doc_status_cd, digital_yn, sender_id, sender_nm, dept_cd, doc_no)
+        VALUES(#{docId}, #{aarsDocId}, #{userId}, #{docTypeCd}, #{docAttrbCd}, #{billId}, #{tmlmtYn}, #{tmlmtDtm}, #{docLng}, #{docSubtle}, #{docStatusCd}, #{digitalYn}, #{senderId}, #{senderNm}, #{deptCd}, #{docNo});
     </insert>
 </mapper>

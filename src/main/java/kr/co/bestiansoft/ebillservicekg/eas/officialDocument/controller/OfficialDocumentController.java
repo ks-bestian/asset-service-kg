@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
 import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.service.OfficialDocumentService;
+import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.InsertDocumentVo;
 import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.OfficialDocumentVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -30,9 +31,9 @@ public class OfficialDocumentController {
     }
     @ApiOperation(value="saveDocument", notes = "saveDocument")
     @PostMapping("/eas/document")
-    public ResponseEntity<CommonResponse> saveOfficialDocument (@RequestBody OfficialDocumentVo vo) {
-        System.out.println(vo.toString());
-        return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.saveOfficialDocument(vo)), HttpStatus.OK);
+    public ResponseEntity<CommonResponse> saveOfficialDocument (@RequestBody InsertDocumentVo vo) {
+
+        return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.saveAllDocument(vo)), HttpStatus.OK);
     }
 
 }

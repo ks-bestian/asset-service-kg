@@ -4,10 +4,9 @@
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.eas.history.repository.HistoryRepository">
 
     <insert id="insertHistory" parameterType="kr.co.bestiansoft.ebillservicekg.eas.history.vo.HistoryVo">
-        INSERT INTO kgst.eas_history
-        (history_id, document_id, user_id, user_name, action_type, action_detail, action_dt)
-        VALUES
-        (nextval('kgst.eas_history_history_id_seq'::regclass), #{documentId}, #{userId}, #{userName}, #{actionType}, #{actionDetail}, #{actionDt})
+        INSERT INTO eas_history
+            (doc_id, user_id, user_nm, act_type, act_detail, act_dtm, history_id)
+        VALUES(#{docId}, #{userId}, #{userNm}, #{actType}, #{actDetail}, #{actDtm}, #{historyId});
     </insert>
 
 </mapper>

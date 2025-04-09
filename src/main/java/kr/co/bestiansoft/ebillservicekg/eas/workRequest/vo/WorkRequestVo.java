@@ -10,12 +10,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class WorkRequestVo extends ComDefaultVO {
 
-    private int workRequestId;
-    private String workDetail;
-    private boolean hasDeadline;
-    private LocalDateTime workDeadlineDt;
-    private boolean isInformation;
+    private int workReqId;
+    private String docId;
+    private String workCn;
+    private char tmlmtYn;
+    private LocalDateTime tmlmtDtm;
+    private char infoYn;
     private String workCycleCd;
     private String workStatus;
-
 }
