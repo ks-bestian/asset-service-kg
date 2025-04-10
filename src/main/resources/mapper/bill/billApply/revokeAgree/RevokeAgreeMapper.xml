@@ -72,7 +72,7 @@
 		select
 			em.bill_kind 		--안건종류
 			, em.scl_dsc_rcp_nmb 							--사회토론번호
-			, to_char(em.reg_dt, 'DD/MM/YYYY HH:MM') as regDate	-- 등록날짜
+			, to_char(em.reg_dt, 'DD/MM/YYYY HH24:mi') as regDate	-- 등록날짜
 			, case
 				when #{lang} = 'lng_type_1' then em.bill_name_kg
 				else em.bill_name_ru

@@ -64,6 +64,14 @@
 		<if test="billNo != null and billNo != ''">
 		    and  x.bill_no  like concat('%', #{billNo}, '%')
 		</if>
+		
+		<if test="ppslDtFrom != null and ppslDtFrom != ''">
+		    and  x.ppsl_dt <![CDATA[ >= ]]> #{ppslDtFrom}
+		</if>
+		
+		<if test="ppslDtTo != null and ppslDtTo != ''">
+		    and  x.ppsl_dt <![CDATA[ <= ]]> #{ppslDtTo}
+		</if>
 
     </select>
 

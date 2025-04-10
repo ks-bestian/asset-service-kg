@@ -62,6 +62,9 @@ public class ApplyServiceImpl implements ApplyService {
 
 		//발의자 요청
 		List<String> proposerList = applyVo.getProposerList();
+		if(proposerList == null) {
+			proposerList = new ArrayList<>();
+		}
 	    proposerList.add(applyVo.getPpsrId());
 
 		int ord = proposerList.size();
@@ -107,6 +110,9 @@ public class ApplyServiceImpl implements ApplyService {
 		applyVo.setBillId(billId);
 
 		List<String> newProposerList = applyVo.getProposerList();
+		if(newProposerList == null) {
+			newProposerList = new ArrayList<>();
+		}
 	    List<String> oldProposerList = applyMapper.getProposerList(billId);
 	    if (!newProposerList.contains(loginId)) {
 	    	newProposerList.add(loginId);
