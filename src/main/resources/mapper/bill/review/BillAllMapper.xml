@@ -35,6 +35,7 @@
 			join view_user_member vum on (em.ppsr_id = vum.user_id)
 			left outer join ebs_bp_instance ebi on (em.bill_id = ebi.bill_id)
 			join ebs_bp_step ebs on (ebs.step_id = ebi.current_step_id and ebs.bp_df_id = ebi.bp_df_id)
+			where em.bill_no is not null
 		) A
 		where 1=1
 	    <if test="searchBillName != null and searchBillName != ''">

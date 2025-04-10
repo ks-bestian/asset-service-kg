@@ -59,7 +59,7 @@ public class BillAllVo extends ComDefaultVO {
     // 정부이송일
     private LocalDate gvrnTrsfDt;
     // 공포일자
-    private LocalDate prmgDt;
+    private String prmgDt;
     // 공포번호
     private String prmgNo;
     // 요약내용
