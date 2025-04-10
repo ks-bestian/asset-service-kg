@@ -80,8 +80,13 @@
 		    , em.rcp_dt                 -- 안건접수일자
 		    , kgst.fngetlangnm(em.etc_kg,em.etc_ru,em.etc_kg,#{lang}) as etc -- 비고
 		    , em.scl_dsc_rcp_nmb
+		    , em.scl_dsc_rcp_nmb
+		    , ebs.stat_cd
+		    , kgst.fngetbillprogress(ebs.stat_cd) as progress_value
 		FROM ebs_master em
 		join view_user_member vum on (em.ppsr_id = vum.user_id)
+		join ebs_bp_instance ebi on (em.bill_id = ebi.bill_id)
+		join ebs_bp_step ebs on (ebs.step_id = ebi.current_step_id and ebs.bp_df_id = ebi.bp_df_id)
 		where em.bill_id = #{billId}
 
     </select>
