@@ -182,7 +182,7 @@
 			, em.etc_kg						-- 비고kg
 			, em.etc_ru						-- 비고ru
 			, kgst.fngetlangnm(em.etc_kg,em.etc_ru,em.etc_kg,#{lang}) as etc
-			, to_char(em.reg_dt, 'DD/MM/YYYY HH:mm') as regDate -- 등록일
+			, to_char(em.reg_dt, 'DD/MM/YYYY HH24:mi') as regDate -- 등록일
 			, em.scl_dsc_rcp_nmb 				-- 사회토론번호
 			, em.ppsl_dt 						-- 제안일
 			, em.bill_no						-- 안건번호
