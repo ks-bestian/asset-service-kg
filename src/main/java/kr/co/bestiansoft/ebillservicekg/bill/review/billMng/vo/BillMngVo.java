@@ -141,4 +141,6 @@ public class BillMngVo extends ComDefaultVO {
     private MultipartFile[] files;
     
     private String fileKindCd;
+    
+    private String rcpDt;
 }

@@ -14,6 +14,8 @@ import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMap
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.service.ApplyService;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyResponse;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo;
+import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.service.BillMngService;
+import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
@@ -38,6 +40,7 @@ public class ApplyServiceImpl implements ApplyService {
 	private final ComFileService comFileService;
 	private final ProcessService processService;
 	private final HomePageMapper homePageMapper;
+	private final BillMngService billMngService;
 
 	@Transactional
 	@Override
@@ -48,7 +51,9 @@ public class ApplyServiceImpl implements ApplyService {
 		String billId = StringUtil.getEbillId();
 		applyVo.setBillId(billId);
 		String ppsrId = new SecurityInfoUtil().getAccountId();
+		
 		applyVo.setPpsrId(ppsrId);
+		applyVo.setRegId(ppsrId);
 		applyMapper.insertApplyBill(applyVo);
 
 		//파일등록
@@ -65,7 +70,10 @@ public class ApplyServiceImpl implements ApplyService {
 		if(proposerList == null) {
 			proposerList = new ArrayList<>();
 		}
-	    proposerList.add(applyVo.getPpsrId());
+		
+		if(!proposerList.contains(applyVo.getPpsrId())) {
+			proposerList.add(applyVo.getPpsrId());	
+		}
 
 		int ord = proposerList.size();
 		for(String memberId : proposerList) {
@@ -90,6 +98,69 @@ public class ApplyServiceImpl implements ApplyService {
 		pVo.setStepId("PC_START");//안건생성 프로세스시작
 		processService.handleProcess(pVo);
 
+		return applyVo;
+	}
+	
+	@Transactional
+	@Override
+	public ApplyVo createApplyRegister(ApplyVo applyVo) throws Exception {
+		//안건등록
+		String billId = StringUtil.getEbillId();
+		applyVo.setBillId(billId);
+		applyVo.setRegId(new SecurityInfoUtil().getAccountId());
+		
+		applyMapper.insertApplyBill(applyVo);
+
+		//파일등록
+		comFileService.saveFileEbs(applyVo.getFiles(), applyVo.getFileKindCds(), billId);
+
+		//추가 - 내 문서함에서 파일 업로드(20250221 조진호)
+		comFileService.saveFileEbs(applyVo.getMyFileIds(), applyVo.getFileKindCds2(), billId);
+
+		//파일 정보를 가지고 있어서 null처리
+		applyVo.setFiles(null);
+
+		//발의자 요청
+		List<String> proposerList = applyVo.getProposerList();
+		if(proposerList == null) {
+			proposerList = new ArrayList<>();
+		}
+
+		int ord = proposerList.size();
+		String ppsrId = applyVo.getPpsrId();
+		for(String memberId : proposerList) {
+			ApplyVo member = applyMapper.getProposerInfo(memberId);
+
+			if(member == null) break;
+
+			applyVo.setOrd(++ord);
+			applyVo.setPolyCd(member.getPolyCd());
+			applyVo.setPolyNm(member.getPolyNm());
+			applyVo.setPpsrId(member.getMemberId());
+
+//			if(member.getMemberId().equals(ppsrId)) {
+//				applyVo.setSignDt("sign");
+//			}
+//			else {
+//				applyVo.setSignDt(null);
+//			}
+			applyVo.setSignDt("sign");
+			applyMapper.insertProposerList(applyVo);
+		}
+		
+		ProcessVo pVo = new ProcessVo();
+		pVo.setBillId(billId);
+		pVo.setStepId("PC_START");//안건생성 프로세스시작
+		processService.handleProcess(pVo);
+		
+		
+		//안건접수
+		BillMngVo billMngVo = new BillMngVo();
+		billMngVo.setBillId(billId);
+		billMngVo.setRcpDt(applyVo.getRcpDt());
+		billMngVo.setStepId(applyVo.getStepId());
+		billMngService.billRegisterMng(billMngVo);
+		
 		return applyVo;
 	}
 

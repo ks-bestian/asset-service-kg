@@ -23,7 +23,6 @@
 			<if test="billNo != null"> , bill_no </if> -- 안건번호
 			<if test="ppslDt != null"> , ppsl_dt </if> -- 제안날짜
 			, bill_year_seq		-- 년도별순번
-
 		)
 		values (
 			  #{billId}
@@ -36,7 +35,7 @@
 			, to_char(now(), 'YYYYMMDD')
 			<if test="etcKg != null">, #{etcKg} </if>
 			<if test="etcRu != null">, #{etcRu} </if>
-			, #{ppsrId}
+			, #{regId}
 			, now()
 			<if test="billNo != null">, #{billNo} </if>
 			<if test="ppslDt != null">, #{ppslDt} </if>

@@ -50,8 +50,10 @@ public class BillAllServiceImpl implements BillAllService {
     	/* Proposer List */
     	List<AgreeVo> proposerList = agreeMapper.selectAgreeProposerList(billId);
     	/* Proposer String */
-    	String proposerItem = proposerList.stream().map(AgreeVo::getMemberNm).collect(Collectors.joining(", "));
-    	billBasicInfo.setProposerItems(proposerItem);
+    	if(proposerList != null) {
+    		String proposerItem = proposerList.stream().map(AgreeVo::getMemberNm).collect(Collectors.joining(", "));
+        	billBasicInfo.setProposerItems(proposerItem);	
+    	}
 
     	/* Bill doc list*/
     	List<EbsFileVo> billFileList = billAllMapper.selectListBillFile(param);

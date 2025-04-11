@@ -10,6 +10,8 @@ import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 public interface ApplyService {
 
 	ApplyVo createApply(ApplyVo applyVo) throws Exception;
+	
+	ApplyVo createApplyRegister(ApplyVo applyVo) throws Exception;
 
 	List<ApplyVo> getApplyList(HashMap<String, Object> param);
 

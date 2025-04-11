@@ -32,7 +32,7 @@
 			    , ebs.stat_cd
 			    , kgst.fngetcodenm('1010', ebs.stat_cd, #{lang}) as stat_nm
 			FROM ebs_master em
-			join view_user_member vum on (em.ppsr_id = vum.user_id)
+			left outer join view_user_member vum on (em.ppsr_id = vum.user_id)
 			left outer join ebs_bp_instance ebi on (em.bill_id = ebi.bill_id)
 			join ebs_bp_step ebs on (ebs.step_id = ebi.current_step_id and ebs.bp_df_id = ebi.bp_df_id)
 			where em.bill_no is not null
@@ -85,9 +85,9 @@
 		    , ebs.stat_cd
 		    , kgst.fngetbillprogress(ebs.stat_cd) as progress_value
 		FROM ebs_master em
-		join view_user_member vum on (em.ppsr_id = vum.user_id)
-		join ebs_bp_instance ebi on (em.bill_id = ebi.bill_id)
-		join ebs_bp_step ebs on (ebs.step_id = ebi.current_step_id and ebs.bp_df_id = ebi.bp_df_id)
+		left outer join view_user_member vum on (em.ppsr_id = vum.user_id)
+		left outer join ebs_bp_instance ebi on (em.bill_id = ebi.bill_id)
+		left outer join ebs_bp_step ebs on (ebs.step_id = ebi.current_step_id and ebs.bp_df_id = ebi.bp_df_id)
 		where em.bill_id = #{billId}
 
     </select>

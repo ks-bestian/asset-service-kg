@@ -37,6 +37,12 @@ public class ApplyController {
     public ResponseEntity<CommonResponse> createBillApply(ApplyVo applyVo) throws Exception {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "apply create successfully", applyService.createApply(applyVo)), HttpStatus.CREATED);
     }
+    
+    @ApiOperation(value = "안건접수 등록", notes = "안건접수 등록한다")
+    @PostMapping(value = "/bill/apply/register", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<CommonResponse> createBillApplySubmit(ApplyVo applyVo) throws Exception {
+        return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "apply create successfully", applyService.createApplyRegister(applyVo)), HttpStatus.CREATED);
+    }
 
     @ApiOperation(value = "목록 조회", notes = "안건제출 목록을 조회한다")
     @GetMapping("/bill/apply")

@@ -409,7 +409,12 @@
 		UPDATE kgst.ebs_master
 		SET
 			  bill_no = kgst.fngetbillno(#{billId})
+			<if test="rcpDt != null">
+			, rcp_dt = #{rcpDt}
+			</if>
+			<if test="rcpDt == null">
 			, rcp_dt = to_char(now(),'YYYYMMDD')
+			</if>
 			, rcp_usr_id = #{modId}
 			, mod_id = #{modId}
 			, mod_dt = now()
@@ -698,7 +703,8 @@
 		select
 			row_number() over(order by ep.ord asc) as num
 			, kgst.fngetlangnm(vum.member_nm_kg, vum.member_nm_ru, vum.member_nm_kg, #{lang}) as proposerNm -- 제안자 이름
-			, kgst.fngetlangnm(vum.cmit_nm_kg, vum.cmit_nm_ru, vum.cmit_nm_ko, #{lang}) as cmitNm -- 정당 이름
+			, kgst.fngetlangnm(vum.cmit_nm_kg, vum.cmit_nm_ru, vum.cmit_nm_ko, #{lang}) as cmitNm -- 위원회 이름
+			, vum.poly_nm -- 정당 이름
 		from
 			kgst.ebs_proposer ep
 			join kgst.view_user_member vum on vum.member_id = ep.proposer_id

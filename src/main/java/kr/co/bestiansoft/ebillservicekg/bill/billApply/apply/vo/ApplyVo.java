@@ -95,5 +95,6 @@ public class ApplyVo extends ComDefaultVO {
 	private String parentId;
 	private String content;
 
+	private String rcpDt;
 
 }

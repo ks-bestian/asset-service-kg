@@ -13,6 +13,7 @@ import kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.service.RevokeServ
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.vo.RevokeResponse;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.vo.RevokeVo;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.service.BillMngService;
+import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
@@ -67,15 +68,23 @@ public class RevokeServiceImpl implements RevokeService {
 	@Override
 	public ProcessVo billRevokeRequest(String billId,RevokeVo vo) {
 
-		this.updateRevoke(billId, vo);
+		BillMngVo billMngVo = new BillMngVo();
+		billMngVo.setBillId(billId);
+		billMngVo.setRmrkKg(vo.getWtCnKg());
+		billMngVo.setRmrkRu(vo.getWtCnRu());
+		billMngVo.setFiles(vo.getFiles());
+		billMngVo.setClsCd("400"); //의안철회
+		billMngVo.setFileKindCd("170"); //안건철회문서
+		billMngService.insertBillDetail(billMngVo);
 		
-		if(vo.getFiles() != null) {
-			String[] fileKindCd = new String[vo.getFiles().length];
-			for(int i = 0; i < vo.getFiles().length; ++i) {
-				fileKindCd[i] = "170"; //안건철회
-			}
-			comFileService.saveFileEbs(vo.getFiles(), fileKindCd, billId);	
-		}
+//		this.updateRevoke(billId, vo);
+//		if(vo.getFiles() != null) {
+//			String[] fileKindCd = new String[vo.getFiles().length];
+//			for(int i = 0; i < vo.getFiles().length; ++i) {
+//				fileKindCd[i] = "170"; //안건철회
+//			}
+//			comFileService.saveFileEbs(vo.getFiles(), fileKindCd, billId);	
+//		}
 		
 		ProcessVo pVo = new ProcessVo();
 		pVo.setBillId(billId);
