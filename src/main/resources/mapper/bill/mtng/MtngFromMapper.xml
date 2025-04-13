@@ -30,11 +30,11 @@
 		FROM kgst.ebs_mtng em
 		left outer join kgst.com_dept cd on (em.dept_cd = cd.dept_cd)
 		WHERE 1=1
-		
+
 		<if test="mtngTypeCd != null and mtngTypeCd != ''">
 	    	AND em.mtng_type_cd = #{mtngTypeCd}
 	    </if>
-	    
+
 	    <if test="statCd != null and statCd != ''">
 	    	AND em.stat_cd = #{statCd}
 	    </if>
@@ -148,6 +148,7 @@
 			, REG_ID
 			, REG_DT
 			, DUE_DTM
+			, OPEN_DTM
 			, SESSION_NO
 			, SESSION_ORD
 		)
@@ -162,6 +163,7 @@
 			,  #{regId}
 			,  now()
 			,  #{dueDtm}
+			,  #{openDtm}
 			,  #{sessionNo}
 			,  #{sessionOrd}
 		)
@@ -357,6 +359,7 @@
 			, rmk = #{rmk}
 			, mod_id = #{modId}
 			, mod_dt = now()
+			<if test="openDtm != null"> , open_dtm = #{openDtm} </if>
 			<if test="ageCd != null"> , age_cd = #{ageCd} </if>
 			<if test="sessionNo != null"> , session_no = #{sessionNo} </if>
 			<if test="sessionOrd != null"> , session_ord = #{sessionOrd} </if>
@@ -442,12 +445,12 @@
 		    AND MTNG_ID = #{mtngId}
 
     </select>
-    
-    
+
+
     <select id="selectListMtngByBillId" resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MtngFromVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.repository.MtngFromMapper.selectListMtngByBillId */
-    	select 
-			  ema.bill_id 
+    	select
+			  ema.bill_id
 			, em.mtng_id
 			, em.mtng_type_cd
 			, em.dept_cd
@@ -462,17 +465,126 @@
 			, em.reg_id
 			, em.reg_dt
 		from ebs_mtng_agenda ema
-		inner join ebs_mtng em 
-		on ema.mtng_id = em.mtng_id 
+		inner join ebs_mtng em
+		on ema.mtng_id = em.mtng_id
 		where ema.bill_id = #{billId}
 		order by em.open_dtm
     </select>
-    
-    <delete id="deleteMtngAgenda">
-    	delete from ebs_mtng_agenda
-    	where 1=1
-    	and mtng_id = #{mtngId}
+
+    <delete id="deleteMtngAgenda" parameterType="java.util.HashMap">
+         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.repository.MtngFromMapper.deleteMtngAgenda */
+    	delete from kgst.ebs_mtng_agenda
+    	where mtng_id = #{mtngId}
     	and bill_id = #{billId}
     </delete>
-    
+
+
+    <select id="selectListAgenda" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.AgendaVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.repository.MtngFromMapper.selectListAgenda */
+		select
+		    ema.mtng_id
+		  , ema.bill_id
+		  , kgst.fngetlangnm(em.bill_name_kg,em.bill_name_ru,em.bill_name_kg,#{lang})  as bill_name -- 안건 이름
+		  , kgst.fngetlangnm(vum.user_nm_kg,vum.user_nm_ru,vum.user_nm_kg,#{lang}) as ppsr_nm -- 제안자 이름
+		  , em.bill_no
+		  , mt.open_dtm
+		from ebs_mtng mt
+		join ebs_mtng_agenda ema on (mt.mtng_id = ema.mtng_id)
+		join ebs_master em on (em.bill_id = ema.bill_id)
+		join kgst.view_user_member vum on (em.ppsr_id = vum.user_id)
+		where 1=1
+		  and mt.mtng_id = #{mtngId}
+
+    </select>
+
+    <select id="selectListHallMtngAgenda" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.AgendaVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.repository.MtngFromMapper.selectListHallMtngAgenda */
+		select
+		    ema.mtng_id
+		  , ema.bill_id
+		  , COALESCE(ema.rslt_cd, '')  as rslt_cd
+		  , kgst.fngetlangnm(em.bill_name_kg,em.bill_name_ru,em.bill_name_kg,#{lang})  as bill_name -- 안건 이름
+		  , kgst.fngetlangnm(vum.user_nm_kg,vum.user_nm_ru,vum.user_nm_kg,#{lang}) as ppsr_nm -- 제안자 이름
+		  , em.bill_no
+		  , mt.open_dtm
+		  , mt.session_no
+		  , mt.session_ord
+		from ebs_mtng mt
+		join ebs_mtng_agenda ema on (mt.mtng_id = ema.mtng_id)
+		join ebs_master em on (em.bill_id = ema.bill_id)
+		join kgst.view_user_member vum on (em.ppsr_id = vum.user_id)
+		where 1=1
+	    <if test="searchDate != null and searchDate != ''">
+	        and mt.open_dtm LIKE CONCAT(#{searchDate}, '%')
+	    </if>
+	     <if test="searchSessionNo != null and searchSessionNo != ''">
+	        and mt.session_no = #{searchSessionNo}
+	    </if>
+	     <if test="searchSessionOrd != null and searchSessionOrd != ''">
+	        and mt.session_ord = #{searchSessionOrd}
+	    </if>
+
+	     <if test="billName != null and billName != ''">
+	        and kgst.fngetlangnm(em.bill_name_kg,em.bill_name_ru,em.bill_name_kg,#{lang}) LIKE CONCAT('%',#{billName}, '%')
+	    </if>
+
+	     <if test="billNo != null and billNo != ''">
+	        and em.bill_no LIKE CONCAT('%',#{billNo}, '%')
+	    </if>
+
+	</select>
+
+    <select id="selectListHallMtng" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MtngFromVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.repository.MtngFromMapper.selectListHallMtng */
+
+		SELECT
+		    em.mtng_id
+		  , em.mtng_type_cd
+		  , kgst.fngetcodenm('1014',em.mtng_type_cd,#{lang}) as mtng_type_nm
+		  , em.dept_cd
+		  , kgst.fngetlangnm(cd.dept_nm1,cd.dept_nm2,cd.dept_nm3,#{lang}) as dept_nm
+		  , em.excn_cycl
+		  , em.due_dtm
+		  , em.open_dtm
+		  , em.close_dtm
+		  , em.mtng_plc
+		  , em.age_cd
+		  , em.rmk
+		  , em.stat_cd
+		  , kgst.fngetcodenm('1007',em.stat_cd,#{lang}) as stat_nm
+		  , em.reg_id
+		  , em.reg_dt
+		  , em.session_no
+		  , em.session_ord
+		FROM kgst.ebs_mtng em
+		left outer join kgst.com_dept cd on (em.dept_cd = cd.dept_cd)
+		WHERE 1=1
+	    	AND em.mtng_type_cd = '2'
+	    <if test="searchDate != null and searchDate != ''">
+	        and em.open_dtm LIKE CONCAT(#{searchDate}, '%')
+	    </if>
+	     <if test="searchSessionNo != null and searchSessionNo != ''">
+	        and em.session_no = #{searchSessionNo}
+	    </if>
+	     <if test="searchSessionOrd != null and searchSessionOrd != ''">
+	        and em.session_ord = #{searchSessionOrd}
+	    </if>
+		order by em.open_dtm desc
+
+    </select>
+
+	<update id="updateHallMtngResult" parameterType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MtngFromVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.repository.MtngFromMapper.updateHallMtngResult */
+		update kgst.ebs_mtng_agenda
+		  set mod_id = #{modId}
+			, mod_dt = now()
+			, rslt_cd = #{rsltCd}
+		where mtng_id = #{mtngId}
+		  and bill_id = #{billId}
+	</update>
+
+
 </mapper>

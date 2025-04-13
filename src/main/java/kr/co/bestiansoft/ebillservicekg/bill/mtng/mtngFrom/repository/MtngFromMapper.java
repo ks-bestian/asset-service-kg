@@ -37,4 +37,10 @@ public interface MtngFromMapper {
 
 	List<MtngFromVo> selectListMtngByBillId (String billId);
 	void deleteMtngAgenda(Long mtngId, String billId);
+	List<MtngFromVo> selectListHallMtng (HashMap<String, Object> param);
+	List<AgendaVo> selectListAgenda (HashMap<String, Object> param);
+	List<AgendaVo> selectListHallMtngAgenda (HashMap<String, Object> param);
+	void updateHallMtngResult(MtngFromVo mtngFromVo);
+
+
 }

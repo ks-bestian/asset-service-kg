@@ -26,14 +26,22 @@ public class MtngFromVo extends ComDefaultVO {
 	private String statCd;
 	private String dueDtm;
 	private String statNm;
-	
+
 	private String sessionNo;
 	private Long sessionOrd;
+	private String rsltCd;
 
     private List<MemberVo> attendantList;
     private List<AgendaVo> agendaList;
     private List<MtngFileVo> reportList;
 
 
+
+	private String billId;
+	private String billNo;
+	private String billName;
+	private String ppsrNm;
+	private String ppsrId;
+	private String ppslDt;
 
 }

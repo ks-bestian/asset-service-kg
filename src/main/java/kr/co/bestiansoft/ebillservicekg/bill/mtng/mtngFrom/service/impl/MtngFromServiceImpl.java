@@ -3,6 +3,7 @@ package kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.service.impl;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.stereotype.Service;
@@ -97,34 +98,20 @@ public class MtngFromServiceImpl implements MtngFromService {
 			memberVo.setRegId(regId);
 			mtngFromMapper.insertEbsMtngAttendant(memberVo);
 		}
-		
+
 //		if("2".equals(mtngFromVo.getMtngTypeCd())) { //본회의
 //			for(AgendaVo aVo:agendaList) {
 //				ProcessVo pVo = new ProcessVo();
 //				pVo.setBillId(aVo.getBillId());
 //				pVo.setStepId("1700");//본회의심사요청
-//				processService.handleProcess(pVo);	
+//				processService.handleProcess(pVo);
 //			}
 //		}
 
 		return mtngFromVo;
 	}
-    
-    @Override
-    public void submitMtngAgenda(Long mtngId) {
-    	HashMap<String, Object> param = new HashMap<>();
-		param.put("mtngId", mtngId);
-    	List<AgendaVo> list = mtngFromMapper.selectListMtngAgenda(param);
-    	for(AgendaVo agenda : list) {
-    		if("1700".equals(agenda.getCurrentStepId())) {
-    			continue;
-    		}
-    		ProcessVo pVo = new ProcessVo();
-			pVo.setBillId(agenda.getBillId());
-			pVo.setStepId("1700");//본회의심사요청
-			processService.handleProcess(pVo);
-    	}
-    }
+
+
 
 	@Override
 	public List<MemberVo> getMemberList(HashMap<String, Object> param) {
@@ -142,7 +129,7 @@ public class MtngFromServiceImpl implements MtngFromService {
 		// TODO 회의 취소 - 알림발송 구현 해야함
 
         for (Long mtngId : mtngIds) {
-        	
+
         	HashMap<String, Object> param = new HashMap<>();
     		param.put("mtngId", mtngId);
     		MtngFromVo mtng = mtngFromMapper.selectMtngFrom(param);
@@ -153,12 +140,12 @@ public class MtngFromServiceImpl implements MtngFromService {
     				for(AgendaVo agenda : list) {
     					String undoStepId = "1700"; //본회의심사요청
     					if(undoStepId.equals(agenda.getCurrentStepId())) {
-    						processService.undoProcess(agenda.getBillId(), undoStepId);	
+    						processService.undoProcess(agenda.getBillId(), undoStepId);
     					}
     				}
-    			}	
+    			}
     		}
-    		
+
     		mtngFromMapper.deleteMtngFromAgenda(mtngId);
     		mtngFromMapper.deleteMtngFromAttendant(mtngId);
     		mtngFromMapper.deleteMtngFrom(mtngId);
@@ -177,7 +164,7 @@ public class MtngFromServiceImpl implements MtngFromService {
 		}
 		return list;
 	}
-	
+
 	@Override
 	public List<BillMngVo> selectListMainMtngBill(HashMap<String, Object> param) {
 
@@ -231,11 +218,11 @@ public class MtngFromServiceImpl implements MtngFromService {
 //				mtngFromMapper.insertEbsMtngAgenda(agendaVo);
 //			}
 //		}
-		
+
 		Set<String> oldset = new HashSet<>();
 		Set<String> newset = new HashSet<>();
 		int ord = 0;
-		
+
 		HashMap<String, Object> param = new HashMap<>();
 		param.put("mtngId", mtngFromVo.getMtngId());
 		param.put("lang", mtngFromVo.getLang());
@@ -244,16 +231,16 @@ public class MtngFromServiceImpl implements MtngFromService {
 			for(AgendaVo agenda : oldlist) {
 				oldset.add(agenda.getBillId());
 				ord = Math.max(ord, agenda.getOrd());
-			}	
+			}
 		}
-		
+
 		List<AgendaVo> newlist = mtngFromVo.getAgendaList();
 		if(newlist != null) {
 			for(AgendaVo agenda : newlist) {
 				newset.add(agenda.getBillId());
-			}	
+			}
 		}
-		
+
 		if(newlist != null) {
 			for(AgendaVo vo : newlist) {
 				if(!oldset.contains(vo.getBillId())) {
@@ -262,31 +249,140 @@ public class MtngFromServiceImpl implements MtngFromService {
 					agendaVo.setMtngId(mtngFromVo.getMtngId());
 					agendaVo.setOrd(++ord);
 					agendaVo.setRegId(userId);
-					mtngFromMapper.insertEbsMtngAgenda(agendaVo);	
+					mtngFromMapper.insertEbsMtngAgenda(agendaVo);
 				}
-			}	
+			}
 		}
-		
+
 		if(oldlist != null) {
 			for(AgendaVo agenda : oldlist) {
 				if(!newset.contains(agenda.getBillId())) {
 					mtngFromMapper.deleteMtngAgenda(mtngFromVo.getMtngId(), agenda.getBillId());
-					
+
 					String undoStepId = "1700"; //본회의심사요청
 					if(undoStepId.equals(agenda.getCurrentStepId())) {
-						processService.undoProcess(agenda.getBillId(), undoStepId);	
+						processService.undoProcess(agenda.getBillId(), undoStepId);
 					}
 				}
-			}	
+			}
 		}
-		
+
 		return mtngFromVo;
 	}
 
 	@Transactional
 	@Override
 	public List<MtngFromVo> selectListMtngByBillId(String billId) {
-		return mtngFromMapper.selectListMtngByBillId(billId);		
+		return mtngFromMapper.selectListMtngByBillId(billId);
 	}
+
+
+
+	/*Hall meeting*/
+
+	@Transactional
+	@Override
+	public MtngFromVo createHallMtng(MtngFromVo mtngFromVo) {
+		/* 등록자 아이디 세팅 */
+		String regId = new SecurityInfoUtil().getAccountId();
+		mtngFromVo.setRegId(regId);
+
+		/*회의*/
+		mtngFromMapper.insertEbsMtng(mtngFromVo);
+
+		/*안건*/
+		List<AgendaVo> agendaList = mtngFromVo.getAgendaList();
+		int idx = 1;
+		for(AgendaVo aVo:agendaList) {
+			AgendaVo agendaVo = new AgendaVo();
+			agendaVo.setBillId(aVo.getBillId());
+			agendaVo.setMtngId(mtngFromVo.getMtngId());
+			agendaVo.setOrd(idx++);
+			agendaVo.setRegId(regId);
+			mtngFromMapper.insertEbsMtngAgenda(agendaVo);
+		}
+		idx = 1;
+
+		return mtngFromVo;
+	}
+
+
+    @Override
+    public void submitMtngAgenda(Long mtngId) {
+    	HashMap<String, Object> param = new HashMap<>();
+		param.put("mtngId", mtngId);
+    	List<AgendaVo> list = mtngFromMapper.selectListMtngAgenda(param);
+    	for(AgendaVo agenda : list) {
+    		if("1700".equals(agenda.getCurrentStepId())) {
+    			continue;
+    		}
+    		ProcessVo pVo = new ProcessVo();
+			pVo.setBillId(agenda.getBillId());
+			pVo.setStepId("1700");//본회의심사요청
+			processService.handleProcess(pVo);
+    	}
+    }
+
+	@Override
+	public List<MtngFromVo> getHallMtngList(HashMap<String, Object> param) {
+
+		List<MtngFromVo> mtngList = mtngFromMapper.selectListHallMtng(param);
+		HashMap<String, Object> agendaParam = new HashMap<String, Object>();
+
+		for(MtngFromVo vo:mtngList) {
+
+			Long mtngId = vo.getMtngId();
+			agendaParam.put("mtngId", mtngId);
+
+			List<AgendaVo> agendaList = mtngFromMapper.selectListAgenda(agendaParam);
+			vo.setAgendaList(agendaList);
+		}
+
+        return mtngList;
+	}
+
+	@Override
+	public List<AgendaVo> getHallMtngBillList(HashMap<String, Object> param) {
+		List<AgendaVo> agendaList = mtngFromMapper.selectListHallMtngAgenda(param);
+		return agendaList;
+	}
+
+	@Transactional
+	@Override
+	public MtngFromVo updateHallMtngResult(MtngFromVo mtngFromVo) {
+
+		String loginId = new SecurityInfoUtil().getAccountId();
+		mtngFromVo.setModId(loginId);
+		mtngFromMapper.updateHallMtngResult(mtngFromVo);
+		return mtngFromVo;
+	}
+
+	@Transactional
+	@Override
+	public MtngFromVo deleteHallMtngBill(MtngFromVo mtngFromVo) {
+
+		String loginId = new SecurityInfoUtil().getAccountId();
+		mtngFromVo.setModId(loginId);
+
+		mtngFromMapper.deleteMtngAgenda(mtngFromVo.getMtngId(),mtngFromVo.getBillId());
+
+		ProcessVo pVo = new ProcessVo();
+		pVo.setBillId(mtngFromVo.getBillId());
+		pVo.setStepId("1600");//위원회 회의심사보고
+		processService.handleProcess(pVo);
+
+		return mtngFromVo;
+	}
+
+	@Override
+	public MtngFromVo updateHallMtng(MtngFromVo mtngFromVo) {
+
+		String userId = new SecurityInfoUtil().getAccountId();
+		mtngFromVo.setModId(userId);
+		mtngFromMapper.updateFromMtngBill(mtngFromVo);
+		
+		return null;
+	}
+
 
 }
