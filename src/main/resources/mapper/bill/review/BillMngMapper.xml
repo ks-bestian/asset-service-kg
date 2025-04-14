@@ -282,7 +282,17 @@
 		    , now()
 		)
     </insert>
-
+    
+    <delete id="deleteBillDetail" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
+    	delete from ebs_master_detail 
+		where 1=1
+		and bill_id = #{billId}
+		and cls_cd = #{clsCd}
+		<if test="seq != null">
+		and seq = #{seq}
+		</if>
+    </delete>
+    
     <update id="updateBillDetail" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.updateBillDetail */
 		UPDATE kgst.ebs_master_detail

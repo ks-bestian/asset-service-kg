@@ -13,11 +13,11 @@ public interface RevokeService {
 
 	RevokeResponse getRevokeDetail(String billId, String lang);
 
-	ProcessVo billRevokeRequest(String billId,RevokeVo vo);
+	ProcessVo billRevokeRequest(String billId,RevokeVo vo) throws Exception;
 	
 	ProcessVo billRevokeSubmit(String billId,RevokeVo vo);
 
-	int billRevokeCancle(String billId, HashMap<String, Object> param);
+	int billRevokeCancel(String billId, HashMap<String, Object> param);
 
 	int updateRevoke(String billId, RevokeVo revokeVo);
 

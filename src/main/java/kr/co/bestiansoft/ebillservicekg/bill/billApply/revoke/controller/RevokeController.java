@@ -43,7 +43,7 @@ public class RevokeController {
 
     @ApiOperation(value = "철회요청", notes = "철회를 요청한다")
     @PostMapping(value = "/bill/revoke/request/{billId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<CommonResponse> billRevokeRequest(@PathVariable String billId, RevokeVo vo) {
+    public ResponseEntity<CommonResponse> billRevokeRequest(@PathVariable String billId, RevokeVo vo) throws Exception {
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill revoke request successfully", revokeService.billRevokeRequest(billId,vo)), HttpStatus.OK);
     }
     
@@ -56,7 +56,7 @@ public class RevokeController {
     @ApiOperation(value = "철회취소", notes = "철회요청을 취소한다")
     @PutMapping("/bill/revoke/cancel/{billId}")
     public ResponseEntity<CommonResponse> billRevokeCancel(@PathVariable String billId, @RequestParam HashMap<String, Object> param) {
-    	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill revoke cancel successfully", revokeService.billRevokeCancle(billId, param)), HttpStatus.OK);
+    	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill revoke cancel successfully", revokeService.billRevokeCancel(billId, param)), HttpStatus.OK);
     }
 
     @ApiOperation(value = "철회수정", notes = "철회 정보를 수정한다")

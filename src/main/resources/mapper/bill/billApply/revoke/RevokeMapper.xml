@@ -21,6 +21,7 @@
 	      , AA.task_id
 	      , AA.task_status
 	      , ep.wt_dt
+	      , emd.reg_dt as revokeRegDt
 		from (
 			select
 			   pl.bill_id
@@ -45,6 +46,7 @@
 		) AA
 		join kgst.view_user_member vum on (AA.ppsr_id = vum.user_id)
 		join kgst.ebs_proposer ep on (ep.bill_id = AA.bill_id and ep.proposer_id = #{userId})
+		left outer join kgst.ebs_master_detail emd on (AA.bill_id = emd.bill_id and emd.cls_cd = '400')
         where 1=1
         	AND AA.ppsr_id = #{userId}
 		<if test="naTermCd != null and naTermCd != ''">
@@ -78,9 +80,10 @@
 			, kgst.fngetlangnm(vum.member_nm_kg,vum.member_nm_ru,vum.member_nm_kg,#{lang}) as ppsr_nm -- 제안자 이름
 			, em.ppsr_id
 			, kgst.fngetlangnm(em.etc_kg,em.etc_ru,em.etc_kg,#{lang}) as etc -- 비고
-			, kgst.fngetlangnm(em.wt_cn_kg,em.wt_cn_ru,em.wt_cn_kg,#{lang}) as wt_cn -- 철회사유
+			, kgst.fngetlangnm(emd.rmrk_kg,emd.rmrk_ru,emd.rmrk_kg,#{lang}) as wt_cn -- 철회사유
 		from kgst.ebs_master em
 		left join kgst.view_user_member vum on (em.ppsr_id = vum.member_id )
+		left outer join kgst.ebs_master_detail emd on (em.bill_id = emd.bill_id and emd.cls_cd = '400')
 		where em.bill_id = #{billId}
     </select>
 

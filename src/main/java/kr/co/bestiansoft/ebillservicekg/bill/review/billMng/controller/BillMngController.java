@@ -76,14 +76,14 @@ public class BillMngController {
 
     @ApiOperation(value = "안건관리 법률검토 등록", notes = "기타정보 등록")
     @PostMapping(value = "/bill/review/billLegalReview")
-    public ResponseEntity<CommonResponse> insertBillDetail(@RequestBody BillMngVo billMngVo) {
+    public ResponseEntity<CommonResponse> insertBillDetail(@RequestBody BillMngVo billMngVo) throws Exception {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Bill created successfully", billMngService.insertBillDetail(billMngVo)), HttpStatus.CREATED);
     }
     
     @ApiOperation(value = "안건심사 등록", notes = "안건심사 등록")
     @PostMapping(value = "/bill/review/billMng/detail", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<CommonResponse> insertBillDetail2(BillMngVo billMngVo) {
-        return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "legal act review created successfully", billMngService.insertBillDetail(billMngVo)), HttpStatus.CREATED);
+    public ResponseEntity<CommonResponse> insertBillDetail2(BillMngVo billMngVo) throws Exception {
+        return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "review created successfully", billMngService.insertBillDetail(billMngVo)), HttpStatus.CREATED);
     }
 
     @ApiOperation(value = "안건관리 법률검토 검토보고", notes = "법률검토 검토보고 등록")
@@ -100,7 +100,7 @@ public class BillMngController {
 
     @ApiOperation(value = "Bill meeting review", notes = "Bill meeting review")
     @PostMapping(value = "/bill/review/cmtMeetingRvReport", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<CommonResponse> insertCmtMeetingRvReport(BillMngVo billMngVo) {
+    public ResponseEntity<CommonResponse> insertCmtMeetingRvReport(BillMngVo billMngVo) throws Exception {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Bill meeting review create successfully", billMngService.insertCmtMeetingRvReport(billMngVo)), HttpStatus.CREATED);
     }
 
@@ -159,7 +159,7 @@ public class BillMngController {
 
     @ApiOperation(value = "파일첨부", notes = "안건심사에 관련된 파일을 첨부한다")
     @PostMapping(value = "/bill/review/billMng/file", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-	public ResponseEntity<CommonResponse> insertBillMngFile(BillMngVo billMngVo){
+	public ResponseEntity<CommonResponse> insertBillMngFile(BillMngVo billMngVo) throws Exception{
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "apply create successfully", billMngService.insertBillDetailFile(billMngVo)), HttpStatus.CREATED);
 	}
 

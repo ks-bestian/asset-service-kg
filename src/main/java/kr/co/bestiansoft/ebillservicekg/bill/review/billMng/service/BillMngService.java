@@ -38,7 +38,7 @@ public interface BillMngService {
     //BillMngResponse selectOnelegalReview(HashMap<String, Object> param);
 
     /* 안건관리 기타정보등록 */
-    BillMngVo insertBillDetail(BillMngVo billMngVo);
+    BillMngVo insertBillDetail(BillMngVo billMngVo) throws Exception;
 
     /* 안건관리 법률검토 보고 */
     BillMngVo insertBillLegalReviewReport(BillMngVo billMngVo);
@@ -49,7 +49,7 @@ public interface BillMngService {
 
 
     /* Bill meeting review */
-    BillMngVo insertCmtMeetingRvReport(BillMngVo billMngVo);
+    BillMngVo insertCmtMeetingRvReport(BillMngVo billMngVo) throws Exception;
 
     /* Bill meeting review */
     BillMngVo deleteCmtReview(BillMngVo billMngVo);
@@ -74,5 +74,7 @@ public interface BillMngService {
 
 	EbsFileVo updateEbsFileDelYn(EbsFileVo ebsFileVo);
 
-	BillMngVo insertBillDetailFile(BillMngVo billMngVo);
+	BillMngVo insertBillDetailFile(BillMngVo billMngVo) throws Exception;
+	
+	void deleteBillDetail(BillMngVo billMngVo);
 }

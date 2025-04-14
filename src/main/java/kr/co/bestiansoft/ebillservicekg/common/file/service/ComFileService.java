@@ -22,8 +22,8 @@ public interface ComFileService {
 	
 	void saveFileBillMng(EbsFileVo ebsFileVo);
 
-	void saveFileBillDetailMng(BillMngVo billMngVo);
+	void saveFileBillDetailMng(BillMngVo billMngVo) throws Exception;
 	
-	String getPdfTmpFilepath(String fileId) throws Exception;
-
+	void saveFileEbs(MultipartFile file, String fileKindCd, String billId, String clsCd, String opbYn, Long detailSeq);
+	void saveFileEbs(String myFileId, String fileKindCd, String billId, String clsCd, String opbYn, Long detailSeq) throws Exception;
 }

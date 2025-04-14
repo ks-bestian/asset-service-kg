@@ -205,7 +205,7 @@ public class BillMngServiceImpl implements BillMngService {
 
 	@Transactional
 	@Override
-	public BillMngVo insertBillDetail(BillMngVo billMngVo) {
+	public BillMngVo insertBillDetail(BillMngVo billMngVo) throws Exception {
 
 		String loginId = new SecurityInfoUtil().getAccountId();
 //		String clsCd = "";
@@ -231,6 +231,20 @@ public class BillMngServiceImpl implements BillMngService {
 		billMngVo.setFiles(null);
 		return billMngVo;
 	}
+	
+	@Transactional
+	@Override
+	public void deleteBillDetail(BillMngVo billMngVo) {
+
+		EbsFileVo ebsFileVo = new EbsFileVo();
+		ebsFileVo.setBillId(billMngVo.getBillId());
+		ebsFileVo.setFileKindCd(billMngVo.getFileKindCd()); //안건철회문서
+		ebsFileVo.setModId(new SecurityInfoUtil().getAccountId());
+		billMngMapper.updateEbsFileDelYn(ebsFileVo);
+		
+		billMngVo.setClsCd(billMngVo.getClsCd()); //의안철회
+		billMngMapper.deleteBillDetail(billMngVo);
+	}
 
 	@Override
 	public BillMngVo insertBillLegalReviewReport(BillMngVo billMngVo) {
@@ -255,7 +269,7 @@ public class BillMngServiceImpl implements BillMngService {
 
 
 	@Override
-	public BillMngVo insertCmtMeetingRvReport(BillMngVo billMngVo) {
+	public BillMngVo insertCmtMeetingRvReport(BillMngVo billMngVo) throws Exception {
 
 		BillMngVo resultVo = new BillMngVo();
 		String loginId = new SecurityInfoUtil().getAccountId();
@@ -345,7 +359,7 @@ public class BillMngServiceImpl implements BillMngService {
 	
 	@Transactional
 	@Override
-	public BillMngVo insertBillDetailFile(BillMngVo billMngVo) {
+	public BillMngVo insertBillDetailFile(BillMngVo billMngVo) throws Exception {
 		//파일등록
 		comFileService.saveFileBillDetailMng(billMngVo);
 		//파일 정보를 가지고 있어서 null처리

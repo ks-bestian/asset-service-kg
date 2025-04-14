@@ -82,8 +82,4 @@ public class ComFileController {
 				.body(resource);
 	}
 	
-	@GetMapping("/com/file/pdf/path")
-	public ResponseEntity<?> getPdfTmpFilepath(@RequestParam String fileId) throws Exception {
-		return ResponseEntity.ok(comFileService.getPdfTmpFilepath(fileId));
-	}
 }

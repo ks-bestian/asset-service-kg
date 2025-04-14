@@ -66,13 +66,14 @@ public class RevokeServiceImpl implements RevokeService {
 
 	@Transactional
 	@Override
-	public ProcessVo billRevokeRequest(String billId,RevokeVo vo) {
+	public ProcessVo billRevokeRequest(String billId,RevokeVo vo) throws Exception {
 
 		BillMngVo billMngVo = new BillMngVo();
 		billMngVo.setBillId(billId);
 		billMngVo.setRmrkKg(vo.getWtCnKg());
 		billMngVo.setRmrkRu(vo.getWtCnRu());
 		billMngVo.setFiles(vo.getFiles());
+		billMngVo.setMyFileIds(vo.getMyFileIds());
 		billMngVo.setClsCd("400"); //의안철회
 		billMngVo.setFileKindCd("170"); //안건철회문서
 		billMngService.insertBillDetail(billMngVo);
@@ -108,14 +109,20 @@ public class RevokeServiceImpl implements RevokeService {
 	}
 
 	@Override
-	public int billRevokeCancle(String billId, HashMap<String, Object> param) {
+	public int billRevokeCancel(String billId, HashMap<String, Object> param) {
 		processService.undoProcess(billId, "1100");
 		
-		EbsFileVo ebsFileVo = new EbsFileVo();
-		ebsFileVo.setBillId(billId);
-		ebsFileVo.setFileKindCd("170"); //안건철회
-		ebsFileVo.setModId(new SecurityInfoUtil().getAccountId());
-		billMngService.updateEbsFileDelYn(ebsFileVo);
+		BillMngVo billMngVo = new BillMngVo();
+		billMngVo.setBillId(billId);
+		billMngVo.setFileKindCd("170"); //안건철회문서
+		billMngVo.setClsCd("400"); //의안철회
+		billMngService.deleteBillDetail(billMngVo);
+		
+//		EbsFileVo ebsFileVo = new EbsFileVo();
+//		ebsFileVo.setBillId(billId);
+//		ebsFileVo.setFileKindCd("170"); //안건철회
+//		ebsFileVo.setModId(new SecurityInfoUtil().getAccountId());
+//		billMngService.updateEbsFileDelYn(ebsFileVo);
 		
 		return 0;
 	}

@@ -72,5 +72,7 @@ public class RevokeVo extends ComDefaultVO {
     private String taskStatus;
 
     private MultipartFile[] files;
+    private String[] myFileIds;
 
+    private LocalDateTime revokeRegDt;
 }
