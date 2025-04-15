@@ -431,7 +431,36 @@
 		WHERE	bill_id = #{billId}
 
 	</update>
-
+	
+	<update id="updateBillMaster" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
+	    /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.updateBillMaster */
+		UPDATE kgst.ebs_master
+		SET
+			  mod_id = #{modId}
+			, mod_dt = now()
+			<if test="billNo != null">, bill_no = #{billNo}</if>
+			<if test="billKind != null">, bill_kind = #{billKind}</if>
+			<if test="naTermCd != null">, na_term_cd = #{naTermCd}</if>
+			<if test="billNameKg != null">, bill_name_kg = #{billNameKg}</if>
+			<if test="billNameRu != null">, bill_name_ru = #{billNameRu}</if>
+			<if test="ppslKndCd != null">, ppsl_knd_cd = #{ppslKndCd}</if>
+			<if test="ppsrId != null">, ppsr_id = #{ppsrId}</if>
+			<if test="ppslDt != null">, ppsl_dt = #{ppslDt}</if>
+			<if test="gvrnTrsfDt != null">, gvrn_trsf_dt = #{gvrnTrsfDt}</if>
+			<if test="prmgDt != null">, prmg_dt = #{prmgDt}</if>
+			<if test="prmgNo != null">, prmg_no = #{prmgNo}</if>
+			<if test="etcKg != null">, etc_kg = #{etcKg}</if>
+			<if test="etcRu != null">, etc_ru = #{etcRu}</if>
+			<if test="sclDscRcpNmb != null">, scl_dsc_rcp_nmb = #{sclDscRcpNmb}</if>
+			<if test="gvrnSbmsElctDcmnNmbr != null">, gvrn_sbms_elct_dcmn_nmbr = #{gvrnSbmsElctDcmnNmbr}</if>
+			<if test="wtCnKg != null">, wt_cn_kg = #{wtCnKg}</if>
+			<if test="wtCnRu != null">, wt_cn_ru = #{wtCnRu}</if>
+			<if test="intExtCls != null">, int_ext_cls = #{intExtCls}</if>
+			<if test="rcpDt != null">, rcp_dt = #{rcpDt}</if>
+			<if test="rcpUsrId != null">, rcp_usr_id = #{rcpUsrId}</if>
+			<if test="rvwDt != null">, rvw_dt = #{rvwDt}</if>
+		WHERE	bill_id = #{billId}
+	</update>
 
 
     <insert id="insertCmtMeetingRvReport" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo"

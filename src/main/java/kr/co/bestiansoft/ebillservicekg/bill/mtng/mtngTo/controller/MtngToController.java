@@ -82,8 +82,8 @@ public class MtngToController {
     @ApiOperation(value = "회의 안건 법적행위부서전송", notes = "회의 안건을 법적행위부서전송한다")
     @PutMapping("/bill/mtng/to/send")
     public ResponseEntity<CommonResponse> sendLegalActMtngAgenda(@RequestBody MtngFromVo mtngFromVo){
-    	mtngToService.sendLegalActMtngAgenda(mtngFromVo.getMtngId());
+    	mtngToService.sendLegalActMtngAgenda(mtngFromVo.getAgendaList());
         return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "OK", "submission successful"), HttpStatus.OK);
     }
-
+    
 }

@@ -380,9 +380,32 @@ public class MtngFromServiceImpl implements MtngFromService {
 		String userId = new SecurityInfoUtil().getAccountId();
 		mtngFromVo.setModId(userId);
 		mtngFromMapper.updateFromMtngBill(mtngFromVo);
+
+		/*안건*/
+		List<AgendaVo> agendaList = mtngFromVo.getAgendaList();
+		for(AgendaVo aVo:agendaList) {
+			AgendaVo agendaVo = new AgendaVo();
+			agendaVo.setBillId(aVo.getBillId());
+			agendaVo.setMtngId(mtngFromVo.getMtngId());
+			agendaVo.setRegId(userId);
+			mtngFromMapper.insertEbsMtngAgenda(agendaVo);
+		}
 		
 		return null;
 	}
-
+	
+	@Override
+	public void addHallMtngAgenda(MtngFromVo mtngFromVo) {
+		String userId = new SecurityInfoUtil().getAccountId();
+		/*안건*/
+		List<AgendaVo> agendaList = mtngFromVo.getAgendaList();
+		for(AgendaVo aVo:agendaList) {
+			AgendaVo agendaVo = new AgendaVo();
+			agendaVo.setBillId(aVo.getBillId());
+			agendaVo.setMtngId(mtngFromVo.getMtngId());
+			agendaVo.setRegId(userId);
+			mtngFromMapper.insertEbsMtngAgenda(agendaVo);
+		}
+	}
 
 }

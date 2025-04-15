@@ -63,4 +63,6 @@ public interface BillMngMapper {
 	void updateEbsFileDelYn(EbsFileVo ebsFileVo);
 
 	void deleteBillDetail(BillMngVo billMngVo);
+	
+	void updateBillMaster(BillMngVo billMngVo);	
 }

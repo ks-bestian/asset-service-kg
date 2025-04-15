@@ -234,6 +234,14 @@ public class BillMngServiceImpl implements BillMngService {
 	
 	@Transactional
 	@Override
+	public BillMngVo insertBillPrmg(BillMngVo billMngVo) throws Exception {
+		billMngVo.setModId(new SecurityInfoUtil().getAccountId());
+		billMngMapper.updateBillMaster(billMngVo);
+		return this.insertBillDetail(billMngVo);
+	}
+	
+	@Transactional
+	@Override
 	public void deleteBillDetail(BillMngVo billMngVo) {
 
 		EbsFileVo ebsFileVo = new EbsFileVo();

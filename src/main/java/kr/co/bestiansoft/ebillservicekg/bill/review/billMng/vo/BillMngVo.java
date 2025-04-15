@@ -57,7 +57,7 @@ public class BillMngVo extends ComDefaultVO {
     // 정부이송일
     private LocalDate gvrnTrsfDt;
     // 공포일자
-    private LocalDate prmgDt;
+    private String prmgDt;
     // 공포번호
     private String prmgNo;
     // 요약내용
@@ -144,4 +144,10 @@ public class BillMngVo extends ComDefaultVO {
     private String fileKindCd;
     
     private String rcpDt;
+    
+    private String rcpUsrId;
+    
+    private String intExtCls;
+    
+    private String rvwDt;
 }

@@ -100,6 +100,13 @@ public class MtngFromController {
     public ResponseEntity<CommonResponse> updateHallMtng(@RequestBody MtngFromVo mtngFromVo){
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "mtng update successfully", mtngFromService.updateHallMtng(mtngFromVo)), HttpStatus.OK);
     }
+    
+    @ApiOperation(value = "Hall회의 안건추가", notes = "Hall 회의 안건을 추가한다")
+    @PutMapping("/bill/mtng/hallMtng/agenda")
+    public ResponseEntity<CommonResponse> addHallMtngAgenda(@RequestBody MtngFromVo mtngFromVo){
+    	mtngFromService.addHallMtngAgenda(mtngFromVo);
+    	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "OK", "agenda added successfully"), HttpStatus.OK);
+    }
 
     @ApiOperation(value = "Hall 회의 리스트 조회", notes = "리스트를 조회한다.")
     @GetMapping("/bill/mtng/hallMtng")

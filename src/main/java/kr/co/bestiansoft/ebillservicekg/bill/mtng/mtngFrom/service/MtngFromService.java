@@ -32,6 +32,6 @@ public interface MtngFromService {
 	MtngFromVo updateHallMtngResult(MtngFromVo mtngFromVo);
 	MtngFromVo deleteHallMtngBill(MtngFromVo mtngFromVo);
 
-
+	void addHallMtngAgenda(MtngFromVo mtngFromVo);
 
 }

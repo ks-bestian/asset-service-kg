@@ -22,6 +22,8 @@ import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.AgendaVo;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MemberVo;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.vo.MtngFileVo;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.vo.MtngToVo;
+import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper;
+import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
@@ -42,6 +44,7 @@ public class MtngToServiceImpl implements MtngToService {
     private final MtngAllMapper mtngAllMapper;
     private final ComFileService comFileService;
     private final ProcessService processService;
+    private final BillMngMapper billMngMapper;
 
     @Override
     public List<MtngToVo> getMtngToList(HashMap<String, Object> param) {
@@ -133,13 +136,32 @@ public class MtngToServiceImpl implements MtngToService {
 	}
 
 
+//    @Override
+//    public void sendLegalActMtngAgenda(Long mtngId) {
+//    	HashMap<String, Object> param = new HashMap<>();
+//		param.put("mtngId", mtngId);
+//    	List<AgendaVo> list = mtngFromMapper.selectListMtngAgenda(param);
+//    	for(AgendaVo agenda : list) {
+//    		if("1900".equals(agenda.getCurrentStepId())) {
+//    			continue;
+//    		}
+//    		ProcessVo pVo = new ProcessVo();
+//			pVo.setBillId(agenda.getBillId());
+//			pVo.setStepId("1900");//법적행위관리
+//			processService.handleProcess(pVo);
+//    	}
+//    }
+    
     @Override
-    public void sendLegalActMtngAgenda(Long mtngId) {
-    	HashMap<String, Object> param = new HashMap<>();
-		param.put("mtngId", mtngId);
-    	List<AgendaVo> list = mtngFromMapper.selectListMtngAgenda(param);
-    	for(AgendaVo agenda : list) {
-    		if("1900".equals(agenda.getCurrentStepId())) {
+    public void sendLegalActMtngAgenda(List<AgendaVo> agendaList) {
+    	if(agendaList == null) {
+    		return;
+    	}
+    	for(AgendaVo agenda : agendaList) {
+    		BillMngVo vo = new BillMngVo();
+    		vo.setBillId(agenda.getBillId());
+    		BillMngVo bill = billMngMapper.selectOneBill(vo);
+    		if("1900".equals(bill.getCurrentStepId())) {
     			continue;
     		}
     		ProcessVo pVo = new ProcessVo();

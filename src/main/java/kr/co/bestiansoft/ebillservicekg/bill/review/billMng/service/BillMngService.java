@@ -77,4 +77,6 @@ public interface BillMngService {
 	BillMngVo insertBillDetailFile(BillMngVo billMngVo) throws Exception;
 	
 	void deleteBillDetail(BillMngVo billMngVo);
+	
+	BillMngVo insertBillPrmg(BillMngVo billMngVo) throws Exception;
 }
