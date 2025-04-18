@@ -311,7 +311,7 @@
 		    and emc.cmt_cd = #{deptCd}
 		</if>
 		<if test="billNo != null and billNo != ''">
-		    and em.bill_no = #{billNo}
+		    and em.bill_no LIKE CONCAT('%', #{billNo}, '%')
 		</if>
         <if test="billNm != null and billNm != ''">
             AND kgst.fngetlangnm(em.bill_name_kg,em.bill_name_ru,em.bill_name_kg,#{lang}) LIKE CONCAT('%', #{billNm}, '%')
@@ -516,6 +516,7 @@
 		join ebs_master em on (em.bill_id = ema.bill_id)
 		join kgst.view_user_member vum on (em.ppsr_id = vum.user_id)
 		where 1=1
+			and mt.mtng_type_cd = '2'
 	    <if test="searchDate != null and searchDate != ''">
 	        and mt.open_dtm LIKE CONCAT(#{searchDate}, '%')
 	    </if>
