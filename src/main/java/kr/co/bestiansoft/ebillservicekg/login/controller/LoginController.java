@@ -68,6 +68,14 @@ public class LoginController {
 
 	private final CustomUserDetailsService customUserDetailsService;
 
+
+
+	@PostMapping("/logout")
+	public void test(@RequestBody @Valid LoginRequest loginRead, HttpServletRequest req, HttpServletResponse res) {
+
+
+	};
+
 	@PostMapping("/login")
 	public ResponseEntity<LoginResponse> authenticate(@RequestBody @Valid LoginRequest loginRead, HttpServletRequest req, HttpServletResponse res) {
 

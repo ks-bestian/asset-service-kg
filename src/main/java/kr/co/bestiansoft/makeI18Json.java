@@ -62,8 +62,11 @@ public class makeI18Json {
 
 		String jsonPath = JSON_ROOT_PATH+lang+".json";
 
-	    Map<String, Map<String, String>> root = new HashMap<>();
-	    Map<String, String> msgMap = new LinkedHashMap<>();
+	    //Map<String, Map<String, String>> root = new HashMap<>();
+	    //Map<String, String> msgMap = new LinkedHashMap<>();
+
+	    Map<String, Object> root = new HashMap<>();
+	    Map<String, String> msgMap = new HashMap<>();
 
         for(Map<String, String> map:messageList) {
 
@@ -75,10 +78,15 @@ public class makeI18Json {
         		msgMap.put(map.get("MSG_CODE"), map.get("MESSAGE_TEXT_KR"));
         	}
         }
+
+        root.putAll(msgMap);
         root.put("msg", msgMap);
+
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String jsonOutput = gson.toJson(root);
+
+       // String jsonOutput2 = gson.toJson(msgMap);
 
         try (FileWriter writer = new FileWriter(jsonPath)) {
             writer.write(jsonOutput);

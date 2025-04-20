@@ -39,7 +39,8 @@ logging:
 
 security:
   allow:
-    context-url: http://localhost:5173
+    context-url: http://localhost
+    context-url2: http://localhost:5173
 
 jwt:
   secret: 2fdd12003e9607e97e71e0076daea1ec542430ac32a24c16bb322025e36f79d6

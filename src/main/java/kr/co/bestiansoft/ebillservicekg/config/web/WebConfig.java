@@ -20,6 +20,8 @@ public class WebConfig implements WebMvcConfigurer {
     @Value("${security.allow.context-url}")
     private String allowedUrl;
 
+    @Value("${security.allow.context-url2}")
+    private String allowedUrl2;
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LogInterceptor(acsHistService));
@@ -30,6 +32,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins(allowedUrl)
+                .allowedOrigins(allowedUrl2)
                 .allowedMethods("GET", "POST", "PUT", "DELETE") // 허용할 HTTP 메서드 설정
                 .allowedHeaders("*");
 //                .allowCredentials(true);
