@@ -35,6 +35,7 @@ import kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeDetailVo;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.ProposerVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.config.web.JwtFilter;
+import kr.co.bestiansoft.ebillservicekg.config.web.TokenBlacklist;
 import kr.co.bestiansoft.ebillservicekg.config.web.TokenProvider;
 import kr.co.bestiansoft.ebillservicekg.login.repository.LoginMapper;
 import kr.co.bestiansoft.ebillservicekg.login.service.CustomUserDetailsService;
@@ -59,6 +60,7 @@ public class LoginController {
 	private HttpSessionSecurityContextRepository securityContextRepository;
 
 	private final TokenProvider tokenProvider;
+	private final TokenBlacklist tokenBlacklist;
 
 	private final LoginMapper loginMapper;
 	private final ProcessMapper processMapper;
@@ -71,10 +73,24 @@ public class LoginController {
 
 
 	@PostMapping("/logout")
-	public void test(@RequestBody @Valid LoginRequest loginRead, HttpServletRequest req, HttpServletResponse res) {
+	public ResponseEntity<?> logout(HttpServletRequest req,HttpServletResponse rep) {
+
+		String bearerToken = req.getHeader("Authorization");
+		String jwt ="";
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+        	jwt = bearerToken.substring(7);
+        	tokenBlacklist.addToBlacklist(jwt);
+            rep.setStatus(HttpServletResponse.SC_OK);
+
+            return ResponseEntity.ok(HttpStatus.OK);
+
+        }
+
+	    return new ResponseEntity<>(rep, HttpStatus.UNAUTHORIZED);
+	}
 
 
-	};
+
 
 	@PostMapping("/login")
 	public ResponseEntity<LoginResponse> authenticate(@RequestBody @Valid LoginRequest loginRead, HttpServletRequest req, HttpServletResponse res) {
