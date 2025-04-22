@@ -5,6 +5,7 @@ import java.util.List;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.vo.AgreeVo;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 import kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo;
+import kr.co.bestiansoft.ebillservicekg.test.vo.CommentsVo;
 import lombok.Data;
 
 @Data
@@ -20,5 +21,7 @@ public class ApplyResponse {
 
 	ProcessVo processVo;
 	
-	List<ApplyVo> commentList;
+//	List<ApplyVo> commentList;
+	
+	List<CommentsVo> commentList;
 }

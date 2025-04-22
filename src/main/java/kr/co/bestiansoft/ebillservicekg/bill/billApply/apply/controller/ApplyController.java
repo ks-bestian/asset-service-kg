@@ -109,5 +109,12 @@ public class ApplyController {
     public ResponseEntity<CommonResponse> createBillHome(@RequestBody ApplyVo applyVo) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "insert homepage successfully", applyService.createBillHome(applyVo)), HttpStatus.CREATED);
     }
+    
+    @ApiOperation(value = "홈페이지 게재 중지", notes = "안건을 홈페이지에 게재 중지한다")
+    @PostMapping(value = "/bill/apply/home/stop")
+    public ResponseEntity<CommonResponse> stopBillHome(@RequestBody ApplyVo applyVo) {
+    	applyService.stopBillHome(applyVo);
+    	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "OK", "stopped successfully"), HttpStatus.OK);
+    }
 
 }

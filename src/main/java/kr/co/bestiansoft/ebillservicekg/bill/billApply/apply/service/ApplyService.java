@@ -35,4 +35,5 @@ public interface ApplyService {
 
 	ApplyVo createBillHome(ApplyVo applyVo);
 
+	void stopBillHome(ApplyVo applyVo);
 }

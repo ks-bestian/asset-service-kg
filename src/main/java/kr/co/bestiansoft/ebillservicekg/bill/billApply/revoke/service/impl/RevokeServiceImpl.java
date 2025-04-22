@@ -12,6 +12,7 @@ import kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.repository.RevokeM
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.service.RevokeService;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.vo.RevokeResponse;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.vo.RevokeVo;
+import kr.co.bestiansoft.ebillservicekg.bill.billApply.revokeAgree.repository.RevokeAgreeMapper;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.service.BillMngService;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
@@ -33,6 +34,7 @@ public class RevokeServiceImpl implements RevokeService {
 	private final ProcessService processService;
 	private final ComFileService comFileService;
 	private final BillMngService billMngService;
+	private final RevokeAgreeMapper revokeAgreeMapper;
 
 	@Override
 	public List<RevokeVo> getRevokeList(HashMap<String, Object> param) {
@@ -86,6 +88,14 @@ public class RevokeServiceImpl implements RevokeService {
 //			}
 //			comFileService.saveFileEbs(vo.getFiles(), fileKindCd, billId);	
 //		}
+		
+		// 발의자 철회처리
+		String userId = new SecurityInfoUtil().getAccountId();
+		HashMap<String, Object> param = new HashMap<>();
+		param.put("userId", userId);
+		param.put("billId", billId);
+		param.put("agreeYn", "Y");
+		revokeAgreeMapper.updateRevokeAgree(param);
 		
 		ProcessVo pVo = new ProcessVo();
 		pVo.setBillId(billId);

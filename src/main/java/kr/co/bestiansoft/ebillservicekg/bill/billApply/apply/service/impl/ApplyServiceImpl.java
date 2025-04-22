@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,7 @@ import kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper;
 import kr.co.bestiansoft.ebillservicekg.process.service.ProcessService;
 import kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo;
 import kr.co.bestiansoft.ebillservicekg.test.repository2.HomePageMapper;
+import kr.co.bestiansoft.ebillservicekg.test.vo.CommentsVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -256,8 +258,13 @@ public class ApplyServiceImpl implements ApplyService {
 		result.setProposerList(proposerList);
 
 		//안건 의견 목록
-		List<ApplyVo> commentList = homePageMapper.selectBillCommentList(applyDetail.getSclDscRcpNmb());
-		result.setCommentList(commentList);
+//		List<ApplyVo> commentList = homePageMapper.selectBillCommentList(applyDetail.getSclDscRcpNmb());
+//		result.setCommentList(commentList);
+		
+		if(applyDetail.getSclDscRcpNmb() != null && !"".equals(applyDetail.getSclDscRcpNmb())) {
+			List<CommentsVo> commentList = homePageMapper.selectCommentsByLawId(Long.valueOf(applyDetail.getSclDscRcpNmb()));
+			result.setCommentList(commentList);
+		}
 
 		//안건 프로세스정보가져오기.
 		ProcessVo pcParam = new ProcessVo();
@@ -344,6 +351,19 @@ public class ApplyServiceImpl implements ApplyService {
 		applyMapper.updateBillHome(applyVo);
 
 		return applyVo;
+	}
+	
+	@Override
+	public void stopBillHome(ApplyVo applyVo) {
+		
+		String sclDscRcpNmb = applyVo.getSclDscRcpNmb();
+		Long id = Long.valueOf(sclDscRcpNmb);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("updatedBy", new SecurityInfoUtil().getAccountId());
+		map.put("status", false);
+		map.put("id", id);
+		homePageMapper.updateLaws(map);
 	}
 
 }

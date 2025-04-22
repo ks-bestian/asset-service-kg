@@ -37,4 +37,45 @@
 			and c.law_id::varchar = #{lawId}
 		order by id 
 	</select>
+	
+	<update id="updateLaws" parameterType="java.util.HashMap">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.test.repository2.HomePageMapper.updateLaws */
+		update homepage.laws
+		set
+			  updated_at = now()
+			<if test="updatedBy != null"> , updated_by = #{updatedBy} </if>
+			<if test="createdAt != null"> , created_at = #{createdAt} </if>
+			<if test="createdBy != null"> , created_by = #{createdBy} </if>
+			<if test="descriptionKg != null"> , description_kg = #{descriptionKg} </if>
+			<if test="descriptionRu != null"> , description_ru = #{descriptionRu} </if>
+			<if test="publishDate != null"> , publish_date = #{publishDate} </if>
+			<if test="registrationNumber != null"> , registration_number = #{registrationNumber} </if>
+			<if test="slug != null"> , slug = #{slug} </if>
+			<if test="status != null"> , status = #{status} </if>
+			<if test="titleKg != null"> , title_kg = #{titleKg} </if>
+			<if test="titleRu != null"> , title_ru = #{titleRu} </if>
+			<if test="viewedFull != null"> , viewed_full = #{viewedFull} </if>
+			<if test="viewedHalf != null"> , viewed_half = #{viewedHalf} </if>
+		where id = #{id}
+	</update>
+	
+	<select id="selectCommentsByLawId" resultType="kr.co.bestiansoft.ebillservicekg.test.vo.CommentsVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.test.repository2.HomePageMapper.selectComments */
+		SELECT 
+			  id
+			, created_at
+			, updated_at
+			, approved
+			, "content"
+			, deleted
+			, edited
+			, esi_user_id
+			, law_id
+			, parent_id
+			, created_by
+			, updated_by
+		FROM homepage."comments"
+		where 1=1
+		and law_id = #{lawId}
+	</select>
 </mapper>
