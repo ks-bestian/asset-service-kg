@@ -22,14 +22,7 @@
             and grp_code::text like concat('%', #{grpCode}, '%')
         </if>
         <if test="grpCodeNm != null and grpCodeNm != ''">
-            <choose>
-                <when test="lang == 'lng_type_2'">
-                    and grp_code_nm2 like concat('%', #{grpCodeNm}, '%')
-                </when>
-                <otherwise>
-                    and grp_code_nm1 like concat('%', #{grpCodeNm}, '%')
-                </otherwise>
-            </choose>
+            and kgst.fngetlangnm(grp_code_nm1,grp_code_nm2,grp_code_nm3, #{lang}) like concat('%', #{grpCodeNm}, '%')
         </if>
         order by grp_code desc
     </select>
@@ -56,14 +49,7 @@
             and code_id like concat('%', #{codeId}, '%')
         </if>
         <if test="codeNm != null and codeNm != ''">
-            <choose>
-                <when test="lang == 'lng_type_2'">
-                    and code_nm2 like concat('%', #{codeNm}, '%')
-                </when>
-                <otherwise>
-                    and code_nm1 like concat('%', #{codeNm}, '%')
-                </otherwise>
-            </choose>
+            and kgst.fngetlangnm(code_nm1, code_nm2, code_nm3, #{lang}) like concat ('%', #{codeNm}, '%')
         </if>
         order by ord asc, reg_dt desc
     </select>
