@@ -3,6 +3,7 @@ package kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.service.impl;
 import kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.repository.ReceivedInfoRepository;
 import kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.service.ReceivedInfoService;
 import kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.vo.ReceivedInfoVo;
+import kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.vo.UpdateReceivedInfoVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,4 +19,10 @@ public class ReceivedInfoServiceImpl implements ReceivedInfoService {
     public int insertReceivedInfo(ReceivedInfoVo vo) {
         return receivedInfoRepository.insertReceivedInfo(vo);
     }
+
+    @Override
+    public void updateReceivedInfo(UpdateReceivedInfoVo vo) {
+        receivedInfoRepository.updateReceivedInfo(vo);
+    }
+
 }

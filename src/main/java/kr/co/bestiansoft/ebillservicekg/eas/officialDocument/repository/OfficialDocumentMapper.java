@@ -10,4 +10,5 @@ public interface OfficialDocumentMapper {
     List<OfficialDocumentVo> getOfficialDocument(OfficialDocumentVo vo);
     int saveOfficialDocument(OfficialDocumentVo vo);
     void updateStatus(String billId, String docStatusCd);
+
 }

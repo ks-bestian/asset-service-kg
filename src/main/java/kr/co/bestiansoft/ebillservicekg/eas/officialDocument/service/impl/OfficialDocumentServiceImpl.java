@@ -113,7 +113,7 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
                         .userId(user.getUserId())
                         .userNm(user.getUserNm())
                         .deptCd(user.getDeptCd())
-                        .rcvOrd(0)
+                        .rcvOrd(i+1)
                         .build();
 
                 result += receivedInfoService.insertReceivedInfo(receivedInfoVo);

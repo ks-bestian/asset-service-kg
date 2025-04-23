@@ -3,6 +3,7 @@ package kr.co.bestiansoft.ebillservicekg.eas.approval.service.impl;
 import kr.co.bestiansoft.ebillservicekg.eas.approval.repository.ApprovalRepository;
 import kr.co.bestiansoft.ebillservicekg.eas.approval.service.ApprovalService;
 import kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalVo;
+import kr.co.bestiansoft.ebillservicekg.eas.approval.vo.UpdateApprovalVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,15 @@ public class ApprovalServiceImpl implements ApprovalService {
 
     public int insertApproval(ApprovalVo vo){
         return approvalRepository.insertApproval(vo);
+    }
+
+    @Override
+    public void updateStatus(String apvlId, String apvlStatusCd){
+        approvalRepository.updateStatus(apvlId, apvlStatusCd);
+    }
+    @Override
+    public void updateApproval(UpdateApprovalVo vo) {
+        approvalRepository.updateApproval(vo);
     }
 
 }

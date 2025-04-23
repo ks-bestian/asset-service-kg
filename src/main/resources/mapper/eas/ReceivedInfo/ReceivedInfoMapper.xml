@@ -8,5 +8,17 @@
         (doc_id, user_id, user_nm, dept_cd, ext_orgn_cd, rcv_status, rcv_dtm, check_dtm, rcp_dtm, rjct_dtm, rjct_cn, rcv_ord)
         VALUES(#{docId}, #{userId}, #{userNm}, #{deptCd}, #{extOrgnCd}, #{rcvStatus}, #{rcvDtm}, #{checkDtm}, #{rcpDtm}, #{rjctDtm}, #{rjctCn}, #{rcvOrd});
     </insert>
+    <update id="updateReceivedInfo" parameterType="kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.vo.UpdateReceivedInfoVo">
+        update eas_received_info
+        <set>
+            <if test="rcvStatus"> rcv_status = #{rcvStatus} , </if>
+            <if test="rcvDtm"> rcv_dtm = #{rcvDtm} , </if>
+            <if test="checkDtm"> check_dtm = #{checkDtm} , </if>
+            <if test="rcpDtm"> rcp_dtm = #{rcpDtm} , </if>
+            <if test="rjctDtm"> rjct_dtm = #{rjctDtm} , </if>
+            <if test="rjctCn"> rjct_cn = #{rjctCn} , </if>
+        </set>
+        where rcv_id = #{rcvId}
+    </update>
 
 </mapper>
