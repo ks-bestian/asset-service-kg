@@ -141,41 +141,6 @@
         where rcv_id = #{rcvId} and msg_group_id = #{msgGroupId}
     </update>
 
-<!--    <select id="selectUserMember" parameterType="kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo">-->
-<!--        select-->
-<!--              um.user_id-->
-<!--            , kgst.fngetlangnm(um.user_nm_kg, um.user_nm_ru, um.user_nm_kg, #{lang}) as user_nm-->
-<!--            , kgst.fngetlangnm(um.dept_nm_kg,um.dept_nm_ru,um.dept_nm_ko,#{lang}) as dept_nm-->
-<!--            , kgst.fngetlangnm(um.cmit_nm_kg,um.cmit_nm_ru,um.cmit_nm_ko,#{lang}) as cmit_nm-->
-<!--            , um.poly_nm-->
-<!--            , (case when um.user_id in (select cu.user_id from com_user cu) then 'user'-->
-<!--                    when um.member_id in (select cm.member_id from com_member cm) then 'member'-->
-<!--              end) as type-->
-<!--        from view_user_member um-->
-<!--        <if test="deptCd != '' and deptCd != null">-->
-<!--            left join com_ccof ccof on ccof.user_id = um.user_id-->
-<!--        </if>-->
-<!--        where (um.msg_rcv_yn != 'N' or um.msg_rcv_yn is null)-->
-<!--        <if test="polyCd != '' and polyCd != null">-->
-<!--            and um.poly_cd = #{polyCd}-->
-<!--        </if>-->
-<!--        <if test="deptCd != '' and deptCd != null">-->
-<!--            and (um.dept_cd = #{deptCd} or ccof.dept_cd = #{deptCd})-->
-<!--        </if>-->
-<!--        <if test="cmitCd != '' and cmitCd != null">-->
-<!--            and um.dept_cd = #{cmitCd}-->
-<!--        </if>-->
-<!--        <if test="lang != null and lang != ''">-->
-<!--            <choose>-->
-<!--                <when test="lang == 'lng_type_2'">-->
-<!--                    and um.user_nm_ru like concat('%', #{searchNm}, '%')-->
-<!--                </when>-->
-<!--                <otherwise>-->
-<!--                    and um.user_nm_kg like concat ('%', #{searchNm}, '%')-->
-<!--                </otherwise>-->
-<!--            </choose>-->
-<!--        </if>-->
-<!--    </select>-->
 
     <select id="selectUserMember" parameterType="kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo">
         SELECT
