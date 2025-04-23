@@ -29,14 +29,7 @@
             and em.msg_sj like concat('%', #{msgSj}, '%')
         </if>
         <if test="sendNm != null and sendNm != ''">
-            <choose>
-                <when test="lang == 'lng_type_2'">
-                    and vum.user_nm_ru like concat('%', #{sendNm}, '%')
-                </when>
-                <otherwise>
-                    and vum.user_nm_kg like concat('%', #{sendNm}, '%')
-                </otherwise>
-            </choose>
+            and kgst.fngetlangnm(vum.user_nm_kg, vum.user_nm_ru, vum.user_nm_kg, #{lang}) like concat ('%', #{sendNm}, '%')
         </if>
         order by em.send_dt desc
     </select>
@@ -68,14 +61,7 @@
             and msg_sj like concat('%', #{msgSj}, '%')
         </if>
         <if test="rcvNm != null and rcvNm != ''">
-            <choose>
-                <when test="lang == 'lng_type_2'">
-                    and vum.user_nm_ru like concat('%', #{rcvNm}, '%')
-                </when>
-                <otherwise>
-                    and vum.user_nm_kg like concat('%', #{rcvNm}, '%')
-                </otherwise>
-            </choose>
+            and kgst.fngetlangnm(vum.user_nm_kg, vum.user_nm_ru, vum.user_nm_kg, #{lang}) like concat ('%', #{rcvNm}, '%')
         </if>
         order by send_dt desc
     </select>

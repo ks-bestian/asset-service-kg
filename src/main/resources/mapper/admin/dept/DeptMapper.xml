@@ -24,17 +24,7 @@
         from com_dept
         where 1=1
         <if test="deptNm != null and deptNm != ''">
-            <choose>
-                <when test="lang == 'lng_type_1'">
-                    and dept_nm1 like concat('%', #{deptNm}, '%')
-                </when>
-                <when test="lang == 'lng_type_2'">
-                    and dept_nm2 like concat('%', #{deptNm}, '%')
-                </when>
-                <when test="lang == 'lng_type_3'">
-                    and dept_nm3 like concat('%', #{deptNm}, '%')
-                </when>
-            </choose>
+            and kgst.fngetlangnm(dept_nm1, dept_nm2, dept_nm3, #{lang}) like concat ('%', #{deptNm}, '%')
         </if>
         <if test="useYn != null and useYn != ''">
             and use_yn = #{useYn}

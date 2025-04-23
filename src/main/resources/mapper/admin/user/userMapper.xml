@@ -30,14 +30,7 @@
         left join com_code_detail cc on cc.code_id = cu.job_cd
         where 1=1
         <if test="userNm != null and userNm !=''">
-            <choose>
-                <when test="lang == 'lng_type_2'">
-                    and cu.user_nm_ru like concat('%', #{userNm}, '%')
-                </when>
-                <otherwise>
-                    and cu.user_nm_kg like concat('%', #{userNm}, '%')
-                </otherwise>
-            </choose>
+            and kgst.fngetlangnm(cu.user_nm_kg, cu.user_nm_ru, cu.user_nm_kg, #{lang}) like concat ('%', #{userNm}, '%')
         </if>
         <if test="deptCd != null and deptCd !=''">
             and cu.dept_cd = #{deptCd}

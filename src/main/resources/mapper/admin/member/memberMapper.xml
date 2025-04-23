@@ -29,14 +29,7 @@
         from com_member
         where 1=1
         <if test="memberNm != null and memberNm !=''">
-            <choose>
-                <when test="lang == 'lng_type_2'">
-                    and member_nm_ru like concat('%', #{memberNm}, '%')
-                </when>
-                <otherwise>
-                    and member_nm_kg like concat('%', #{memberNm}, '%')
-                </otherwise>
-            </choose>
+            and kgst.fngetlangnm(member_nm_kg, member_nm_ru, member_nm_kg, #{lang}) like concat ('%', #{memberNm}, '%')
         </if>
 
         <if test="polyCd != null and polyCd !=''">
