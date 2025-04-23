@@ -4,4 +4,5 @@ import kr.co.bestiansoft.ebillservicekg.eas.history.vo.HistoryVo;
 
 public interface HistoryService {
     int insertHistory(HistoryVo historyVo);
+    String getActionDetail(String actionType, String userNm);
 }

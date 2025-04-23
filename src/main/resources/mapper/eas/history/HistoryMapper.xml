@@ -5,8 +5,8 @@
 
     <insert id="insertHistory" parameterType="kr.co.bestiansoft.ebillservicekg.eas.history.vo.HistoryVo">
         INSERT INTO eas_history
-            (doc_id, user_id, user_nm, act_type, act_detail, act_dtm, history_id)
-        VALUES(#{docId}, #{userId}, #{userNm}, #{actType}, #{actDetail}, #{actDtm}, #{historyId});
+            (doc_id, user_id, user_nm, act_type, act_detail, act_dtm)
+        VALUES(#{docId}, #{userId}, #{userNm}, #{actType}, #{actDetail}, #{actDtm});
     </insert>
 
 </mapper>

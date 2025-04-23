@@ -10,4 +10,5 @@ public interface OfficialDocumentService {
     List<OfficialDocumentVo> getOfficialDocument (OfficialDocumentVo vo);
     int saveOfficialDocument(OfficialDocumentVo vo);
     int saveAllDocument(InsertDocumentVo vo);
+    void updateStatusOfficialDocument(String billId, String status);
 }

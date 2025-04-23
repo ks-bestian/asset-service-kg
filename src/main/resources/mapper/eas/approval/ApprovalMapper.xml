@@ -4,8 +4,8 @@
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.eas.approval.repository.ApprovalRepository">
     <insert id="insertApproval" parameterType="kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalVo">
         INSERT INTO kgst.eas_approval
-        (doc_id, user_id, user_nm, dept_cd, job_cd, apvl_ord, apvl_dtm, rcv_dtm, check_dtm, apvl_file_id, apvl_opinion, apvl_status_cd, apvl_id)
-        VALUES(#{docId}, #{userId}, #{userNm}, #{deptCd}, #{jobCd}, #{apvlOrd}, #{apvlDtm}, #{rcvDtm}, #{checkDtm}, #{apvlFileId}, #{apvlOpinion}, #{apvlStatusCd}, #{apvlId});
+        (doc_id, user_id, user_nm, dept_cd, job_cd, apvl_ord, apvl_dtm, rcv_dtm, check_dtm, apvl_file_id, apvl_opinion, apvl_status_cd)
+        VALUES(#{docId}, #{userId}, #{userNm}, #{deptCd}, #{jobCd}, #{apvlOrd}, #{apvlDtm}, #{rcvDtm}, #{checkDtm}, #{apvlFileId}, #{apvlOpinion}, #{apvlStatusCd});
     </insert>
 
 </mapper>
