@@ -8,7 +8,7 @@
         VALUES(#{formId}, #{docRcver}, #{docTitle}, #{docCn}, #{docFileNm}, #{senderNm}, #{deptNm}, #{posNm}, #{aarsFileId}, #{aarsStatusCd}, #{regDt}, #{regId});
     </insert>
     <update id="updateDraftStatus">
-        update eas_draft
+        update kgst.eas_draft
            set aars_status_cd = #{aarsStatusCd}
          where aars_doc_id=#{aarsDocId}
     </update>

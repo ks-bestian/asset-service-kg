@@ -27,4 +27,9 @@ public class EasFileServiceImpl implements EasFileService {
     public int saveEasFile(EasFileVo vo){
         return easFileRepository.insertEasFile(vo);
     }
+
+    @Override
+    public List<EasFileVo> getAttachFiles(String docId) {
+        return easFileRepository.getAttachFiles(docId);
+    }
 }

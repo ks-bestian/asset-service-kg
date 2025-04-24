@@ -12,8 +12,7 @@ import kr.co.bestiansoft.ebillservicekg.eas.history.service.HistoryService;
 import kr.co.bestiansoft.ebillservicekg.eas.history.vo.HistoryVo;
 import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.repository.OfficialDocumentMapper;
 import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.service.OfficialDocumentService;
-import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.InsertDocumentVo;
-import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.OfficialDocumentVo;
+import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.*;
 import kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.service.ReceivedInfoService;
 import kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.vo.ReceivedInfoVo;
 import lombok.RequiredArgsConstructor;
@@ -42,9 +41,11 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
 
 
     @Override
-    public List<OfficialDocumentVo> getOfficialDocument(OfficialDocumentVo vo){
-        return officialDocumentMapper.getOfficialDocument(vo);
+    public List<DocumentListDto> getDocumentList(SearchDocumentVo vo) {
+        vo.setUserId(new SecurityInfoUtil().getAccountId());
+        return officialDocumentMapper.getDocumentList(vo);
     }
+
     public int saveOfficialDocument(OfficialDocumentVo vo){
         return officialDocumentMapper.saveOfficialDocument(vo);
     }
@@ -143,6 +144,16 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
     @Override
     public void updateStatusOfficialDocument(String billId, String status) {
         officialDocumentMapper.updateStatus(billId,status);
+    }
+
+    @Override
+    public int countDocumentList(String userId) {
+        return officialDocumentMapper.countDocumentList(userId);
+    }
+
+    @Override
+    public DocumentDetailDto getDocumentDetail(int rcvId) {
+        return officialDocumentMapper.getDocumentDetail(new SecurityInfoUtil().getAccountId(),rcvId);
     }
 
     public String arrayToString(String[] arrayS){

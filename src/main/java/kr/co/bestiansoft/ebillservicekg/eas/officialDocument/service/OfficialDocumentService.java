@@ -1,14 +1,15 @@
 package kr.co.bestiansoft.ebillservicekg.eas.officialDocument.service;
 
-import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.InsertDocumentVo;
-import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.OfficialDocumentVo;
+import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.*;
 
 import java.util.List;
 
 public interface OfficialDocumentService {
 
-    List<OfficialDocumentVo> getOfficialDocument (OfficialDocumentVo vo);
+    List<DocumentListDto> getDocumentList(SearchDocumentVo vo);
     int saveOfficialDocument(OfficialDocumentVo vo);
     int saveAllDocument(InsertDocumentVo vo);
     void updateStatusOfficialDocument(String billId, String status);
+    int countDocumentList(String userId);
+    DocumentDetailDto getDocumentDetail(int rcvId);
 }

@@ -2,20 +2,64 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.repository.OfficialDocumentMapper">
-
-    <select id="getOfficialDocument" resultType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.OfficialDocumentVo">
-        select
-            a.*
-          from eas_document a
-    </select>
     <insert id="saveOfficialDocument" parameterType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.OfficialDocumentVo">
-        INSERT INTO eas_document
+        INSERT INTO kgst.eas_document
         (doc_id, aars_doc_id, user_id, doc_type_cd, doc_attrb_cd, bill_id, tmlmt_yn, tmlmt_dtm, doc_lng, doc_subtle, doc_status_cd, digital_yn, sender_id, sender_nm, dept_cd, doc_no)
         VALUES(#{docId}, #{aarsDocId}, #{userId}, #{docTypeCd}, #{docAttrbCd}, #{billId}, #{tmlmtYn}, #{tmlmtDtm}, #{docLng}, #{docSubtle}, #{docStatusCd}, #{digitalYn}, #{senderId}, #{senderNm}, #{deptCd}, #{docNo});
     </insert>
     <update id="updateStatus">
-        update eas_document
+        update kgst.eas_document
            set doc_status_cd = #{docStatusCd}
          where bill_id = #{billId}
     </update>
+    <select id="getDocumentList" parameterType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.SearchDocumentVo" resultType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.DocumentListDto">
+        select d.doc_id, doc_attrb_cd, d.tmlmt_yn, d.tmlmt_Dtm, doc_subtle, sender_id, sender_nm, doc_no, rcv_dtm, check_dtm, rcv_id
+        from eas_document d, eas_received_info r
+        where d.doc_id = r.doc_id
+          and doc_status_cd = 'ds02'
+          and r.user_id = #{userId}
+          <if test="docSubtle != null "> and doc_subtle like '%'||#{docSubtle}||'%' </if>
+          <if test="tmlmtDtm != null"> and tmlmt_dtm = #{tmlmtDtm} </if>
+          <if test="fromRcvDtm != null and toRcvDtm != null"> and rcv_dtm between #{fromRcvDtm} and #{toRcvDtm} </if>
+          <if test="docNo != null"> and doc_no like '%'||#{docNo}||'%' </if>
+          <if test="docTypeCd != null"> and doc_type_cd = #{docTypeCd}; </if>
+        order by rcv_dtm desc
+    </select>
+    <select id="countDocumentList" resultType="int">
+        select count(d.doc_id)
+        from eas_document d, eas_received_info r
+        where d.doc_id = r.doc_id
+          and doc_status_cd = 'ds02'
+          and check_dtm is null
+          and r.user_id = #{userId};
+    </select>
+    <select id="getDocumentUser" resultType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.DocumentUserDto">
+        select sender_id as user_id , sender_nm as user_nm ,dept_cd
+        from eas_document ed
+        where doc_id = #{docId}
+        union distinct
+        select user_id, user_nm , dept_cd
+        from eas_approval
+        where doc_id = #{docId}
+        union distinct
+        select user_id, user_nm, dept_cd
+        from eas_received_info
+        where doc_id = #{docId}
+        union distinct
+        select ew.user_id, ew.user_nm, ew.dept_cd
+        from eas_work_request ewr, eas_work_response ew
+        where ewr.work_req_id = ew.work_req_id
+          and doc_id = #{docId};
+    </select>
+    <select id="getDocumentDetail" resultType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.DocumentDetailDto">
+        select d.doc_id, aars_file_id,  d.doc_type_cd, d.doc_attrb_cd, bill_id, (select bill_no from ebs_master where bill_id= d.bill_id ) bill_no,
+               tmlmt_yn, tmlmt_dtm, doc_lng, doc_subtle, digital_yn, sender_id, d.sender_nm, d.dept_cd, doc_no,
+               rcv_id, rcv_status, r.rjct_cn, rcv_ord , rcv_dtm, rcp_dtm
+        from eas_document d, eas_received_info r, eas_draft ed
+        where d.doc_id = r.doc_id
+          and d.aars_doc_id = ed.aars_doc_id
+          and doc_status_cd = 'ds02'
+          and r.user_id =#{userId}
+          and rcv_id = #{rcvId};
+    </select>
 </mapper>

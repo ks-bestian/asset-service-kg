@@ -9,7 +9,7 @@
         VALUES(#{docId}, #{userId}, #{userNm}, #{deptCd}, #{extOrgnCd}, #{rcvStatus}, #{rcvDtm}, #{checkDtm}, #{rcpDtm}, #{rjctDtm}, #{rjctCn}, #{rcvOrd});
     </insert>
     <update id="updateReceivedInfo" parameterType="kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.vo.UpdateReceivedInfoVo">
-        update eas_received_info
+        update kgst.eas_received_info
         <set>
             <if test="rcvStatus"> rcv_status = #{rcvStatus} , </if>
             <if test="rcvDtm"> rcv_dtm = #{rcvDtm} , </if>

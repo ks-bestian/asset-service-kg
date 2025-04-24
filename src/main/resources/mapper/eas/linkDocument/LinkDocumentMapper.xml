@@ -3,13 +3,22 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.eas.linkDocument.repository.LinkDocumentRepository">
     <insert id="insertLinkDocument" parameterType="kr.co.bestiansoft.ebillservicekg.eas.linkDocument.vo.LinkDocumentVo">
-        INSERT INTO eas_link_document
+        INSERT INTO kgst.eas_link_document
             (from_doc_id, to_doc_id, link_type, reg_dt, reg_id, link_id)
         VALUES(#{fromDocId}, #{toDocId}, #{linkType}, #{regDt}, #{regId}, #{linkId});
     </insert>
     <delete id="deleteLinkDocument">
-        delete eas_link_document
+        delete kgst.eas_link_document
          where from_doc_id =#{fromDocId}
            and to_doc_id =#{toDocId}
     </delete>
+    <select id="getLinkDocument" resultType="kr.co.bestiansoft.ebillservicekg.eas.linkDocument.vo.LinkDocumentVo">
+        select *
+        from kgst.eas_link_document
+        where from_doc_id = #{docId}
+        union distinct
+        select *
+        from kgst.eas_link_document
+        where to_doc_id = #{docId};
+    </select>
 </mapper>

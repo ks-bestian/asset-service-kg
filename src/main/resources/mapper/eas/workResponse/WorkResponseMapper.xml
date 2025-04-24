@@ -9,7 +9,7 @@
         VALUES(#{workReqId}, #{userId}, #{deptCd}, #{jobCd}, #{checkDtm}, #{rspnsDtm}, #{rspnsCn}, #{fileId}, #{rspnsId});
     </insert>
     <update id="updateWorkContents" parameterType="kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.UpdateWorkResponseVo">
-        update bestian.kgst.eas_work_response
+        update kgst.eas_work_response
         <set>
             <if test="checkDtm != null"> check_dtm =  #{checkDtm} , </if>
             <if test="rspnsDtm != null"> rspns_dtm = #{rspnsDtm} , </if>

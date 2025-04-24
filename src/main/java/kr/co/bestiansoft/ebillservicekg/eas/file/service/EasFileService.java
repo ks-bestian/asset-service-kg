@@ -8,4 +8,5 @@ import java.util.List;
 public interface EasFileService {
     EasFileVo uploadEasFile (EasFileVo vo);
     int saveEasFile(EasFileVo vo);
+    List<EasFileVo> getAttachFiles(String docId);
 }

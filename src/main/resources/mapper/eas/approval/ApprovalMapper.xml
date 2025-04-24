@@ -8,12 +8,12 @@
         VALUES(#{docId}, #{userId}, #{userNm}, #{deptCd}, #{jobCd}, #{apvlOrd}, #{apvlDtm}, #{rcvDtm}, #{checkDtm}, #{apvlFileId}, #{apvlOpinion}, #{apvlStatusCd});
     </insert>
     <update id="updateStatus">
-        update eas_approval
+        update kgst.eas_approval
            set apvl_status_cd = #{apvlStatusCd}
          where apvl_id = #{apvlId}
     </update>
     <update id="updateApproval" parameterType="kr.co.bestiansoft.ebillservicekg.eas.approval.vo.UpdateApprovalVo">
-        update eas_approval
+        update kgst.eas_approval
         <set>
             <if test="apvlDtm != null">  apvl_dtm = #{apvlDtm}, </if>
             <if test="rcvDtm != null"> rcv_dtm = #{rcvDtm},  </if>
