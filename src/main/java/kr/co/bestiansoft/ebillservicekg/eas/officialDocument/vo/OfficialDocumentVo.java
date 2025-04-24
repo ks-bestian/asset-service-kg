@@ -26,9 +26,10 @@ public class OfficialDocumentVo extends ComDefaultVO {
     private String senderNm;
     private String deptCd;
     private String docNo;
+    private LocalDateTime regDtm;
 
     @Builder
-    public OfficialDocumentVo(String docId, int aarsDocId, String userId, String docTypeCd, String docAttrbCd, String billId, char tmlmtYn, LocalDateTime tmlmtDtm, String docLng, String docSubtle, String docStatusCd, char digitalYn, String senderId, String senderNm, String deptCd, String docNo) {
+    public OfficialDocumentVo(String docId, int aarsDocId, String userId, String docTypeCd, String docAttrbCd, String billId, char tmlmtYn, LocalDateTime tmlmtDtm, String docLng, String docSubtle, String docStatusCd, char digitalYn, String senderId, String senderNm, String deptCd, String docNo, LocalDateTime regDtm) {
         this.docId = docId;
         this.aarsDocId = aarsDocId;
         this.userId = userId;
@@ -45,5 +46,6 @@ public class OfficialDocumentVo extends ComDefaultVO {
         this.senderNm = senderNm;
         this.deptCd = deptCd;
         this.docNo = docNo;
+        this.regDtm = regDtm;
     }
 }

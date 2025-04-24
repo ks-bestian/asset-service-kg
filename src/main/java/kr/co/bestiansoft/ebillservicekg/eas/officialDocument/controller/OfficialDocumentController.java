@@ -37,5 +37,10 @@ public class OfficialDocumentController {
     public ResponseEntity<CommonResponse> getOfficialDocument (@PathVariable int rcvId){
         return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.getDocumentDetail(rcvId)), HttpStatus.OK);
     }
+    @ApiOperation(value = "getCount", notes = "getCount")
+    @GetMapping("/eas/document/count")
+    public ResponseEntity<CommonResponse> getDocumentCount (){
+        return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.countDocumentList()), HttpStatus.OK);
+    }
 
 }

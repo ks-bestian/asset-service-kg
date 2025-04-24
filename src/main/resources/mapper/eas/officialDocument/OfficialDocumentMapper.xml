@@ -4,8 +4,8 @@
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.repository.OfficialDocumentMapper">
     <insert id="saveOfficialDocument" parameterType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.OfficialDocumentVo">
         INSERT INTO kgst.eas_document
-        (doc_id, aars_doc_id, user_id, doc_type_cd, doc_attrb_cd, bill_id, tmlmt_yn, tmlmt_dtm, doc_lng, doc_subtle, doc_status_cd, digital_yn, sender_id, sender_nm, dept_cd, doc_no)
-        VALUES(#{docId}, #{aarsDocId}, #{userId}, #{docTypeCd}, #{docAttrbCd}, #{billId}, #{tmlmtYn}, #{tmlmtDtm}, #{docLng}, #{docSubtle}, #{docStatusCd}, #{digitalYn}, #{senderId}, #{senderNm}, #{deptCd}, #{docNo});
+        (doc_id, aars_doc_id, user_id, doc_type_cd, doc_attrb_cd, bill_id, tmlmt_yn, tmlmt_dtm, doc_lng, doc_subtle, doc_status_cd, digital_yn, sender_id, sender_nm, dept_cd, doc_no, reg_dtm)
+        VALUES(#{docId}, #{aarsDocId}, #{userId}, #{docTypeCd}, #{docAttrbCd}, #{billId}, #{tmlmtYn}, #{tmlmtDtm}, #{docLng}, #{docSubtle}, #{docStatusCd}, #{digitalYn}, #{senderId}, #{senderNm}, #{deptCd}, #{docNo}, #{regDtm});
     </insert>
     <update id="updateStatus">
         update kgst.eas_document
@@ -52,14 +52,9 @@
           and doc_id = #{docId};
     </select>
     <select id="getDocumentDetail" resultType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.DocumentDetailDto">
-        select d.doc_id, aars_file_id,  d.doc_type_cd, d.doc_attrb_cd, bill_id, (select bill_no from ebs_master where bill_id= d.bill_id ) bill_no,
-               tmlmt_yn, tmlmt_dtm, doc_lng, doc_subtle, digital_yn, sender_id, d.sender_nm, d.dept_cd, doc_no,
-               rcv_id, rcv_status, r.rjct_cn, rcv_ord , rcv_dtm, rcp_dtm
-        from eas_document d, eas_received_info r, eas_draft ed
-        where d.doc_id = r.doc_id
-          and d.aars_doc_id = ed.aars_doc_id
-          and doc_status_cd = 'ds02'
-          and r.user_id =#{userId}
-          and rcv_id = #{rcvId};
+        select d.doc_id, aars_file_id,  d.doc_type_cd, d.doc_attrb_cd, bill_id, (select bill_no from ebs_master where bill_id= d.bill_id ) bill_no, tmlmt_yn, tmlmt_dtm, doc_lng, doc_subtle, digital_yn, sender_id, d.sender_nm, d.dept_cd, doc_no, d.reg_dtm
+        from eas_document d, eas_draft ed
+        where d.aars_doc_id = ed.aars_doc_id
+          and d.doc_id = #{docId}
     </select>
 </mapper>

@@ -9,5 +9,4 @@ public interface ApprovalRepository {
     int insertApproval(ApprovalVo vo);
     void updateStatus(String apvlId, String apvlStatusCd);
     void updateApproval(UpdateApprovalVo vo);
-//    void updateApproval()
 }

@@ -10,6 +10,6 @@ public interface OfficialDocumentService {
     int saveOfficialDocument(OfficialDocumentVo vo);
     int saveAllDocument(InsertDocumentVo vo);
     void updateStatusOfficialDocument(String billId, String status);
-    int countDocumentList(String userId);
+    int countDocumentList();
     DocumentDetailDto getDocumentDetail(int rcvId);
 }

@@ -26,6 +26,7 @@ public class InsertDocumentVo {
     private String docNo;
     private String deptCd;
     private String jobCd;
+    private String regDtm;
     private char externalYn;
 
     private String[] approvalIds;

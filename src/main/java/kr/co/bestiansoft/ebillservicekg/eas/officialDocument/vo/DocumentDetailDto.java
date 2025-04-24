@@ -28,4 +28,5 @@ public class DocumentDetailDto {
     String rcvStatus;
     LocalDateTime rcvDtm;
     LocalDateTime rcpDtm;
+    LocalDateTime regDtm;
 }

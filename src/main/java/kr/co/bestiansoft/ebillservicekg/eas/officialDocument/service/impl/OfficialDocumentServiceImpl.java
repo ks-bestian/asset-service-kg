@@ -57,7 +57,7 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
         int result= 0 ;
         String loginId = new SecurityInfoUtil().getAccountId();
         UserMemberVo loginUser = userService.getUserMemberDetail(loginId);
-
+        LocalDateTime now = LocalDateTime.now();
         /* save eas_document */
 
         OfficialDocumentVo documentVo = OfficialDocumentVo.builder()
@@ -77,6 +77,7 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
                 .docLng(arrayToString(vo.getDocLng()))
                 .docAttrbCd(arrayToString(vo.getDocAttrbCd()))
                 .senderNm(loginUser.getUserNm())
+                .regDtm(now)
                 .build();
 
 
@@ -89,7 +90,6 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
             UserMemberVo user = userService.getUserMemberDetail(approvalIds[i]);
             ApprovalVo approvalVo = ApprovalVo.builder()
                     .docId(vo.getDocId())
-                    .apvlDtm(LocalDateTime.now())
                     .apvlStatusCd("AS01")
                     .apvlOrd(i)
                     .userId(user.getUserId())
@@ -97,7 +97,7 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
                     .deptCd(user.getDeptCd())
                     .jobCd(user.getJobCd())
                     .build();
-
+            if(i ==0) approvalVo.setApvlDtm(now);
 
             result += approvalService.insertApproval(approvalVo);
         }
@@ -130,7 +130,7 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
                 .docId(vo.getDocId())
                 .userId(loginId)
                 .actType(actionType)
-                .actDtm(LocalDateTime.now())
+                .actDtm(now)
                 .actDetail(historyService.getActionDetail(actionType, loginUser.getUserNm()))
                 .userNm(loginUser.getUserNm())
                 .build();
@@ -147,8 +147,8 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
     }
 
     @Override
-    public int countDocumentList(String userId) {
-        return officialDocumentMapper.countDocumentList(userId);
+    public int countDocumentList() {
+        return officialDocumentMapper.countDocumentList(new SecurityInfoUtil().getAccountId());
     }
 
     @Override
