@@ -18,4 +18,9 @@ public class LinkDocumentServiceImpl implements LinkDocumentService {
     public int insertLinkDocument(LinkDocumentVo vo) {
         return linkDocumentRepository.insertLinkDocument(vo);
     }
+
+    @Override
+    public void deleteLinkDocument(String fromDocId, String toDocId) {
+        linkDocumentRepository.deleteLinkDocument(fromDocId, toDocId);
+    }
 }

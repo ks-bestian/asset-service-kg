@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Data
 public class UpdateReceivedInfoVo {
+    int rcv_id;
     String rcvStatus;
     LocalDateTime rcvDtm;
     LocalDateTime checkDtm;

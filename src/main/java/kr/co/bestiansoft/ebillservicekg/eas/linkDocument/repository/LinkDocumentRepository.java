@@ -6,4 +6,5 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface LinkDocumentRepository {
     int insertLinkDocument (LinkDocumentVo vo);
+    void deleteLinkDocument (String fromDocId, String toDocId);
 }

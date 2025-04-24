@@ -3,6 +3,7 @@ package kr.co.bestiansoft.ebillservicekg.eas.workResponse.service.impl;
 
 import kr.co.bestiansoft.ebillservicekg.eas.workResponse.repository.WorkResponseRepository;
 import kr.co.bestiansoft.ebillservicekg.eas.workResponse.service.WorkResponseService;
+import kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.UpdateWorkResponseVo;
 import kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.WorkResponseVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,5 +18,15 @@ public class WorkResponseServiceImpl implements WorkResponseService {
     @Override
     public int insertWorkResponse(WorkResponseVo vo) {
         return workResponseRepository.insertWorkResponse(vo);
+    }
+
+    @Override
+    public void updateWorkResponse(UpdateWorkResponseVo vo) {
+        workResponseRepository.updateWorkContents(vo);
+    }
+
+    @Override
+    public void deleteWorkRequestId(String workReqId) {
+        workResponseRepository.deleteWorkRequestId(workReqId);
     }
 }

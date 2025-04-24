@@ -25,4 +25,9 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
         vo.setRegDt(LocalDateTime.now());
         return draftDocumentRepository.insertDraftDocument(vo);
     }
+
+    @Override
+    public void updateDraftStatus(String aarsDocId, String aarsStatusCd) {
+        draftDocumentRepository.updateDraftStatus(aarsDocId, aarsStatusCd);
+    }
 }

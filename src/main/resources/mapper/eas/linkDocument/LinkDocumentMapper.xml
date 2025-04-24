@@ -7,4 +7,9 @@
             (from_doc_id, to_doc_id, link_type, reg_dt, reg_id, link_id)
         VALUES(#{fromDocId}, #{toDocId}, #{linkType}, #{regDt}, #{regId}, #{linkId});
     </insert>
+    <delete id="deleteLinkDocument">
+        delete eas_link_document
+         where from_doc_id =#{fromDocId}
+           and to_doc_id =#{toDocId}
+    </delete>
 </mapper>

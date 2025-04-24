@@ -6,4 +6,6 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface WorkRequestRepository {
     int insertWorkRequest (WorkRequestVo vo);
+    void deleteWorkRequest (String workReqId);
+    void updateWorkStatus (String workReqId, String workStatus);
 }

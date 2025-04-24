@@ -5,4 +5,5 @@ import kr.co.bestiansoft.ebillservicekg.eas.draftDocument.vo.DraftDocumentVo;
 public interface DraftDocumentService {
 
     int insertDraftDocument(DraftDocumentVo vo);
+    void updateDraftStatus(String aarsDocId, String aarsStatusCd);
 }

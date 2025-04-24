@@ -18,4 +18,14 @@ public class WorkRequestServiceImpl implements WorkRequestService {
     public int insertWorkRequest(WorkRequestVo vo) {
         return workRequestRepository.insertWorkRequest(vo);
     }
+
+    @Override
+    public void deleteWorkRequest(String workReqId) {
+        workRequestRepository.deleteWorkRequest(workReqId);
+    }
+
+    @Override
+    public void updateWorkStatus(String workReqId, String workStatus) {
+        workRequestRepository.updateWorkStatus(workReqId, workStatus);
+    }
 }

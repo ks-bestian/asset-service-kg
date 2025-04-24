@@ -3,10 +3,24 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.eas.workResponse.repository.WorkResponseRepository">
 
-<insert id="insertWorkResponse" parameterType="kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.WorkResponseVo">
-    INSERT INTO kgst.eas_work_response
-    (work_req_id, user_id, dept_cd, job_cd, check_dtm, rspns_dtm, rspns_cn, file_id, rspns_id)
-    VALUES(#{workReqId}, #{userId}, #{deptCd}, #{jobCd}, #{checkDtm}, #{rspnsDtm}, #{rspnsCn}, #{fileId}, #{rspnsId});
-</insert>
+    <insert id="insertWorkResponse" parameterType="kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.WorkResponseVo">
+        INSERT INTO kgst.eas_work_response
+        (work_req_id, user_id, dept_cd, job_cd, check_dtm, rspns_dtm, rspns_cn, file_id, rspns_id)
+        VALUES(#{workReqId}, #{userId}, #{deptCd}, #{jobCd}, #{checkDtm}, #{rspnsDtm}, #{rspnsCn}, #{fileId}, #{rspnsId});
+    </insert>
+    <update id="updateWorkContents" parameterType="kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.UpdateWorkResponseVo">
+        update bestian.kgst.eas_work_response
+        <set>
+            <if test="checkDtm != null"> check_dtm =  #{checkDtm} , </if>
+            <if test="rspnsDtm != null"> rspns_dtm = #{rspnsDtm} , </if>
+            <if test="rspnsCn != null"> rspns_cn = #{rspnsCn} , </if>
+            <if test="fileId != null"> file_iid =#{fileId} , </if>
+        </set>
+        where rspns_id = #{rspnsId}
+    </update>
+    <delete id="deleteWorkRequestId">
+        delete kgst.eas_work_response
+         where work_req_id =#{workReqId}
+    </delete>
 
 </mapper>
