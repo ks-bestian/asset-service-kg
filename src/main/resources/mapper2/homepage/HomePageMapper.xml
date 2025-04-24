@@ -76,6 +76,8 @@
 			, updated_by
 		FROM homepage."comments"
 		where 1=1
+		<if test="updatedBy != null">
 		and law_id = #{lawId}
+		</if>
 	</select>
 </mapper>

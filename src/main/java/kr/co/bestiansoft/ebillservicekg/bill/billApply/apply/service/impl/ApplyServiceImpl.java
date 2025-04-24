@@ -163,6 +163,8 @@ public class ApplyServiceImpl implements ApplyService {
 		billMngVo.setStepId(applyVo.getStepId());
 		billMngService.billRegisterMng(billMngVo);
 		
+		applyVo.setBillNo(billMngVo.getBillNo());
+		
 		return applyVo;
 	}
 
@@ -258,13 +260,12 @@ public class ApplyServiceImpl implements ApplyService {
 		result.setProposerList(proposerList);
 
 		//안건 의견 목록
-//		List<ApplyVo> commentList = homePageMapper.selectBillCommentList(applyDetail.getSclDscRcpNmb());
-//		result.setCommentList(commentList);
-		
-		if(applyDetail.getSclDscRcpNmb() != null && !"".equals(applyDetail.getSclDscRcpNmb())) {
-			List<CommentsVo> commentList = homePageMapper.selectCommentsByLawId(Long.valueOf(applyDetail.getSclDscRcpNmb()));
-			result.setCommentList(commentList);
-		}
+//		if(applyDetail.getSclDscRcpNmb() != null && !"".equals(applyDetail.getSclDscRcpNmb())) {
+//			List<CommentsVo> commentList = homePageMapper.selectCommentsByLawId(Long.valueOf(applyDetail.getSclDscRcpNmb()));
+//			result.setCommentList(commentList);
+//		}
+		List<CommentsVo> commentList = homePageMapper.selectCommentsByLawId(null);
+		result.setCommentList(commentList);
 
 		//안건 프로세스정보가져오기.
 		ProcessVo pcParam = new ProcessVo();

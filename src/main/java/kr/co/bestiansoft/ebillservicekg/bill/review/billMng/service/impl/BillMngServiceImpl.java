@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.vo.MtngAllVo;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper;
+import kr.co.bestiansoft.ebillservicekg.bill.review.billAll.vo.BillAllVo;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.service.BillMngService;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngResponse;
@@ -181,6 +182,11 @@ public class BillMngServiceImpl implements BillMngService {
     	billMngVo.setModId(loginId);
     	billMngMapper.updateBillno(billMngVo);// New billno create update
 
+    	HashMap<String, Object> param = new HashMap<>();
+    	param.put("billId", billMngVo.getBillId());
+    	BillAllVo bill = billAllMapper.selectBill(param);
+    	billMngVo.setBillNo(bill.getBillNo());
+    	
 		ProcessVo pVo = new ProcessVo();
 		pVo.setBillId(billMngVo.getBillId());
 		pVo.setStepId(billMngVo.getStepId());

@@ -14,6 +14,8 @@ import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMap
 import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
+import kr.co.bestiansoft.ebillservicekg.test.repository2.HomePageMapper;
+import kr.co.bestiansoft.ebillservicekg.test.vo.CommentsVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,6 +28,7 @@ public class AgreeServiceImpl implements AgreeService {
 
 	private final AgreeMapper agreeMapper;
 	private final ApplyMapper applyMapper;
+	private final HomePageMapper homePageMapper;
 
 	@Override
 	public List<AgreeVo> getAgreeList(HashMap<String, Object> param) {
@@ -50,6 +53,9 @@ public class AgreeServiceImpl implements AgreeService {
 		//파일목록
 		List<EbsFileVo> fileList = applyMapper.selectApplyFileList(billId);
 		result.setFileList(fileList);
+		
+		List<CommentsVo> commentList = homePageMapper.selectCommentsByLawId(null);
+		result.setCommentList(commentList);
 
 		return result;
 	}

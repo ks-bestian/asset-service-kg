@@ -93,6 +93,7 @@
 			  ema.atdt_user_id as member_id
 			, atdt_user_nm  as member_nm
 			, atdt_dept_nm  as dept_nm
+			, atdt_dept_nm  as poly_nm
 			, vum.dept_cd
 			, vum.poly_cd
 			, vum.poly_nm
