@@ -1,6 +1,5 @@
 package kr.co.bestiansoft.ebillservicekg.eas.approval.vo;
 
-import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
