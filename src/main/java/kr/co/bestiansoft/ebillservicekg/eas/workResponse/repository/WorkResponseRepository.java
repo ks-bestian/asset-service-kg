@@ -4,9 +4,12 @@ import kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.UpdateWorkResponseVo
 import kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.WorkResponseVo;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 @Mapper
 public interface WorkResponseRepository {
     int insertWorkResponse (WorkResponseVo vo);
-    void updateWorkContents (UpdateWorkResponseVo vo);
-    void deleteWorkRequestId(String workReqId);
+    int updateWorkContents (UpdateWorkResponseVo vo);
+    int deleteWorkRequestId(String workReqId);
+    List<WorkResponseVo> getWorkResponse(int workReqId);
 }

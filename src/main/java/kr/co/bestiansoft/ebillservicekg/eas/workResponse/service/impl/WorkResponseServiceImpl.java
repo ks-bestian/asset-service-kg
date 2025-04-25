@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -25,22 +27,29 @@ public class WorkResponseServiceImpl implements WorkResponseService {
     }
 
     /**
-     * Updates the work response details in the repository.
+     * Updates work response details using the provided data object.
      *
      * @param vo the UpdateWorkResponseVo object containing updated work response details
+     * @return the number of records updated
      */
     @Override
-    public void updateWorkResponse(UpdateWorkResponseVo vo) {
-        workResponseRepository.updateWorkContents(vo);
+    public int updateWorkResponse(UpdateWorkResponseVo vo) {
+        return workResponseRepository.updateWorkContents(vo);
     }
 
     /**
-     * Deletes a work request record based on the provided work request ID.
+     * Deletes a work request by its ID.
      *
-     * @param workReqId the unique identifier of the work request to be deleted
+     * @param workReqId the identifier of the work request to be deleted
+     * @return the number of records deleted
      */
     @Override
-    public void deleteWorkRequestId(String workReqId) {
-        workResponseRepository.deleteWorkRequestId(workReqId);
+    public int deleteWorkRequestId(String workReqId) {
+        return workResponseRepository.deleteWorkRequestId(workReqId);
+    }
+
+    @Override
+    public List<WorkResponseVo> getWorkResponse(int workReqId) {
+        return workResponseRepository.getWorkResponse(workReqId);
     }
 }

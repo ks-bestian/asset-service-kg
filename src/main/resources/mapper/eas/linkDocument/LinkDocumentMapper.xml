@@ -13,11 +13,11 @@
            and to_doc_id =#{toDocId}
     </delete>
     <select id="getLinkDocument" resultType="kr.co.bestiansoft.ebillservicekg.eas.linkDocument.vo.LinkDocumentVo">
-        select *
+        select link_id, from_doc_id, to_doc_id, link_type, reg_dt, reg_id
         from kgst.eas_link_document
         where from_doc_id = #{docId}
         union distinct
-        select *
+        select link_id, from_doc_id, to_doc_id, link_type, reg_dt, reg_id
         from kgst.eas_link_document
         where to_doc_id = #{docId};
     </select>

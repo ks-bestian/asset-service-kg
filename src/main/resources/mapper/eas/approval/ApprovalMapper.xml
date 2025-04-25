@@ -24,5 +24,9 @@
         </set>
         where apvl_id = #{apvlId}
     </update>
-
+    <select id="getApproval" resultType="kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalVo">
+        select apvl_id, doc_id, user_id, user_nm, dept_cd, job_cd, apvl_ord, apvl_dtm, rcv_dtm, check_dtm, apvl_file_id, apvl_opinion, apvl_status_cd
+          from kgst.eas_approval
+         where doc_id =#{docId}
+    </select>
 </mapper>

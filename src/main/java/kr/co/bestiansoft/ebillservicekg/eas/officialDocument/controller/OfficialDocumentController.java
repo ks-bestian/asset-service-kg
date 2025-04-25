@@ -47,5 +47,9 @@ public class OfficialDocumentController {
     public ResponseEntity<CommonResponse> updateStatusOfficialDocument (String docId, String status){
         return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.updateStatusOfficialDocument(docId, status)), HttpStatus.OK);
     }
-
+    @ApiOperation(value = "getDocumentUser", notes = "getDocumentUser")
+    @GetMapping("/eas/document/user/{docId}")
+    public ResponseEntity<CommonResponse> getDocumentUser ( @PathVariable  String docId){
+        return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.getDocumentUser(docId)), HttpStatus.OK);
+    }
 }

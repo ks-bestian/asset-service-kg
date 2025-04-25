@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
-public class ApprovalVo  extends ComDefaultVO {
+public class ApprovalVo  {
     private int apvlId;
     private String docId;
     private String userId;

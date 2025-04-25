@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Slf4j
 @Service
@@ -35,6 +37,17 @@ public class ReceivedInfoServiceImpl implements ReceivedInfoService {
     @Override
     public int updateReceivedInfo(UpdateReceivedInfoVo vo) {
         return receivedInfoRepository.updateReceivedInfo(vo);
+    }
+
+    /**
+     * Retrieves a list of received information records based on the provided document ID.
+     *
+     * @param docId the identifier of the document for which the received information is to be retrieved
+     * @return a list of {@link ReceivedInfoVo} objects containing the received information
+     */
+    @Override
+    public List<ReceivedInfoVo> getReceivedInfo(String docId) {
+        return receivedInfoRepository.getReceivedInfo(docId);
     }
 
 }

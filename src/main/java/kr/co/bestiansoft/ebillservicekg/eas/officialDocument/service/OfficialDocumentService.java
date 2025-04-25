@@ -12,4 +12,5 @@ public interface OfficialDocumentService {
     int updateStatusOfficialDocument(String docId, String status);
     int countDocumentList();
     DocumentDetailDto getDocumentDetail(String docId);
+    List<DocumentUserDto> getDocumentUser(String docId);
 }

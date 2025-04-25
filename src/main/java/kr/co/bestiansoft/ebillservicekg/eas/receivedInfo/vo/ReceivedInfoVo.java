@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
-public class ReceivedInfoVo extends ComDefaultVO {
+public class ReceivedInfoVo {
     private int rcvId;
     private String docId;
     private String userId;

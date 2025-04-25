@@ -9,7 +9,7 @@
         VALUES(#{fileId}, #{docId}, #{fileType}, #{orgFileId}, #{orgFileName}, #{pdfFileId}, #{pdfFileName}, #{fileSize}, #{fileExt}, #{deleteYn}, #{deleteDtm}, #{deleteUserId}, #{regId}, #{regDt});
     </insert>
     <select id="getAttachFiles" resultType="kr.co.bestiansoft.ebillservicekg.eas.file.vo.EasFileVo">
-        select ef.*
+        select file_id, doc_id, file_type, org_file_id, org_file_nm, pdf_file_id, pdf_file_nm, file_size, file_ext, delete_yn, delete_dtm, delete_user_id, reg_id, reg_dt
         from kgst.eas_file ef
         where ef.file_type = 'EFT01'
           and ef.doc_id = #{docId};

@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Slf4j
 @Service
@@ -46,4 +48,13 @@ public class ApprovalServiceImpl implements ApprovalService {
         approvalRepository.updateApproval(vo);
     }
 
+    /**
+     * Retrieves a list of approval records associated with the given document ID.
+     *
+     * @param docId the unique identifier of the document for which approval records are to be fetched
+     * @return a list of ApprovalVo objects containing the approval details
+     */
+    public List<ApprovalVo> getApproval(String docId){
+        return  approvalRepository.getApproval(docId);
+    }
 }

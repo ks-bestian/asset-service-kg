@@ -11,6 +11,6 @@ public interface OfficialDocumentMapper {
     int saveOfficialDocument(OfficialDocumentVo vo);
     int updateStatus(String docId, String docStatusCd);
     int countDocumentList(String userId);
-    DocumentUserDto getDocumentUser(String docId);
+    List<DocumentUserDto> getDocumentUser(String docId);
     DocumentDetailDto getDocumentDetail(String docId);
 }

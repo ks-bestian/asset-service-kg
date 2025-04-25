@@ -22,5 +22,9 @@
         delete kgst.eas_work_response
          where work_req_id =#{workReqId}
     </delete>
-
+    <select id="getWorkResponse" resultType="kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.WorkResponseVo">
+        select rspns_id, work_req_id, user_id, dept_cd, job_cd, check_dtm, rspns_dtm, rspns_cn, file_id, user_nm
+          from eas_work_response
+         where work_req_id =#{workReqId}
+    </select>
 </mapper>

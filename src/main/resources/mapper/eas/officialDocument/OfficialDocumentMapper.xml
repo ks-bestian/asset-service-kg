@@ -26,12 +26,17 @@
         order by rcv_dtm desc
     </select>
     <select id="countDocumentList" resultType="int">
-        select count(d.doc_id)
-        from eas_document d, eas_received_info r
-        where d.doc_id = r.doc_id
-          and doc_status_cd = 'ds02'
-          and check_dtm is null
-          and r.user_id = #{userId};
+        select count(1)
+        from eas_received_info r
+        where r.user_id = 'gduser1'
+          and r.check_dtm is null
+          and exists (
+            select 1
+              from eas_document d
+             where d.doc_id = r.doc_id
+               and d.doc_status_cd = 'ds02'
+        );
+
     </select>
     <select id="getDocumentUser" resultType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.DocumentUserDto">
         select sender_id as user_id , sender_nm as user_nm ,dept_cd

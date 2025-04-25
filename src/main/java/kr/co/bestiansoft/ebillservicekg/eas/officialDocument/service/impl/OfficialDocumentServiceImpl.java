@@ -8,6 +8,7 @@ import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.eas.approval.service.ApprovalService;
 import kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalVo;
+import kr.co.bestiansoft.ebillservicekg.eas.file.service.EasFileService;
 import kr.co.bestiansoft.ebillservicekg.eas.history.service.HistoryService;
 import kr.co.bestiansoft.ebillservicekg.eas.history.vo.HistoryVo;
 import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.repository.OfficialDocumentMapper;
@@ -38,6 +39,7 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
     private final ReceivedInfoService receivedInfoService;
     private final HistoryService historyService;
     private final UserService userService;
+    private final EasFileService easFileService;
 
     /**
      * Retrieves a list of documents based on the search criteria provided.
@@ -199,15 +201,27 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
     }
 
     /**
-     * Retrieves the details of a document based on the given document ID.
+     * Retrieves the details of a document by its identifier.
      *
-     * @param docId the unique identifier of the document whose details are to be fetched.
-     * @return an instance of {@link DocumentDetailDto} containing the detailed information
-     *         about the specified document.
+     * @param docId The unique identifier of the document.
+     * @return A DTO containing the document details, including its associated files.
      */
     @Override
     public DocumentDetailDto getDocumentDetail(String docId) {
-        return officialDocumentMapper.getDocumentDetail(docId);
+        DocumentDetailDto documentDetailDto = officialDocumentMapper.getDocumentDetail(docId);
+        documentDetailDto.setFiles(easFileService.getAttachFiles(docId));
+        return documentDetailDto;
+    }
+
+    /**
+     * Retrieves a list of DocumentUserDto objects associated with the specified document ID.
+     *
+     * @param docId the unique identifier of the document for which the users are to be fetched
+     * @return a list of DocumentUserDto representing the users associated with the specified document
+     */
+    @Override
+    public List<DocumentUserDto> getDocumentUser(String docId) {
+        return officialDocumentMapper.getDocumentUser(docId);
     }
 
     /**

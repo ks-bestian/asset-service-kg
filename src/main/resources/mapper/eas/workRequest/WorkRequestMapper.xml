@@ -17,4 +17,10 @@
            set work_status = #{workStatus}
          where work_req_id = #{workReqId}
     </update>
+    <select id="getWorkRequestList" resultType="kr.co.bestiansoft.ebillservicekg.eas.workRequest.vo.WorkRequestVo">
+        select work_req_id, doc_id, work_cn, tmlmt_yn, tmlmt_dtm, info_yn, work_cycle_cd, reg_id, reg_dt, work_status
+          from kgst.eas_work_request
+         where doc_id = #{docId}
+    </select>
+
 </mapper>

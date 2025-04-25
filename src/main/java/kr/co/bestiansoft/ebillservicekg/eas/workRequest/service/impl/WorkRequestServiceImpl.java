@@ -2,10 +2,17 @@ package kr.co.bestiansoft.ebillservicekg.eas.workRequest.service.impl;
 
 import kr.co.bestiansoft.ebillservicekg.eas.workRequest.repository.WorkRequestRepository;
 import kr.co.bestiansoft.ebillservicekg.eas.workRequest.service.WorkRequestService;
+import kr.co.bestiansoft.ebillservicekg.eas.workRequest.vo.WorkRequestAndResponseVo;
 import kr.co.bestiansoft.ebillservicekg.eas.workRequest.vo.WorkRequestVo;
+import kr.co.bestiansoft.ebillservicekg.eas.workResponse.service.WorkResponseService;
+import kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.WorkResponseVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -13,6 +20,7 @@ import org.springframework.stereotype.Service;
 public class WorkRequestServiceImpl implements WorkRequestService {
 
     private final WorkRequestRepository workRequestRepository;
+    private final WorkResponseService workResponseService;
 
     /**
      * Inserts a work request record into the repository.
@@ -26,23 +34,46 @@ public class WorkRequestServiceImpl implements WorkRequestService {
     }
 
     /**
-     * Deletes a work request from the repository based on the provided work request ID.
+     * Deletes a work request identified by the provided ID.
      *
      * @param workReqId the unique identifier of the work request to be deleted
+     * @return the number of records deleted, typically 1 if successful
      */
     @Override
-    public void deleteWorkRequest(String workReqId) {
-        workRequestRepository.deleteWorkRequest(workReqId);
+    public int deleteWorkRequest(String workReqId) {
+        return workRequestRepository.deleteWorkRequest(workReqId);
     }
 
     /**
-     * Updates the status of a work request in the repository.
+     * Updates the status of the work request identified by the given ID.
      *
-     * @param workReqId the unique identifier of the work request
-     * @param workStatus the new status to be assigned to the work request
+     * @param workReqId the unique identifier of the work request to update
+     * @param workStatus the new status to be updated for the work request
+     * @return the number of records affected by the update, typically 1 if successful
      */
     @Override
-    public void updateWorkStatus(String workReqId, String workStatus) {
-        workRequestRepository.updateWorkStatus(workReqId, workStatus);
+    public int updateWorkStatus(String workReqId, String workStatus) {
+        return workRequestRepository.updateWorkStatus(workReqId, workStatus);
     }
+
+
+    /**
+     * Retrieves a list of work requests associated with the specified document ID,
+     * and enriches each work request with its corresponding responses.
+     *
+     * @param docId the document ID used to filter work requests
+     * @return a list of WorkRequestAndResponseVo objects, where each object contains
+     *         details of the work request and its associated responses
+     */
+    @Override
+    public List<WorkRequestAndResponseVo> getWorkRequestList(String docId) {
+        return workRequestRepository.getWorkRequestList(docId)
+                .stream()
+                .map(request -> {
+                    List<WorkResponseVo> responses = workResponseService.getWorkResponse(request.getWorkReqId());
+                    return new WorkRequestAndResponseVo().from(request, responses);
+                })
+                .collect(Collectors.toList());
+    }
+
 }

@@ -8,9 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.ApiOperation;
 
 @Controller
@@ -30,5 +28,10 @@ public class ReceivedInfoController {
     public ResponseEntity<CommonResponse> insertReceivedInfo(@RequestBody UpdateReceivedInfoVo vo) {
         System.out.println(vo.toString());
         return new ResponseEntity<>(new CommonResponse(200, "OK", infoService.updateReceivedInfo(vo)), HttpStatus.OK);
+    }
+    @ApiOperation(value="getReceivedInfo", notes = "getReceivedInfo")
+    @GetMapping("/eas/receivedInfo/{docId}")
+    public ResponseEntity<CommonResponse> getReceivedInfo(@PathVariable String docId){
+        return new ResponseEntity<>(new CommonResponse(200, "OK", infoService.getReceivedInfo(docId)), HttpStatus.OK);
     }
 }
