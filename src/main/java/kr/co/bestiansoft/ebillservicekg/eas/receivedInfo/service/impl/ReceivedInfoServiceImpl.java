@@ -15,14 +15,26 @@ public class ReceivedInfoServiceImpl implements ReceivedInfoService {
 
     private final ReceivedInfoRepository receivedInfoRepository;
 
+    /**
+     * Inserts the received information into the repository.
+     *
+     * @param vo the {@link ReceivedInfoVo} object containing the received information to be inserted
+     * @return the number of rows affected by the insert operation
+     */
     @Override
     public int insertReceivedInfo(ReceivedInfoVo vo) {
         return receivedInfoRepository.insertReceivedInfo(vo);
     }
 
+    /**
+     * Updates the received information in the repository.
+     *
+     * @param vo the {@link UpdateReceivedInfoVo} object containing the updated information
+     * @return the number of rows affected by the update operation
+     */
     @Override
-    public void updateReceivedInfo(UpdateReceivedInfoVo vo) {
-        receivedInfoRepository.updateReceivedInfo(vo);
+    public int updateReceivedInfo(UpdateReceivedInfoVo vo) {
+        return receivedInfoRepository.updateReceivedInfo(vo);
     }
 
 }

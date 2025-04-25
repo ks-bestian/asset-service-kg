@@ -5,5 +5,5 @@ import kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.vo.UpdateReceivedInfoVo
 
 public interface ReceivedInfoService {
     int insertReceivedInfo (ReceivedInfoVo vo);
-    void updateReceivedInfo (UpdateReceivedInfoVo vo);
+    int updateReceivedInfo (UpdateReceivedInfoVo vo);
 }

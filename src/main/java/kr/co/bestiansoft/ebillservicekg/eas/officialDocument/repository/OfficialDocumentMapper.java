@@ -9,8 +9,8 @@ import java.util.List;
 public interface OfficialDocumentMapper {
     List<DocumentListDto> getDocumentList(SearchDocumentVo vo);
     int saveOfficialDocument(OfficialDocumentVo vo);
-    void updateStatus(String billId, String docStatusCd);
+    int updateStatus(String docId, String docStatusCd);
     int countDocumentList(String userId);
     DocumentUserDto getDocumentUser(String docId);
-    DocumentDetailDto getDocumentDetail(String userId, int rcvId);
+    DocumentDetailDto getDocumentDetail(String docId);
 }

@@ -18,11 +18,26 @@ public class HistoryServiceImpl implements HistoryService {
 
     private final HistoryRepository historyRepository;
     private final ComCodeService codeService;
+
+    /**
+     * Inserts a history record into the database.
+     *
+     * @param vo the HistoryVo object containing the details of the history to be inserted
+     * @return an integer representing the number of rows affected by the insert operation
+     */
     @Override
     public int insertHistory(HistoryVo vo) {
         return historyRepository.insertHistory(vo);
     }
 
+    /**
+     * Retrieves the action detail by combining a username and a code name associated with the given action type.
+     *
+     * @param actionType the type of the action whose code name is to be retrieved
+     * @param userNm     the name of the user to be included in the action detail
+     * @return a string combining the username and the code name associated with the action type,
+     *         or an empty string if no code name is found for the given action type
+     */
     public String getActionDetail(String actionType, String userNm){
         return Optional.ofNullable(codeService.getComCodeById(actionType))
                 .map(ComCodeDetailVo::getCodeNm1)

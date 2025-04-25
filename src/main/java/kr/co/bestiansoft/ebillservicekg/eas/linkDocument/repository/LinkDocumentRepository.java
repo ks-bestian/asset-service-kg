@@ -8,6 +8,6 @@ import java.util.List;
 @Mapper
 public interface LinkDocumentRepository {
     int insertLinkDocument (LinkDocumentVo vo);
-    void deleteLinkDocument (String fromDocId, String toDocId);
+    int deleteLinkDocument (String fromDocId, String toDocId);
     List<LinkDocumentVo> getLinkDocument (String docId);
 }

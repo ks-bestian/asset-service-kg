@@ -39,17 +39,52 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
     private final HistoryService historyService;
     private final UserService userService;
 
-
+    /**
+     * Retrieves a list of documents based on the search criteria provided.
+     *
+     * @param vo the search criteria encapsulated in a {@link SearchDocumentVo} object.
+     *           This includes fields such as document attributes, time limits,
+     *           document type, and received date ranges.
+     *           The method also sets the user ID in the search criteria using the account information.
+     *
+     * @return a list of {@link DocumentListDto} objects that match the search criteria.
+     *         Each object contains details such as document ID, attributes, sender information,
+     *         and timestamps related to document receipt and checking.
+     */
     @Override
     public List<DocumentListDto> getDocumentList(SearchDocumentVo vo) {
         vo.setUserId(new SecurityInfoUtil().getAccountId());
         return officialDocumentMapper.getDocumentList(vo);
     }
 
+    /**
+     * Saves an official document to the database.
+     *
+     * @param vo an instance of {@link OfficialDocumentVo} containing the details
+     *           of the document to be saved, such as ID, attributes, status, and other metadata.
+     * @return an integer indicating the number of rows affected by the save operation.
+     */
     public int saveOfficialDocument(OfficialDocumentVo vo){
         return officialDocumentMapper.saveOfficialDocument(vo);
     }
 
+    /**
+     * Saves all document-related data including official document, approvals, received information, and history.
+     * The method performs transactional operations and integrates multiple services to store the provided document data.
+     *
+     * @param vo InsertDocumentVo containing the data required to save the document and related details:
+     *           - Aars document ID
+     *           - Bill ID
+     *           - Document ID
+     *           - Document number
+     *           - Department code
+     *           - Document type code
+     *           - Document timeline and status
+     *           - Approvals and receiver information
+     *           - Other metadata for the document.
+     * @return The total count of records affected across all the insert operations, including those for
+     *         official documents, approvals, received info, and history.
+     */
     @Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
     @Override
     public int saveAllDocument(InsertDocumentVo vo) {
@@ -141,21 +176,46 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
 
     }
 
+    /**
+     * Updates the status of an official document in the database.
+     *
+     * @param docId the unique identifier of the document whose status is to be updated
+     * @param status the new status to be applied to the specified document
+     * @return an integer representing the number of rows affected by the update operation
+     */
     @Override
-    public void updateStatusOfficialDocument(String billId, String status) {
-        officialDocumentMapper.updateStatus(billId,status);
+    public int updateStatusOfficialDocument(String docId, String status) {
+        return officialDocumentMapper.updateStatus(docId,status);
     }
 
+    /**
+     * Counts the total number of documents associated with the currently logged-in account.
+     *
+     * @return the count of documents as an integer.
+     */
     @Override
     public int countDocumentList() {
         return officialDocumentMapper.countDocumentList(new SecurityInfoUtil().getAccountId());
     }
 
+    /**
+     * Retrieves the details of a document based on the given document ID.
+     *
+     * @param docId the unique identifier of the document whose details are to be fetched.
+     * @return an instance of {@link DocumentDetailDto} containing the detailed information
+     *         about the specified document.
+     */
     @Override
-    public DocumentDetailDto getDocumentDetail(int rcvId) {
-        return officialDocumentMapper.getDocumentDetail(new SecurityInfoUtil().getAccountId(),rcvId);
+    public DocumentDetailDto getDocumentDetail(String docId) {
+        return officialDocumentMapper.getDocumentDetail(docId);
     }
 
+    /**
+     * Converts an array of Strings into a single, comma-separated String.
+     *
+     * @param arrayS the array of Strings to be concatenated into a single String
+     * @return a comma-separated String containing all elements of the input array
+     */
     public String arrayToString(String[] arrayS){
         return String.join(",", arrayS);
     }

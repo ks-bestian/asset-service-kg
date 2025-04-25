@@ -23,10 +23,5 @@ public class DocumentDetailDto {
     String senderNm;
     String deptCd;
     String docNo;
-    int rcvId;
-    String receiveUserId;
-    String rcvStatus;
-    LocalDateTime rcvDtm;
-    LocalDateTime rcpDtm;
     LocalDateTime regDtm;
 }

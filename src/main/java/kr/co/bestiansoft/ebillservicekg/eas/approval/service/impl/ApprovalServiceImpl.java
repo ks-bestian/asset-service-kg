@@ -15,14 +15,32 @@ public class ApprovalServiceImpl implements ApprovalService {
 
     private final ApprovalRepository approvalRepository;
 
+    /**
+     * Inserts a new approval record into the repository.
+     *
+     * @param vo the ApprovalVo object containing approval information to be inserted
+     * @return the number of rows affected by the insert operation
+     */
     public int insertApproval(ApprovalVo vo){
         return approvalRepository.insertApproval(vo);
     }
 
+    /**
+     * Updates the status of an approval record in the repository.
+     *
+     * @param apvlId the unique identifier of the approval record to be updated
+     * @param apvlStatusCd the new status code to be set for the approval record
+     */
     @Override
     public void updateStatus(String apvlId, String apvlStatusCd){
         approvalRepository.updateStatus(apvlId, apvlStatusCd);
     }
+
+    /**
+     * Updates an existing approval record in the repository with the provided details.
+     *
+     * @param vo the UpdateApprovalVo object containing the updated approval information
+     */
     @Override
     public void updateApproval(UpdateApprovalVo vo) {
         approvalRepository.updateApproval(vo);

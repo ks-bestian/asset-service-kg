@@ -33,14 +33,19 @@ public class OfficialDocumentController {
         return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.getDocumentList(vo)), HttpStatus.OK);
     }
     @ApiOperation(value = "getDocumentDetail", notes = "getDocumentDetail")
-    @GetMapping("/eas/document/{rcvId}")
-    public ResponseEntity<CommonResponse> getOfficialDocument (@PathVariable int rcvId){
-        return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.getDocumentDetail(rcvId)), HttpStatus.OK);
+    @GetMapping("/eas/document/{docId}")
+    public ResponseEntity<CommonResponse> getOfficialDocument (@PathVariable String docId){
+        return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.getDocumentDetail(docId)), HttpStatus.OK);
     }
-    @ApiOperation(value = "getCount", notes = "getCount")
-    @GetMapping("/eas/document/count")
+    @ApiOperation(value = "getReceivedCount", notes = "getReceivedCount")
+    @GetMapping("/eas/document/receive/count")
     public ResponseEntity<CommonResponse> getDocumentCount (){
         return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.countDocumentList()), HttpStatus.OK);
+    }
+    @ApiOperation(value = "updateDocumentStatus", notes = "updateDocumentStatus")
+    @PutMapping("/eas/document/status")
+    public ResponseEntity<CommonResponse> updateStatusOfficialDocument (String docId, String status){
+        return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.updateStatusOfficialDocument(docId, status)), HttpStatus.OK);
     }
 
 }

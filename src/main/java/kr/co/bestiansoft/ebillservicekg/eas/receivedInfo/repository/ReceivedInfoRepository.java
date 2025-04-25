@@ -7,5 +7,5 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface ReceivedInfoRepository {
     int insertReceivedInfo(ReceivedInfoVo vo);
-    void updateReceivedInfo(UpdateReceivedInfoVo vo);
+    int updateReceivedInfo(UpdateReceivedInfoVo vo);
 }

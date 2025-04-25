@@ -9,7 +9,7 @@ public interface OfficialDocumentService {
     List<DocumentListDto> getDocumentList(SearchDocumentVo vo);
     int saveOfficialDocument(OfficialDocumentVo vo);
     int saveAllDocument(InsertDocumentVo vo);
-    void updateStatusOfficialDocument(String billId, String status);
+    int updateStatusOfficialDocument(String docId, String status);
     int countDocumentList();
-    DocumentDetailDto getDocumentDetail(int rcvId);
+    DocumentDetailDto getDocumentDetail(String docId);
 }
