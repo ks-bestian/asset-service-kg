@@ -2,6 +2,7 @@ package kr.co.bestiansoft.ebillservicekg.common.file.service.impl;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -54,10 +55,6 @@ public class ComFileServiceImpl implements ComFileService {
 	private final PdfService pdfService;
 	private final DocumentMapper documentMapper;
 	
-//	@Value("${edv.pdf-temp-path}")
-//    private String pdfTempPath;
-	
-
 	@Override
 	public String saveFile(MultipartFile[] files) {
 		String fileGroupId = StringUtil.getUUUID();
@@ -189,118 +186,34 @@ public class ComFileServiceImpl implements ComFileService {
 		}
 	}
 
+	@Transactional
 	@Override
 	public void saveFileEbs(MultipartFile[] files, String[] fileKindCdList, String billId) {
-
 		if(files == null) return;
-
-		List<Map<String, Object>> pdfJobs = new ArrayList<>();
-
-		String[] fileKindCds = fileKindCdList;
-		int idx = 0;
-		for(MultipartFile file:files) {
-
-			String orgFileId = StringUtil.getUUUID();
-    		String orgFileNm = file.getOriginalFilename();
-    		String fileKindCd = fileKindCds[idx];
-
-    		////////////////////////
-			try (InputStream edvIs = file.getInputStream()){
-				edv.save(orgFileId, edvIs);
-			} catch (Exception edvEx) {
-				throw new RuntimeException("EDV_NOT_WORK", edvEx);
-			}
-    		////////////////////////
-
-			EbsFileVo fileVo = new EbsFileVo();
-			fileVo.setBillId(billId);
-
-			fileVo.setOrgFileId(orgFileId);
-			fileVo.setOrgFileNm(orgFileNm);
-			fileVo.setFileSize(file.getSize());
-			fileVo.setDeleteYn("N");
-			fileVo.setOpbYn("N");
-			fileVo.setFileKindCd(fileKindCd);
-			idx++;
-			fileMapper.insertFileEbs(fileVo);
-
-			// pdf변환작업
-			Map<String, Object> pdfJob = new HashMap<>();
-			pdfJob.put("file", file);
-			pdfJob.put("orgFileId", orgFileId);
-			pdfJobs.add(pdfJob);
-		}
-
-		// pdf변환
-		for(Map<String, Object> job : pdfJobs) {
-			MultipartFile file = (MultipartFile)job.get("file");
-			String orgFileId = (String)job.get("orgFileId");
-			convertToPdfEbs(file, orgFileId);
+		
+		for(int i = 0; i < files.length; ++i) {
+			MultipartFile file = files[i];
+			String fileKindCd = fileKindCdList[i];
+			String opbYn = "N";
+			String clsCd = null;
+			Long detailSeq = null;
+			saveFileEbs(file, fileKindCd, billId, clsCd, opbYn, detailSeq);
 		}
 	}
 
+	@Transactional
 	@Override
 	public void saveFileEbs(String[] myFileIds, String[] fileKindCdList, String billId) throws Exception {
 
 		if(myFileIds == null) return;
 
-		List<Map<String, Object>> pdfJobs = new ArrayList<>();
-
-		String[] fileKindCds = fileKindCdList;
-		int idx = 0;
-		for(String myFileId : myFileIds) {
-
-			String userId = new SecurityInfoUtil().getAccountId();
-			FileVo myFile = documentMapper.selectMyFile(userId, myFileId);
-
-			String orgFileId = StringUtil.getUUUID();
-    		String orgFileNm = myFile.getFileTitle();
-    		String fileType = myFile.getFileType();
-    		if(fileType != null && fileType.length() > 0) {
-    			orgFileNm += "." + fileType;
-    		}
-    		String fileKindCd = fileKindCds[idx];
-
-    		InputStream myFileIs = edv.download(myFileId);
-    		File tmpFile = File.createTempFile("tmp", null);
-			IOUtils.copy(myFileIs, new FileOutputStream(tmpFile));
-
-    		////////////////////////
-			try (InputStream edvIs = new FileInputStream(tmpFile)){
-				edv.save(orgFileId, edvIs);
-			} catch (Exception edvEx) {
-				throw new RuntimeException("EDV_NOT_WORK", edvEx);
-			}
-    		////////////////////////
-
-			EbsFileVo fileVo = new EbsFileVo();
-			fileVo.setBillId(billId);
-
-			fileVo.setOrgFileId(orgFileId);
-			fileVo.setOrgFileNm(orgFileNm);
-			fileVo.setFileSize(myFile.getFileSize());
-			fileVo.setDeleteYn("N");
-			fileVo.setOpbYn("N");
-			fileVo.setFileKindCd(fileKindCd);
-			idx++;
-			fileMapper.insertFileEbs(fileVo);
-
-			// pdf변환작업
-			Map<String, Object> pdfJob = new HashMap<>();
-			pdfJob.put("tmpFile", tmpFile);
-			pdfJob.put("filename", myFile.getFileNm());
-			pdfJob.put("orgFileId", orgFileId);
-			pdfJobs.add(pdfJob);
-
-			myFileIs.close();
-		}
-
-		// pdf변환
-		for(Map<String, Object> job : pdfJobs) {
-			File tmpFile = (File)job.get("tmpFile");
-			String filename = (String)job.get("filename");
-			String orgFileId = (String)job.get("orgFileId");
-			convertToPdfEbs(tmpFile, filename, orgFileId);
+		for(int i = 0; i < myFileIds.length; ++i) {
+			String myFileId = myFileIds[i];
+			String fileKindCd = fileKindCdList[i];
+			String opbYn = "N";
+			String clsCd = null;
+			Long detailSeq = null;
+			saveFileEbs(myFileId, fileKindCd, billId, clsCd, opbYn, detailSeq);
 		}
 	}
 
@@ -502,58 +415,106 @@ public class ComFileServiceImpl implements ComFileService {
 	}
 
 	@Override
-	public void saveFileBillDetailMng(BillMngVo billMngVo) {
+	public void saveFileBillDetailMng(BillMngVo billMngVo) throws Exception {
 
-		if(billMngVo.getFiles() == null) return;
-
-		List<Map<String, Object>> pdfJobs = new ArrayList<>();
-		Long detailSeq = billMngVo.getSeq();
-		String billId = billMngVo.getBillId();
-		String clsCd = billMngVo.getClsCd();
-
-		for(MultipartFile file:billMngVo.getFiles()) {
-
-			String orgFileId = StringUtil.getUUUID();
-    		String orgFileNm = file.getOriginalFilename();
-
-    		////////////////////////
-			try (InputStream edvIs = file.getInputStream()){
-				edv.save(orgFileId, edvIs);
-			} catch (Exception edvEx) {
-				throw new RuntimeException("EDV_NOT_WORK", edvEx);
-			}
-    		////////////////////////
-
-			EbsFileVo fileVo = new EbsFileVo();
-			fileVo.setBillId(billId);
-
-			fileVo.setOrgFileId(orgFileId);
-			fileVo.setOrgFileNm(orgFileNm);
-			fileVo.setFileSize(file.getSize());
-			fileVo.setDeleteYn("N");
-			fileVo.setOpbYn("Y");
-			fileVo.setDetailSeq(detailSeq);
-			fileVo.setClsCd(clsCd);
-			fileVo.setRegId(new SecurityInfoUtil().getAccountId());
-			
-			fileVo.setFileKindCd(billMngVo.getFileKindCd());
-			fileMapper.insertFileEbs(fileVo);
-
-			// pdf변환작업
-			Map<String, Object> pdfJob = new HashMap<>();
-			pdfJob.put("file", file);
-			pdfJob.put("orgFileId", orgFileId);
-			pdfJobs.add(pdfJob);
+		if(billMngVo.getFiles() != null) {
+			for(MultipartFile file : billMngVo.getFiles()) {
+				String opbYn = "Y";
+				saveFileEbs(file, billMngVo.getFileKindCd(), billMngVo.getBillId(), billMngVo.getClsCd(), opbYn, billMngVo.getSeq());
+			}	
 		}
-
-		// pdf변환
-		for(Map<String, Object> job : pdfJobs) {
-			MultipartFile file = (MultipartFile)job.get("file");
-			String orgFileId = (String)job.get("orgFileId");
-			convertToPdfEbs(file, orgFileId);
+		if(billMngVo.getMyFileIds() != null) {
+			for(String myFileId : billMngVo.getMyFileIds()) {
+				String opbYn = "Y";
+				saveFileEbs(myFileId, billMngVo.getFileKindCd(), billMngVo.getBillId(), billMngVo.getClsCd(), opbYn, billMngVo.getSeq());
+			}
 		}
 
 	}
 	
+	@Transactional
+	@Override
+	public void saveFileEbs(MultipartFile file, String fileKindCd, String billId, String clsCd, String opbYn, Long detailSeq) {
+		if(file == null) return;
 
+		String orgFileId = StringUtil.getUUUID();
+		String orgFileNm = file.getOriginalFilename();
+
+		////////////////////////
+		try (InputStream edvIs = file.getInputStream()){
+			edv.save(orgFileId, edvIs);
+		} catch (Exception edvEx) {
+			throw new RuntimeException("EDV_NOT_WORK", edvEx);
+		}
+		////////////////////////
+
+		EbsFileVo fileVo = new EbsFileVo();
+		fileVo.setBillId(billId);
+
+		fileVo.setOrgFileId(orgFileId);
+		fileVo.setOrgFileNm(orgFileNm);
+		fileVo.setFileSize(file.getSize());
+		fileVo.setDeleteYn("N");
+		fileVo.setOpbYn(opbYn);
+		fileVo.setFileKindCd(fileKindCd);
+		fileVo.setDetailSeq(detailSeq);
+		fileVo.setClsCd(clsCd);
+		fileVo.setRegId(new SecurityInfoUtil().getAccountId());
+		
+		fileMapper.insertFileEbs(fileVo);
+
+		// pdf변환
+		convertToPdfEbs(file, orgFileId);
+	}
+	
+	@Transactional
+	@Override
+	public void saveFileEbs(String myFileId, String fileKindCd, String billId, String clsCd, String opbYn, Long detailSeq) throws Exception {
+		
+		if(myFileId == null) return;
+
+
+		String userId = new SecurityInfoUtil().getAccountId();
+		FileVo myFile = documentMapper.selectMyFile(userId, myFileId);
+
+		String orgFileId = StringUtil.getUUUID();
+		String orgFileNm = myFile.getFileTitle();
+		String fileType = myFile.getFileType();
+		if(fileType != null && fileType.length() > 0) {
+			orgFileNm += "." + fileType;
+		}
+
+		InputStream myFileIs = edv.download(myFileId);
+		File tmpFile = File.createTempFile("tmp", null);
+		IOUtils.copy(myFileIs, new FileOutputStream(tmpFile));
+
+		////////////////////////
+		try (InputStream edvIs = new FileInputStream(tmpFile)){
+			edv.save(orgFileId, edvIs);
+		} catch (Exception edvEx) {
+			throw new RuntimeException("EDV_NOT_WORK", edvEx);
+		}
+		////////////////////////
+
+		EbsFileVo fileVo = new EbsFileVo();
+		fileVo.setBillId(billId);
+
+		fileVo.setOrgFileId(orgFileId);
+		fileVo.setOrgFileNm(orgFileNm);
+		fileVo.setFileSize(myFile.getFileSize());
+		fileVo.setDeleteYn("N");
+		fileVo.setOpbYn(opbYn);
+		fileVo.setFileKindCd(fileKindCd);
+		fileVo.setDetailSeq(detailSeq);
+		fileVo.setClsCd(clsCd);
+		fileVo.setRegId(new SecurityInfoUtil().getAccountId());
+		
+		fileMapper.insertFileEbs(fileVo);
+
+		myFileIs.close();
+		
+		// pdf변환
+		convertToPdfEbs(tmpFile, myFile.getFileNm(), orgFileId);
+	}
+	
 }

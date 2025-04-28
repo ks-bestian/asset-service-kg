@@ -379,7 +379,23 @@
 		  </if>
 
 		  <if test="statCd != null and statCd != ''">
-		  	and emt.stat_cd = #{statCd}
+		  	and step.stat_cd = #{statCd}
+		  </if>
+		  
+		  <if test="billNo != null and billNo != ''">
+		  	and em.bill_no like concat('%', #{billNo}, '%')
+		  </if>
+		  
+		  <if test="billName != null and billName != ''">
+		  	and kgst.fngetlangnm(em.bill_name_kg,em.bill_name_ru,em.bill_name_kg,#{lang}) like concat('%', #{billName}, '%')
+		  </if>
+		  
+		  <if test="ppslDtFrom != null and ppslDtFrom != ''">
+		    and  em.ppsl_dt <![CDATA[ >= ]]> #{ppslDtFrom}
+		  </if>
+		
+		  <if test="ppslDtTo != null and ppslDtTo != ''">
+		    and  em.ppsl_dt <![CDATA[ <= ]]> #{ppslDtTo}
 		  </if>
 
 
