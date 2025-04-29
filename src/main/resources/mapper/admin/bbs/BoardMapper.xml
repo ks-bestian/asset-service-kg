@@ -34,7 +34,6 @@
 		order by
 				case
 				when cb.important_yn = 'Y' then 1
-				when cb.important_yn = 'N' then 2
 				else 3
 			end,
 		cb.reg_dt desc

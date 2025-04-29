@@ -148,7 +148,7 @@
             , poly_nm
             , is_member
             FROM view_user_member
-            where 1=1
+            where msg_rcv_yn is distinct from 'N'
             <if test="selectTab != null and selectTab != ''">
                 <choose>
                     <when test="selectTab == 'cmit'">
@@ -173,7 +173,7 @@
             FROM com_ccof cc
             INNER JOIN com_user cu ON cu.user_id = cc.user_id
             INNER JOIN com_dept cd ON cd.dept_cd = cc.dept_cd
-            where 1=1
+            where cu.msg_rcv_yn is distinct from 'N'
             <if test="selectTab != null and selectTab != ''">
                 <choose>
                     <when test="selectTab == 'cmit'">

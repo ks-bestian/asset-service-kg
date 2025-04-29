@@ -59,4 +59,10 @@ public class MemberController {
     public ResponseEntity<CommonResponse> getMemberByPoly(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "ok", memberService.getMemberByPoly(param)), HttpStatus.OK);
     }
+
+    @ApiOperation(value = "비밀번호 초기화", notes = "비밀번호 초기화한다.")
+    @PutMapping("admin/member/reset/pswd")
+    public ResponseEntity<CommonResponse> resetPswd(@RequestBody HashMap<String, Object> param) {
+        return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Member updated successfully", memberService.resetPswd(param)), HttpStatus.OK);
+    }
 }

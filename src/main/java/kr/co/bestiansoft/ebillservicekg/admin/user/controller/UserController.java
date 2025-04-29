@@ -57,4 +57,11 @@ public class UserController {
     public ResponseEntity<CommonResponse> getUserByDept(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "ok", userService.getUserByDept(param)), HttpStatus.OK);
     }
+
+
+    @ApiOperation(value = "사용자 비밀번호 초기화", notes = "사용자 비밀번호 초기화")
+    @PutMapping("user/reset/pswd")
+    public ResponseEntity<CommonResponse> resetPswd(@RequestBody HashMap<String, Object> param) {
+        return new ResponseEntity<>(new CommonResponse(200, "ok", userService.resetPswd(param)), HttpStatus.OK);
+    }
 }

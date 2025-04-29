@@ -15,4 +15,5 @@ public interface MemberMapper {
     int updateMember(MemberVo memberVo);
     void deleteMember(String memberId);
 	List<MemberVo> selectListMemberByPoly(HashMap<String, Object> param);
+    int resetPswd(HashMap<String, Object> param);
 }

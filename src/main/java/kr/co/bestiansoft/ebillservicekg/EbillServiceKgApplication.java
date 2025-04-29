@@ -16,5 +16,4 @@ public class EbillServiceKgApplication {
         SpringApplication.run(EbillServiceKgApplication.class, args);
     }
 
-
 }
