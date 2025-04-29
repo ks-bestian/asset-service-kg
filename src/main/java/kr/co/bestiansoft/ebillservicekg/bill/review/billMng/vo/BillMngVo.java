@@ -44,7 +44,7 @@ public class BillMngVo extends ComDefaultVO {
     private String statCd;
     private String statNm;
     private String taskStatNm;
-
+    private String taskRegDt;
 
 
     // 위원회아이디

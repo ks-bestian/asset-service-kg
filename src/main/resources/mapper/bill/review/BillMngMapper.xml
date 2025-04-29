@@ -33,6 +33,7 @@
 			  , kgst.fngetcodenm('1034',pl.task_status,#{lang}) as task_stat_nm
 			  , pl.assigned_to
 			  , pl.trgt_user_id
+			  , pl.task_reg_dt
 			from kgst.view_bill_process_list pl
 			join kgst.view_user_member vum on (pl.ppsr_id = vum.user_id)
 			where 1=1
@@ -77,7 +78,7 @@
 		<if test="statCd != null and statCd != ''">
 		    and  x.stat_cd = #{statCd}
 		</if>
-         order by x.task_status desc
+         order by x.task_status desc, x.task_reg_dt desc
     </select>
 
      <select id="selectOneBill" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo"
@@ -347,6 +348,7 @@
 		  , max(A.mtng_type_cd) as mtng_type_cd
 		  , max(A.age_cd) as age_cd
 		  , max(A.stat_nm) as stat_nm
+		  , max(A.stat_cd) as stat_cd
 		from
 		(
 			select
@@ -366,6 +368,7 @@
 			  , ema.rslt_cd
 			  , emt.mtng_type_cd
 			  , emt.age_cd
+			  , step.stat_cd
 			  , kgst.fngetcodenm('1010',step.stat_cd,#{lang}) as stat_nm
 			from kgst.ebs_master em
 			join kgst.ebs_master_cmt emc on (em.bill_id = emc.bill_id)
@@ -406,6 +409,7 @@
 
 		) A
 		where 1=1
+
 		group by A.bill_id
 		order by ppsl_dt
     </select>
