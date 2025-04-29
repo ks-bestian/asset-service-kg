@@ -28,4 +28,5 @@ public class UserVo extends ComDefaultVO {
     private String ccofCd;
     private List<String> ccofCds;
     private Integer ord;
+    private String userPassword;
 }

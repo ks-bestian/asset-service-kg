@@ -88,6 +88,7 @@
             , reg_dt
             , mod_id
             , mod_dt
+            , user_password
         )
         values (
               #{memberId}
@@ -109,6 +110,7 @@
             , now()
             , null
             , null
+            , #{userPassword}
         )
     </insert>
 
@@ -157,4 +159,11 @@
        		</if>
         order by member_nm_kg
     </select>
+
+    <update id="resetPswd" parameterType="java.util.HashMap">
+        update com_member set
+            user_password = #{userPassword}
+        where member_id = #{memberId}
+
+    </update>
 </mapper>

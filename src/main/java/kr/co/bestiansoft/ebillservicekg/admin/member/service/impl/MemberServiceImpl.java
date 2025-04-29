@@ -6,6 +6,7 @@ import kr.co.bestiansoft.ebillservicekg.admin.member.vo.MemberVo;
 import kr.co.bestiansoft.ebillservicekg.admin.menu.repository.MenuMapper;
 import kr.co.bestiansoft.ebillservicekg.admin.menu.vo.MenuVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
+import kr.co.bestiansoft.ebillservicekg.login.vo.LoginRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberVo createMember(MemberVo memberVo) {
         memberVo.setRegId(new SecurityInfoUtil().getAccountId());
+        memberVo.setUserPassword(LoginRequest.getSha256(memberVo.getUserPassword()));
         memberMapper.insertMember(memberVo);
         return memberVo;
     }
@@ -57,4 +59,10 @@ public class MemberServiceImpl implements MemberService {
 	public List<MemberVo> getMemberByPoly(HashMap<String, Object> param) {
 		return memberMapper.selectListMemberByPoly(param);
 	}
+
+    @Override
+    public int resetPswd(HashMap<String, Object> param) {
+        param.put("userPassword", LoginRequest.getSha256((String)param.get("memberId")));
+        return memberMapper.resetPswd(param);
+    }
 }

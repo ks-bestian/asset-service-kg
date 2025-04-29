@@ -24,4 +24,5 @@ public class MemberVo extends ComDefaultVO {
     private String msgRcvYn;
     private String docMgrYn;
     private String deptNm;
+    private String userPassword;
 }

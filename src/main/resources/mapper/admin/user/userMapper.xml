@@ -144,6 +144,7 @@
             , reg_dt
             , mod_id
             , mod_dt
+            , user_password
         )
         values (
               #{deptCd}
@@ -162,6 +163,7 @@
             , now()
             , null
             , null
+            , #{userPassword}
         )
     </insert>
 
@@ -183,6 +185,7 @@
             , doc_mgr_yn = #{docMgrYn}
             , mod_id = #{modId}
             , mod_dt = now()
+            , user_password = #{userPassword}
         where user_id = #{userId}
     </update>
 
@@ -211,4 +214,10 @@
         where user_id = #{userId}
     </update>
 
+    <update id="resetUserPswd" parameterType="java.util.HashMap">
+        update com_user
+        set
+            user_password = #{userPassword}
+        where user_id = #{userId}
+    </update>
 </mapper>

@@ -5,6 +5,7 @@ import kr.co.bestiansoft.ebillservicekg.admin.user.repository.UserMapper;
 import kr.co.bestiansoft.ebillservicekg.admin.user.service.UserService;
 import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
+import kr.co.bestiansoft.ebillservicekg.login.vo.LoginRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,11 +35,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserVo createUser(UserVo userVo) {
         String regId = new SecurityInfoUtil().getAccountId();
+        userVo.setUserPassword(LoginRequest.getSha256(userVo.getUserPassword()));
         userVo.setRegId(regId);
+
         int ord = 1;
+
         List<String> ccofCds = userVo.getCcofCds();
 
         userMapper.insertUser(userVo);
+
         for (String deptCd : ccofCds) {
             userVo.setDeptCd(deptCd);
             userVo.setOrd(ord);
@@ -56,6 +61,7 @@ public class UserServiceImpl implements UserService {
         String modId = new SecurityInfoUtil().getAccountId();
 
         userVo.setModId(modId);
+        userVo.setUserPassword(LoginRequest.getSha256(userVo.getUserPassword()));
         userMapper.updateUser(userVo);
 
         ccofMapper.deleteCcof(userVo.getUserId());
@@ -87,5 +93,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserVo> getUserByDept(HashMap<String, Object> param) {
         return userMapper.selectListUserByDept(param);
+    }
+
+    @Override
+    public int resetPswd(HashMap<String, Object> param) {
+        param.put("userPassword", LoginRequest.getSha256((String)param.get("userId")));
+        return userMapper.resetUserPswd(param);
     }
 }

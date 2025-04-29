@@ -11,5 +11,6 @@ public interface UserService {
     UserVo createUser(UserVo userVo);
     int updateUser(UserVo userVo);
     void deleteUser(List<String> seq);
+    int resetPswd(HashMap<String, Object> param);
     List<UserVo> getUserByDept(HashMap<String, Object> param);
 }
