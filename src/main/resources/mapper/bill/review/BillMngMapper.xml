@@ -30,28 +30,29 @@
 			  , pl.step_id
 			  , pl.stat_cd
 			  , kgst.fngetcodenm('1010',pl.stat_cd,#{lang}) as stat_nm
+			  , kgst.fngetcodenm('1034',pl.task_status,#{lang}) as task_stat_nm
 			  , pl.assigned_to
 			  , pl.trgt_user_id
 			from kgst.view_bill_process_list pl
 			join kgst.view_user_member vum on (pl.ppsr_id = vum.user_id)
 			where 1=1
-	
+
 			  <if test="assignedTo != null and assignedTo != ''">
 			  	and pl.assigned_to = #{assignedTo}
 			  </if>
-	
+
 			  <if test="trgtUserId != null and trgtUserId != ''">
 			    and pl.trgtUserId = #{trgtUserId}
 			  </if>
-	
+
 			  <if test="stepId != null and stepId != ''">
 			    and pl.step_id = #{stepId}
 			  </if>
-	
+
 			  <if test="taskStatus != null and taskStatus != ''">
 			    and pl.task_status = #{taskStatus}
 			  </if>
-	
+
 			  <if test="naTermCd != null and naTermCd != ''">
 			    and pl.na_term_cd = #{naTermCd}
 			  </if>
@@ -64,15 +65,19 @@
 		<if test="billNo != null and billNo != ''">
 		    and  x.bill_no  like concat('%', #{billNo}, '%')
 		</if>
-		
+
 		<if test="ppslDtFrom != null and ppslDtFrom != ''">
 		    and  x.ppsl_dt <![CDATA[ >= ]]> #{ppslDtFrom}
 		</if>
-		
+
 		<if test="ppslDtTo != null and ppslDtTo != ''">
 		    and  x.ppsl_dt <![CDATA[ <= ]]> #{ppslDtTo}
 		</if>
 
+		<if test="statCd != null and statCd != ''">
+		    and  x.stat_cd = #{statCd}
+		</if>
+         order by x.task_status desc
     </select>
 
      <select id="selectOneBill" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo"
@@ -282,9 +287,9 @@
 		    , now()
 		)
     </insert>
-    
+
     <delete id="deleteBillDetail" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
-    	delete from ebs_master_detail 
+    	delete from ebs_master_detail
 		where 1=1
 		and bill_id = #{billId}
 		and cls_cd = #{clsCd}
@@ -292,7 +297,7 @@
 		and seq = #{seq}
 		</if>
     </delete>
-    
+
     <update id="updateBillDetail" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.updateBillDetail */
 		UPDATE kgst.ebs_master_detail
@@ -381,19 +386,19 @@
 		  <if test="statCd != null and statCd != ''">
 		  	and step.stat_cd = #{statCd}
 		  </if>
-		  
+
 		  <if test="billNo != null and billNo != ''">
 		  	and em.bill_no like concat('%', #{billNo}, '%')
 		  </if>
-		  
+
 		  <if test="billName != null and billName != ''">
 		  	and kgst.fngetlangnm(em.bill_name_kg,em.bill_name_ru,em.bill_name_kg,#{lang}) like concat('%', #{billName}, '%')
 		  </if>
-		  
+
 		  <if test="ppslDtFrom != null and ppslDtFrom != ''">
 		    and  em.ppsl_dt <![CDATA[ >= ]]> #{ppslDtFrom}
 		  </if>
-		
+
 		  <if test="ppslDtTo != null and ppslDtTo != ''">
 		    and  em.ppsl_dt <![CDATA[ <= ]]> #{ppslDtTo}
 		  </if>
@@ -447,7 +452,7 @@
 		WHERE	bill_id = #{billId}
 
 	</update>
-	
+
 	<update id="updateBillMaster" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
 	    /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.updateBillMaster */
 		UPDATE kgst.ebs_master

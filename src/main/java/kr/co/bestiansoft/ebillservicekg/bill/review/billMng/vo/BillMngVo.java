@@ -43,6 +43,9 @@ public class BillMngVo extends ComDefaultVO {
     // 상태코드
     private String statCd;
     private String statNm;
+    private String taskStatNm;
+
+
 
     // 위원회아이디
     private String cmtId;
@@ -128,7 +131,7 @@ public class BillMngVo extends ComDefaultVO {
     private String cmtNm;
 
     private List<EbsFileVo> ebsfileList;
-    
+
     private List<MtngFromVo> mtngList;
 
     private Long mtngId;
@@ -140,14 +143,14 @@ public class BillMngVo extends ComDefaultVO {
 	//파일
     private MultipartFile[] files;
     private String[] myFileIds;
-    
+
     private String fileKindCd;
-    
+
     private String rcpDt;
-    
+
     private String rcpUsrId;
-    
+
     private String intExtCls;
-    
+
     private String rvwDt;
 }
