@@ -202,6 +202,9 @@
             , msg_rcv_yn = #{msgRcvYn}
             , profile_img_path = #{profileImgPath}
             , mbl_no = #{mblNo}
+            <if test="userPassword != null and userPassword != ''">
+                , user_password = #{userPassword}
+            </if>
         where member_id = #{memberId}
     </update>
 
@@ -211,6 +214,9 @@
               email = #{email}
             , msg_rcv_yn = #{msgRcvYn}
             , profile_img_path = #{profileImgPath}
+            <if test="userPassword != null and userPassword != ''">
+                , user_password = #{userPassword}
+            </if>
         where user_id = #{userId}
     </update>
 
