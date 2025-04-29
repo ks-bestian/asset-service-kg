@@ -7,6 +7,7 @@ import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.impl.EDVHelper;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.ComFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
+import kr.co.bestiansoft.ebillservicekg.login.vo.LoginRequest;
 import kr.co.bestiansoft.ebillservicekg.myPage.myInfo.service.MyInfoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -65,6 +66,10 @@ public class MyInfoServiceImpl implements MyInfoService {
         if(userMemberVo.getFiles() != null) {
             String fileGroupId = comFileService.saveFile(userMemberVo.getFiles());
             userMemberVo.setProfileImgPath(fileGroupId);
+        }
+
+        if(userMemberVo.getUserPassword() != null) {
+            userMemberVo.setUserPassword(LoginRequest.getSha256(userMemberVo.getUserPassword()));
         }
 
         if (userMemberVo.getType().equals("member")) {

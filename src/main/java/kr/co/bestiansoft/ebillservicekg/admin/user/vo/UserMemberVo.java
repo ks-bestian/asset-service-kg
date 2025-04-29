@@ -36,6 +36,7 @@ public class UserMemberVo {
     private String type;
     private String mblNo;
     private String isMember;
+    private String userPassword;
 
     private MultipartFile[] files;
 }
