@@ -9,6 +9,7 @@
 
 		select
 		    AA.bill_id
+		  , AA.bill_no
 		  , kgst.fngetlangnm(AA.bill_name_kg,AA.bill_name_ru,AA.bill_name_kg,#{lang}) as bill_name -- 안건 이름
 		  , kgst.fngetlangnm(vum.member_nm_kg,vum.member_nm_ru,vum.member_nm_kg,#{lang}) as ppsr_nm -- 제안자 이름
 	      , AA.scl_dsc_rcp_nmb
@@ -19,10 +20,16 @@
 	      , AA.step_id
 	      , AA.task_id
 	      , AA.task_status
-	      , ep.wt_dt
+	      , case
+					when (ep.wt_dt is not null and ep.wt_cnc_dt is null) then
+						ep.wt_dt
+					else null
+				 end as wt_dt 		-- 철회동의날짜
+	      , emd.reg_dt as revokeRegDt
 		from (
 			select
 			   pl.bill_id
+			 , max(pl.bill_no) as bill_no  
 			 , max(pl.bill_name_kg) as bill_name_kg
 			 , max(pl.bill_name_ru) as bill_name_ru
 			 , max(pl.current_step_id) as current_step_id
@@ -45,10 +52,14 @@
 		) AA
 		join kgst.view_user_member vum on (AA.ppsr_id = vum.user_id)
 		join kgst.ebs_proposer ep on (ep.bill_id = AA.bill_id and ep.proposer_id = #{userId} and ep.sign_dt is not null and ep.sign_cnc_dt is null)
+		left outer join kgst.ebs_master_detail emd on (AA.bill_id = emd.bill_id and emd.cls_cd = '400')
         where 1=1
 		<if test="naTermCd != null and naTermCd != ''">
 			and AA.na_term_cd = #{naTermCd}
 		</if>
+		<if test="billNo != null and billNo != ''">
+			and AA.bill_no LIKE CONCAT('%', #{billNo}, '%')
+		</if>	
 		<if test="billName != null and billName != ''">
 		    <if test="lang == 'lng_type_1' or lang == 'lng_type_3'">
 		    	and AA.bill_name_kg like concat('%', #{billName}, '%')

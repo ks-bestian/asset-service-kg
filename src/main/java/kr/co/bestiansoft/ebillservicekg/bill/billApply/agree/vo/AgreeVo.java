@@ -53,4 +53,6 @@ public class AgreeVo extends ComDefaultVO {
     private String memberNm;
     private String memberNmKg;
     private String memberNmRu;
+    
+    private String memberId;
 }

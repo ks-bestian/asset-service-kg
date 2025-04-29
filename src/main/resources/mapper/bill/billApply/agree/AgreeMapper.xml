@@ -134,6 +134,7 @@
 			, case when ep.sign_dt is null then 'N' else 'Y' end as agree_yn -- 동의여부
 			, case when ep.wt_dt is null then 'N' else 'Y' end as wt_yn -- 철회동의여부
 			, kgst.fngetlangnm(vum.member_nm_kg,vum.member_nm_ru,vum.member_nm_kg,#{lang}) as member_nm -- 의원이름
+			, vum.member_id
 			, vum.member_nm_kg					-- 의원이름kg
 			, vum.member_nm_ru					-- 의원이름ru
 			, vum.poly_nm  					-- 정당이름

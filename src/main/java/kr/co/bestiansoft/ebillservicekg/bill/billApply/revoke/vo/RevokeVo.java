@@ -12,6 +12,8 @@ public class RevokeVo extends ComDefaultVO {
 
 	//안건아이디
 	private String billId;
+	//안건아이디
+	private String billNo;
     //등록번호(사회토론번호?)
 	private String sclDscRcpNmb;
 	//안건이름

@@ -516,8 +516,10 @@
 		join ebs_mtng_agenda ema on (mt.mtng_id = ema.mtng_id)
 		join ebs_master em on (em.bill_id = ema.bill_id)
 		join kgst.view_user_member vum on (em.ppsr_id = vum.user_id)
+		join ebs_bp_instance ebi on (em.bill_id = ebi.bill_id)
 		where 1=1
 			and mt.mtng_type_cd = '2'
+			and ebi.current_step_id = '1700'
 	    <if test="searchDate != null and searchDate != ''">
 	        and mt.open_dtm LIKE CONCAT(#{searchDate}, '%')
 	    </if>
