@@ -79,4 +79,6 @@ public interface BillMngService {
 	void deleteBillDetail(BillMngVo billMngVo);
 	
 	BillMngVo insertBillPrmg(BillMngVo billMngVo) throws Exception;
+	
+	BillMngVo presidentReject(BillMngVo billMngVo) throws Exception;
 }

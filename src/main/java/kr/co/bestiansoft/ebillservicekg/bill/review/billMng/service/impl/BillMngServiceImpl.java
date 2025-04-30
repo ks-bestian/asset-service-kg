@@ -248,6 +248,19 @@ public class BillMngServiceImpl implements BillMngService {
 	
 	@Transactional
 	@Override
+	public BillMngVo presidentReject(BillMngVo billMngVo) throws Exception {
+		ProcessVo pVo = new ProcessVo();
+		pVo.setBillId(billMngVo.getBillId());
+		pVo.setStepId("1400"); //위원회회의예정
+		pVo.setTaskId(billMngVo.getTaskId());
+		processService.handleProcess(pVo);
+		
+		billMngVo.setModId(new SecurityInfoUtil().getAccountId());
+		return this.insertBillDetail(billMngVo);
+	}
+	
+	@Transactional
+	@Override
 	public void deleteBillDetail(BillMngVo billMngVo) {
 
 		EbsFileVo ebsFileVo = new EbsFileVo();

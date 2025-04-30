@@ -18,6 +18,8 @@ import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
+import kr.co.bestiansoft.ebillservicekg.myPage.message.service.MsgService;
+import kr.co.bestiansoft.ebillservicekg.myPage.message.vo.MsgRequest;
 import kr.co.bestiansoft.ebillservicekg.process.service.ProcessService;
 import kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +37,7 @@ public class RevokeServiceImpl implements RevokeService {
 	private final ComFileService comFileService;
 	private final BillMngService billMngService;
 	private final RevokeAgreeMapper revokeAgreeMapper;
+	private final MsgService msgService;
 
 	@Override
 	public List<RevokeVo> getRevokeList(HashMap<String, Object> param) {
@@ -118,6 +121,7 @@ public class RevokeServiceImpl implements RevokeService {
 		return pVo;
 	}
 
+	@Transactional
 	@Override
 	public int billRevokeCancel(String billId, HashMap<String, Object> param) {
 		processService.undoProcess(billId, "1100");
@@ -133,6 +137,27 @@ public class RevokeServiceImpl implements RevokeService {
 //		ebsFileVo.setFileKindCd("170"); //안건철회
 //		ebsFileVo.setModId(new SecurityInfoUtil().getAccountId());
 //		billMngService.updateEbsFileDelYn(ebsFileVo);
+		
+		//철회동의 의원에게 알림
+		String msgSj = "철회취소";
+		String msgCn = "철회취소했습니다";
+		List<String> rcvIds = new ArrayList<>();
+		
+		String userId = new SecurityInfoUtil().getAccountId();
+		param.put("userId", userId);
+		param.put("billId", billId);
+		List<RevokeVo> proposerList = revokeMapper.selectProposerList(param);
+		for(RevokeVo proposer : proposerList) {
+			if(!userId.equals(proposer.getProposerId()) && "Y".equals(proposer.getRevokeYn())) {
+				rcvIds.add(proposer.getProposerId());
+			}
+		}
+		
+		MsgRequest msgRequest = new MsgRequest();
+		msgRequest.setMsgSj(msgSj);
+		msgRequest.setMsgCn(msgCn);
+		msgRequest.setRcvIds(rcvIds);
+		msgService.sendMsg(msgRequest);
 		
 		return 0;
 	}

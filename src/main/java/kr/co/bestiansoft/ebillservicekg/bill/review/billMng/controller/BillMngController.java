@@ -91,6 +91,12 @@ public class BillMngController {
     public ResponseEntity<CommonResponse> insertBillPrmg(BillMngVo billMngVo) throws Exception {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "review created successfully", billMngService.insertBillPrmg(billMngVo)), HttpStatus.CREATED);
     }
+    
+    @ApiOperation(value = "대통령 거부", notes = "대통령 거부")
+    @PostMapping(value = "/bill/review/billMng/presidentReject", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<CommonResponse> presidentReject(BillMngVo billMngVo) throws Exception {
+        return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "review created successfully", billMngService.presidentReject(billMngVo)), HttpStatus.CREATED);
+    }
 
     @ApiOperation(value = "안건관리 법률검토 검토보고", notes = "법률검토 검토보고 등록")
     @PostMapping(value = "/bill/review/billLegalReview/report")
