@@ -21,6 +21,7 @@
 			  , pl.bill_kind
 			  , pl.na_term_cd
 			  , pl.ppsr_id
+			  , pl.rcp_dt
 			  , vum.member_nm_kg
 			  , vum.member_nm_ru
 			  , pl.ppsl_dt
@@ -35,6 +36,7 @@
 			  , pl.trgt_user_id
 			  , pl.reg_dt
 			  , pl.task_reg_dt
+			  , TO_CHAR(pl.completed_dt, 'DD/MM/YYYY') as completed_dt
 			from kgst.view_bill_process_list pl
 			join kgst.view_user_member vum on (pl.ppsr_id = vum.user_id)
 			where 1=1
@@ -75,12 +77,12 @@
 		<if test="ppslDtTo != null and ppslDtTo != ''">
 		    and  x.ppsl_dt <![CDATA[ <= ]]> #{ppslDtTo}
 		</if>
-		
+
 
 		<if test="statCd != null and statCd != ''">
 		    and  x.stat_cd = #{statCd}
 		</if>
-         order by x.task_status desc, x.task_reg_dt desc
+         order by x.task_status desc, x.rcp_dt desc
     </select>
 
      <select id="selectOneBill" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo"

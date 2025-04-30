@@ -519,7 +519,7 @@
 		join ebs_bp_instance ebi on (em.bill_id = ebi.bill_id)
 		where 1=1
 			and mt.mtng_type_cd = '2'
-			and ebi.current_step_id = '1700'
+
 	    <if test="searchDate != null and searchDate != ''">
 	        and mt.open_dtm LIKE CONCAT(#{searchDate}, '%')
 	    </if>

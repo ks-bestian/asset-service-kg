@@ -73,10 +73,12 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     @Override
     public BoardVo createBoardFile(BoardVo boardVo, String brdType) {
-    	String fileGroupId = comFileService.saveFile(boardVo.getFiles());
+        if(boardVo.getFiles() != null) {
+            String fileGroupId = comFileService.saveFile(boardVo.getFiles());
+            boardVo.setFileGroupId(fileGroupId);
+        }
     	
     	boardVo.setBrdType(brdType);
-    	boardVo.setFileGroupId(fileGroupId);
 
         boardVo.setRegId(new SecurityInfoUtil().getAccountId());
     	boardMapper.insertBoard(boardVo);

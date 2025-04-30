@@ -22,6 +22,9 @@
         <if test="search != null and search != ''">
             and (lng_ty1 like concat('%', #{search}, '%') or lng_ty2 like concat('%', #{search}, '%') or lng_ty3 like concat('%', #{search}, '%'))
         </if>
+        <if test="codeId != null and codeId != ''">
+            and cast(lng_id as text) like concat ('%', #{codeId}, '%')
+        </if>
         order by reg_dt desc
     </select>
 
