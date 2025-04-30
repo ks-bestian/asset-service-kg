@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 
 public interface EasFileService {
-    int uploadEasFile (EasFileVo vo);
+    void uploadEasFile (EasFileVo vo);
     int saveEasFile(EasFileVo vo);
     List<EasFileVo> getAttachFiles(String docId);
 }

@@ -62,7 +62,7 @@ public class EasFileVo{
         // SaveFileDto 정보 설정
         result.setFileId(dto.getFileId());
         result.setOrgFileId(dto.getFileId());
-        result.setOrgFileNm(dto.getOrgFileName());
+        result.setOrgFileNm(dto.getOrgFileNm());
         result.setFileSize(dto.getFileSize());
         result.setFileExt(dto.getFileExt());
 
