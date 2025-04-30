@@ -54,12 +54,14 @@
 
 		select
 		    AA.bill_id
+		  , AA.bill_no
 		  , kgst.fngetlangnm(AA.bill_name_kg,AA.bill_name_ru,AA.bill_name_kg,#{lang})  as bill_name -- 안건 이름
 		  , kgst.fngetlangnm(AA.member_nm_kg,AA.member_nm_ru,AA.member_nm_kg,#{lang}) as ppsr_nm -- 제안자 이름
 		  , AA.bill_name_kg
 		  , AA.bill_name_ru
 		  , AA.scl_dsc_rcp_nmb
 		  , AA.ppsl_dt
+		  , AA.rcp_dt
 		  , AA.reg_dt
 		  , AA.stat_nm
 		  , AA.stat_cd
@@ -80,6 +82,7 @@
 			  , max(pl.etc_kg) as etc_kg
 			  , max(pl.etc_ru) as etc_ru
 			  , max(pl.ppsl_dt) as ppsl_dt
+			  , max(pl.rcp_dt) as rcp_dt
 			  , max(pl.reg_dt) as reg_dt
 			  , max(pl.current_step_id) as current_step_id
 			  , max(pl.step_id) as step_id
@@ -118,7 +121,7 @@
 		<if test="fromDate != null and fromDate != ''">
 			AND AA.ppsl_dt <![CDATA[<=]]> #{fromDate}
 		</if>
-	    order by AA.reg_dt desc
+	    order by AA.ppsl_dt desc
 
     </select>
 
@@ -188,7 +191,7 @@
 			, (select emc.cmt_cd from kgst.ebs_master_cmt emc where emc.bill_id = em.bill_id and emc.cmt_se_cd = 'M') as cmt_cd
 			, ebi.current_step_id
 		from kgst.ebs_master em
-		left join kgst.ebs_bp_instance ebi on (em.bill_id = ebi.bill_id) 
+		left join kgst.ebs_bp_instance ebi on (em.bill_id = ebi.bill_id)
 		left join kgst.view_user_member view on (view.member_id = em.ppsr_id)
 		where em.bill_id = #{billId}
     </select>
