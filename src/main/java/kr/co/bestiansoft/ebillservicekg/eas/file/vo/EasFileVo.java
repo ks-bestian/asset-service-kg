@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Data
-public class EasFileVo extends ComDefaultVO {
+public class EasFileVo{
     private String fileId;
     private String docId;
     private String fileType;
@@ -23,9 +23,12 @@ public class EasFileVo extends ComDefaultVO {
     private char deleteYn;
     private LocalDateTime deleteDtm;
     private String deleteUserId;
+    private MultipartFile[] files;
+    private String regId;
+    private LocalDateTime regDt;
 
     @Builder
-    public EasFileVo(String fileId, String docId, String fileType, String orgFileId, String orgFileNm, String pdfFileId, String pdfFileNm, int fileSize, String fileExt, char deleteYn, LocalDateTime deleteDtm, String deleteUserId) {
+    public EasFileVo(String fileId, String docId, String fileType, String orgFileId, String orgFileNm, String pdfFileId, String pdfFileNm, int fileSize, String fileExt, char deleteYn, LocalDateTime deleteDtm, String deleteUserId, MultipartFile[] files, String regId, LocalDateTime regDt) {
         this.fileId = fileId;
         this.docId = docId;
         this.fileType = fileType;
@@ -38,5 +41,32 @@ public class EasFileVo extends ComDefaultVO {
         this.deleteYn = deleteYn;
         this.deleteDtm = deleteDtm;
         this.deleteUserId = deleteUserId;
+        this.files = files;
+        this.regId = regId;
+        this.regDt = regDt;
     }
+
+    public EasFileVo fromSaveFileDto(SaveFileDto dto, EasFileVo base) {
+        EasFileVo result = new EasFileVo();
+        // 기본 정보 복사
+        result.setDocId(base.getDocId());
+        result.setFileType(base.getFileType());
+        result.setRegId(base.getRegId());
+        result.setRegDt(base.getRegDt());
+        result.setDeleteYn(base.getDeleteYn());
+        result.setDeleteUserId(base.getDeleteUserId());
+        result.setDeleteDtm(base.getDeleteDtm());
+        result.setPdfFileId(base.getPdfFileId());
+        result.setPdfFileNm(base.getPdfFileNm());
+
+        // SaveFileDto 정보 설정
+        result.setFileId(dto.getFileId());
+        result.setOrgFileId(dto.getFileId());
+        result.setOrgFileNm(dto.getOrgFileName());
+        result.setFileSize(dto.getFileSize());
+        result.setFileExt(dto.getFileExt());
+
+        return result;
+    }
+
 }

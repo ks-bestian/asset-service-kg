@@ -14,4 +14,15 @@
         where ef.file_type = 'EFT01'
           and ef.doc_id = #{docId};
     </select>
+    <update id="updatePdfFileInfo" parameterType="kr.co.bestiansoft.ebillservicekg.eas.file.vo.UpdatePdfFileDto">
+        update eas_file
+           set pdf_file_id = #{pdfFileId}
+             , pdf_file_nm = #{pdfFileNm}
+         where file_id = #{fileId}
+    </update>
+    <select id="getFileById" resultType="kr.co.bestiansoft.ebillservicekg.eas.file.vo.EasFileVo">
+        select file_id, doc_id, file_type, org_file_id, org_file_nm, pdf_file_id, pdf_file_nm, file_size, file_ext, delete_yn, delete_dtm, delete_user_id, reg_id, reg_dt
+          from eas_file f
+         where f.file_id = #{fileId}
+    </select>
 </mapper>

@@ -9,4 +9,6 @@ import java.util.List;
 public interface EasFileRepository {
     int insertEasFile (EasFileVo vo);
     List<EasFileVo> getAttachFiles(String docId);
+    void updatePdfFileInfo(EasFileVo vo);
+    EasFileVo getFileById(String fileId);
 }
