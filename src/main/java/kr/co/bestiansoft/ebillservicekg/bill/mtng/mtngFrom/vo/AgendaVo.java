@@ -30,6 +30,7 @@ public class AgendaVo extends ComDefaultVO {
 	private String sessionOrd;
 	
 	private String openDtm;
+	private int agendaOrd;
 
 
 }

@@ -98,6 +98,7 @@ public class MtngFromController {
     @ApiOperation(value = "Hall회의  수정", notes = "Hall 회의를 수정한다")
     @PutMapping("/bill/mtng/hallMtng")
     public ResponseEntity<CommonResponse> updateHallMtng(@RequestBody MtngFromVo mtngFromVo){
+
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "mtng update successfully", mtngFromService.updateHallMtng(mtngFromVo)), HttpStatus.OK);
     }
     
@@ -133,6 +134,13 @@ public class MtngFromController {
     @PostMapping(value = "/bill/mtng/hallMtng/result")
     public ResponseEntity<CommonResponse> createHallMtngResult(@RequestBody MtngFromVo mtngFromVo) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Mtng created successfully", mtngFromService.updateHallMtngResult(mtngFromVo)), HttpStatus.CREATED);
+    }
+
+    @ApiOperation(value = "Hall 회의결과 순서 변경", notes = "회의결과 순서 변경")
+    @PutMapping(value = "/bill/mtng/hallMtng/ord")
+    public ResponseEntity<CommonResponse> updateHallMtngOrd(@RequestBody MtngFromVo mtngFromVo) {
+        mtngFromService.updateHallMtngOrd(mtngFromVo);
+        return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "OK", "update succesful"), HttpStatus.OK);
     }
 
     @ApiOperation(value = "본회의안건삭제", notes = "본회의 안건삭제 ")

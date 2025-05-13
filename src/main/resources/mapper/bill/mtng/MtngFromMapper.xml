@@ -117,6 +117,7 @@
 			, emt.dept_cd
 			, ema.bill_id
 			, ema.rslt_cd
+			, ema.ord as agendaOrd
 			, kgst.fngetcodenm('1008',ema.rslt_cd,#{lang}) as rslt_nm
 			, kgst.fngetlangnm(em.bill_name_kg ,em.bill_name_ru ,em.bill_name_kg ,#{lang}) as bill_name
 			, em.bill_no
@@ -133,7 +134,7 @@
 		join ebs_bp_instance ebi on (em.bill_id = ebi.bill_id)
 		join ebs_bp_step ebs on (ebi.current_step_id = ebs.step_id)
 		where emt.mtng_id = #{mtngId}
-		order by em.bill_no
+		order by ema.ord
 
     </select>
 
@@ -261,7 +262,7 @@
 		     (
 		       #{mtngId}
 		     ,  #{billId}
-		     ,  #{ord}
+		     ,  #{agendaOrd}
 		     ,  #{regId}
 		     ,  now()
 		    )
@@ -452,6 +453,7 @@
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.repository.MtngFromMapper.selectListMtngByBillId */
     	select
 			  ema.bill_id
+			, ema.ord
 			, em.mtng_id
 			, em.mtng_type_cd
 			, em.dept_cd
@@ -496,6 +498,7 @@
 		join kgst.view_user_member vum on (em.ppsr_id = vum.user_id)
 		where 1=1
 		  and mt.mtng_id = #{mtngId}
+		order by ema.ord
 
     </select>
 
@@ -505,6 +508,7 @@
 		select
 		    ema.mtng_id
 		  , ema.bill_id
+		  , ema.ord as agendaOrd
 		  , COALESCE(ema.rslt_cd, '')  as rslt_cd
 		  , kgst.fngetlangnm(em.bill_name_kg,em.bill_name_ru,em.bill_name_kg,#{lang})  as bill_name -- 안건 이름
 		  , kgst.fngetlangnm(vum.user_nm_kg,vum.user_nm_ru,vum.user_nm_kg,#{lang}) as ppsr_nm -- 제안자 이름
@@ -537,7 +541,7 @@
 	     <if test="billNo != null and billNo != ''">
 	        and em.bill_no LIKE CONCAT('%',#{billNo}, '%')
 	    </if>
-
+		order by ema.ord
 	</select>
 
     <select id="selectListHallMtng" parameterType="java.util.HashMap"
@@ -588,6 +592,16 @@
 			, rslt_cd = #{rsltCd}
 		where mtng_id = #{mtngId}
 		  and bill_id = #{billId}
+	</update>
+
+	<update id="updateHallMtngOrd" parameterType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MtngFromVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.repository.MtngFromMapper.updateHallMtngOrd */
+		update kgst.ebs_mtng_agenda
+		set mod_id = #{modId}
+			, mod_dt = now()
+			, ord = #{ord}
+		where mtng_id = #{mtngId}
+		 and bill_id = #{billId}
 	</update>
 
 

@@ -25,6 +25,9 @@
         inner join view_user_member vum on vum.user_id = em.send_id
         where em.msg_div = 'R'
             and em.rcv_id = #{rcvId}
+<!--            and (-->
+<!--            (#{status} = 'confirm' and em.rcv_dt is not null) or (#{status} = 'unconfirm' and em.send_dt is not null and em.rcv_dt is null) or (#{status} not in (confirm, unconfirm))-->
+<!--            )-->
         <if test="msgSj != null and msgSj != ''">
             and em.msg_sj like concat('%', #{msgSj}, '%')
         </if>
