@@ -25,6 +25,7 @@
 			, kgst.fngetlangnm(view.user_nm_kg, view.user_nm_ru, view.user_nm_kg, #{lang}) as reg_nm
 			, cb.important_yn
 			, cb.hidden_yn
+			, kgst.fngetlangnm(view.dept_nm_kg, view.dept_nm_ru, view.dept_nm_ko, #{lang}) as dept_nm
         from com_board cb
 		left join kgst.view_user_member view on view.user_id = cb.reg_id
         where cb.brd_type = #{brdType}
@@ -60,6 +61,7 @@
 			, cb.important_yn
 			, cb.hidden_yn
 			, kgst.fngetlangnm(view.user_nm_kg, view.user_nm_ru, view.user_nm_kg, #{lang}) as reg_nm
+			, kgst.fngetlangnm(view.dept_nm_kg, view.dept_nm_ru, view.dept_nm_ko, #{lang}) as dept_nm
         from com_board cb
 		inner join view_user_member view on view.user_id = cb.reg_id
         where brd_id = #{id}

@@ -297,7 +297,7 @@ public class MtngFromServiceImpl implements MtngFromService {
 			AgendaVo agendaVo = new AgendaVo();
 			agendaVo.setBillId(aVo.getBillId());
 			agendaVo.setMtngId(mtngFromVo.getMtngId());
-			agendaVo.setOrd(idx++);
+			agendaVo.setAgendaOrd(idx++);
 			agendaVo.setRegId(regId);
 			mtngFromMapper.insertEbsMtngAgenda(agendaVo);
 		}

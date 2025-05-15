@@ -223,10 +223,11 @@
         where user_id = #{userId}
     </update>
 
-    <update id="resetUserPswd" parameterType="java.util.HashMap">
+    <update id="updatePswd" parameterType="java.util.HashMap">
         update com_user
         set
             user_password = #{userPassword}
         where user_id = #{userId}
     </update>
+
 </mapper>
