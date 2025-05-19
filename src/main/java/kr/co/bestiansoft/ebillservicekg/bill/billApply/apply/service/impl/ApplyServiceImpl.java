@@ -59,10 +59,10 @@ public class ApplyServiceImpl implements ApplyService {
 		applyMapper.insertApplyBill(applyVo);
 
 		//파일등록
-		comFileService.saveFileEbs(applyVo.getFiles(), applyVo.getFileKindCds(), billId);
+		comFileService.saveFileEbs(applyVo.getFiles(), applyVo.getFileKindCds(), applyVo.getOpbYns(), billId);
 
 		//추가 - 내 문서함에서 파일 업로드(20250221 조진호)
-		comFileService.saveFileEbs(applyVo.getMyFileIds(), applyVo.getFileKindCds2(), billId);
+		comFileService.saveFileEbs(applyVo.getMyFileIds(), applyVo.getFileKindCds2(), applyVo.getOpbYns2(), billId);
 
 		//파일 정보를 가지고 있어서 null처리
 		applyVo.setFiles(null);
@@ -114,10 +114,10 @@ public class ApplyServiceImpl implements ApplyService {
 		applyMapper.insertApplyBill(applyVo);
 
 		//파일등록
-		comFileService.saveFileEbs(applyVo.getFiles(), applyVo.getFileKindCds(), billId);
+		comFileService.saveFileEbs(applyVo.getFiles(), applyVo.getFileKindCds(), applyVo.getOpbYns(), billId);
 
 		//추가 - 내 문서함에서 파일 업로드(20250221 조진호)
-		comFileService.saveFileEbs(applyVo.getMyFileIds(), applyVo.getFileKindCds2(), billId);
+		comFileService.saveFileEbs(applyVo.getMyFileIds(), applyVo.getFileKindCds2(), applyVo.getOpbYns2(), billId);
 
 		//파일 정보를 가지고 있어서 null처리
 		applyVo.setFiles(null);
@@ -177,7 +177,7 @@ public class ApplyServiceImpl implements ApplyService {
 
 	@Transactional
 	@Override
-	public int updateApply(ApplyVo applyVo, String billId) {
+	public int updateApply(ApplyVo applyVo, String billId) throws Exception {
 		//TODO :: 1. 메세지 알림 기능 적용 필요
 		String loginId = new SecurityInfoUtil().getAccountId();
 
@@ -225,9 +225,13 @@ public class ApplyServiceImpl implements ApplyService {
 
 		//파일변경
 		if (applyVo.getFiles() != null) {
-			comFileService.saveFileEbs(applyVo.getFiles(), applyVo.getFileKindCds(), billId);
+			comFileService.saveFileEbs(applyVo.getFiles(), applyVo.getFileKindCds(), applyVo.getOpbYns(), billId);
 			applyVo.setFiles(null);
 		}
+		if(applyVo.getMyFileIds() != null) {
+			comFileService.saveFileEbs(applyVo.getMyFileIds(), applyVo.getFileKindCds2(), applyVo.getOpbYns2(), billId);	
+		}
+		
 
 		//bill update
 		applyVo.setLoginId(loginId);
@@ -332,6 +336,12 @@ public class ApplyServiceImpl implements ApplyService {
 	public int deleteBillFile(EbsFileVo ebsFileVo) {
 		String userId = new SecurityInfoUtil().getAccountId();
 		return applyMapper.updateFileDelete(ebsFileVo, userId);
+	}
+	
+	@Override
+	public int updateFileOpbYn(EbsFileVo ebsFileVo) {
+		String userId = new SecurityInfoUtil().getAccountId();
+		return applyMapper.updateFileOpbYn(ebsFileVo, userId);
 	}
 
 	@Override

@@ -21,4 +21,7 @@ public class UserMemberAuthMappVo extends UserMemberVo {
 	private Boolean updateYn;
 	private String regId;
 	private String modId;
+	
+	private Boolean createFolderYn;
+	private Boolean createFileYn;
 }

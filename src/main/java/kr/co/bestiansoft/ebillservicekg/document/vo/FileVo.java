@@ -53,4 +53,7 @@ public class FileVo extends ComDefaultVO {
 	private Boolean createYn;
 	private Boolean deleteYn;
 	private Boolean updateYn;
+	
+	private Boolean createFolderYn;
+	private Boolean createFileYn;
 }

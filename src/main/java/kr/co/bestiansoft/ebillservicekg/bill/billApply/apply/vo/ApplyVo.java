@@ -73,10 +73,12 @@ public class ApplyVo extends ComDefaultVO {
 	//파일
     private MultipartFile[] files;
 	private String[] fileKindCds;
+	private String[] opbYns;
 
 	// 추가 - 내 문서함에서 파일 업로드(20250221 조진호)
 	private String[] myFileIds;
 	private String[] fileKindCds2;
+	private String[] opbYns2;
 
 	//로그인아이디
 	private String loginId;
