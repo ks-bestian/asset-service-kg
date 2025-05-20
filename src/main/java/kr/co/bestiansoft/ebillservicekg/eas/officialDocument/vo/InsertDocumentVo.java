@@ -4,7 +4,9 @@ package kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 
 @NoArgsConstructor
 @Data
@@ -16,7 +18,7 @@ public class InsertDocumentVo {
     private String[] docAttrbCd;
     private String billId;
     private char tmlmtYn;
-    private LocalDateTime tmlmtDtm;
+    private LocalDate tmlmtDtm;
     private String[] docLng;
     private String docSubtle;
     private String docStatusCd;
@@ -31,7 +33,7 @@ public class InsertDocumentVo {
 
     private String[] approvalIds;
 
-    private String[] receiverIds;
+    private List<Map<String, String>> receiverIds;
 
     private String[] easFileIds;
 }

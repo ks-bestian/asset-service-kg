@@ -14,6 +14,7 @@ import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.service.OfficialDoc
 import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.*;
 import kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.service.ReceivedInfoService;
 import kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.vo.ReceivedInfoVo;
+import kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.vo.UpdateReceivedInfoVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.List;
-
+import java.util.Map;
 
 
 @Slf4j
@@ -102,7 +103,7 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
                 .deptCd(vo.getDeptCd())
                 .docTypeCd(vo.getDocTypeCd())
                 .tmlmtYn(vo.getTmlmtYn())
-                .tmlmtDtm(vo.getTmlmtDtm())
+                .tmlmtDtm(vo.getTmlmtDtm() != null ?vo.getTmlmtDtm().atStartOfDay() : null)
                 .docSubtle(vo.getDocSubtle())
                 .senderId(loginId)
                 .docStatusCd("ds01")
@@ -125,7 +126,7 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
             ApprovalVo approvalVo = ApprovalVo.builder()
                     .docId(vo.getDocId())
                     .apvlStatusCd("AS01")
-                    .apvlOrd(i)
+                    .apvlOrd(i+1)
                     .userId(user.getUserId())
                     .userNm(user.getUserNm())
                     .deptCd(user.getDeptCd())
@@ -138,10 +139,12 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
 
 
         /* eas_received_info */
-        String[] receivedIds = vo.getReceiverIds();
-        for(int i=0 ; i < receivedIds.length ; i++){
-            if(vo.getExternalYn() == 'N'){
-                UserMemberVo user = userService.getUserMemberDetail(receivedIds[i]);
+        List<Map<String, String>> receivedIds = vo.getReceiverIds();
+        log.info("receivedIds.size() = {}",receivedIds.size());
+        for(int i=0 ; i < receivedIds.size() ; i++){
+            log.info("receivedIds.get({}).get(\"isExternal\") = {}",i,receivedIds.get(i).get("isExternal"));
+            if(receivedIds.get(i).get("isExternal").equals("false")){
+                UserMemberVo user = userService.getUserMemberDetail(receivedIds.get(i).get("userId"));
                 ReceivedInfoVo receivedInfoVo = ReceivedInfoVo.builder()
                         .docId(vo.getDocId())
                         .rcvStatus("RS001")
@@ -152,7 +155,7 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
                         .build();
 
                 result += receivedInfoService.insertReceivedInfo(receivedInfoVo);
-            }else if(vo.getExternalYn() == 'Y'){
+            }else{
                 /* todo 외부기관 */
             }
 
@@ -219,6 +222,16 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
     @Override
     public List<DocumentUserDto> getDocumentUser(String docId) {
         return officialDocumentMapper.getDocumentUser(docId);
+    }
+
+    @Override
+    public int updateReadDateTime(String docId) {
+        UpdateReceivedInfoVo vo = new UpdateReceivedInfoVo();
+        vo.setDocId(docId);
+        vo.setCheckDtm(LocalDateTime.now());
+        vo.setUserId(new SecurityInfoUtil().getAccountId());
+        vo.setRcvStatus("RS002");
+        return receivedInfoService.updateReceivedInfo(vo);
     }
 
     /**

@@ -18,7 +18,8 @@
             <if test="rjctDtm"> rjct_dtm = #{rjctDtm} , </if>
             <if test="rjctCn"> rjct_cn = #{rjctCn} , </if>
         </set>
-        where rcv_id = #{rcvId}
+        where doc_id = #{docId}
+          and user_id = #{userId}
     </update>
     <select id="getReceivedInfo" resultType="kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.vo.ReceivedInfoVo">
         select rcv_id, doc_id, user_id, user_nm, dept_cd, ext_orgn_cd, rcv_status, rcv_dtm, check_dtm, rcp_dtm, rjct_dtm, rjct_cn, rcv_ord

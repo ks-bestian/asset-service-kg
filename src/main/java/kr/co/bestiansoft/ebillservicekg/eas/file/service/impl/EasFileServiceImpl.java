@@ -60,16 +60,15 @@ public class EasFileServiceImpl implements EasFileService {
 
             if (!isPdfFile(fileVo.getFileExt())) {
                 String fileId = fileVo.getFileId();
-                executorService.submit(() -> {
-                    try {
-                        UpdatePdfFileDto pdfDto = savePdfFile(file);
-                        updatePdfInfo(fileId, pdfDto);
-                        log.info("PDF 변환 완료: 원본 파일 ID {}, PDF 파일 ID {}", fileId, pdfDto.getPdfFileId());
-                    } catch (Exception e) {
-                        log.error("PDF 변환 실패: 파일 ID {}, 오류: {}", fileId, e.getMessage(), e);
-                    }
-                });
+                try {
+                    UpdatePdfFileDto pdfDto = savePdfFile(file);
+                    updatePdfInfo(fileId, pdfDto);
+                    log.info("PDF 변환 완료: 원본 파일 ID {}, PDF 파일 ID {}", fileId, pdfDto.getPdfFileId());
+                } catch (Exception e) {
+                    log.error("PDF 변환 실패: 파일 ID {}, 오류: {}", fileId, e.getMessage(), e);
+                }
             }
+
         }
     }
 
@@ -185,6 +184,7 @@ public class EasFileServiceImpl implements EasFileService {
         File tmpPdfFile = null;
 
         try{
+            // 임시 파일 생성
             tmpFile =File.createTempFile("temp", null);
             tmpPdfFile = File.createTempFile("pdfTemp", null);
             file.transferTo(tmpFile);

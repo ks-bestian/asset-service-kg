@@ -8,11 +8,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Data
 public class UpdateReceivedInfoVo {
-    int rcv_id;
+    String docId;
+    int rcvId;
     String rcvStatus;
     LocalDateTime rcvDtm;
     LocalDateTime checkDtm;
     LocalDateTime rcpDtm;
     LocalDateTime rjctDtm;
     String rjctCn;
+    String userId;
 }

@@ -13,4 +13,5 @@ public interface OfficialDocumentService {
     int countDocumentList();
     DocumentDetailDto getDocumentDetail(String docId);
     List<DocumentUserDto> getDocumentUser(String docId);
+    int updateReadDateTime(String docId);
 }
