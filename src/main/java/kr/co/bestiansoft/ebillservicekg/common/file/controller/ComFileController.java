@@ -1,23 +1,22 @@
 package kr.co.bestiansoft.ebillservicekg.common.file.controller;
 
-import java.io.BufferedOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.rowset.serial.SerialStruct;
 
+import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.parameters.P;
+import org.springframework.web.bind.annotation.*;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,6 +24,7 @@ import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.impl.EDVHelper;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.ComFileVo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Api(tags = "파일 API")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -81,5 +81,23 @@ public class ComFileController {
 //				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + orgFileNm + "\"")
 				.body(resource);
 	}
-	
+
+	@ApiOperation(value = "파일 업로드", notes = "파일을 업로드한다.")
+	@PostMapping(value = "/com/file/upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+	public ResponseEntity<CommonResponse> uploadFile(@RequestPart("file") MultipartFile[] file) {
+		try {
+			String fileId = comFileService.saveFile(file);
+			ComFileVo fileVo = comFileService.getFile(fileId);
+
+			Map<String, Object> responseData = new HashMap<>();
+			responseData.put("fileId", fileId);
+			responseData.put("pdfFileId", fileVo.getPdfFileId());
+
+			return ResponseEntity.ok(new CommonResponse(200, "File uploaded successfully.", responseData));
+			}catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new CommonResponse(500, "File upload failed.", e.getMessage()));
+		}
+	}
 }
+
+
