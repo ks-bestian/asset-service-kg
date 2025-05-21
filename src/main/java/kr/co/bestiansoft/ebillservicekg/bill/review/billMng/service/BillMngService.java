@@ -70,7 +70,7 @@ public interface BillMngService {
 
 	BillMngVo insertBillCommitt(BillMngVo billMngVo);
 
-	EbsFileVo insertBillMngFile(EbsFileVo ebsfileVo);
+//	EbsFileVo insertBillMngFile(EbsFileVo ebsfileVo);
 
 	EbsFileVo updateEbsFileDelYn(EbsFileVo ebsFileVo);
 

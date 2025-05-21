@@ -22,6 +22,7 @@ import io.swagger.annotations.ApiOperation;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.service.ApplyService;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
+import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 import lombok.RequiredArgsConstructor;
 
@@ -32,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 public class ApplyController {
 
     private final ApplyService applyService;
+    private final ComFileService comFileService;
 
     @ApiOperation(value = "안건제출", notes = "안건을 생성한다")
     @PostMapping(value = "/bill/apply", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
@@ -53,7 +55,7 @@ public class ApplyController {
 
     @ApiOperation(value = "안건 수정", notes = "안건을 수정한다")
     @PostMapping(value = "/bill/apply/update/{billId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<CommonResponse> updateBillUpdate(@ModelAttribute ApplyVo applyVo, @PathVariable String billId) {
+    public ResponseEntity<CommonResponse> updateBillUpdate(@ModelAttribute ApplyVo applyVo, @PathVariable String billId) throws Exception {
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "apply updated successfully", applyService.updateApply(applyVo, billId)), HttpStatus.OK);
     }
 
@@ -97,6 +99,13 @@ public class ApplyController {
     @PutMapping("/bill/file/delete")
     public ResponseEntity<CommonResponse> deleteBillFile(@RequestBody EbsFileVo ebsFileVo){
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill file delete successfully", applyService.deleteBillFile(ebsFileVo)), HttpStatus.OK);
+    }
+    
+    @ApiOperation(value = "파일 공개여부 수정", notes = "파일 공개여부를 수정한다")
+    @PutMapping("/bill/file/updateopen")
+    public ResponseEntity<CommonResponse> updateopenBillFile(@RequestBody EbsFileVo ebsFileVo){
+    	applyService.updateFileOpbYn(ebsFileVo);
+    	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "OK", "updated successfully"), HttpStatus.OK);
     }
 
     @ApiOperation(value = "안건 전체 조회", notes = "안건전체를 조회한다")

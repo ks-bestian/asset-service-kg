@@ -309,6 +309,7 @@
 			, org_file_nm
 			, pdf_file_id
 			, pdf_file_nm
+			, opb_yn
 		from kgst.ebs_file ef
 		where ef.bill_id = #{billId}
 			and ef.delete_yn = 'N'
@@ -322,6 +323,16 @@
 		    mod_id = #{userId}
 		  , mod_dt = now()
 		  , delete_yn = 'Y'
+		WHERE org_file_id = #{ebsFileVo.orgFileId}
+    </update>
+    
+    <update id="updateFileOpbYn" parameterType="java.util.HashMap">
+    	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.updateFileOpbYn */
+        update kgst.ebs_file
+		set
+		    mod_id = #{userId}
+		  , mod_dt = now()
+		  , opb_yn = #{ebsFileVo.opbYn}
 		WHERE org_file_id = #{ebsFileVo.orgFileId}
     </update>
 

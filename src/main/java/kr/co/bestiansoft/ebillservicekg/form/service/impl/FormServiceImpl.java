@@ -34,10 +34,14 @@ public class FormServiceImpl implements FormService {
         int formId = formWithFieldsVo.getFormId();
 
         //insert fields
+        int i = 1;
+
         if(formWithFieldsVo.getFields() != null) {
             for(FormFieldVo field : formWithFieldsVo.getFields()) {
                 field.setFormId(formId);
+                field.setFieldSeq(i);
                 formFieldService.createFormField(field);
+                i++;
             }
         }
         return formWithFieldsVo;
@@ -54,11 +58,9 @@ public class FormServiceImpl implements FormService {
     }
 
     @Override
-    public void deleteFormWithFields(List<Integer> formIds) {
-        for(Integer formId: formIds) {
-            formFieldService.deleteFormFields(formId);
-            formMapper.deleteForm(formId);
-        }
+    public void deleteFormWithFields(Integer formId) {
+        formFieldService.deleteFormFields(formId);
+        formMapper.deleteForm(formId);
     }
 }
 

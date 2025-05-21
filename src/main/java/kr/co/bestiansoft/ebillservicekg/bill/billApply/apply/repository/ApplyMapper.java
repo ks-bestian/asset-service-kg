@@ -46,6 +46,8 @@ public interface ApplyMapper {
 	List<EbsFileVo> selectApplyFileList(String billId);
 
 	int updateFileDelete(EbsFileVo ebsFileVo, String userId);
+	
+	int updateFileOpbYn(EbsFileVo ebsFileVo, String userId);
 
 	List<ApplyVo> selectBillAll(HashMap<String, Object> param);
 

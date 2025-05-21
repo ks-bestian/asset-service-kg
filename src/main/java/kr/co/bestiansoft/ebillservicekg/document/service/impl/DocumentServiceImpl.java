@@ -126,7 +126,7 @@ public class DocumentServiceImpl implements DocumentService {
     	String userId = new SecurityInfoUtil().getAccountId();
     	String deptCd = new SecurityInfoUtil().getDeptCd();
     	
-    	if(!isAuthorizedCreate(vo.getUpperFolderId(), userId)) {
+    	if(!isAuthorizedCreateFolder(vo.getUpperFolderId(), userId)) {
     		throw new ForbiddenException("forbidden");
     	}
     	
@@ -351,7 +351,7 @@ public class DocumentServiceImpl implements DocumentService {
     public int uploadFile(FileVo vo) {
     	String userId = new SecurityInfoUtil().getAccountId();
     	
-    	if(!isAuthorizedCreate(vo.getFolderId(), userId)) {
+    	if(!isAuthorizedCreateFile(vo.getFolderId(), userId)) {
     		throw new ForbiddenException("forbidden");
     	}
     	
@@ -642,33 +642,51 @@ public class DocumentServiceImpl implements DocumentService {
     	return ret;
     }
     
-    private boolean isAuthorizedCreate(Long folderId, String userId) {
-    	if(folderId == -1) {
-    		return true;
-    	}
+    private boolean isAuthorizedCreateFolder(Long folderId, String userId) {
+//    	if(folderId == -1) {
+//    		return true;
+//    	}
     	FolderVo folder = documentMapper.selectFolderByFolderId(folderId);
-    	if(folder == null) {
-    		return false;
-    	}
-    	if("N".equals(folder.getDeptFolderYn())) {
+//    	if(folder == null) {
+//    		return false;
+//    	}
+    	if(folder != null && "N".equals(folder.getDeptFolderYn())) {
     		return folder.getUserId().equals(userId);
     	}
     	UserMemberAuthMappVo userAuth = documentMapper.selectUserAuthMapp(folderId, userId);
     	if(userAuth == null) {
     		return false;
     	}
-    	return userAuth.getCreateYn();    	
+    	return userAuth.getCreateFolderYn();    	
+    }
+    
+    private boolean isAuthorizedCreateFile(Long folderId, String userId) {
+//    	if(folderId == -1) {
+//    		return true;
+//    	}
+    	FolderVo folder = documentMapper.selectFolderByFolderId(folderId);
+//    	if(folder == null) {
+//    		return false;
+//    	}
+    	if(folder != null && "N".equals(folder.getDeptFolderYn())) {
+    		return folder.getUserId().equals(userId);
+    	}
+    	UserMemberAuthMappVo userAuth = documentMapper.selectUserAuthMapp(folderId, userId);
+    	if(userAuth == null) {
+    		return false;
+    	}
+    	return userAuth.getCreateFileYn();    	
     }
     
     private boolean isAuthorizedRead(Long folderId, String userId) {
-    	if(folderId == -1) {
-    		return true;
-    	}
+//    	if(folderId == -1) {
+//    		return true;
+//    	}
     	FolderVo folder = documentMapper.selectFolderByFolderId(folderId);
-    	if(folder == null) {
-    		return false;
-    	}
-    	if("N".equals(folder.getDeptFolderYn())) {
+//    	if(folder == null) {
+//    		return false;
+//    	}
+    	if(folder != null && "N".equals(folder.getDeptFolderYn())) {
     		return folder.getUserId().equals(userId);
     	}
     	UserMemberAuthMappVo userAuth = documentMapper.selectUserAuthMapp(folderId, userId);
@@ -679,14 +697,14 @@ public class DocumentServiceImpl implements DocumentService {
     }
     
     private boolean isAuthorizedUpdate(Long folderId, String userId) {
-    	if(folderId == -1) {
-    		return true;
-    	}
+//    	if(folderId == -1) {
+//    		return true;
+//    	}
     	FolderVo folder = documentMapper.selectFolderByFolderId(folderId);
-    	if(folder == null) {
-    		return false;
-    	}
-    	if("N".equals(folder.getDeptFolderYn())) {
+//    	if(folder == null) {
+//    		return false;
+//    	}
+    	if(folder != null && "N".equals(folder.getDeptFolderYn())) {
     		return folder.getUserId().equals(userId);
     	}
     	UserMemberAuthMappVo userAuth = documentMapper.selectUserAuthMapp(folderId, userId);
@@ -697,14 +715,14 @@ public class DocumentServiceImpl implements DocumentService {
     }
     
     private boolean isAuthorizedDelete(Long folderId, String userId) {
-    	if(folderId == -1) {
-    		return true;
-    	}
+//    	if(folderId == -1) {
+//    		return true;
+//    	}
     	FolderVo folder = documentMapper.selectFolderByFolderId(folderId);
-    	if(folder == null) {
-    		return false;
-    	}
-    	if("N".equals(folder.getDeptFolderYn())) {
+//    	if(folder == null) {
+//    		return false;
+//    	}
+    	if(folder != null && "N".equals(folder.getDeptFolderYn())) {
     		return folder.getUserId().equals(userId);
     	}
     	UserMemberAuthMappVo userAuth = documentMapper.selectUserAuthMapp(folderId, userId);
@@ -715,14 +733,14 @@ public class DocumentServiceImpl implements DocumentService {
     }
     
     private boolean isAuthorizedDeleteRecursive(Long folderId, String userId) {
-    	if(folderId == -1) {
-    		return false;
-    	}
+//    	if(folderId == -1) {
+//    		return false;
+//    	}
     	FolderVo folder = documentMapper.selectFolderByFolderId(folderId);
-    	if(folder == null) {
-    		return false;
-    	}
-    	if("N".equals(folder.getDeptFolderYn())) {
+//    	if(folder == null) {
+//    		return false;
+//    	}
+    	if(folder != null && "N".equals(folder.getDeptFolderYn())) {
     		return folder.getUserId().equals(userId);
     	}
     	
@@ -1076,58 +1094,58 @@ public class DocumentServiceImpl implements DocumentService {
 	public List<FolderVo> selectDeptFolderList(FolderVo vo) {
     	String userId = new SecurityInfoUtil().getAccountId();
     	String deptCd = new SecurityInfoUtil().getDeptCd();
-    	vo.setUserId(userId);
-    	vo.setDeptCd(deptCd);
-    	return documentMapper.selectDeptFolderList(vo);
-
-    	
 //    	vo.setUserId(userId);
 //    	vo.setDeptCd(deptCd);
-//        List<FolderVo> list = documentMapper.selectDeptFolderListAll(vo);
-//        
-//		ArrayDeque<Long> dq = new ArrayDeque<>();
-//		Set<Long> set = new HashSet<>();
-//		Map<Long, FolderVo> map = new HashMap<>();
-//		
-//		for(FolderVo folder : list) {
-//			Long folderId = folder.getFolderId();
-//			map.put(folderId, folder);
-//			if(folder.getSearchYn()) {
-//				dq.add(folderId);
-//				set.add(folderId);
-//			}
-//		}
-//		
-//		while(!dq.isEmpty()) {
-//			Long id = dq.pollFirst();
-//			FolderVo folder = map.get(id);
-//			Long upId = folder.getUpperFolderId();
-//			if(upId == -1) {
-//				continue;
-//			}
-//			if(!map.containsKey(upId)) {
-//				continue;
-//			}
-//			if(set.contains(upId)) {
-//				continue;
-//			}
-//			dq.add(upId);
-//			set.add(upId);
-//		}
-//
-//		List<FolderVo> ret = new ArrayList<>();
-//		for(FolderVo folder : list) {
-//			if(folder.getUpperFolderId().equals(vo.getUpperFolderId()) && set.contains(folder.getFolderId())) {
-//				ret.add(folder);
-//			}
-//		}
-//		Collections.sort(ret, new Comparator<FolderVo>() {
-//			@Override
-//			public int compare(FolderVo a, FolderVo b) {
-//				return a.getFolderNm().compareTo(b.getFolderNm());
-//			}
-//		});
-//		return ret;
+//    	return documentMapper.selectDeptFolderList(vo);
+
+    	
+    	vo.setUserId(userId);
+    	vo.setDeptCd(deptCd);
+        List<FolderVo> list = documentMapper.selectDeptFolderListAll(vo);
+        
+		ArrayDeque<Long> dq = new ArrayDeque<>();
+		Set<Long> set = new HashSet<>();
+		Map<Long, FolderVo> map = new HashMap<>();
+		
+		for(FolderVo folder : list) {
+			Long folderId = folder.getFolderId();
+			map.put(folderId, folder);
+			if(folder.getSearchYn()) {
+				dq.add(folderId);
+				set.add(folderId);
+			}
+		}
+		
+		while(!dq.isEmpty()) {
+			Long id = dq.pollFirst();
+			FolderVo folder = map.get(id);
+			Long upId = folder.getUpperFolderId();
+			if(upId == -1) {
+				continue;
+			}
+			if(!map.containsKey(upId)) {
+				continue;
+			}
+			if(set.contains(upId)) {
+				continue;
+			}
+			dq.add(upId);
+			set.add(upId);
+		}
+
+		List<FolderVo> ret = new ArrayList<>();
+		for(FolderVo folder : list) {
+			if(folder.getUpperFolderId().equals(vo.getUpperFolderId()) && set.contains(folder.getFolderId())) {
+				ret.add(folder);
+			}
+		}
+		Collections.sort(ret, new Comparator<FolderVo>() {
+			@Override
+			public int compare(FolderVo a, FolderVo b) {
+				return a.getFolderNm().compareTo(b.getFolderNm());
+			}
+		});
+		return ret;
 	}
     
 }

@@ -323,6 +323,7 @@
 		  , ef.pdf_file_id
 		  , ef.pdf_file_nm
 		  , ef.detail_seq
+		  , ef.opb_yn
 		from ebs_master_detail emd
 		join ebs_file ef on (emd.seq = ef.detail_seq)
 		where ef.detail_seq = #{detailSeq}

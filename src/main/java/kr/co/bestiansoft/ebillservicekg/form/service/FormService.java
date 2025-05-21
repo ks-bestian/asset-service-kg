@@ -10,5 +10,5 @@ public interface FormService {
     FormWithFieldsVo createFormWithFields(FormWithFieldsVo formWithFieldsVo);
     FormWithFieldsVo getFormWithFieldsById(Integer formId);
 
-    void deleteFormWithFields(List<Integer> formIds);
+    void deleteFormWithFields(Integer formId);
 }
