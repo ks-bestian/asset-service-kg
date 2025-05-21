@@ -376,18 +376,25 @@
 				and AA.stat_cd = #{statCd}
 			</if>
 	    order by AA.reg_dt desc
-
     </select>
-
 
 
     <update id="updateBillHome" parameterType="kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo">
     	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.updateBillHome */
         update kgst.ebs_master
 		set
-		  scl_dsc_rcp_nmb  = #{sclDscRcpNmb}		-- 상태 사회토론번호
-		  , mod_id = #{modId}
+		    mod_id = #{modId}
 		  , mod_dt = now()
+		<if test="sclDscRcpNmb != null and sclDscRcpNmb != ''">
+			<choose>
+				<when test="sclDscRcpNmb == 'stop'">
+					, scl_dsc_rcp_nmb = ''
+				</when>
+				<otherwise>
+					, scl_dsc_rcp_nmb  = #{sclDscRcpNmb}		-- 상태 사회토론번호
+				</otherwise>
+			</choose>
+		</if>
 		WHERE bill_id = #{billId}
     </update>
 

@@ -13,6 +13,7 @@
 			, description_kg
 			, description_ru
 			, created_at
+			, status
 		)
 		VALUES (
 			  #{ppsrNm}
@@ -21,6 +22,7 @@
 			, #{etcKg}
 			, #{etcRu}
 			, now()
+			, #{status}
 		)
     </insert>
     
@@ -59,7 +61,7 @@
 		where id = #{id}
 	</update>
 	
-	<select id="selectCommentsByLawId" resultType="kr.co.bestiansoft.ebillservicekg.test.vo.CommentsVo">
+	<select id="selectCommentsByLawId" parameterType="java.lang.Long" resultType="kr.co.bestiansoft.ebillservicekg.test.vo.CommentsVo">
 		/* QueryID : kr.co.bestiansoft.ebillservicekg.test.repository2.HomePageMapper.selectComments */
 		SELECT 
 			  id
@@ -80,4 +82,21 @@
 		and law_id = #{lawId}
 		</if>
 	</select>
+
+	<insert id="insertComments" parameterType="kr.co.bestiansoft.ebillservicekg.test.vo.CommentsVo">
+		insert into homepage.comments (
+			  created_at
+			, content
+			, law_id
+			, parent_id
+			, created_by
+		)
+		values (
+			  now()
+			, #{content}
+			, #{lawId}
+			, #{parentId}
+			, #{createdBy}
+		)
+	</insert>
 </mapper>

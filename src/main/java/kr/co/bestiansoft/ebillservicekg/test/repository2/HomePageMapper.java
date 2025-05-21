@@ -16,4 +16,5 @@ public interface HomePageMapper {
 	List<ApplyVo> selectBillCommentList(String lawId);
 	void updateLaws(Map<String, Object> map);
 	List<CommentsVo> selectCommentsByLawId(Long lawId);
+	void insertComments(CommentsVo commentsVo);
 }
