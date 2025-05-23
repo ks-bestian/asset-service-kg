@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.service.AgreeService;
+import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.service.ApplyService;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
 import lombok.RequiredArgsConstructor;
 
@@ -25,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class AgreeController {
 
     private final AgreeService agreeService;
+    private final ApplyService applyService;
 
     @ApiOperation(value = "동의서명 목록", notes = "동의서명 목록을 조회")
     @GetMapping("/bill/agree")
@@ -35,9 +37,10 @@ public class AgreeController {
     
     @ApiOperation(value = "동의서명 상세", notes = "동의서명 상세를 조회")
     @GetMapping("/bill/agree/{billId}")
-    public ResponseEntity<CommonResponse> getApplyDetail(@PathVariable String billId, @RequestParam String lang) {
+    public ResponseEntity<CommonResponse> getApplyDetail(@PathVariable String billId, @RequestParam HashMap<String, Object> param) {
     	//todo :: 로그인 유저 아이디 가져오는걸로 변경 필요
-    	return new ResponseEntity<>(new CommonResponse(200, "OK", agreeService.getAgreeDetail(billId, lang)), HttpStatus.OK);
+//    	return new ResponseEntity<>(new CommonResponse(200, "OK", agreeService.getAgreeDetail(billId, lang)), HttpStatus.OK);
+    	return new ResponseEntity<>(new CommonResponse(200, "OK", applyService.getApplyDetail(billId, param)), HttpStatus.OK);
     }
     
     @ApiOperation(value = "동의 서명", notes = "안건에 대해 동의 및 동의 취소")

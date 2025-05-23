@@ -11,6 +11,7 @@ import kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.service.AgreeServic
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.vo.AgreeResponse;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.vo.AgreeVo;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper;
+import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
@@ -31,9 +32,10 @@ public class AgreeServiceImpl implements AgreeService {
 	private final HomePageMapper homePageMapper;
 
 	@Override
-	public List<AgreeVo> getAgreeList(HashMap<String, Object> param) {
+	public List<ApplyVo> getAgreeList(HashMap<String, Object> param) {
 		param.put("loginId", new SecurityInfoUtil().getAccountId());
-		return agreeMapper.selectAgreeList(param);
+		return applyMapper.selectListBillAgree(param);
+//		return agreeMapper.selectAgreeList(param);
 	}
 
 	@Override
@@ -51,7 +53,10 @@ public class AgreeServiceImpl implements AgreeService {
 		result.setProposerList(proposerList);
 
 		//파일목록
-		List<EbsFileVo> fileList = applyMapper.selectApplyFileList(billId);
+		HashMap<String, Object> param = new HashMap<>();
+		param.put("billId", billId);
+		param.put("lang", lang);
+		List<EbsFileVo> fileList = applyMapper.selectApplyFileList(param);
 		result.setFileList(fileList);
 		
 		List<CommentsVo> commentList = homePageMapper.selectCommentsByLawId(null);

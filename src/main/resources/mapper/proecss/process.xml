@@ -458,9 +458,16 @@
     <delete id="deleteBpTasks" parameterType="kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo">
 	/* QueryID : kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper.deleteBpTasks */
 	DELETE FROM EBS_BP_TASKS
-	WHERE TASK_ID = #{taskId}
-	   AND STEP_ID = #{stepId}
-	   AND BILL_ID = #{billId}
+	WHERE 1=1
+		<if test="taskId != null and taskId != ''">
+		   AND TASK_ID = #{taskId}
+		</if>
+		<if test="stepId != null and stepId != ''">
+		   AND STEP_ID = #{stepId}
+		</if>
+		<if test="billId != null and billId != ''">
+		   AND BILL_ID = #{billId}
+		</if>
     </delete>
 
    <!-- 해당안건의 소관위 -->
@@ -506,6 +513,11 @@
 	</select>
 
 
+	<select id="selectCurrentStepId">
+		select current_step_id
+		from ebs_bp_instance ebi 
+		where bill_id = #{billId}
+	</select>
 
 
 

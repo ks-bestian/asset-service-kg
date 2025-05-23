@@ -1,5 +1,6 @@
 package kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -39,6 +40,8 @@ public class ApplyVo extends ComDefaultVO {
 	//제안자 이름
 	private String ppsrNm;
 	private String memberNm;
+    private String memberNmKg;
+    private String memberNmRu;
 	//제안자 아이디
 	private String ppsrId;
 	//안건 상태
@@ -50,6 +53,8 @@ public class ApplyVo extends ComDefaultVO {
 	private String wtCnKg;
 	//철회사유ru
 	private String wtCnRu;
+	//철회사유
+	private String wtCn;
 	//제출날짜
 	private String ppslDt;
 
@@ -98,5 +103,16 @@ public class ApplyVo extends ComDefaultVO {
 	private String content;
 
 	private String rcpDt;
+	
+    //동의여부
+    private String agreeYn;
 
+    private String revokeYn;
+    
+    //제안자 대상
+    private String proposerId;
+
+    private LocalDateTime revokeRegDt;
+    private LocalDateTime wtDt;
+	private LocalDateTime wtCncDt;
 }

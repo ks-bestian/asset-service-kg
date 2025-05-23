@@ -15,6 +15,7 @@ import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMap
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.service.ApplyService;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyResponse;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo;
+import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.service.BillMngService;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
@@ -171,8 +172,10 @@ public class ApplyServiceImpl implements ApplyService {
 	@Override
 	public List<ApplyVo> getApplyList(HashMap<String, Object> param) {
 		String loginId = new SecurityInfoUtil().getAccountId();
-		param.put("loginId", loginId);
-		return applyMapper.selectListApply(param);
+//		param.put("loginId", loginId);
+//		return applyMapper.selectListApply(param);
+		param.put("ppsrId", loginId);
+		return applyMapper.selectListBillApply(param);
 	}
 
 	@Transactional
@@ -242,6 +245,18 @@ public class ApplyServiceImpl implements ApplyService {
 	@Override
 	public int deleteApply(String billId) {
 		applyMapper.deleteProposerByBillId(billId);
+		
+		HashMap<String, Object> param = new HashMap<>();
+		param.put("userId", new SecurityInfoUtil().getAccountId());
+		param.put("billId", billId);
+		applyMapper.deleteBillFileByBillId(param);
+		
+		ProcessVo processVo = new ProcessVo();
+		processVo.setBillId(billId);
+		processMapper.deleteBpTasks(processVo);
+		processMapper.deleteBpInstance(processVo);
+		
+		
 		return applyMapper.deleteApplyByBillId(billId);
 	}
 
@@ -252,12 +267,18 @@ public class ApplyServiceImpl implements ApplyService {
 
 		//안건 상세
 		param.put("billId", billId);
-		ApplyVo applyDetail = applyMapper.selectApplyDetail(param);
+		param.put("userId", new SecurityInfoUtil().getAccountId());
+//		ApplyVo applyDetail = applyMapper.selectApplyDetail(param);
+		ApplyVo applyDetail = applyMapper.selectBill(param);
 		result.setApplyDetail(applyDetail);
 
 		//파일 리스트
-		List<EbsFileVo> fileList = applyMapper.selectApplyFileList(billId);
+		List<EbsFileVo> fileList = applyMapper.selectBillFileList(param);
 		result.setFileList(fileList);
+		
+		//발의문서 리스트
+		List<EbsFileVo> applyFileList = applyMapper.selectApplyFileList(param);
+		result.setApplyFileList(applyFileList);
 
 		//발의자 대상
 		List<AgreeVo> proposerList = agreeMapper.selectAgreeProposerList(billId);

@@ -18,6 +18,8 @@ public class ApplyResponse {
 	List<AgreeVo> proposerList;
 
 	List<EbsFileVo> fileList;
+	
+	List<EbsFileVo> applyFileList;
 
 	ProcessVo processVo;
 	

@@ -5,18 +5,39 @@ spring:
   application:
     name: ebill-service-kg
   datasource:
-      
     kgst:
       driver-class-name: org.postgresql.Driver
       jdbcUrl: jdbc:postgresql://3.39.79.144:5432/bestian?currentSchema=kgst&useUnicode=true&characterEncoding=utf8&autoReconnect=true
       username: best
       password: best1234
-
     homepage:
       driver-class-name: org.postgresql.Driver
       jdbcUrl: jdbc:postgresql://43.203.192.251:5432/postgres?currentSchema=homepage&useUnicode=true&characterEncoding=utf8&autoReconnect=true
       username: home
       password: homepass
+
+#  jta:
+#    enabled: true
+#    atomikos:
+#      datasource:
+#        kgst:
+#          min-pool-size: 5
+#          max-pool-size: 10
+#          unique-resource-name: kgstDataSource
+#          xa-data-source-class-name: org.postgresql.xa.PGXADataSource
+#          xa-properties:
+#            user: best
+#            password: best1234
+#            url: jdbc:postgresql://3.39.79.144:5432/bestian?currentSchema=kgst&useUnicode=true&characterEncoding=utf8&autoReconnect=true
+#        homepage:
+#          min-pool-size: 5
+#          max-pool-size: 10
+#          unique-resource-name: homepageDataSource
+#          xa-data-source-class-name: org.postgresql.xa.PGXADataSource
+#          xa-properties:
+#            user: home
+#            password: homepass
+#            url: jdbc:postgresql://43.203.192.251:5432/postgres?currentSchema=homepage&useUnicode=true&characterEncoding=utf8&autoReconnect=true
 
   mvc:
     pathmatch:

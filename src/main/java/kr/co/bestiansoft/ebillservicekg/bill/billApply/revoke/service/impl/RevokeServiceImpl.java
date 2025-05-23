@@ -5,9 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper;
+import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.repository.RevokeMapper;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.service.RevokeService;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.vo.RevokeResponse;
@@ -40,10 +42,12 @@ public class RevokeServiceImpl implements RevokeService {
 	private final MsgService msgService;
 
 	@Override
-	public List<RevokeVo> getRevokeList(HashMap<String, Object> param) {
+	public List<ApplyVo> getRevokeList(HashMap<String, Object> param) {
 		String userId = new SecurityInfoUtil().getAccountId();
-		param.put("userId", userId);
-		return revokeMapper.selectRevokeList(param);
+//		param.put("userId", userId);
+//		return revokeMapper.selectRevokeList(param);
+		param.put("ppsrId", userId);
+		return applyMapper.selectListBillRevoke(param);
 	}
 
 	@Override
@@ -63,15 +67,15 @@ public class RevokeServiceImpl implements RevokeService {
 		result.setProposerList(proposerList);
 
 		//파일목록
-		List<EbsFileVo> fileList = applyMapper.selectApplyFileList(billId);
+		List<EbsFileVo> fileList = applyMapper.selectApplyFileList(param);
 		result.setFileList(fileList);
 
 		return result;
 	}
-
+	
 	@Transactional
 	@Override
-	public ProcessVo billRevokeRequest(String billId,RevokeVo vo) throws Exception {
+	public ProcessVo billRevokeRequest(String billId,RevokeVo vo) {
 
 		BillMngVo billMngVo = new BillMngVo();
 		billMngVo.setBillId(billId);
@@ -81,7 +85,12 @@ public class RevokeServiceImpl implements RevokeService {
 		billMngVo.setMyFileIds(vo.getMyFileIds());
 		billMngVo.setClsCd("400"); //의안철회
 		billMngVo.setFileKindCd("170"); //안건철회문서
-		billMngService.insertBillDetail(billMngVo);
+		try {
+			billMngService.insertBillDetail(billMngVo);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 //		this.updateRevoke(billId, vo);
 //		if(vo.getFiles() != null) {
@@ -105,6 +114,8 @@ public class RevokeServiceImpl implements RevokeService {
 		pVo.setStepId("1100"); //안건철회관리
 //		pVo.setTaskId(vo.getTaskId());
 		processService.handleProcess(pVo);
+		
+		
 
 		return pVo;
 	}
@@ -161,6 +172,23 @@ public class RevokeServiceImpl implements RevokeService {
 		
 		return 0;
 	}
+	
+//	@Override
+//	public boolean hasEveryProposerAgreedToRevoke(String billId) {
+//		HashMap<String, Object> param = new HashMap<>();
+//		param.put("billId", billId);
+//		List<RevokeVo> proposerList = revokeMapper.selectProposerList(param);
+//		if(proposerList == null) {
+//			return false;
+//		}
+//		
+//		for(RevokeVo proposer : proposerList) {
+//			if(!"Y".equals(proposer.getRevokeYn())) {
+//				return false;
+//			}
+//		}
+//		return true;
+//	}
 
 	@Override
 	public int updateRevoke(String billId, RevokeVo revokeVo) {

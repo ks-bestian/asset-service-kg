@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.service.ApplyService;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.service.RevokeService;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.vo.RevokeVo;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
@@ -28,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 public class RevokeController {
 
     private final RevokeService revokeService;
+    private final ApplyService applyService;
 
     @ApiOperation(value = "철회목록", notes = "철회목록을 조회한다")
     @GetMapping("/bill/revoke")
@@ -37,8 +39,9 @@ public class RevokeController {
 
     @ApiOperation(value = "철회상세", notes = "철회상세를 조회한다")
     @GetMapping("/bill/revoke/{billId}")
-    public ResponseEntity<CommonResponse> getRevokeDetail(@PathVariable String billId, @RequestParam String lang) {
-    	return new ResponseEntity<>(new CommonResponse(200, "OK", revokeService.getRevokeDetail(billId, lang)), HttpStatus.OK);
+    public ResponseEntity<CommonResponse> getRevokeDetail(@PathVariable String billId, @RequestParam HashMap<String, Object> param) {
+//    	return new ResponseEntity<>(new CommonResponse(200, "OK", revokeService.getRevokeDetail(billId, lang)), HttpStatus.OK);
+    	return new ResponseEntity<>(new CommonResponse(200, "OK", applyService.getApplyDetail(billId, param)), HttpStatus.OK);
     }
 
     @ApiOperation(value = "철회요청", notes = "철회를 요청한다")
@@ -46,6 +49,12 @@ public class RevokeController {
     public ResponseEntity<CommonResponse> billRevokeRequest(@PathVariable String billId, RevokeVo vo) throws Exception {
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill revoke request successfully", revokeService.billRevokeRequest(billId,vo)), HttpStatus.OK);
     }
+    
+//    @ApiOperation(value = "제안자 전원 철회동의 여부확인", notes = "제안자 전원이 철회에 동의했는지 확인한다")
+//    @PostMapping(value = "/bill/revoke/checkagree/{billId}")
+//    public ResponseEntity<CommonResponse> billRevokeCheckAgree(@PathVariable String billId, RevokeVo vo) {
+//    	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill revoke submit successfully", revokeService.hasEveryProposerAgreedToRevoke(billId)), HttpStatus.OK);
+//    }
     
     @ApiOperation(value = "철회접수요청", notes = "철회접수를 요청한다")
     @PostMapping(value = "/bill/revoke/submit/{billId}")
