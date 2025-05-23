@@ -22,4 +22,7 @@ public interface ComFileMapper {
 	int updateFileEbsMtng(EbsFileVo vo);
 	
 	EbsFileVo selectEbsFile(String orgFileId);
+
+	void updatePdfFileInfo(ComFileVo updateVo);
+
 }

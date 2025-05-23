@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import kr.co.bestiansoft.ebillservicekg.test.domain.CommentsHierarchy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -289,8 +291,15 @@ public class ApplyServiceImpl implements ApplyService {
 //			List<CommentsVo> commentList = homePageMapper.selectCommentsByLawId(Long.valueOf(applyDetail.getSclDscRcpNmb()));
 //			result.setCommentList(commentList);
 //		}
+
+		//안건 댓글
 		List<CommentsVo> commentList = homePageMapper.selectCommentsByLawId(null);
-		result.setCommentList(commentList);
+//		result.setCommentList(commentList);
+
+		CommentsHierarchy ch = new CommentsHierarchy();
+		ch.buildCommentsHierarchy(commentList);
+		ArrayNode nodes = ch.getCommentsJson();
+		result.setCommentLists(nodes);
 
 		//안건 프로세스정보가져오기.
 		ProcessVo pcParam = new ProcessVo();
@@ -374,12 +383,13 @@ public class ApplyServiceImpl implements ApplyService {
 	@Override
 	public ApplyVo createBillHome(ApplyVo applyVo) {
 		String modId = new SecurityInfoUtil().getAccountId();
-
+		applyVo.setStatus(true);
 		homePageMapper.insertHomeLaws(applyVo);
 
 		String sclDscRcpNmb = String.valueOf(applyVo.getId());
 		applyVo.setSclDscRcpNmb(sclDscRcpNmb);
 		applyVo.setModId(modId);
+
 		applyMapper.updateBillHome(applyVo);
 
 		return applyVo;
@@ -390,12 +400,19 @@ public class ApplyServiceImpl implements ApplyService {
 		
 		String sclDscRcpNmb = applyVo.getSclDscRcpNmb();
 		Long id = Long.valueOf(sclDscRcpNmb);
-		
+
 		Map<String, Object> map = new HashMap<>();
 		map.put("updatedBy", new SecurityInfoUtil().getAccountId());
 		map.put("status", false);
 		map.put("id", id);
 		homePageMapper.updateLaws(map);
+
+		applyVo.setSclDscRcpNmb("stop");
+		applyMapper.updateBillHome(applyVo);
 	}
 
+	@Override
+	public void createComments(CommentsVo commentsVo) {
+		homePageMapper.insertComments(commentsVo);
+	}
 }

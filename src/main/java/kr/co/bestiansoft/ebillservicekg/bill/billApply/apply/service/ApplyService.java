@@ -6,6 +6,7 @@ import java.util.List;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyResponse;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
+import kr.co.bestiansoft.ebillservicekg.test.vo.CommentsVo;
 
 public interface ApplyService {
 
@@ -38,4 +39,6 @@ public interface ApplyService {
 	ApplyVo createBillHome(ApplyVo applyVo);
 
 	void stopBillHome(ApplyVo applyVo);
+
+	void createComments(CommentsVo commentsVo);
 }

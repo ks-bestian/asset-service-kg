@@ -101,7 +101,7 @@ public class ApplyVo extends ComDefaultVO {
 	private String lawId;
 	private String parentId;
 	private String content;
-
+	private Boolean status;
 	private String rcpDt;
 	
     //동의여부

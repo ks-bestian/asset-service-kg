@@ -3,6 +3,8 @@ package kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.service.impl;
 import java.util.HashMap;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import kr.co.bestiansoft.ebillservicekg.test.domain.CommentsHierarchy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,7 +62,11 @@ public class AgreeServiceImpl implements AgreeService {
 		result.setFileList(fileList);
 		
 		List<CommentsVo> commentList = homePageMapper.selectCommentsByLawId(null);
-		result.setCommentList(commentList);
+
+		CommentsHierarchy ch = new CommentsHierarchy();
+		ch.buildCommentsHierarchy(commentList);
+		ArrayNode nodes = ch.getCommentsJson();
+		result.setCommentLists(nodes);
 
 		return result;
 	}

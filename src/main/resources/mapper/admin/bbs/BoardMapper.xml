@@ -25,12 +25,19 @@
 			, kgst.fngetlangnm(view.user_nm_kg, view.user_nm_ru, view.user_nm_kg, #{lang}) as reg_nm
 			, cb.important_yn
 			, cb.hidden_yn
-			, kgst.fngetlangnm(view.dept_nm_kg, view.dept_nm_ru, view.dept_nm_ko, #{lang}) as dept_nm
+			, kgst.fngetlangnm(cd.dept_nm1, cd.dept_nm2, cd.dept_nm3, #{lang}) as dept_nm
         from com_board cb
 		left join kgst.view_user_member view on view.user_id = cb.reg_id
+		left join com_dept cd on cd.dept_cd = cb.cmt_cd
         where cb.brd_type = #{brdType}
 		<if test="brdSj != null and brdSj != ''">
 			  and cb.brd_sj like concat('%', #{brdSj}, '%')
+		</if>
+		<if test="regNm != null and regNm != ''">
+			and kgst.fngetlangnm(view.user_nm_kg, view.user_nm_ru, view.user_nm_kg, #{lang}) like concat('%', #{regNm}, '%')
+		</if>
+		<if test="deptNm != null and deptNm != ''">
+			and kgst.fngetlangnm(view.dept_nm_kg, view.dept_nm_ru, view.dept_nm_kg, #{lang}) like concat('%', #{deptNm}, '%')
 		</if>
 		order by
 				case
@@ -43,7 +50,7 @@
     <select id="getBoardById" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo">
         select
-        	  row_number() over(order by reg_dt desc) as num
+        	  row_number() over(order by cb.reg_dt desc) as num
         	, cb.brd_id
         	, cb.brd_type
         	, cb.brd_sj
@@ -61,9 +68,10 @@
 			, cb.important_yn
 			, cb.hidden_yn
 			, kgst.fngetlangnm(view.user_nm_kg, view.user_nm_ru, view.user_nm_kg, #{lang}) as reg_nm
-			, kgst.fngetlangnm(view.dept_nm_kg, view.dept_nm_ru, view.dept_nm_ko, #{lang}) as dept_nm
+			, kgst.fngetlangnm(cd.dept_nm1, cd.dept_nm2, cd.dept_nm3, #{lang}) as dept_nm
         from com_board cb
 		inner join view_user_member view on view.user_id = cb.reg_id
+		left join com_dept cd on cd.dept_cd = cb.cmt_cd
         where brd_id = #{id}
     </select>
 

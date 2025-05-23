@@ -15,6 +15,8 @@
 			, delete_yn
 			, reg_id
 			, reg_dt
+			, pdf_file_id
+			, pdf_file_nm
 		) values (
 			  #{fileId}
 			, #{fileGroupId}
@@ -25,6 +27,8 @@
 			, 'N'
 			, #{regId}
 			, now()
+			, #{pdfFileId}
+			, #{pdfFileNm}
 		)
     </insert>
 
@@ -42,6 +46,8 @@
 			, reg_dt
 			, mod_id
 			, mod_dt
+			, pdf_file_id
+			, pdf_file_nm
 		from
 			kgst.com_file
 		where 1=1
@@ -62,6 +68,8 @@
 			, reg_dt
 			, mod_id
 			, mod_dt
+			, pdf_file_id
+			, pdf_file_nm
 		from
 			kgst.com_file
 		where 1=1
@@ -199,5 +207,12 @@
 		where 1=1
 		and org_file_id = #{orgFileId}
 	</select>
+
+	<update id="updatePdfFileInfo" parameterType="kr.co.bestiansoft.ebillservicekg.common.file.vo.ComFileVo">
+		UPDATE com_file
+		SET pdf_file_id = #{pdfFileId},
+			pdf_file_nm = #{pdfFileNm}
+		WHERE file_id = #{fileId}
+	</update>
 
 </mapper>

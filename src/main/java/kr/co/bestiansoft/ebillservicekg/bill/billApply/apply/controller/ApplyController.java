@@ -2,6 +2,7 @@ package kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.controller;
 
 import java.util.HashMap;
 
+import kr.co.bestiansoft.ebillservicekg.test.vo.CommentsVo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -125,5 +126,12 @@ public class ApplyController {
     	applyService.stopBillHome(applyVo);
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "OK", "stopped successfully"), HttpStatus.OK);
     }
+
+    @ApiOperation(value = "홈페이지 답글 등록", notes = "홈페이지 답글 등록")
+    @PostMapping(value = "law/comment")
+    public ResponseEntity<CommonResponse> createComment(@RequestBody CommentsVo commentsVo) {
+        applyService.createComments(commentsVo);
+        return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "OK", "successfully"), HttpStatus.OK);
+    };
 
 }
