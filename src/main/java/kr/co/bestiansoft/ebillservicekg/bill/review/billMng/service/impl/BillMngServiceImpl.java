@@ -19,6 +19,7 @@ import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.service.BillMngServi
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngResponse;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.ProposerVo;
+import kr.co.bestiansoft.ebillservicekg.common.file.repository.ComFileMapper;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
@@ -42,6 +43,7 @@ public class BillMngServiceImpl implements BillMngService {
     private final ComFileService comFileService;
 	private static final Logger LOGGER = LoggerFactory.getLogger(BillMngServiceImpl.class);
 	private final ProcessMapper processMapper;
+	private final ComFileMapper comFileMapper;
 
     @Override
     public List<BillMngVo> getBillList(HashMap<String, Object> param) {
@@ -373,16 +375,16 @@ public class BillMngServiceImpl implements BillMngService {
 		return billMngVo;
 	}
 
-	@Transactional
-	@Override
-	public EbsFileVo insertBillMngFile(EbsFileVo ebsFileVo) {
-		//파일등록
-		comFileService.saveFileBillMng(ebsFileVo);
-		//파일 정보를 가지고 있어서 null처리
-		ebsFileVo.setFiles(null);
-
-		return ebsFileVo;
-	}
+//	@Transactional
+//	@Override
+//	public EbsFileVo insertBillMngFile(EbsFileVo ebsFileVo) {
+//		//파일등록
+//		comFileService.saveFileBillMng(ebsFileVo);
+//		//파일 정보를 가지고 있어서 null처리
+//		ebsFileVo.setFiles(null);
+//
+//		return ebsFileVo;
+//	}
 	
 	@Transactional
 	@Override
@@ -401,7 +403,7 @@ public class BillMngServiceImpl implements BillMngService {
 
 		return ebsFileVo;
 	}
-
+	
 	@Override
 	public List<BillMngVo> selectListMainMtSubmit(HashMap<String, Object> param) {
         List<BillMngVo> result = billMngMapper.selectListMainMtSubmit(param);

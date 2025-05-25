@@ -47,7 +47,235 @@
 		      )
 	   )
     </insert>
-
+    
+    <sql id="_selectBill">
+    	select
+		    A.bill_id
+		  , A.bill_no
+		  , A.bill_name -- 안건 이름
+		  , A.ppsr_id
+		  , A.ppsr_nm -- 제안자 이름
+		  , A.member_nm
+		  , A.bill_name_kg
+		  , A.bill_name_ru
+		  , A.bill_kind
+		  , A.scl_dsc_rcp_nmb
+		  , A.na_term_cd
+		  , A.ppsl_dt
+		  , A.rcp_dt
+		  , A.reg_dt
+		  , A.regDate
+		  , A.current_step_id
+		  , A.stat_nm
+		  , A.stat_cd
+		  , A.etc
+		from (
+			select
+			    em.bill_id
+			  , em.bill_name_kg
+			  , em.bill_name_ru
+			  , fngetlangnm(em.bill_name_kg, em.bill_name_ru, em.bill_name_kg, #{lang}) as bill_name
+			  , em.bill_no
+			  , em.bill_kind
+			  , em.scl_dsc_rcp_nmb
+			  , em.na_term_cd
+			  , em.ppsr_id
+			  , fngetlangnm(vum.member_nm_kg, vum.member_nm_ru, vum.member_nm_kg, #{lang}) as ppsr_nm
+			  , fngetlangnm(vum.member_nm_kg, vum.member_nm_ru, vum.member_nm_kg, #{lang}) as member_nm
+			  , em.etc_kg
+			  , em.etc_ru
+			  , fngetlangnm(em.etc_kg, em.etc_ru, em.etc_kg, #{lang}) as etc
+			  , em.ppsl_dt
+			  , em.rcp_dt
+			  , em.reg_dt
+			  , to_char(em.reg_dt, 'DD/MM/YYYY HH24:mi') as regDate -- 등록일
+			  , ebi.current_step_id
+			  , ebs.stat_cd
+			  , fngetcodenm('1010', ebs.stat_cd, #{lang}) as stat_nm
+			from ebs_master em
+			left join view_user_member vum on (em.ppsr_id = vum.user_id)
+			left join ebs_bp_instance ebi on em.bill_id = ebi.bill_id
+		    left join ebs_bp_step ebs on ebi.bp_df_id = ebs.bp_df_id and ebi.current_step_id = ebs.step_id 
+		 ) A
+    </sql>
+    
+    <select id="selectListBillApply" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.selectListBill */
+        select AA.* from (
+			<include refid="_selectBill" />
+		) AA
+        where 1=1
+		<if test="ppsrId != null and ppsrId != ''">
+			and AA.ppsr_id = #{ppsrId}
+		</if>
+		<if test="naTermCd != null and naTermCd != ''">
+			and AA.na_term_cd = #{naTermCd}
+		</if>
+		<if test="billName != null and billName != ''">
+			and AA.bill_name like concat('%', #{billName}, '%')
+		</if>
+		<if test="sclDscRcpNmb != null and sclDscRcpNmb != ''">
+			and AA.scl_dsc_rcp_nmb like concat('%', #{sclDscRcpNmb}, '%')
+		</if>
+		<if test="statCd != null and statCd != ''">
+			and AA.stat_cd = #{statCd}
+		</if>
+		<if test="toDate != null and toDate != ''">
+			AND AA.ppsl_dt <![CDATA[>=]]> #{toDate}
+		</if>
+		<if test="fromDate != null and fromDate != ''">
+			AND AA.ppsl_dt <![CDATA[<=]]> #{fromDate}
+		</if>
+	    order by AA.reg_dt desc
+    </select>
+    
+    <select id="selectBill" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.selectBill */
+        select 
+        	  AA.* 
+        	, ep.sign_dt
+	        , ep.sign_cnc_dt
+	        , ep.wt_dt
+	        , ep.wt_cnc_dt
+	        , case
+				when (ep.sign_dt is not null and ep.sign_cnc_dt is null) then 'Y'
+				else 'N'
+			  end as agreeYn 				-- 동의여부
+			, case
+				when (ep.wt_dt is not null and ep.wt_cnc_dt is null) then 'Y'
+				else 'N'
+			  end as revokeYn 				-- 철회동의여부
+			, kgst.fngetlangnm(emd.rmrk_kg, emd.rmrk_ru, emd.rmrk_kg, #{lang}) as wt_cn -- 철회사유
+        from (
+	        <include refid="_selectBill" />
+        ) AA
+        left join kgst.ebs_proposer ep on (AA.bill_id = ep.bill_id and ep.proposer_id = #{userId})
+        left outer join kgst.ebs_master_detail emd on (AA.bill_id = emd.bill_id and emd.cls_cd = '400') --철회정보
+        where 1=1
+        and AA.bill_id = #{billId}
+    </select>
+    
+    <select id="selectListBillAgree" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.repository.AgreeMapper.selectAgreeList */
+        select 
+        	  AA.*
+        	, case
+					when (ep.sign_dt is not null and ep.sign_cnc_dt is null) then
+						ep.sign_dt
+					else null
+				 end as sign_dt 		-- 동의날짜
+        from (
+			<include refid="_selectBill" />        
+		) AA
+		join kgst.ebs_proposer ep on (AA.bill_id = ep.bill_id)
+			where 1=1
+			  and ep.proposer_id = #{loginId}
+			  and AA.ppsr_id != #{loginId}
+			<if test="naTermCd != null and naTermCd != ''">
+				and AA.na_term_cd = #{naTermCd}
+			</if>
+			<if test="billName != null and billName != ''">
+				and AA.bill_name like concat('%', #{billName}, '%')
+			</if>
+			<if test="sclDscRcpNmb != null and sclDscRcpNmb != ''">
+				and AA.scl_dsc_rcp_nmb like concat('%', #{sclDscRcpNmb}, '%')
+			</if>
+			<if test="statCd != null and statCd != ''">
+				and AA.stat_cd = #{statCd}
+			</if>
+			<if test="toDate != null and toDate != ''">
+				AND AA.ppsl_dt <![CDATA[>=]]> #{toDate}
+			</if>
+			<if test="fromDate != null and fromDate != ''">
+				AND AA.ppsl_dt <![CDATA[<=]]> #{fromDate}
+			</if>
+			<if test="ppsrNm != null and ppsrNm != ''">
+				and AA.ppsr_nm like concat('%', #{ppsrNm}, '%')
+			</if>
+			order by AA.reg_dt desc
+    </select>
+    
+    
+    <select id="selectListBillRevoke" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.selectListBill */
+        select 
+        	  AA.* 
+        	, emd.reg_dt as revokeRegDt --철회요청날짜
+        from (
+			<include refid="_selectBill" />
+		) AA
+		left outer join kgst.ebs_master_detail emd on (AA.bill_id = emd.bill_id and emd.cls_cd = '400') --철회정보
+        where 1=1
+	        and AA.stat_cd = 'ST020' --철회
+		<if test="ppsrId != null and ppsrId != ''">
+			and AA.ppsr_id = #{ppsrId}
+		</if>
+		<if test="naTermCd != null and naTermCd != ''">
+			and AA.na_term_cd = #{naTermCd}
+		</if>
+		<if test="billName != null and billName != ''">
+			and AA.bill_name like concat('%', #{billName}, '%')
+		</if>
+		<if test="sclDscRcpNmb != null and sclDscRcpNmb != ''">
+			and AA.scl_dsc_rcp_nmb like concat('%', #{sclDscRcpNmb}, '%')
+		</if>
+		<if test="toDate != null and toDate != ''">
+			AND AA.ppsl_dt <![CDATA[>=]]> #{toDate}
+		</if>
+		<if test="fromDate != null and fromDate != ''">
+			AND AA.ppsl_dt <![CDATA[<=]]> #{fromDate}
+		</if>
+	    order by AA.reg_dt desc
+    </select>
+    
+    <select id="selectListBillRevokeAgree" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.selectListBill */
+        select 
+        	  AA.* 
+        	, case
+					when (ep.wt_dt is not null and ep.wt_cnc_dt is null) then
+						ep.wt_dt
+					else null
+				 end as wt_dt 		-- 철회동의날짜
+	        , emd.reg_dt as revokeRegDt --철회요청날짜
+        from (
+			<include refid="_selectBill" />
+		) AA
+		join kgst.ebs_proposer ep on (AA.bill_id = ep.bill_id)
+		left outer join kgst.ebs_master_detail emd on (AA.bill_id = emd.bill_id and emd.cls_cd = '400') --철회정보
+        where 1=1
+	        and AA.stat_cd = 'ST020' --철회
+	        and ep.proposer_id = #{loginId}
+		    and AA.ppsr_id != #{loginId}
+		    and ep.sign_dt is not null and ep.sign_cnc_dt is null
+		<if test="ppsrId != null and ppsrId != ''">
+			and AA.ppsr_id = #{ppsrId}
+		</if>
+		<if test="naTermCd != null and naTermCd != ''">
+			and AA.na_term_cd = #{naTermCd}
+		</if>
+		<if test="billName != null and billName != ''">
+			and AA.bill_name like concat('%', #{billName}, '%')
+		</if>
+		<if test="sclDscRcpNmb != null and sclDscRcpNmb != ''">
+			and AA.scl_dsc_rcp_nmb like concat('%', #{sclDscRcpNmb}, '%')
+		</if>
+		<if test="toDate != null and toDate != ''">
+			AND AA.ppsl_dt <![CDATA[>=]]> #{toDate}
+		</if>
+		<if test="fromDate != null and fromDate != ''">
+			AND AA.ppsl_dt <![CDATA[<=]]> #{fromDate}
+		</if>
+	    order by AA.reg_dt desc
+    </select>
+    
+    
+    <!--
     <select id="selectListApply" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.selectListApply */
@@ -55,8 +283,8 @@
 		select
 		    AA.bill_id
 		  , AA.bill_no
-		  , kgst.fngetlangnm(AA.bill_name_kg,AA.bill_name_ru,AA.bill_name_kg,#{lang})  as bill_name -- 안건 이름
-		  , kgst.fngetlangnm(AA.member_nm_kg,AA.member_nm_ru,AA.member_nm_kg,#{lang}) as ppsr_nm -- 제안자 이름
+		  , kgst.fngetlangnm(AA.bill_name_kg,AA.bill_name_ru,AA.bill_name_kg,#{lang})  as bill_name
+		  , kgst.fngetlangnm(AA.member_nm_kg,AA.member_nm_ru,AA.member_nm_kg,#{lang}) as ppsr_nm
 		  , AA.bill_name_kg
 		  , AA.bill_name_ru
 		  , AA.scl_dsc_rcp_nmb
@@ -66,7 +294,7 @@
 		  , AA.stat_nm
 		  , AA.stat_cd
 		  , AA.na_term_cd
-		  , kgst.fngetlangnm(AA.etc_kg,AA.etc_ru,AA.etc_kg,#{lang}) as etc -- etc
+		  , kgst.fngetlangnm(AA.etc_kg,AA.etc_ru,AA.etc_kg,#{lang}) as etc
 		from (
 			select
 			    pl.bill_id
@@ -121,10 +349,10 @@
 		<if test="fromDate != null and fromDate != ''">
 			AND AA.ppsl_dt <![CDATA[<=]]> #{fromDate}
 		</if>
-	    order by AA.ppsl_dt desc
+	    order by AA.reg_dt desc
 
     </select>
-
+    -->
 
 
     <update id="updateApplyByBillId" parameterType="kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo">
@@ -201,7 +429,7 @@
     	delete from kgst.ebs_proposer
         where bill_id = #{billId}
     </delete>
-
+    
     <update id="updateApplyBill" parameterType="java.lang.String">
     	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.updateApplyBill */
         update kgst.ebs_master
@@ -300,8 +528,8 @@
 			, #{billNameRu}
 		)
     </insert>
-
-    <select id="selectApplyFileList" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo">
+    
+    <select id="selectBillFileList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo">
 		/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.selectApplyFileList */
 		select
 			  ef.file_kind_cd
@@ -309,9 +537,31 @@
 			, org_file_nm
 			, pdf_file_id
 			, pdf_file_nm
+			, opb_yn
 		from kgst.ebs_file ef
 		where ef.bill_id = #{billId}
 			and ef.delete_yn = 'N'
+		order by file_kind_cd asc, ef.reg_dt asc
+    </select>
+
+    <select id="selectApplyFileList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.selectApplyFileList */
+		select
+			  ef.file_kind_cd
+			, org_file_id
+			, org_file_nm
+			, pdf_file_id
+			, pdf_file_nm
+			, opb_yn
+		from kgst.ebs_file ef
+		where ef.bill_id = #{billId}
+			and ef.delete_yn = 'N'
+		<if test="lang == 'lng_type_1' or lang == 'lng_type_3'">
+	    	and file_kind_cd in ('110', '120', '130')
+	    </if>
+	    <if test="lang == 'lng_type_2'">
+	    	and file_kind_cd in ('140', '150', '160')
+	    </if>
 		order by file_kind_cd asc, ef.reg_dt asc
     </select>
 
@@ -322,6 +572,26 @@
 		    mod_id = #{userId}
 		  , mod_dt = now()
 		  , delete_yn = 'Y'
+		WHERE org_file_id = #{ebsFileVo.orgFileId}
+    </update>
+    
+    <update id="deleteBillFileByBillId" parameterType="java.util.HashMap">
+    	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.deleteBillFileByBillId */
+        update kgst.ebs_file
+		set
+		    mod_id = #{userId}
+		  , mod_dt = now()
+		  , delete_yn = 'Y'
+		WHERE bill_id = #{billId}
+    </update>
+    
+    <update id="updateFileOpbYn" parameterType="java.util.HashMap">
+    	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.updateFileOpbYn */
+        update kgst.ebs_file
+		set
+		    mod_id = #{userId}
+		  , mod_dt = now()
+		  , opb_yn = #{ebsFileVo.opbYn}
 		WHERE org_file_id = #{ebsFileVo.orgFileId}
     </update>
 
@@ -376,18 +646,25 @@
 				and AA.stat_cd = #{statCd}
 			</if>
 	    order by AA.reg_dt desc
-
     </select>
-
 
 
     <update id="updateBillHome" parameterType="kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo">
     	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.updateBillHome */
         update kgst.ebs_master
 		set
-		  scl_dsc_rcp_nmb  = #{sclDscRcpNmb}		-- 상태 사회토론번호
-		  , mod_id = #{modId}
+		    mod_id = #{modId}
 		  , mod_dt = now()
+		<if test="sclDscRcpNmb != null and sclDscRcpNmb != ''">
+			<choose>
+				<when test="sclDscRcpNmb == 'stop'">
+					, scl_dsc_rcp_nmb = ''
+				</when>
+				<otherwise>
+					, scl_dsc_rcp_nmb  = #{sclDscRcpNmb}		-- 상태 사회토론번호
+				</otherwise>
+			</choose>
+		</if>
 		WHERE bill_id = #{billId}
     </update>
 

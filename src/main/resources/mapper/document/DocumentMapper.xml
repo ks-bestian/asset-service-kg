@@ -106,19 +106,28 @@
 		/* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectDeptFolderListAll */
 		select 
 			  d.*
-			, (case when vum.dept_cd = #{deptCd} and vum.dept_head_yn = 'Y' then true
+			, (case when #{folderId} = -1 and vum.dept_head_yn = 'Y' then true
+					when vum.dept_cd = #{deptCd} and vum.dept_head_yn = 'Y' then true
 					when d.reg_id = #{userId} then true 
 					else coalesce(bam.search_yn, true)  
 				end) as searchYn
-			, (case when vum.dept_cd = #{deptCd} and vum.dept_head_yn = 'Y' then true
+			, (case when #{folderId} = -1 and vum.dept_head_yn = 'Y' then true
+					when vum.dept_cd = #{deptCd} and vum.dept_head_yn = 'Y' then true
 					when d.reg_id = #{userId} then true 
-					else coalesce(bam.create_yn, false)  
-				end) as createYn
-			, (case when vum.dept_cd = #{deptCd} and vum.dept_head_yn = 'Y' then true
+					else coalesce(bam.create_folder_yn, false)  
+				end) as createFolderYn
+			, (case when #{folderId} = -1 and vum.dept_head_yn = 'Y' then true
+					when vum.dept_cd = #{deptCd} and vum.dept_head_yn = 'Y' then true
+					when d.reg_id = #{userId} then true 
+					else coalesce(bam.create_file_yn, false)  
+				end) as createFileYn
+			, (case when #{folderId} = -1 and vum.dept_head_yn = 'Y' then true
+					when vum.dept_cd = #{deptCd} and vum.dept_head_yn = 'Y' then true
 					when d.reg_id = #{userId} then true 
 					else coalesce(bam.update_yn, false)  
 				end) as updateYn
-			, (case when vum.dept_cd = #{deptCd} and vum.dept_head_yn = 'Y' then true
+			, (case when #{folderId} = -1 and vum.dept_head_yn = 'Y' then true
+					when vum.dept_cd = #{deptCd} and vum.dept_head_yn = 'Y' then true
 					when d.reg_id = #{userId} then true 
 					else coalesce(bam.delete_yn, false)  
 				end) as deleteYn
@@ -155,8 +164,12 @@
 				end) as searchYn
 			, (case when vum.dept_cd = #{deptCd} and vum.dept_head_yn = 'Y' then true
 					when d.reg_id = #{userId} then true 
-					else coalesce(bam.create_yn, false)  
-				end) as createYn
+					else coalesce(bam.create_folder_yn, false)  
+				end) as createFolderYn
+			, (case when vum.dept_cd = #{deptCd} and vum.dept_head_yn = 'Y' then true
+					when d.reg_id = #{userId} then true 
+					else coalesce(bam.create_file_yn, false)  
+				end) as createFileYn
 			, (case when vum.dept_cd = #{deptCd} and vum.dept_head_yn = 'Y' then true
 					when d.reg_id = #{userId} then true 
 					else coalesce(bam.update_yn, false)  
@@ -413,19 +426,28 @@
 				, (select user_nm_kg 
 				from kgst.view_user_member vcm
 				where vcm.user_id = b.mod_id) as mod_nm
-				, (case when d.dept_folder_yn = 'Y' and d.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
+				, (case when #{folderId} = -1 and vum.dept_head_yn = 'Y' then true
+						when d.dept_folder_yn = 'Y' and d.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
 						when vum.user_id = d.reg_id then true 
 						else coalesce(bam.search_yn, true)  
 					end) as searchYn
-				, (case when d.dept_folder_yn = 'Y' and d.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
+				, (case when #{folderId} = -1 and vum.dept_head_yn = 'Y' then true
+						when d.dept_folder_yn = 'Y' and d.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
 						when vum.user_id = d.reg_id then true 
-						else coalesce(bam.create_yn, true)  
-					end) as createYn
-				, (case when d.dept_folder_yn = 'Y' and d.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
+						else coalesce(bam.create_folder_yn, true)  
+					end) as createFolderYn
+				, (case when #{folderId} = -1 and vum.dept_head_yn = 'Y' then true
+						when d.dept_folder_yn = 'Y' and d.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
+						when vum.user_id = d.reg_id then true 
+						else coalesce(bam.create_file_yn, true)  
+					end) as createFileYn
+				, (case when #{folderId} = -1 and vum.dept_head_yn = 'Y' then true
+						when d.dept_folder_yn = 'Y' and d.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
 						when vum.user_id = d.reg_id then true 
 						else coalesce(bam.update_yn, true)  
 					end) as updateYn
-				, (case when d.dept_folder_yn = 'Y' and d.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
+				, (case when #{folderId} = -1 and vum.dept_head_yn = 'Y' then true
+						when d.dept_folder_yn = 'Y' and d.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
 						when vum.user_id = d.reg_id then true 
 						else coalesce(bam.delete_yn, true)  
 					end) as deleteYn
@@ -1014,19 +1036,28 @@
 				, vum.poly_cd
 				, vum.poly_nm
 				, vum.rsdn_rgst_nmbr
-				, (case when bfi.dept_folder_yn = 'Y' and bfi.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
+				, (case when #{folderId} = -1 and vum.dept_head_yn = 'Y' then true
+						when bfi.dept_folder_yn = 'Y' and bfi.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
 						when vum.user_id = bfi.reg_id then true 
 						else coalesce(bam.search_yn, true)  
 					end) as searchYn
-				, (case when bfi.dept_folder_yn = 'Y' and bfi.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
+				, (case when #{folderId} = -1 and vum.dept_head_yn = 'Y' then true
+						when bfi.dept_folder_yn = 'Y' and bfi.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
 						when vum.user_id = bfi.reg_id then true 
-						else coalesce(bam.create_yn, false)  
-					end) as createYn
-				, (case when bfi.dept_folder_yn = 'Y' and bfi.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
+						else coalesce(bam.create_folder_yn, false)  
+					end) as createFolderYn
+				, (case when #{folderId} = -1 and vum.dept_head_yn = 'Y' then true
+						when bfi.dept_folder_yn = 'Y' and bfi.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
+						when vum.user_id = bfi.reg_id then true 
+						else coalesce(bam.create_file_yn, false)  
+					end) as createFileYn
+				, (case when #{folderId} = -1 and vum.dept_head_yn = 'Y' then true
+						when bfi.dept_folder_yn = 'Y' and bfi.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
 						when vum.user_id = bfi.reg_id then true 
 						else coalesce(bam.update_yn, false)  
 					end) as updateYn
-				, (case when bfi.dept_folder_yn = 'Y' and bfi.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
+				, (case when #{folderId} = -1 and vum.dept_head_yn = 'Y' then true
+						when bfi.dept_folder_yn = 'Y' and bfi.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
 						when vum.user_id = bfi.reg_id then true 
 						else coalesce(bam.delete_yn, false)  
 					end) as deleteYn
@@ -1054,8 +1085,10 @@
         INSERT INTO kgst.bs_auth_mapp (
 			  folder_id
 			, user_id
+			, dept_cd
 			, search_yn
-			, create_yn
+			, create_folder_yn
+			, create_file_yn
 			, update_yn
 			, delete_yn
 			, reg_id
@@ -1064,8 +1097,10 @@
 		VALUES (
 			  #{folderId}
 			, #{userId}
+			, #{deptCd}
 			, #{searchYn}
-			, #{createYn}
+			, #{createFolderYn}
+			, #{createFileYn}
 			, #{updateYn}
 			, #{deleteYn}
 			, #{regId}
@@ -1076,7 +1111,8 @@
 		SET   mod_dt = now()
 			, mod_id = #{modId}
 			, search_yn = #{searchYn}
-			, create_yn = #{createYn}
+			, create_folder_yn = #{createFolderYn}
+			, create_file_yn = #{createFileYn}
 			, update_yn = #{updateYn}
 			, delete_yn = #{deleteYn}
     </insert>
@@ -1112,19 +1148,28 @@
     <select id="selectUserAuthMapp" resultType="kr.co.bestiansoft.ebillservicekg.document.vo.UserMemberAuthMappVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper.selectUserAuthMapp */
         select 
-			  (case when bfi.dept_folder_yn = 'Y' and bfi.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
+			  (case when #{folderId} = -1 and vum.dept_head_yn = 'Y' then true
+					when bfi.dept_folder_yn = 'Y' and bfi.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
 					when vum.user_id = bfi.reg_id then true 
 					else coalesce(bam.search_yn, true)  
 				end) as searchYn
-			, (case when bfi.dept_folder_yn = 'Y' and bfi.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
+			, (case when #{folderId} = -1 and vum.dept_head_yn = 'Y' then true
+					when bfi.dept_folder_yn = 'Y' and bfi.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
 					when vum.user_id = bfi.reg_id then true 
-					else coalesce(bam.create_yn, false)  
-				end) as createYn
-			, (case when bfi.dept_folder_yn = 'Y' and bfi.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
+					else coalesce(bam.create_folder_yn, false)  
+				end) as createFolderYn
+			, (case when #{folderId} = -1 and vum.dept_head_yn = 'Y' then true
+					when bfi.dept_folder_yn = 'Y' and bfi.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
+					when vum.user_id = bfi.reg_id then true 
+					else coalesce(bam.create_file_yn, false)  
+				end) as createFileYn
+			, (case when #{folderId} = -1 and vum.dept_head_yn = 'Y' then true
+					when bfi.dept_folder_yn = 'Y' and bfi.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
 					when vum.user_id = bfi.reg_id then true 
 					else coalesce(bam.update_yn, false)  
 				end) as updateYn
-			, (case when bfi.dept_folder_yn = 'Y' and bfi.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
+			, (case when #{folderId} = -1 and vum.dept_head_yn = 'Y' then true
+					when bfi.dept_folder_yn = 'Y' and bfi.dept_cd = vum.dept_cd and vum.dept_head_yn = 'Y' then true
 					when vum.user_id = bfi.reg_id then true 
 					else coalesce(bam.delete_yn, false)  
 				end) as deleteYn
@@ -1132,7 +1177,7 @@
 		left outer join kgst.bs_folder_info bfi
 		on bfi.folder_id = #{folderId}
 		left outer join kgst.bs_auth_mapp bam
-		on bam.folder_id = bfi.folder_id 
+		on bam.folder_id = #{folderId} 
 		and bam.user_id = vum.user_id 
 		where 1=1
 		and vum.user_id = #{userId}

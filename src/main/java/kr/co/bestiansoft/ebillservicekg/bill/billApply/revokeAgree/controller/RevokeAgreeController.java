@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.service.ApplyService;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.revokeAgree.service.RevokeAgreeService;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class RevokeAgreeController {
 
     private final RevokeAgreeService revokeAgreeService;
+    private final ApplyService applyService;
     
     @ApiOperation(value = "철회목록", notes = "철회목록을 조회한다")
     @GetMapping("/bill/revokeAgree")
@@ -35,7 +37,8 @@ public class RevokeAgreeController {
     @ApiOperation(value = "철회 상세", notes = "철회 상세를 조회한다")
     @GetMapping("/bill/revokeAgree/{billId}")
     public ResponseEntity<CommonResponse> getRevokeDetail(@PathVariable String billId, @RequestParam HashMap<String, Object> param) {
-    	return new ResponseEntity<>(new CommonResponse(200, "OK", revokeAgreeService.getRevokeDetail(billId, param)), HttpStatus.OK);
+//    	return new ResponseEntity<>(new CommonResponse(200, "OK", revokeAgreeService.getRevokeDetail(billId, param)), HttpStatus.OK);
+    	return new ResponseEntity<>(new CommonResponse(200, "OK", applyService.getApplyDetail(billId, param)), HttpStatus.OK);
     }
     
     @ApiOperation(value = "철회 동의", notes = "철회 요청에 대한 동의 및 동의취소를 한다")

@@ -44,4 +44,6 @@ public class MtngFromVo extends ComDefaultVO {
 	private String ppsrId;
 	private String ppslDt;
 
+	private int ord;
+
 }

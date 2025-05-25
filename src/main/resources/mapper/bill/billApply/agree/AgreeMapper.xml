@@ -3,15 +3,14 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.repository.AgreeMapper">
 
-
     <select id="selectAgreeList" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.vo.AgreeVo">
 
 		with apply as (
 		select
 			    AA.bill_id
-			  , kgst.fngetlangnm(AA.bill_name_kg, AA.bill_name_ru, AA.bill_name_kg, #{lang}) as bill_name -- 안건 이름
-			  , kgst.fngetlangnm(vum.member_nm_kg, vum.member_nm_ru, vum.member_nm_kg, #{lang}) as ppsr_nm -- 제안자 이름
+			  , kgst.fngetlangnm(AA.bill_name_kg, AA.bill_name_ru, AA.bill_name_kg, #{lang}) as bill_name
+			  , kgst.fngetlangnm(vum.member_nm_kg, vum.member_nm_ru, vum.member_nm_kg, #{lang}) as ppsr_nm
 		      , AA.scl_dsc_rcp_nmb
 		      , AA.ppsl_dt
 		      , AA.stat_nm
@@ -21,7 +20,7 @@
 					when (ep.sign_dt is not null and ep.sign_cnc_dt is null) then
 						ep.sign_dt
 					else null
-				 end as sign_dt 		-- 동의날짜
+				 end as sign_dt
 			  , AA.reg_dt
 			from (
 				select
@@ -131,8 +130,14 @@
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.repository.AgreeMapper.selectAgreeProposerList */
 		select
 			  ep.proposer_id					-- 제안자 대상
-			, case when ep.sign_dt is null then 'N' else 'Y' end as agree_yn -- 동의여부
-			, case when ep.wt_dt is null then 'N' else 'Y' end as wt_yn -- 철회동의여부
+			, case
+				when (ep.sign_dt is not null and ep.sign_cnc_dt is null) then 'Y'
+				else 'N'
+			  end as agreeYn 				-- 동의여부
+			, case
+				when (ep.wt_dt is not null and ep.wt_cnc_dt is null) then 'Y'
+				else 'N'
+			  end as revokeYn 				-- 철회동의여부  
 			, kgst.fngetlangnm(vum.member_nm_kg,vum.member_nm_ru,vum.member_nm_kg,#{lang}) as member_nm -- 의원이름
 			, vum.member_id
 			, vum.member_nm_kg					-- 의원이름kg
@@ -152,7 +157,6 @@
 			, mod_dt = now()			-- 수정날짜
 			<if test='agreeYn == "N"'> 	-- 서명 취소
 			, sign_cnc_dt = now()
-			, sign_dt = null
 			</if>
 			<if test='agreeYn == "Y"'> 	-- 서명 동의
 			, sign_dt = now()

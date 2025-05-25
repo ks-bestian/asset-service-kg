@@ -41,6 +41,7 @@ public interface MtngFromMapper {
 	List<AgendaVo> selectListAgenda (HashMap<String, Object> param);
 	List<AgendaVo> selectListHallMtngAgenda (HashMap<String, Object> param);
 	void updateHallMtngResult(MtngFromVo mtngFromVo);
+	void updateHallMtngOrd(AgendaVo agendaVo);
 
 
 }

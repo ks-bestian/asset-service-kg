@@ -35,7 +35,7 @@ public class AgreeVo extends ComDefaultVO {
     //동의여부
     private String agreeYn;
 
-    private String wtYn;
+    private String revokeYn;
     //비고
     private String etc;
     //비고kg

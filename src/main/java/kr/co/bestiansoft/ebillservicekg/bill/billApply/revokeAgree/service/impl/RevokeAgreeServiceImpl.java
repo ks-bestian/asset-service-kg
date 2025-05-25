@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper;
+import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.revokeAgree.repository.RevokeAgreeMapper;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.revokeAgree.service.RevokeAgreeService;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.revokeAgree.vo.RevokeAgreeResponse;
@@ -26,11 +27,20 @@ public class RevokeAgreeServiceImpl implements RevokeAgreeService {
 	private final ApplyMapper applyMapper;
 
 	@Override
-	public List<RevokeAgreeVo> getRevokeAgreeList(HashMap<String, Object> param) {
+	public List<ApplyVo> getRevokeAgreeList(HashMap<String, Object> param) {
 		String userId = new SecurityInfoUtil().getAccountId();
-		param.put("userId", userId);
-		return revokeAgreeMapper.selectRevokeAgreeList(param);
+//		param.put("userId", userId);
+//		return revokeAgreeMapper.selectRevokeAgreeList(param);
+		param.put("loginId", userId);
+		return applyMapper.selectListBillRevokeAgree(param);
 	}
+	
+//	@Override
+//	public List<RevokeAgreeVo> getRevokeAgreeList(HashMap<String, Object> param) {
+//		String userId = new SecurityInfoUtil().getAccountId();
+//		param.put("userId", userId);
+//		return revokeAgreeMapper.selectRevokeAgreeList(param);
+//	}
 
 	@Override
 	public RevokeAgreeResponse getRevokeDetail(String billId, HashMap<String, Object> param) {
@@ -45,7 +55,7 @@ public class RevokeAgreeServiceImpl implements RevokeAgreeService {
 		List<RevokeAgreeVo> proposerList = revokeAgreeMapper.getProposerList(param);
 		result.setProposerList(proposerList);
 		
-		List<EbsFileVo> fileList = applyMapper.selectApplyFileList(billId);
+		List<EbsFileVo> fileList = applyMapper.selectApplyFileList(param);
 		result.setFileList(fileList);
 		
 		return result;

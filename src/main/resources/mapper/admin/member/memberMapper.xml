@@ -160,7 +160,7 @@
         order by member_nm_kg
     </select>
 
-    <update id="resetPswd" parameterType="java.util.HashMap">
+    <update id="updatePswd" parameterType="java.util.HashMap">
         update com_member set
             user_password = #{userPassword}
         where member_id = #{memberId}

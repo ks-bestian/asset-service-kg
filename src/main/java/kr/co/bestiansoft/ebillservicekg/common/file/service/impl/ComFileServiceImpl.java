@@ -57,12 +57,14 @@ public class ComFileServiceImpl implements ComFileService {
 	
 	@Override
 	public String saveFile(MultipartFile[] files) {
+		String userId = new SecurityInfoUtil().getAccountId();
 		String fileGroupId = StringUtil.getUUUID();
+        String fileId = null;
 
 		for(MultipartFile file:files) {
 
-			String fileId = StringUtil.getUUUID();
-    		String orgFileNm = file.getOriginalFilename();
+			fileId = StringUtil.getUUUID();
+			String orgFileNm = file.getOriginalFilename();
 
     		////////////////////////
 			try (InputStream edvIs = file.getInputStream()){
@@ -79,11 +81,62 @@ public class ComFileServiceImpl implements ComFileService {
 			fileVo.setFileSize(file.getSize());
 			fileVo.setUploadYn("Y");
 			fileVo.setDeleteYn("N");
+			fileVo.setRegId(userId);
 
 			fileMapper.insertFile(fileVo);
+			convertToPdfComFile(file, fileVo.getFileId());
 		}
+		return fileId;
+	}
+	//
+	void convertToPdfComFile(MultipartFile mpf, String orgFileId) {
+		try {
+			String filename = mpf.getOriginalFilename();
+			File tmpFile = File.createTempFile("tmp", null);
+			mpf.transferTo(tmpFile);
 
-		return fileGroupId;
+			convertToPdfComFile(tmpFile, filename, orgFileId);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	void convertToPdfComFile(File tmpFile, String filename, String orgFileId) {
+		//executorService.submit(() -> {
+			File pdfFile = null;
+			try {
+				pdfFile = File.createTempFile("tmp", null);
+				boolean success = pdfService.convertToPdf(tmpFile.getAbsolutePath(), filename, pdfFile.getAbsolutePath());
+
+				if (success) {
+					String pdfFileId = StringUtil.getUUUID();
+					try (InputStream edvIs = new FileInputStream(pdfFile)) {
+						edv.save(pdfFileId, edvIs);
+					} catch (Exception edvEx) {
+						throw new RuntimeException("EDV_NOT_WORK", edvEx);
+					}
+
+					int idx = filename.lastIndexOf(".");
+					String pdfFileNm = filename.substring(0, idx) + ".pdf";
+
+					ComFileVo fileVo = new ComFileVo();
+					fileVo.setFileId(orgFileId);
+					fileVo.setOrgFileNm(filename);
+					fileVo.setPdfFileId(pdfFileId);
+					fileVo.setPdfFileNm(pdfFileNm);
+					fileMapper.updatePdfFileInfo(fileVo);
+
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if (tmpFile != null) {
+					tmpFile.delete();
+				}
+				if (pdfFile != null) {
+					pdfFile.delete();
+				}
+			}
+		//});
 	}
 
 	void convertToPdfEbs(File tmpFile, String filename, String orgFileId) {
@@ -188,13 +241,13 @@ public class ComFileServiceImpl implements ComFileService {
 
 	@Transactional
 	@Override
-	public void saveFileEbs(MultipartFile[] files, String[] fileKindCdList, String billId) {
+	public void saveFileEbs(MultipartFile[] files, String[] fileKindCdList, String[] opbYnList, String billId) {
 		if(files == null) return;
 		
 		for(int i = 0; i < files.length; ++i) {
 			MultipartFile file = files[i];
 			String fileKindCd = fileKindCdList[i];
-			String opbYn = "N";
+			String opbYn = opbYnList[i];
 			String clsCd = null;
 			Long detailSeq = null;
 			saveFileEbs(file, fileKindCd, billId, clsCd, opbYn, detailSeq);
@@ -203,14 +256,14 @@ public class ComFileServiceImpl implements ComFileService {
 
 	@Transactional
 	@Override
-	public void saveFileEbs(String[] myFileIds, String[] fileKindCdList, String billId) throws Exception {
+	public void saveFileEbs(String[] myFileIds, String[] fileKindCdList, String[] opbYnList, String billId) throws Exception {
 
 		if(myFileIds == null) return;
 
 		for(int i = 0; i < myFileIds.length; ++i) {
 			String myFileId = myFileIds[i];
 			String fileKindCd = fileKindCdList[i];
-			String opbYn = "N";
+			String opbYn = opbYnList[i];
 			String clsCd = null;
 			Long detailSeq = null;
 			saveFileEbs(myFileId, fileKindCd, billId, clsCd, opbYn, detailSeq);
@@ -382,37 +435,37 @@ public class ComFileServiceImpl implements ComFileService {
 		}
 	}
 
-	@Override
-	public void saveFileBillMng(EbsFileVo ebsFileVo) {
-		if(ebsFileVo.getFiles() == null) return;
-
-		for(MultipartFile file : ebsFileVo.getFiles()) {
-			String orgFileId = StringUtil.getUUUID();
-    		String orgFileNm = file.getOriginalFilename();
-
-    		////////////////////////
-			try (InputStream edvIs = file.getInputStream()){
-				edv.save(orgFileId, edvIs);
-			} catch (Exception edvEx) {
-				throw new RuntimeException("EDV_NOT_WORK", edvEx);
-			}
-    		////////////////////////
-
-			String regId = new SecurityInfoUtil().getAccountId();
-			EbsFileVo fileVo = new EbsFileVo();
-			fileVo.setBillId(ebsFileVo.getBillId());
-
-			fileVo.setOrgFileId(orgFileId);
-			fileVo.setOrgFileNm(orgFileNm);
-			fileVo.setFileSize(file.getSize());
-			fileVo.setFileKindCd("200");
-			fileVo.setClsCd("120");
-			fileVo.setOpbYn("Y");
-			fileVo.setRegId(regId);
-			fileVo.setRmk(ebsFileVo.getRmk());
-			fileMapper.insertFileEbs(fileVo);
-		}
-	}
+//	@Override
+//	public void saveFileBillMng(EbsFileVo ebsFileVo) {
+//		if(ebsFileVo.getFiles() == null) return;
+//
+//		for(MultipartFile file : ebsFileVo.getFiles()) {
+//			String orgFileId = StringUtil.getUUUID();
+//    		String orgFileNm = file.getOriginalFilename();
+//
+//    		////////////////////////
+//			try (InputStream edvIs = file.getInputStream()){
+//				edv.save(orgFileId, edvIs);
+//			} catch (Exception edvEx) {
+//				throw new RuntimeException("EDV_NOT_WORK", edvEx);
+//			}
+//    		////////////////////////
+//
+//			String regId = new SecurityInfoUtil().getAccountId();
+//			EbsFileVo fileVo = new EbsFileVo();
+//			fileVo.setBillId(ebsFileVo.getBillId());
+//
+//			fileVo.setOrgFileId(orgFileId);
+//			fileVo.setOrgFileNm(orgFileNm);
+//			fileVo.setFileSize(file.getSize());
+//			fileVo.setFileKindCd("200");
+//			fileVo.setClsCd("120");
+//			fileVo.setOpbYn("Y");
+//			fileVo.setRegId(regId);
+//			fileVo.setRmk(ebsFileVo.getRmk());
+//			fileMapper.insertFileEbs(fileVo);
+//		}
+//	}
 
 	@Override
 	public void saveFileBillDetailMng(BillMngVo billMngVo) throws Exception {
@@ -516,5 +569,11 @@ public class ComFileServiceImpl implements ComFileService {
 		// pdf변환
 		convertToPdfEbs(tmpFile, myFile.getFileNm(), orgFileId);
 	}
-	
+
+	@Transactional
+	@Override
+	public void updateEbsFile(EbsFileVo ebsFileVo) {
+		fileMapper.updateFileEbs(ebsFileVo);
+	}
+
 }

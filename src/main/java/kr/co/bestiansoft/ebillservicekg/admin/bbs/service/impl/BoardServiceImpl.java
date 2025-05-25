@@ -25,8 +25,6 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public List<BoardVo> getBoardList(HashMap<String, Object> param, String brdType) {
-        String brdSj = String.valueOf(param.getOrDefault("brdSj", ""));
-        param.put("brdSj", brdSj);
         param.put("brdType", brdType);
         List<BoardVo> result = boardMapper.getBoardList(param);
         return result;

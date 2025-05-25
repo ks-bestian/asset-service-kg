@@ -5,6 +5,7 @@ import kr.co.bestiansoft.ebillservicekg.admin.member.service.MemberService;
 import kr.co.bestiansoft.ebillservicekg.admin.member.vo.MemberVo;
 import kr.co.bestiansoft.ebillservicekg.admin.menu.repository.MenuMapper;
 import kr.co.bestiansoft.ebillservicekg.admin.menu.vo.MenuVo;
+import kr.co.bestiansoft.ebillservicekg.common.utils.PasswordUtill;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.login.vo.LoginRequest;
 import lombok.RequiredArgsConstructor;
@@ -61,8 +62,10 @@ public class MemberServiceImpl implements MemberService {
 	}
 
     @Override
-    public int resetPswd(HashMap<String, Object> param) {
-        param.put("userPassword", LoginRequest.getSha256((String)param.get("memberId")));
-        return memberMapper.resetPswd(param);
+    public String resetPswd(HashMap<String, Object> param) {
+        String pswd = PasswordUtill.generatePassword();
+        param.put("userPassword", LoginRequest.getSha256(pswd));
+        memberMapper.updatePswd(param);
+        return pswd;
     }
 }

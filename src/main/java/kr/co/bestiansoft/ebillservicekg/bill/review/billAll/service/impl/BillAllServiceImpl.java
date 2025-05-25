@@ -44,11 +44,16 @@ public class BillAllServiceImpl implements BillAllService {
     	BillAllResponse billRespanse = new BillAllResponse();
     	param.put("billId", billId);
 
+		System.out.println("!5");
+		System.out.println(param.get("billId"));
+		System.out.println(param);
     	/* Bill basic info */
     	BillAllVo billBasicInfo = billAllMapper.selectBill(param);
-
+		System.out.println("!2");
+		System.out.println(billBasicInfo.toString());
     	/* Proposer List */
     	List<AgreeVo> proposerList = agreeMapper.selectAgreeProposerList(billId);
+
     	/* Proposer String */
     	if(proposerList != null) {
     		String proposerItem = proposerList.stream().map(AgreeVo::getMemberNm).collect(Collectors.joining(", "));

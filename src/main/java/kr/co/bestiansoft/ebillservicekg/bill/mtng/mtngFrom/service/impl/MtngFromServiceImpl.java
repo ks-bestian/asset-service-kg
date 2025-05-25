@@ -297,7 +297,7 @@ public class MtngFromServiceImpl implements MtngFromService {
 			AgendaVo agendaVo = new AgendaVo();
 			agendaVo.setBillId(aVo.getBillId());
 			agendaVo.setMtngId(mtngFromVo.getMtngId());
-			agendaVo.setOrd(idx++);
+			agendaVo.setAgendaOrd(idx++);
 			agendaVo.setRegId(regId);
 			mtngFromMapper.insertEbsMtngAgenda(agendaVo);
 		}
@@ -357,6 +357,23 @@ public class MtngFromServiceImpl implements MtngFromService {
 		return mtngFromVo;
 	}
 
+	@Override
+	public void updateHallMtngOrd(MtngFromVo mtngFromVo) {
+		List<AgendaVo> agendaList = mtngFromVo.getAgendaList();
+
+		int idx = 1;
+		for(AgendaVo avo : agendaList) {
+			AgendaVo agendaVo = new AgendaVo();
+
+			agendaVo.setBillId(avo.getBillId());
+			agendaVo.setMtngId(avo.getMtngId());
+			agendaVo.setOrd(idx++);
+			agendaVo.setModId(new SecurityInfoUtil().getAccountId());
+			mtngFromMapper.updateHallMtngOrd(agendaVo);
+		}
+		idx=1;
+	}
+
 	@Transactional
 	@Override
 	public MtngFromVo deleteHallMtngBill(MtngFromVo mtngFromVo) {
@@ -382,14 +399,18 @@ public class MtngFromServiceImpl implements MtngFromService {
 		mtngFromMapper.updateFromMtngBill(mtngFromVo);
 
 		/*안건*/
+		int idx = 1;
 		List<AgendaVo> agendaList = mtngFromVo.getAgendaList();
+
 		for(AgendaVo aVo:agendaList) {
 			AgendaVo agendaVo = new AgendaVo();
 			agendaVo.setBillId(aVo.getBillId());
 			agendaVo.setMtngId(mtngFromVo.getMtngId());
 			agendaVo.setRegId(userId);
+			agendaVo.setOrd(idx++);
 			mtngFromMapper.insertEbsMtngAgenda(agendaVo);
 		}
+		idx=1;
 		
 		return null;
 	}
@@ -404,6 +425,7 @@ public class MtngFromServiceImpl implements MtngFromService {
 			agendaVo.setBillId(aVo.getBillId());
 			agendaVo.setMtngId(mtngFromVo.getMtngId());
 			agendaVo.setRegId(userId);
+			agendaVo.setAgendaOrd(aVo.getAgendaOrd());
 			mtngFromMapper.insertEbsMtngAgenda(agendaVo);
 		}
 	}

@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import kr.co.bestiansoft.ebillservicekg.test.domain.CommentsHierarchy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +17,7 @@ import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMap
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.service.ApplyService;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyResponse;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo;
+import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.service.BillMngService;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
@@ -59,10 +62,10 @@ public class ApplyServiceImpl implements ApplyService {
 		applyMapper.insertApplyBill(applyVo);
 
 		//파일등록
-		comFileService.saveFileEbs(applyVo.getFiles(), applyVo.getFileKindCds(), billId);
+		comFileService.saveFileEbs(applyVo.getFiles(), applyVo.getFileKindCds(), applyVo.getOpbYns(), billId);
 
 		//추가 - 내 문서함에서 파일 업로드(20250221 조진호)
-		comFileService.saveFileEbs(applyVo.getMyFileIds(), applyVo.getFileKindCds2(), billId);
+		comFileService.saveFileEbs(applyVo.getMyFileIds(), applyVo.getFileKindCds2(), applyVo.getOpbYns2(), billId);
 
 		//파일 정보를 가지고 있어서 null처리
 		applyVo.setFiles(null);
@@ -114,10 +117,10 @@ public class ApplyServiceImpl implements ApplyService {
 		applyMapper.insertApplyBill(applyVo);
 
 		//파일등록
-		comFileService.saveFileEbs(applyVo.getFiles(), applyVo.getFileKindCds(), billId);
+		comFileService.saveFileEbs(applyVo.getFiles(), applyVo.getFileKindCds(), applyVo.getOpbYns(), billId);
 
 		//추가 - 내 문서함에서 파일 업로드(20250221 조진호)
-		comFileService.saveFileEbs(applyVo.getMyFileIds(), applyVo.getFileKindCds2(), billId);
+		comFileService.saveFileEbs(applyVo.getMyFileIds(), applyVo.getFileKindCds2(), applyVo.getOpbYns2(), billId);
 
 		//파일 정보를 가지고 있어서 null처리
 		applyVo.setFiles(null);
@@ -171,13 +174,15 @@ public class ApplyServiceImpl implements ApplyService {
 	@Override
 	public List<ApplyVo> getApplyList(HashMap<String, Object> param) {
 		String loginId = new SecurityInfoUtil().getAccountId();
-		param.put("loginId", loginId);
-		return applyMapper.selectListApply(param);
+//		param.put("loginId", loginId);
+//		return applyMapper.selectListApply(param);
+		param.put("ppsrId", loginId);
+		return applyMapper.selectListBillApply(param);
 	}
 
 	@Transactional
 	@Override
-	public int updateApply(ApplyVo applyVo, String billId) {
+	public int updateApply(ApplyVo applyVo, String billId) throws Exception {
 		//TODO :: 1. 메세지 알림 기능 적용 필요
 		String loginId = new SecurityInfoUtil().getAccountId();
 
@@ -225,9 +230,13 @@ public class ApplyServiceImpl implements ApplyService {
 
 		//파일변경
 		if (applyVo.getFiles() != null) {
-			comFileService.saveFileEbs(applyVo.getFiles(), applyVo.getFileKindCds(), billId);
+			comFileService.saveFileEbs(applyVo.getFiles(), applyVo.getFileKindCds(), applyVo.getOpbYns(), billId);
 			applyVo.setFiles(null);
 		}
+		if(applyVo.getMyFileIds() != null) {
+			comFileService.saveFileEbs(applyVo.getMyFileIds(), applyVo.getFileKindCds2(), applyVo.getOpbYns2(), billId);	
+		}
+		
 
 		//bill update
 		applyVo.setLoginId(loginId);
@@ -238,6 +247,18 @@ public class ApplyServiceImpl implements ApplyService {
 	@Override
 	public int deleteApply(String billId) {
 		applyMapper.deleteProposerByBillId(billId);
+		
+		HashMap<String, Object> param = new HashMap<>();
+		param.put("userId", new SecurityInfoUtil().getAccountId());
+		param.put("billId", billId);
+		applyMapper.deleteBillFileByBillId(param);
+		
+		ProcessVo processVo = new ProcessVo();
+		processVo.setBillId(billId);
+		processMapper.deleteBpTasks(processVo);
+		processMapper.deleteBpInstance(processVo);
+		
+		
 		return applyMapper.deleteApplyByBillId(billId);
 	}
 
@@ -248,12 +269,18 @@ public class ApplyServiceImpl implements ApplyService {
 
 		//안건 상세
 		param.put("billId", billId);
-		ApplyVo applyDetail = applyMapper.selectApplyDetail(param);
+		param.put("userId", new SecurityInfoUtil().getAccountId());
+//		ApplyVo applyDetail = applyMapper.selectApplyDetail(param);
+		ApplyVo applyDetail = applyMapper.selectBill(param);
 		result.setApplyDetail(applyDetail);
 
 		//파일 리스트
-		List<EbsFileVo> fileList = applyMapper.selectApplyFileList(billId);
+		List<EbsFileVo> fileList = applyMapper.selectBillFileList(param);
 		result.setFileList(fileList);
+		
+		//발의문서 리스트
+		List<EbsFileVo> applyFileList = applyMapper.selectApplyFileList(param);
+		result.setApplyFileList(applyFileList);
 
 		//발의자 대상
 		List<AgreeVo> proposerList = agreeMapper.selectAgreeProposerList(billId);
@@ -264,8 +291,15 @@ public class ApplyServiceImpl implements ApplyService {
 //			List<CommentsVo> commentList = homePageMapper.selectCommentsByLawId(Long.valueOf(applyDetail.getSclDscRcpNmb()));
 //			result.setCommentList(commentList);
 //		}
+
+		//안건 댓글
 		List<CommentsVo> commentList = homePageMapper.selectCommentsByLawId(null);
-		result.setCommentList(commentList);
+//		result.setCommentList(commentList);
+
+		CommentsHierarchy ch = new CommentsHierarchy();
+		ch.buildCommentsHierarchy(commentList);
+		ArrayNode nodes = ch.getCommentsJson();
+		result.setCommentLists(nodes);
 
 		//안건 프로세스정보가져오기.
 		ProcessVo pcParam = new ProcessVo();
@@ -333,6 +367,12 @@ public class ApplyServiceImpl implements ApplyService {
 		String userId = new SecurityInfoUtil().getAccountId();
 		return applyMapper.updateFileDelete(ebsFileVo, userId);
 	}
+	
+	@Override
+	public int updateFileOpbYn(EbsFileVo ebsFileVo) {
+		String userId = new SecurityInfoUtil().getAccountId();
+		return applyMapper.updateFileOpbYn(ebsFileVo, userId);
+	}
 
 	@Override
 	public List<ApplyVo> selectBillAll(HashMap<String, Object> param) {
@@ -343,12 +383,13 @@ public class ApplyServiceImpl implements ApplyService {
 	@Override
 	public ApplyVo createBillHome(ApplyVo applyVo) {
 		String modId = new SecurityInfoUtil().getAccountId();
-
+		applyVo.setStatus(true);
 		homePageMapper.insertHomeLaws(applyVo);
 
 		String sclDscRcpNmb = String.valueOf(applyVo.getId());
 		applyVo.setSclDscRcpNmb(sclDscRcpNmb);
 		applyVo.setModId(modId);
+
 		applyMapper.updateBillHome(applyVo);
 
 		return applyVo;
@@ -359,12 +400,19 @@ public class ApplyServiceImpl implements ApplyService {
 		
 		String sclDscRcpNmb = applyVo.getSclDscRcpNmb();
 		Long id = Long.valueOf(sclDscRcpNmb);
-		
+
 		Map<String, Object> map = new HashMap<>();
 		map.put("updatedBy", new SecurityInfoUtil().getAccountId());
 		map.put("status", false);
 		map.put("id", id);
 		homePageMapper.updateLaws(map);
+
+		applyVo.setSclDscRcpNmb("stop");
+		applyMapper.updateBillHome(applyVo);
 	}
 
+	@Override
+	public void createComments(CommentsVo commentsVo) {
+		homePageMapper.insertComments(commentsVo);
+	}
 }

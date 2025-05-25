@@ -15,15 +15,17 @@ public interface ComFileService {
 	void batchFileDelete();
 
 //	void saveFileEbs(MultipartFile[] files, String billId);
-	void saveFileEbs(MultipartFile[] files, String[] fileKindCd, String billId);
-	void saveFileEbs(String[] myFileIds, String[] fileKindCdList, String billId) throws Exception;
+	void saveFileEbs(MultipartFile[] files, String[] fileKindCd, String[] opbYnList, String billId);
+	void saveFileEbs(String[] myFileIds, String[] fileKindCdList, String[] opbYnList, String billId) throws Exception;
 	void saveFileEbsMtng(MultipartFile[] files, String[] fileKindCdList, Long mtngId);
 	void saveFileEbsMtng(String[] myFileIds, String[] fileKindCdList, Long mtngId) throws Exception;
 	
-	void saveFileBillMng(EbsFileVo ebsFileVo);
+//	void saveFileBillMng(EbsFileVo ebsFileVo);
 
 	void saveFileBillDetailMng(BillMngVo billMngVo) throws Exception;
 	
 	void saveFileEbs(MultipartFile file, String fileKindCd, String billId, String clsCd, String opbYn, Long detailSeq);
 	void saveFileEbs(String myFileId, String fileKindCd, String billId, String clsCd, String opbYn, Long detailSeq) throws Exception;
+	
+	void updateEbsFile(EbsFileVo ebsFileVo);
 }

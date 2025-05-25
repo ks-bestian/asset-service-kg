@@ -39,4 +39,7 @@ public interface ProcessMapper {
 	List<ProcessVo> selectBpStepTasks(ProcessVo vo);
 
 	void deleteBpTasks(ProcessVo vo);
+	void deleteBpInstance(ProcessVo vo);
+	
+	String selectCurrentStepId(String billId);
 }

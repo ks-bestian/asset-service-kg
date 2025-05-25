@@ -28,6 +28,7 @@ public interface MtngFromService {
 	MtngFromVo updateHallMtng(MtngFromVo mtngFromVo);
 	List<MtngFromVo> getHallMtngList(HashMap<String, Object> param);
 	void submitMtngAgenda(Long mtngId);
+	void updateHallMtngOrd(MtngFromVo mtngFromVo);
 	List<AgendaVo> getHallMtngBillList(HashMap<String, Object> param);
 	MtngFromVo updateHallMtngResult(MtngFromVo mtngFromVo);
 	MtngFromVo deleteHallMtngBill(MtngFromVo mtngFromVo);

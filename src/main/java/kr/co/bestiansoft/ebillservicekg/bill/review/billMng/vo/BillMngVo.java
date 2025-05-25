@@ -153,4 +153,6 @@ public class BillMngVo extends ComDefaultVO {
     private String intExtCls;
 
     private String rvwDt;
+    
+    private String opbYn;
 }

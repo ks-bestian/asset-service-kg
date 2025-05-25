@@ -214,6 +214,11 @@ public class ProcessServiceImpl implements ProcessService {
 
 		/*안건접수관리*/
 		void executeService_1000(ProcessVo argVo) {
+			
+			String currentStepId = processMapper.selectCurrentStepId(argVo.getBillId());
+			if(!"0".equals(currentStepId)) {
+				throw new IllegalArgumentException();
+			}
 
 			ProcessVo taskVo = new ProcessVo();
 			taskVo.setTaskNm("안건접수");
@@ -229,28 +234,38 @@ public class ProcessServiceImpl implements ProcessService {
 		/*안건철회관리*/
 		void executeService_1100(ProcessVo argVo) {
 
-			String userId = new SecurityInfoUtil().getAccountId();
-			List<ProposerVo> properList = processMapper.selectListProposerId(argVo);
-
-			ProcessVo taskVo = new ProcessVo();
-			taskVo.setTaskNm("안건철회");
-			taskVo.setBillId(argVo.getBillId());
-			taskVo.setStepId(argVo.getStepId());
-			taskVo.setRegId(argVo.getRegId());
-			for(ProposerVo ppVo:properList) {
-
-				if(userId.equals(ppVo.getProposerId())) {//로그인한자가 제안자이면 이미완료.
-					taskVo.setStatus("C");
-				} else {
-					taskVo.setStatus("P");
-				}
-				taskVo.setTrgtUserId(ppVo.getProposerId());//해당국회의원 할당 공동발의자 들에게
-				processMapper.insertBpTask(taskVo);
+			String currentStepId = processMapper.selectCurrentStepId(argVo.getBillId());
+			if("1100".equals(currentStepId)) {
+				throw new IllegalArgumentException();
 			}
+			
+//			String userId = new SecurityInfoUtil().getAccountId();
+//			List<ProposerVo> properList = processMapper.selectListProposerId(argVo);
+//
+//			ProcessVo taskVo = new ProcessVo();
+//			taskVo.setTaskNm("안건철회");
+//			taskVo.setBillId(argVo.getBillId());
+//			taskVo.setStepId(argVo.getStepId());
+//			taskVo.setRegId(argVo.getRegId());
+//			for(ProposerVo ppVo:properList) {
+//
+//				if(userId.equals(ppVo.getProposerId())) {//로그인한자가 제안자이면 이미완료.
+//					taskVo.setStatus("C");
+//				} else {
+//					taskVo.setStatus("P");
+//				}
+//				taskVo.setTrgtUserId(ppVo.getProposerId());//해당국회의원 할당 공동발의자 들에게
+//				processMapper.insertBpTask(taskVo);
+//			}
 		}
 		
 		/*안건철회접수관리*/
 		void executeService_1150(ProcessVo argVo) {
+			
+			String currentStepId = processMapper.selectCurrentStepId(argVo.getBillId());
+			if(!"1100".equals(currentStepId)) {
+				throw new IllegalArgumentException();
+			}
 
 			String userId = new SecurityInfoUtil().getAccountId();
 			
@@ -276,6 +291,11 @@ public class ProcessServiceImpl implements ProcessService {
 		 * GD가 안건접수시 법류부서검토로*/
 		void executeService_1200(ProcessVo argVo) {
 
+			String currentStepId = processMapper.selectCurrentStepId(argVo.getBillId());
+			if(!"1000".equals(currentStepId)) {
+				throw new IllegalArgumentException();
+			}
+			
 			ProcessVo taskVo = new ProcessVo();
 			taskVo.setBillId(argVo.getBillId());
 			taskVo.setStepId(argVo.getStepId());
@@ -290,6 +310,11 @@ public class ProcessServiceImpl implements ProcessService {
 		/*안건접수(위원회작성)*/
 		void executeService_1300(ProcessVo argVo) {
 
+			String currentStepId = processMapper.selectCurrentStepId(argVo.getBillId());
+			if(!"1200".equals(currentStepId)) {
+				throw new IllegalArgumentException();
+			}
+			
 			ProcessVo taskVo = new ProcessVo();
 			taskVo.setBillId(argVo.getBillId());
 			taskVo.setStepId(argVo.getStepId());
@@ -304,6 +329,11 @@ public class ProcessServiceImpl implements ProcessService {
 		/*1차위원회 회의예정*/
 		void executeService_1400(ProcessVo argVo) {
 
+			String currentStepId = processMapper.selectCurrentStepId(argVo.getBillId());
+			if(!"1300".equals(currentStepId)) {
+				throw new IllegalArgumentException();
+			}
+			
 //			언어전문파트 의견서등록
 //			심사부서 의견서등록
 //			회의예정화면에서 회의안건으로 선택하여	회의를 저장한다.
@@ -558,7 +588,7 @@ public class ProcessServiceImpl implements ProcessService {
 		@Transactional
 		@Override
 		public void undoProcess(String billId, String stepId) {
-			if("1100".equals(stepId)) { //안건철회관리
+			if("1100".equals(stepId) || "1150".equals(stepId)) { //안건철회관리
 				ProcessVo vo = new ProcessVo();
 				vo.setBillId(billId);
 				List<ProcessVo> taskList = processMapper.selectBpStepTasks(vo);
@@ -568,7 +598,7 @@ public class ProcessServiceImpl implements ProcessService {
 				String lastStepId = null;
 				for(int i = taskList.size() - 1; i >= 0; --i) {
 					ProcessVo task = taskList.get(i);
-					if("1100".equals(task.getStepId())) {
+					if("1100".equals(task.getStepId()) || "1150".equals(task.getStepId())) {
 						processMapper.deleteBpTasks(task);
 					}
 					else if(lastStepId == null) {

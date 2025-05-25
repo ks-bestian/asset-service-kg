@@ -1,8 +1,13 @@
 package kr.co.bestiansoft.ebillservicekg.common.file.service.impl;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -59,6 +64,38 @@ public class PdfServiceImpl implements PdfService {
 		}
 		return false;
 	}
+	
+	/**
+	 * 
+	 * @param pdfPath PDF 파일 경로
+	 * @param imagePath 삽입할 이미지 파일 경로
+	 * @param outputPath 결과 PDF 파일 경로
+	 * @param pageNumber 이미지를 삽입할 페이지 번호 (0부터 시작)
+	 * @param x 이미지가 삽입될 X 좌표 (페이지 좌측 하단 기준, 포인트 단위)
+	 * @param y 이미지가 삽입될 Y 좌표 (페이지 좌측 하단 기준, 포인트 단위)
+	 * @param width 삽입될 이미지의 너비 (포인트 단위)
+	 * @param height 삽입될 이미지의 높이 (포인트 단위)
+	 * @throws IOException 
+	 */
+	@Override
+	public void addImageToPdf(String pdfPath, String imagePath, String outputPath, int pageNumber, float x, float y, float width, float height) throws IOException {
+		try (PDDocument document = PDDocument.load(new File(pdfPath))) {
+            PDPage page = document.getPage(pageNumber);
+
+            // 이미지 로드
+            PDImageXObject pdImage = PDImageXObject.createFromFile(imagePath, document);
+
+            // 콘텐츠 스트림을 append 모드로 열어서 기존 콘텐츠 위에 이미지를 추가
+            try (PDPageContentStream contentStream = new PDPageContentStream(document, page,
+                                                                            PDPageContentStream.AppendMode.APPEND,
+                                                                            true, true)) {
+                // 이미지 그리기 (x, y, width, height)
+                contentStream.drawImage(pdImage, x, y, width, height);
+            }
+//            document.setAllSecurityToBeRemoved(true);
+            document.save(outputPath);
+        } 
+	}
 
 
 
@@ -104,6 +141,5 @@ public class PdfServiceImpl implements PdfService {
 
 
 	}
-
 
 }

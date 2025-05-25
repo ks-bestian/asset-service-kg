@@ -64,4 +64,11 @@ public class UserController {
     public ResponseEntity<CommonResponse> resetPswd(@RequestBody HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "ok", userService.resetPswd(param)), HttpStatus.OK);
     }
+
+    @ApiOperation(value = "사용자 비밀번호 수정", notes = "사용자 비밀번호를 수정한다.")
+    @PutMapping("login/update")
+    public ResponseEntity<CommonResponse> updatePswd(@RequestBody HashMap<String, Object> param) {
+        userService.updatePswd(param);
+        return new ResponseEntity<>(new CommonResponse(200, "ok", "updated successfully"), HttpStatus.OK);
+    }
 }

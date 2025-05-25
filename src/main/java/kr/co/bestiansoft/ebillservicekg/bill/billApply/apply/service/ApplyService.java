@@ -6,6 +6,7 @@ import java.util.List;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyResponse;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
+import kr.co.bestiansoft.ebillservicekg.test.vo.CommentsVo;
 
 public interface ApplyService {
 
@@ -15,7 +16,7 @@ public interface ApplyService {
 
 	List<ApplyVo> getApplyList(HashMap<String, Object> param);
 
-	int updateApply(ApplyVo applyVo, String billId);
+	int updateApply(ApplyVo applyVo, String billId) throws Exception;
 
 	int deleteApply(String billId);
 
@@ -30,10 +31,14 @@ public interface ApplyService {
 	ApplyVo saveBillAccept(String billId, ApplyVo applyVo);
 
 	int deleteBillFile(EbsFileVo ebsFileVo);
+	
+	int updateFileOpbYn(EbsFileVo ebsFileVo);
 
 	List<ApplyVo> selectBillAll(HashMap<String, Object> param);
 
 	ApplyVo createBillHome(ApplyVo applyVo);
 
 	void stopBillHome(ApplyVo applyVo);
+
+	void createComments(CommentsVo commentsVo);
 }
