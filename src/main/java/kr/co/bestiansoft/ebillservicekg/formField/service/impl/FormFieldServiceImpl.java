@@ -28,7 +28,6 @@ public class FormFieldServiceImpl implements FormFieldService {
 
     @Override
     public List<FormFieldVo> getFormFieldByFormId(Integer formId) {
-        List<FormFieldVo> result = formFieldMapper.selectFormFieldListByFormId(formId);
-        return  result;
+        return formFieldMapper.selectFormFieldListByFormId(formId);
     }
 }

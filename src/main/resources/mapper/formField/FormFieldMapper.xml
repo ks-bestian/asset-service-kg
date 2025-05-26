@@ -4,14 +4,14 @@
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.formField.repository.FormFieldMapper">
     <insert id="insertFormField"  parameterType="kr.co.bestiansoft.ebillservicekg.formField.vo.FormFieldVo">
         insert into kgst.com_form_field (
-        field_seq
+          field_seq
         , form_id
         , field_value
         , field_nm
         , field_type
         , required_yn
         ) values (
-        #{fieldSeq}
+          #{fieldSeq}
         , #{formId}
         , #{fieldValue}
         , #{fieldNm}
@@ -32,7 +32,7 @@
         from kgst.com_form_field t1
         inner join kgst.com_form t2
         on t1.form_id = t2.form_id
-        where t2.form_id = #{form_id}
+        where t2.form_id = #{form_id} order by field_seq desc
     </select>
 
     <!--delete form_field by form_id-->

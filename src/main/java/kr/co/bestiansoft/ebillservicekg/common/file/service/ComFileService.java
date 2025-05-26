@@ -28,4 +28,5 @@ public interface ComFileService {
 	void saveFileEbs(String myFileId, String fileKindCd, String billId, String clsCd, String opbYn, Long detailSeq) throws Exception;
 	
 	void updateEbsFile(EbsFileVo ebsFileVo);
+	void deleteFile(String fieldId);
 }
