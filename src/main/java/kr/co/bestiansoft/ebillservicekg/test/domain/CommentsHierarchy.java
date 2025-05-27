@@ -63,6 +63,7 @@ public class CommentsHierarchy {
         ObjectNode dataNode = mapper.createObjectNode();
 
         dataNode.put("label", vo.getContent());
+        dataNode.put("key", vo.getId());
         dataNode.put("id", vo.getId());
         dataNode.put("regNm", vo.getCreatedBy());
 
@@ -70,9 +71,12 @@ public class CommentsHierarchy {
         jsonNode.put("key", vo.getId());
         jsonNode.put("label", vo.getContent());
         jsonNode.put("parentYn", vo.getParentYn());
+
         if(vo.getCreatedAt() != null) {
             jsonNode.put("regDt", vo.getCreatedAt().toString());
         }
+
+        jsonNode.put("lawId", vo.getLawId());
         jsonNode.set("data", dataNode);
 
         ArrayNode childrenNode = mapper.createArrayNode();

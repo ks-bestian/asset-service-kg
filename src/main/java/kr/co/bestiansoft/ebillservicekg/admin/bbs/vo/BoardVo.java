@@ -30,5 +30,6 @@ public class BoardVo extends ComDefaultVO {
     private List<BoardVo> delList;
     private MultipartFile[] files;
     private String deptNm;
+    private String cmtCd;
     
 }
