@@ -17,6 +17,7 @@ import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MtngFromVo;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.vo.MtngFileVo;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
+import kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper;
 import kr.co.bestiansoft.ebillservicekg.process.service.ProcessService;
 import kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ public class MtngFromServiceImpl implements MtngFromService {
 
     private final MtngFromMapper mtngFromMapper;
     private final ProcessService processService;
+    private final ProcessMapper processMapper;
 
     @Override
     public List<MtngFromVo> getMtngFromList(HashMap<String, Object> param) {
@@ -313,13 +315,20 @@ public class MtngFromServiceImpl implements MtngFromService {
 		param.put("mtngId", mtngId);
     	List<AgendaVo> list = mtngFromMapper.selectListMtngAgenda(param);
     	for(AgendaVo agenda : list) {
-    		if("1700".equals(agenda.getCurrentStepId())) {
+    		if(Boolean.TRUE.equals(agenda.getSubmitted()) || "1700".equals(agenda.getCurrentStepId())) {
     			continue;
     		}
     		ProcessVo pVo = new ProcessVo();
 			pVo.setBillId(agenda.getBillId());
 			pVo.setStepId("1700");//본회의심사요청
 			processService.handleProcess(pVo);
+			
+			MtngFromVo vo = new MtngFromVo();
+			vo.setSubmitted(true);
+			vo.setMtngId(mtngId);
+			vo.setBillId(agenda.getBillId());
+			vo.setModId(new SecurityInfoUtil().getAccountId());
+			mtngFromMapper.updateHallMtngSubmitted(vo);
     	}
     }
 
@@ -381,12 +390,23 @@ public class MtngFromServiceImpl implements MtngFromService {
 		String loginId = new SecurityInfoUtil().getAccountId();
 		mtngFromVo.setModId(loginId);
 
-		mtngFromMapper.deleteMtngAgenda(mtngFromVo.getMtngId(),mtngFromVo.getBillId());
+		HashMap<String, Object> param = new HashMap<>();
+		param.put("mtngId", mtngFromVo.getMtngId());
+		List<AgendaVo> list = mtngFromMapper.selectListMtngAgenda(param);
+		if(list == null || list.isEmpty()) {
+			throw new IllegalArgumentException();
+		}
+		AgendaVo agenda = list.get(0);
+		if(Boolean.TRUE.equals(agenda.getSubmitted())) {
+//			ProcessVo pVo = new ProcessVo();
+//			pVo.setBillId(mtngFromVo.getBillId());
+//			pVo.setStepId("1600");//위원회 회의심사보고
+//			processService.handleProcess(pVo);
 
-		ProcessVo pVo = new ProcessVo();
-		pVo.setBillId(mtngFromVo.getBillId());
-		pVo.setStepId("1600");//위원회 회의심사보고
-		processService.handleProcess(pVo);
+			processService.undoProcess(mtngFromVo.getBillId(), "1700");
+		}
+		
+		mtngFromMapper.deleteMtngAgenda(mtngFromVo.getMtngId(),mtngFromVo.getBillId());
 
 		return mtngFromVo;
 	}

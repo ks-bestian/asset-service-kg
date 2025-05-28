@@ -131,6 +131,7 @@ public class BillMngVo extends ComDefaultVO {
     private String cmtNm;
 
     private List<EbsFileVo> ebsfileList;
+    private List<EbsFileVo> applyFileList;
 
     private List<MtngFromVo> mtngList;
 

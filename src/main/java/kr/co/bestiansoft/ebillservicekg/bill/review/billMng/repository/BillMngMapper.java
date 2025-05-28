@@ -14,7 +14,8 @@ import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 public interface BillMngMapper {
 
 	List<BillMngVo> selectListBillMng(HashMap<String, Object> param);
-	BillMngVo selectOneBill(BillMngVo argVo);
+//	BillMngVo selectOneBill(BillMngVo argVo);
+	BillMngVo selectBill(HashMap<String, Object> param);
 	BillMngVo selectOneBillByGd(BillMngVo argVo);
 
 
@@ -22,8 +23,9 @@ public interface BillMngMapper {
 	void updateBillDetail(BillMngVo billMngVo);
 
 	void updateBillno(BillMngVo billMngVo);
-	List<BillMngVo> selectListBillEtcInfo(BillMngVo billMngVo);
-	List<MtngAllVo> selectListCmtMeetingList(BillMngVo billMngVo);
+	List<BillMngVo> selectListBillEtcInfo(HashMap<String, Object> param);
+	
+	List<MtngAllVo> selectListCmtMeetingList(HashMap<String, Object> param);
 
 	//List<BillMngVo> selectListlegalReview(HashMap<String, Object> param);
 	BillMngVo selectOnelegalReview(BillMngVo argVo);
@@ -58,7 +60,7 @@ public interface BillMngMapper {
 
 	List<ProposerVo> selectProposerByBillId(HashMap<String, Object> param);
 	void insertBillCmt(BillMngVo billMngVo);
-	List<BillMngVo> selectEbsMasterCmtList(BillMngVo argVo);
+	List<BillMngVo> selectEbsMasterCmtList(HashMap<String, Object> param);
 	void deleteBillCmtByBillId(BillMngVo billMngVo);
 	void updateEbsFileDelYn(EbsFileVo ebsFileVo);
 

@@ -158,10 +158,15 @@ public class MtngToServiceImpl implements MtngToService {
     		return;
     	}
     	for(AgendaVo agenda : agendaList) {
-    		BillMngVo vo = new BillMngVo();
-    		vo.setBillId(agenda.getBillId());
-    		BillMngVo bill = billMngMapper.selectOneBill(vo);
-    		if("1900".equals(bill.getCurrentStepId())) {
+//    		BillMngVo vo = new BillMngVo();
+//    		vo.setBillId(agenda.getBillId());
+//    		BillMngVo bill = billMngMapper.selectOneBill(vo);
+    		
+    		HashMap<String, Object> param = new HashMap<>();
+    		param.put("billId", agenda.getBillId());
+    		BillMngVo bill = billMngMapper.selectBill(param);
+    		
+    		if(!"1700".equals(bill.getCurrentStepId()) && !"1800".equals(bill.getCurrentStepId())) {
     			continue;
     		}
     		ProcessVo pVo = new ProcessVo();

@@ -181,6 +181,10 @@ public class ProcessServiceImpl implements ProcessService {
 	        case "3300":
 	        	executeService_3300(argVo);
 	            break;
+	            
+	        case "3400":
+	        	executeService_3400(argVo);
+	            break;
 
 	        case "9999"://종단점
 	        	executeService_9999(argVo);
@@ -330,7 +334,7 @@ public class ProcessServiceImpl implements ProcessService {
 		void executeService_1400(ProcessVo argVo) {
 
 			String currentStepId = processMapper.selectCurrentStepId(argVo.getBillId());
-			if(!"1300".equals(currentStepId)) {
+			if(!"1300".equals(currentStepId) && !"1900".equals(currentStepId)) {
 				throw new IllegalArgumentException();
 			}
 			
@@ -338,20 +342,21 @@ public class ProcessServiceImpl implements ProcessService {
 //			심사부서 의견서등록
 //			회의예정화면에서 회의안건으로 선택하여	회의를 저장한다.
 
-			ProcessVo taskVo = new ProcessVo();
-			taskVo.setBillId(argVo.getBillId());
-			taskVo.setStepId(argVo.getStepId());
-			taskVo.setTaskNm("언어전문파트의견서등록");
-			taskVo.setStatus("P");
-			taskVo.setAssignedTo(AuthConstants.AUTH_LGGSPLZ);//언어전문파트 할당
-			taskVo.setRegId(argVo.getRegId());
-			processMapper.insertBpTask(taskVo);
+			if("1300".equals(currentStepId)) {	// 1차 위원회 전송시에만
+				ProcessVo taskVo = new ProcessVo();
+				taskVo.setBillId(argVo.getBillId());
+				taskVo.setStepId(argVo.getStepId());
+				taskVo.setTaskNm("언어전문파트의견서등록");
+				taskVo.setStatus("P");
+				taskVo.setAssignedTo(AuthConstants.AUTH_LGGSPLZ);//언어전문파트 할당
+				taskVo.setRegId(argVo.getRegId());
+				processMapper.insertBpTask(taskVo);
 
-			taskVo.setTaskNm("심사부서의견서등록");
-			taskVo.setStatus("P");
-			taskVo.setAssignedTo(AuthConstants.AUTH_LGEXNTN);//심사부서 할당
-			processMapper.insertBpTask(taskVo);
-
+				taskVo.setTaskNm("심사부서의견서등록");
+				taskVo.setStatus("P");
+				taskVo.setAssignedTo(AuthConstants.AUTH_LGEXNTN);//심사부서 할당
+				processMapper.insertBpTask(taskVo);	
+			}
 		}
 
 		/*1차위원회 회의결과등록*/
@@ -395,16 +400,21 @@ public class ProcessServiceImpl implements ProcessService {
 		/*1차본회의 심사요청*/
 		void executeService_1700(ProcessVo argVo) {
 
-			//CmttVo cmttVo = processMapper.selectOneCmtt(argVo);
-
-			ProcessVo taskVo = new ProcessVo();
-			taskVo.setBillId(argVo.getBillId());
-			taskVo.setStepId(argVo.getStepId());
-			taskVo.setTaskNm("본회의 심사요청");
-			taskVo.setStatus("C");
-			//taskVo.setAssignedTo(cmttVo.getCmtId());//위원회 할당
-			taskVo.setRegId(argVo.getRegId());
-			processMapper.insertBpTask(taskVo);
+			String currentStepId = processMapper.selectCurrentStepId(argVo.getBillId());
+			if(!"1400".equals(currentStepId) && !"1500".equals(currentStepId) && !"1600".equals(currentStepId)) {
+				throw new IllegalArgumentException();
+			}
+//			
+//			//CmttVo cmttVo = processMapper.selectOneCmtt(argVo);
+//
+//			ProcessVo taskVo = new ProcessVo();
+//			taskVo.setBillId(argVo.getBillId());
+//			taskVo.setStepId(argVo.getStepId());
+//			taskVo.setTaskNm("본회의 심사요청");
+//			taskVo.setStatus("C");
+//			//taskVo.setAssignedTo(cmttVo.getCmtId());//위원회 할당
+//			taskVo.setRegId(argVo.getRegId());
+//			processMapper.insertBpTask(taskVo);
 
 		}
 
@@ -429,6 +439,11 @@ public class ProcessServiceImpl implements ProcessService {
 		/*1차 법적행위관리*/
 		void executeService_1900(ProcessVo argVo) {
 
+			String currentStepId = processMapper.selectCurrentStepId(argVo.getBillId());
+			if(!"1700".equals(currentStepId) && !"1800".equals(currentStepId)) {
+				throw new IllegalArgumentException();
+			}
+			
 //			"1차 법적행위 검토 보고서등록
 //			번역언어심사
 //			법률검토
@@ -534,6 +549,11 @@ public class ProcessServiceImpl implements ProcessService {
 		/*정부이송 요청*/
 		void executeService_3200(ProcessVo argVo) {
 
+			String currentStepId = processMapper.selectCurrentStepId(argVo.getBillId());
+			if(!"1900".equals(currentStepId)) {
+				throw new IllegalArgumentException();
+			}
+			
 			ProcessVo taskVo = new ProcessVo();
 			taskVo.setBillId(argVo.getBillId());
 			taskVo.setStepId(argVo.getStepId());
@@ -556,6 +576,12 @@ public class ProcessServiceImpl implements ProcessService {
 			taskVo.setAssignedTo(AuthConstants.AUTH_GD);//일반부서(GD)
 			taskVo.setRegId(argVo.getRegId());
 			processMapper.insertBpTask(taskVo);
+
+		}
+		
+		/*대통령거부*/
+		void executeService_3400(ProcessVo argVo) {
+
 
 		}
 
@@ -588,13 +614,20 @@ public class ProcessServiceImpl implements ProcessService {
 		@Transactional
 		@Override
 		public void undoProcess(String billId, String stepId) {
+			
+			String currentStepId = processMapper.selectCurrentStepId(billId);
+			if(!stepId.equals(currentStepId)) {
+				throw new IllegalArgumentException();
+			}
+			
+			ProcessVo vo = new ProcessVo();
+			vo.setBillId(billId);
+			List<ProcessVo> taskList = processMapper.selectBpStepTasks(vo);
+			if(taskList == null || taskList.isEmpty()) {
+				throw new IllegalArgumentException();
+			}
+			
 			if("1100".equals(stepId) || "1150".equals(stepId)) { //안건철회관리
-				ProcessVo vo = new ProcessVo();
-				vo.setBillId(billId);
-				List<ProcessVo> taskList = processMapper.selectBpStepTasks(vo);
-				if(taskList == null || taskList.isEmpty()) {
-					return;
-				}
 				String lastStepId = null;
 				for(int i = taskList.size() - 1; i >= 0; --i) {
 					ProcessVo task = taskList.get(i);
@@ -611,22 +644,11 @@ public class ProcessServiceImpl implements ProcessService {
 				vo2.setStepId(lastStepId);
 				processMapper.updateBpInstanceCurrentStep(vo2);
 			}
-			if("1700".equals(stepId)) { //본회의심사요청
-				ProcessVo vo = new ProcessVo();
-				vo.setBillId(billId);
-				vo.setStepId(stepId);
-				List<ProcessVo> list = processMapper.selectBpStepTasks(vo);
-				if(list == null || list.isEmpty()) {
-					return;
-				}
-				Long taskId = list.get(0).getTaskId();
-				vo.setTaskId(taskId);
-				processMapper.deleteBpTasks(vo);
-				
+			else if("1700".equals(stepId)) { //본회의심사요청
 				ProcessVo vo2 = new ProcessVo();
 				vo2.setBillId(billId);
 				vo2.setModId(new SecurityInfoUtil().getAccountId());
-				vo2.setStepId("1400"); //위원회회의예정
+				vo2.setStepId("1400");
 				processMapper.updateBpInstanceCurrentStep(vo2);
 			}
 

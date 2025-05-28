@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.vo.MtngAllVo;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billAll.vo.BillAllVo;
@@ -43,7 +44,7 @@ public class BillMngServiceImpl implements BillMngService {
     private final ComFileService comFileService;
 	private static final Logger LOGGER = LoggerFactory.getLogger(BillMngServiceImpl.class);
 	private final ProcessMapper processMapper;
-	private final ComFileMapper comFileMapper;
+	private final ApplyMapper applyMapper;
 
     @Override
     public List<BillMngVo> getBillList(HashMap<String, Object> param) {
@@ -69,22 +70,35 @@ public class BillMngServiceImpl implements BillMngService {
 
 
     @Override
-    public BillMngResponse getBillById(BillMngVo argVo) {
+    public BillMngResponse getBillById(HashMap<String, Object> param) {
 
     	String deptCd = new SecurityInfoUtil().getDeptCd();
     	
-    	BillMngVo billMngVo = billMngMapper.selectOneBill(argVo);//bill basic info
+    	BillMngVo billMngVo = billMngMapper.selectBill(param);//bill basic info
 
-		ProcessVo param = new ProcessVo();
-		param.setTaskId(argVo.getTaskId());
-		ProcessVo processVo = processMapper.selectBpTask(param);
+    	ProcessVo processVo = null;
+    	if(param.get("taskId") != null) {
+    		Long taskId = Long.valueOf((String)param.get("taskId"));
+    		ProcessVo vo = new ProcessVo();
+    		vo.setTaskId(taskId);
+    		processVo = processMapper.selectBpTask(vo);	
+    	}
 
-    	List<BillMngVo> billEtcInfoList = billMngMapper.selectListBillEtcInfo(argVo);
-    	List<EbsFileVo> fileList = billMngMapper.selectFileList(argVo);
-    	billMngVo.setEbsfileList(fileList);
+    	List<BillMngVo> billEtcInfoList = billMngMapper.selectListBillEtcInfo(param);
+//    	List<EbsFileVo> fileList = billMngMapper.selectFileList(argVo);
+//    	billMngVo.setEbsfileList(fileList);
+    	
+		//파일 리스트
+		List<EbsFileVo> fileList = applyMapper.selectBillFileList(param);
+		billMngVo.setEbsfileList(fileList);
+		
+		//발의문서 리스트
+		List<EbsFileVo> applyFileList = applyMapper.selectApplyFileList(param);
+		billMngVo.setApplyFileList(applyFileList);
 
-    	List<BillMngVo> cmtList = billMngMapper.selectEbsMasterCmtList(argVo);
-    	List<MtngAllVo> cmtMeetingList = billMngMapper.selectListCmtMeetingList(argVo);//committee meeting list
+
+    	List<BillMngVo> cmtList = billMngMapper.selectEbsMasterCmtList(param);
+    	List<MtngAllVo> cmtMeetingList = billMngMapper.selectListCmtMeetingList(param);//committee meeting list
 
     	BillMngVo billlegalReviewVo = new BillMngVo();//bill legal review department
     	List<BillMngVo> billLangReviewVoList = new ArrayList<BillMngVo>();//bill Language review department
@@ -101,34 +115,15 @@ public class BillMngServiceImpl implements BillMngService {
     		listVo.setEbsfileList(detailFileList);
     		
     		String clsCd = listVo.getClsCd();
-    		//if(argVo.getDeptCd().equals(listVo.getDeptCd())) {
 
-        		if("110".equals(clsCd)) {//법률검토결과
-        			billlegalReviewVo = listVo;
-        		} else if("120".equals(clsCd)) {//위원언어전문파트
-        			billLangReviewVoList.add(listVo);
-        		} else if( ("160".equals(clsCd) || "190".equals(clsCd)) && deptCd.equals(listVo.getDeptCd()) ) {// Bill detail info Committee Review
-        			billCmtReviewList.add(listVo);
-        		}
-    		//}
+    		if("110".equals(clsCd)) {//법률검토결과
+    			billlegalReviewVo = listVo;
+    		} else if("120".equals(clsCd)) {//위원언어전문파트
+    			billLangReviewVoList.add(listVo);
+    		} else if( ("160".equals(clsCd) || "190".equals(clsCd)) && deptCd.equals(listVo.getDeptCd()) ) {// Bill detail info Committee Review
+    			billCmtReviewList.add(listVo);
+    		}
     	}
-
-//    	for(BillMngVo vo : billCmtReviewList) {
-//    		Long seq = vo.getSeq();
-//    		List<EbsFileVo> cmtFileList = new ArrayList<EbsFileVo>();
-//
-//    		if(argVo.getDeptCd() != null && argVo.getDeptCd().equals(vo.getDeptCd())) {
-//        		for(EbsFileVo fvo:fileList) {
-//        			if(seq.equals(fvo.getDetailSeq())) {
-//        				cmtFileList.add(fvo);
-//        			}
-//        		}
-//        		vo.setEbsfileList(cmtFileList);
-//    		}
-//    	}
-
-    	//List<ProposerVo> proposerList = billMngMapper.selectProposerMemberList(param);
-    	//List<BillMngVo> cmtList = billMngMapper.selectCmtList(param);
 
     	BillMngResponse billMngResponse = new BillMngResponse();
     	billMngResponse.setBillMngVo(billMngVo);
@@ -145,14 +140,19 @@ public class BillMngServiceImpl implements BillMngService {
 
 
 	@Override
-	public BillMngResponse selectListBillEtcInfo(BillMngVo argVo) {
+	public BillMngResponse selectListBillEtcInfo(HashMap<String, Object> param) {
 
 		BillMngResponse billMngResponse = new BillMngResponse();
 		BillMngVo billlegalReviewVo = null;//bill legal review department
-		List<BillMngVo> billEtcInfoList = billMngMapper.selectListBillEtcInfo(argVo);
-		ProcessVo param = new ProcessVo();
-		param.setTaskId(argVo.getTaskId());
-		ProcessVo processVo = processMapper.selectBpTask(param);
+		List<BillMngVo> billEtcInfoList = billMngMapper.selectListBillEtcInfo(param);
+		
+		ProcessVo processVo = null;
+    	if(param.get("taskId") != null) {
+    		Long taskId = Long.valueOf((String)param.get("taskId"));
+    		ProcessVo vo = new ProcessVo();
+    		vo.setTaskId(taskId);
+    		processVo = processMapper.selectBpTask(vo);	
+    	}
 
     	for(BillMngVo listVo : billEtcInfoList) {
 
@@ -253,7 +253,7 @@ public class BillMngServiceImpl implements BillMngService {
 	public BillMngVo presidentReject(BillMngVo billMngVo) throws Exception {
 		ProcessVo pVo = new ProcessVo();
 		pVo.setBillId(billMngVo.getBillId());
-		pVo.setStepId("1400"); //위원회회의예정
+		pVo.setStepId("3400"); //대통령거부
 		pVo.setTaskId(billMngVo.getTaskId());
 		processService.handleProcess(pVo);
 		

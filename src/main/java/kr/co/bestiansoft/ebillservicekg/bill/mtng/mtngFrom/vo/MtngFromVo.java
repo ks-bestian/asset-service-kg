@@ -45,5 +45,7 @@ public class MtngFromVo extends ComDefaultVO {
 	private String ppslDt;
 
 	private int ord;
+	
+	private Boolean submitted;
 
 }
