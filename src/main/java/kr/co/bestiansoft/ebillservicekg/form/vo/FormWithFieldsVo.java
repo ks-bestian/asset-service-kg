@@ -3,8 +3,6 @@ package kr.co.bestiansoft.ebillservicekg.form.vo;
 import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import kr.co.bestiansoft.ebillservicekg.formField.vo.FormFieldVo;
 import lombok.Data;
-
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -14,8 +12,6 @@ public class FormWithFieldsVo extends ComDefaultVO {
     private String fileNm;
     private String formTitle;
     private String formCn;
-    private String regId;
-    private LocalDateTime regDt;
     private String pdfFileId;
 
     private List<FormFieldVo> fields;

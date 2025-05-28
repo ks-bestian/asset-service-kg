@@ -15,5 +15,7 @@ public interface FormMapper {
     List<FormVo> selectFormList();
 
     void deleteForm(Integer formId);
+
+    FormWithFieldsVo selectFormById(Integer formId);
 }
 

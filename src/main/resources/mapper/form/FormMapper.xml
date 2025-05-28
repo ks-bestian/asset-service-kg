@@ -13,9 +13,8 @@
         , reg_id --등록식별자
         , reg_dt --등록일자
         , pdf_file_id --pdf식별자
-        from kgst.com_form
+        from kgst.com_form order by form_id desc
     </select>
-
 
     <insert id="insertForm" useGeneratedKeys="true" keyProperty="formId" parameterType="kr.co.bestiansoft.ebillservicekg.form.vo.FormWithFieldsVo">
         insert into kgst.com_form (
@@ -48,6 +47,20 @@
             , reg_id
             , reg_dt
             , pdf_file_id
+        from kgst.com_form
+        where form_id = #{formId}
+    </select>
+
+    <select id="selectFormById" parameterType="int" resultType="kr.co.bestiansoft.ebillservicekg.form.vo.FormWithFieldsVo">
+        select
+          form_id
+        , file_id
+        , file_nm
+        , form_title
+        , form_cn
+        , reg_id
+        , reg_dt
+        , pdf_file_id
         from kgst.com_form
         where form_id = #{formId}
     </select>

@@ -37,7 +37,7 @@
 			and kgst.fngetlangnm(view.user_nm_kg, view.user_nm_ru, view.user_nm_kg, #{lang}) like concat('%', #{regNm}, '%')
 		</if>
 		<if test="deptNm != null and deptNm != ''">
-			and kgst.fngetlangnm(view.dept_nm_kg, view.dept_nm_ru, view.dept_nm_kg, #{lang}) like concat('%', #{deptNm}, '%')
+			and kgst.fngetlangnm(cd.dept_nm1, cd.dept_nm2, cd.dept_nm3, #{lang}) like concat('%', #{deptNm}, '%')
 		</if>
 		order by
 				case
@@ -156,6 +156,7 @@
 			, reg_dt
 			, important_yn
 			, hidden_yn
+			, cmt_cd
 		)
 		values (
 			  #{brdType}
@@ -171,6 +172,7 @@
 			, now()
 			, #{importantYn}
 			, #{hiddenYn}
+			, #{cmtCd}
 		)
     </insert>
 
