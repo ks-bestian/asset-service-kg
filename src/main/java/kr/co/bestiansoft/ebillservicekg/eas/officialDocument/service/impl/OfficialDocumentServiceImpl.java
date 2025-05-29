@@ -106,7 +106,7 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
                 .tmlmtDtm(vo.getTmlmtDtm() != null ?vo.getTmlmtDtm().atStartOfDay() : null)
                 .docSubtle(vo.getDocSubtle())
                 .senderId(loginId)
-                .docStatusCd("ds01")
+                .docStatusCd("DS01")
                 .digitalYn('N')
                 .userId(loginId)
                 .docLng(arrayToString(vo.getDocLng()))
@@ -132,7 +132,10 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
                     .deptCd(user.getDeptCd())
                     .jobCd(user.getJobCd())
                     .build();
-            if(i ==0) approvalVo.setApvlDtm(now);
+            if(i ==0) {
+                approvalVo.setRcvDtm(now);
+                approvalVo.setApvlStatusCd("AS02");
+            }
 
             result += approvalService.insertApproval(approvalVo);
         }

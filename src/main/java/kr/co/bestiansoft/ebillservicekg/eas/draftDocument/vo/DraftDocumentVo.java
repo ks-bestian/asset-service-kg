@@ -12,13 +12,7 @@ import java.time.LocalDateTime;
 public class DraftDocumentVo extends ComDefaultVO {
     private int aarsDocId;
     private int formId;
-    private String docRcver;
-    private String docTitle;
-    private String docCn;
-    private String docFileNm;
-    private String senderNm;
-    private String deptNm;
-    private String posNm;
     private String aarsFileId;
     private String aarsStatusCd;
+    private String aarsPdfFileId;
 }

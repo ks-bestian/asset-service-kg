@@ -14,4 +14,5 @@ public class SearchDocumentVo {
     String toRcvDtm;
     String docNo;
     String docTypeCd;
+    String senderNm;
 }
