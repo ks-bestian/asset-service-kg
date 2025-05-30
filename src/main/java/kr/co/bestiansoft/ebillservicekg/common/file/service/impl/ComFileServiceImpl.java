@@ -23,6 +23,7 @@ import kr.co.bestiansoft.ebillservicekg.common.file.repository.ComFileMapper;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.PdfService;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.ComFileVo;
+import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileUpload;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
@@ -456,19 +457,32 @@ public class ComFileServiceImpl implements ComFileService {
 
 	@Override
 	public void saveFileBillDetailMng(BillMngVo billMngVo) throws Exception {
-
-		if(billMngVo.getFiles() != null) {
-			for(MultipartFile file : billMngVo.getFiles()) {
-				String opbYn = "Y";
-				saveFileEbs(file, billMngVo.getFileKindCd(), billMngVo.getBillId(), billMngVo.getClsCd(), opbYn, billMngVo.getSeq());
-			}	
+		
+		if(billMngVo.getFileUploads() == null) {
+			return;
 		}
-		if(billMngVo.getMyFileIds() != null) {
-			for(String myFileId : billMngVo.getMyFileIds()) {
-				String opbYn = "Y";
-				saveFileEbs(myFileId, billMngVo.getFileKindCd(), billMngVo.getBillId(), billMngVo.getClsCd(), opbYn, billMngVo.getSeq());
+		
+		for(EbsFileUpload fileUpload : billMngVo.getFileUploads()) {
+			if(fileUpload.getFile() != null) {
+				saveFileEbs(fileUpload.getFile(), fileUpload.getFileKindCd(), billMngVo.getBillId(), billMngVo.getClsCd(), fileUpload.getOpbYn(), billMngVo.getSeq());
+			}
+			else if(fileUpload.getFileId() != null) {
+				saveFileEbs(fileUpload.getFileId(), fileUpload.getFileKindCd(), billMngVo.getBillId(), billMngVo.getClsCd(), fileUpload.getOpbYn(), billMngVo.getSeq());
 			}
 		}
+
+//		if(billMngVo.getFiles() != null) {
+//			for(MultipartFile file : billMngVo.getFiles()) {
+//				String opbYn = "Y";
+//				saveFileEbs(file, billMngVo.getFileKindCd(), billMngVo.getBillId(), billMngVo.getClsCd(), opbYn, billMngVo.getSeq());
+//			}	
+//		}
+//		if(billMngVo.getMyFileIds() != null) {
+//			for(String myFileId : billMngVo.getMyFileIds()) {
+//				String opbYn = "Y";
+//				saveFileEbs(myFileId, billMngVo.getFileKindCd(), billMngVo.getBillId(), billMngVo.getClsCd(), opbYn, billMngVo.getSeq());
+//			}
+//		}
 
 	}
 	

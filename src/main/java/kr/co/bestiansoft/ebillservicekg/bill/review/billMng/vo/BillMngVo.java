@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MtngFromVo;
+import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileUpload;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
@@ -156,4 +157,10 @@ public class BillMngVo extends ComDefaultVO {
     private String rvwDt;
     
     private String opbYn;
+    
+    private List<EbsFileUpload> fileUploads;
+    
+    // 대통령거부번호
+    private String prsdRjctNo;
+
 }

@@ -281,6 +281,7 @@
 			, kgst.fngetlangnm(emd.rmrk_kg,emd.rmrk_ru,emd.rmrk_kg,#{lang}) as rmrk
 			, emd.mtn_dt
 			, emd.prsd_rjct_dt
+			, emd.prsd_rjct_no
 			, emd.lgl_rvw_rslt_code
 			, kgst.fngetcodenm('1019',emd.lgl_rvw_rslt_code,#{lang}) as lgl_rvw_rslt_nm
 			, emd.lgl_act_rslt_code
@@ -346,6 +347,7 @@
 		    , mtng_id
 		    , dept_cd
 		    , reg_id
+		    , prsd_rjct_no
 		    , reg_dt
 		) values (
 		      #{billId}
@@ -361,6 +363,7 @@
 		    , #{mtngId}
 		    , #{deptCd}
 		    , #{regId}
+		    , #{prsdRjctNo}
 		    , now()
 		)
     </insert>
@@ -391,6 +394,7 @@
 		    <if test="rsltDt != null">, rslt_dt = #{rsltDt}</if>
 		    <if test="rsltCode != null">, rslt_code = #{rsltCode}</if>
 		    <if test="deptCd != null">, dept_cd = #{deptCd}</if>
+		    <if test="prsdRjctNo != null">, prsd_rjct_no = #{prsdRjctNo}</if>
 		WHERE 1=1
 			<if test="seq != null">
 			and seq = #{seq}

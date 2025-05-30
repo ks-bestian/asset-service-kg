@@ -237,6 +237,7 @@ public class BillMngServiceImpl implements BillMngService {
 		comFileService.saveFileBillDetailMng(billMngVo);
 
 		billMngVo.setFiles(null);
+		billMngVo.setFileUploads(null);
 		return billMngVo;
 	}
 	
@@ -251,13 +252,12 @@ public class BillMngServiceImpl implements BillMngService {
 	@Transactional
 	@Override
 	public BillMngVo presidentReject(BillMngVo billMngVo) throws Exception {
-		ProcessVo pVo = new ProcessVo();
-		pVo.setBillId(billMngVo.getBillId());
-		pVo.setStepId("3400"); //대통령거부
-		pVo.setTaskId(billMngVo.getTaskId());
-		processService.handleProcess(pVo);
+//		ProcessVo pVo = new ProcessVo();
+//		pVo.setBillId(billMngVo.getBillId());
+//		pVo.setStepId("3400"); //대통령거부
+//		pVo.setTaskId(billMngVo.getTaskId());
+//		processService.handleProcess(pVo);
 		
-		billMngVo.setModId(new SecurityInfoUtil().getAccountId());
 		return this.insertBillDetail(billMngVo);
 	}
 	
