@@ -24,9 +24,41 @@
         </set>
         where apvl_id = #{apvlId}
     </update>
-    <select id="getApproval" resultType="kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalVo">
+    <select id="getApprovals" resultType="kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalVo">
         select apvl_id, doc_id, user_id, user_nm, dept_cd, job_cd, apvl_ord, apvl_dtm, rcv_dtm, check_dtm, apvl_file_id, apvl_opinion, apvl_status_cd
           from kgst.eas_approval
          where doc_id =#{docId}
+         order by apvl_ord
+    </select>
+    <select id="getApprovalList" resultType="kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalLIstDto" parameterType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.SearchDocumentVo">
+        select d.doc_id, doc_attrb_cd, doc_subtle, sender_id, sender_nm, doc_no, rcv_dtm, check_dtm, apvl_id
+          from eas_document d, eas_approval a
+         where d.doc_id = a.doc_id
+           and d.doc_status_cd ='DMS01'
+           and a.apvl_status_cd ='AS02'
+           and a.user_id = #{userId}
+        <if test="docSubtle != null "> and doc_subtle like '%'||#{docSubtle}||'%' </if>
+        <if test="fromRcvDtm != null and toRcvDtm != null"> and rcv_dtm between #{fromRcvDtm} and #{toRcvDtm} </if>
+        <if test="docNo != null"> and doc_no like '%'||#{docNo}||'%' </if>
+        <if test="senderNm != null"> and sender_nm like '%'||#{senderNm}||'%' </if>
+         order by rcv_dtm desc
+    </select>
+    <select id="countApprovalList" resultType="int">
+        select count(1)
+        from eas_approval a
+        where a.user_id = #{userId}
+          and a.check_dtm is null
+          and a.apvl_status_cd = 'AS02'
+          and exists (
+            select 1
+              from eas_document d
+             where d.doc_id = a.doc_id
+               and d.doc_status_cd ='DMS01'
+        );
+    </select>
+    <select id="getApproval" resultType="kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalVo">
+        select apvl_id, doc_id, user_id, user_nm, dept_cd, job_cd, apvl_ord, apvl_dtm, rcv_dtm, check_dtm, apvl_file_id, apvl_opinion, apvl_status_cd
+          from eas_approval
+         where apvl_id =#{apvlId}
     </select>
 </mapper>

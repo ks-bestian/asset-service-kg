@@ -9,21 +9,23 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Data
 public class UpdateApprovalVo {
-    String apvl_id;
+    String docId;
+    int apvlId;
     LocalDateTime apvlDtm ;
     LocalDateTime rcvDtm;
     LocalDateTime checkDtm;
-    String apvlFileID;
+    String apvlFileId;
     String apvlOpinion;
     String apvlStatusCd;
 
     @Builder
-    public UpdateApprovalVo(String apvl_id, LocalDateTime apvlDtm, LocalDateTime rcvDtm, LocalDateTime checkDtm, String apvlFileID, String apvlOpinion, String apvlStatusCd) {
-        this.apvl_id = apvl_id;
+    public UpdateApprovalVo(String docId, int apvlId, LocalDateTime apvlDtm, LocalDateTime rcvDtm, LocalDateTime checkDtm, String apvlFileId, String apvlOpinion, String apvlStatusCd) {
+        this.docId = docId;
+        this.apvlId = apvlId;
         this.apvlDtm = apvlDtm;
         this.rcvDtm = rcvDtm;
         this.checkDtm = checkDtm;
-        this.apvlFileID = apvlFileID;
+        this.apvlFileId = apvlFileId;
         this.apvlOpinion = apvlOpinion;
         this.apvlStatusCd = apvlStatusCd;
     }

@@ -14,4 +14,5 @@ public interface OfficialDocumentMapper {
     int countDocumentList(String userId);
     List<DocumentUserDto> getDocumentUser(String docId);
     DocumentDetailDto getDocumentDetail(String docId);
+    boolean isReject(String docId);
 }

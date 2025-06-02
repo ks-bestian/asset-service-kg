@@ -8,5 +8,9 @@
             (doc_id, user_id, user_nm, act_type, act_detail, act_dtm)
         VALUES(#{docId}, #{userId}, #{userNm}, #{actType}, #{actDetail}, #{actDtm});
     </insert>
-
+    <select id="getHistory" resultType="kr.co.bestiansoft.ebillservicekg.eas.history.vo.HistoryVo">
+        select history_id, doc_id, user_id, user_nm, act_type, act_detail , act_dtm
+          from eas_history
+         where doc_id = #{docId}
+    </select>
 </mapper>

@@ -1,5 +1,6 @@
 package kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.vo;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,4 +18,17 @@ public class UpdateReceivedInfoVo {
     LocalDateTime rjctDtm;
     String rjctCn;
     String userId;
+
+    @Builder
+    public UpdateReceivedInfoVo(String docId, int rcvId, String rcvStatus, LocalDateTime rcvDtm, LocalDateTime checkDtm, LocalDateTime rcpDtm, LocalDateTime rjctDtm, String rjctCn, String userId) {
+        this.docId = docId;
+        this.rcvId = rcvId;
+        this.rcvStatus = rcvStatus;
+        this.rcvDtm = rcvDtm;
+        this.checkDtm = checkDtm;
+        this.rcpDtm = rcpDtm;
+        this.rjctDtm = rjctDtm;
+        this.rjctCn = rjctCn;
+        this.userId = userId;
+    }
 }

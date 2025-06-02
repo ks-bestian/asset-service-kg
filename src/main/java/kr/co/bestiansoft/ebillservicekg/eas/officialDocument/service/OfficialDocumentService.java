@@ -8,10 +8,9 @@ public interface OfficialDocumentService {
 
     List<DocumentListDto> getDocumentList(SearchDocumentVo vo);
     int saveOfficialDocument(OfficialDocumentVo vo);
-    int saveAllDocument(InsertDocumentVo vo);
     int updateStatusOfficialDocument(String docId, String status);
     int countDocumentList();
     DocumentDetailDto getDocumentDetail(String docId);
     List<DocumentUserDto> getDocumentUser(String docId);
-    int updateReadDateTime(String docId);
+    Boolean isReject(String docId);
 }

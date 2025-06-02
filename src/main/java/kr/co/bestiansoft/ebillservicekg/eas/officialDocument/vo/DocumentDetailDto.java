@@ -12,6 +12,7 @@ import java.util.List;
 public class DocumentDetailDto {
     String docId;
     String aarsFileId;
+    String aarsPdfFileId;
     String docTypeCd;
     String docAttrbCd;
     String billId;

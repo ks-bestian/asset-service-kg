@@ -1,4 +1,4 @@
-    <?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.repository.OfficialDocumentMapper">
@@ -16,7 +16,8 @@
         select d.doc_id, doc_attrb_cd, d.tmlmt_yn, d.tmlmt_Dtm, doc_subtle, sender_id, sender_nm, doc_no, rcv_dtm, check_dtm, rcv_id
           from eas_document d, eas_received_info r
          where d.doc_id = r.doc_id
-           and doc_status_cd = 'DS02'
+           and rcv_status = 'RS01'
+           and doc_status_cd = 'DMS02'
            and r.user_id = #{userId}
           <if test="docSubtle != null "> and doc_subtle like '%'||#{docSubtle}||'%' </if>
           <if test="tmlmtDtm != null"> and tmlmt_dtm = #{tmlmtDtm} </if>
@@ -29,13 +30,14 @@
     <select id="countDocumentList" resultType="int">
         select count(1)
         from eas_received_info r
-        where r.user_id = 'gduser1'
+        where r.user_id = #{userId}
+          and r.rcv_status = 'RS01'
           and r.check_dtm is null
           and exists (
             select 1
               from eas_document d
              where d.doc_id = r.doc_id
-               and d.doc_status_cd = 'DS02'
+               and d.doc_status_cd = 'DMS02'
         );
 
     </select>
@@ -58,9 +60,12 @@
            and doc_id = #{docId};
     </select>
     <select id="getDocumentDetail" resultType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.DocumentDetailDto">
-        select d.doc_id, aars_file_id,  d.doc_type_cd, d.doc_attrb_cd, bill_id, (select bill_no from ebs_master where bill_id= d.bill_id ) bill_no, tmlmt_yn, tmlmt_dtm, doc_lng, doc_subtle, digital_yn, sender_id, d.sender_nm, d.dept_cd, doc_no, d.reg_dtm
+        select d.doc_id, aars_file_id,  d.doc_type_cd, d.doc_attrb_cd, bill_id, (select bill_no from ebs_master where bill_id= d.bill_id ) bill_no, tmlmt_yn, tmlmt_dtm, doc_lng, doc_subtle, digital_yn, sender_id, d.sender_nm, d.dept_cd, doc_no, d.reg_dtm, ed.aars_pdf_file_id
           from eas_document d, eas_draft ed
          where d.aars_doc_id = ed.aars_doc_id
            and d.doc_id = #{docId}
+    </select>
+    <select id="isReject" resultType="boolean">
+        select doc_status_cd ='DMS04' from eas_document where doc_id = #{docId} ;
     </select>
 </mapper>

@@ -3,6 +3,7 @@ package kr.co.bestiansoft.ebillservicekg.eas.officialDocument.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
+import kr.co.bestiansoft.ebillservicekg.eas.documentWorkFlow.service.DocumentWorkFlowService;
 import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.service.OfficialDocumentService;
 import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.InsertDocumentVo;
 import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.SearchDocumentVo;
@@ -18,12 +19,14 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @Controller
 public class OfficialDocumentController {
+
     private final OfficialDocumentService documentService;
+    private final DocumentWorkFlowService documentWorkFlowService;
 
     @ApiOperation(value="saveDocument", notes = "saveDocument")
     @PostMapping("/eas/document")
     public ResponseEntity<CommonResponse> saveOfficialDocument (@RequestBody InsertDocumentVo vo) {
-        return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.saveAllDocument(vo)), HttpStatus.OK);
+        return new ResponseEntity<>(new CommonResponse(200, "OK", documentWorkFlowService.saveAllDocument(vo)), HttpStatus.OK);
     }
     @ApiOperation(value = "getDocumentLists", notes = "getDocumentLists")
     @GetMapping("/eas/documents")
@@ -53,6 +56,11 @@ public class OfficialDocumentController {
     @ApiOperation(value = "updateReadDatetime", notes = "updateReadDatetime")
     @PutMapping("/eas/document/read/{docId}")
     public ResponseEntity<CommonResponse> updateStatusOfficialDocument (@PathVariable String docId){
-        return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.updateReadDateTime(docId)), HttpStatus.OK);
+        return new ResponseEntity<>(new CommonResponse(200, "OK", documentWorkFlowService.updateReadDateTime(docId)), HttpStatus.OK);
+    }
+    @ApiOperation(value = "is Rejecct", notes="is Reject docId")
+    @GetMapping("/eas/reject/{docId}")
+    public ResponseEntity<CommonResponse> isReject(@PathVariable String docId){
+        return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.isReject(docId)), HttpStatus.OK);
     }
 }

@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -43,6 +44,11 @@ public class HistoryServiceImpl implements HistoryService {
                 .map(ComCodeDetailVo::getCodeNm1)
                 .map(codeName -> userNm + " " + codeName)
                 .orElse("");
+    }
+
+    @Override
+    public List<HistoryVo> getHistory(String docId) {
+        return historyRepository.getHistory(docId);
     }
 
 }
