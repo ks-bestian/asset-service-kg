@@ -84,6 +84,77 @@
 		</if>
          order by x.task_status desc, x.rcp_dt desc
     </select>
+    
+    <sql id="_selectBill">
+    	select
+		    A.bill_id
+		  , A.bill_no
+		  , A.bill_name -- 안건 이름
+		  , A.ppsr_id
+		  , A.ppsr_nm -- 제안자 이름
+		  , A.member_nm
+		  , A.bill_name_kg
+		  , A.bill_name_ru
+		  , A.bill_kind
+		  , A.scl_dsc_rcp_nmb
+		  , A.na_term_cd
+		  , A.ppsl_dt
+		  , A.gvrn_trsf_dt
+		  , A.prmg_dt
+		  , A.prmg_no
+		  , A.ppsl_knd_cd
+		  , A.ppsl_knd_nm
+		  , A.rcp_dt
+		  , A.reg_dt
+		  , A.current_step_id
+		  , A.stat_nm
+		  , A.stat_cd
+		  , A.etc
+		from (
+			select
+			    em.bill_id
+			  , em.bill_name_kg
+			  , em.bill_name_ru
+			  , fngetlangnm(em.bill_name_kg, em.bill_name_ru, em.bill_name_kg, #{lang}) as bill_name
+			  , em.bill_no
+			  , em.bill_kind
+			  , em.scl_dsc_rcp_nmb
+			  , em.na_term_cd
+			  , em.ppsr_id
+			  , em.ppsl_knd_cd
+			  , fngetcodenm('1005', em.ppsl_knd_cd, #{lang}) as ppsl_knd_nm
+			  , fngetlangnm(vum.member_nm_kg, vum.member_nm_ru, vum.member_nm_kg, #{lang}) as ppsr_nm
+			  , fngetlangnm(vum.member_nm_kg, vum.member_nm_ru, vum.member_nm_kg, #{lang}) as member_nm
+			  , em.etc_kg
+			  , em.etc_ru
+			  , fngetlangnm(em.etc_kg, em.etc_ru, em.etc_kg, #{lang}) as etc
+			  , em.ppsl_dt
+			  , em.gvrn_trsf_dt
+			  , em.prmg_dt
+		      , em.prmg_no
+			  , em.rcp_dt
+			  , em.reg_dt
+			  , ebi.current_step_id
+			  , ebs.stat_cd
+			  , fngetcodenm('1010', ebs.stat_cd, #{lang}) as stat_nm
+			from ebs_master em
+			left join view_user_member vum on (em.ppsr_id = vum.user_id)
+			left join ebs_bp_instance ebi on em.bill_id = ebi.bill_id
+		    left join ebs_bp_step ebs on ebi.bp_df_id = ebs.bp_df_id and ebi.current_step_id = ebs.step_id 
+		 ) A
+    </sql>
+    
+    <select id="selectBill" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.selectBill */
+        select 
+        	  AA.* 
+        from (
+	        <include refid="_selectBill" />
+        ) AA
+        where 1=1
+        and AA.bill_id = #{billId}
+    </select>
 
      <select id="selectOneBill" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
@@ -197,8 +268,8 @@
 		</if>
 
     </select>
-
-    <select id="selectListBillEtcInfo" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo"
+    
+    <select id="selectListBillEtcInfo" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.selectListBillEtcInfo */
         select
@@ -210,6 +281,7 @@
 			, kgst.fngetlangnm(emd.rmrk_kg,emd.rmrk_ru,emd.rmrk_kg,#{lang}) as rmrk
 			, emd.mtn_dt
 			, emd.prsd_rjct_dt
+			, emd.prsd_rjct_no
 			, emd.lgl_rvw_rslt_code
 			, kgst.fngetcodenm('1019',emd.lgl_rvw_rslt_code,#{lang}) as lgl_rvw_rslt_nm
 			, emd.lgl_act_rslt_code
@@ -275,6 +347,7 @@
 		    , mtng_id
 		    , dept_cd
 		    , reg_id
+		    , prsd_rjct_no
 		    , reg_dt
 		) values (
 		      #{billId}
@@ -290,6 +363,7 @@
 		    , #{mtngId}
 		    , #{deptCd}
 		    , #{regId}
+		    , #{prsdRjctNo}
 		    , now()
 		)
     </insert>
@@ -320,6 +394,7 @@
 		    <if test="rsltDt != null">, rslt_dt = #{rsltDt}</if>
 		    <if test="rsltCode != null">, rslt_code = #{rsltCode}</if>
 		    <if test="deptCd != null">, dept_cd = #{deptCd}</if>
+		    <if test="prsdRjctNo != null">, prsd_rjct_no = #{prsdRjctNo}</if>
 		WHERE 1=1
 			<if test="seq != null">
 			and seq = #{seq}
@@ -420,7 +495,7 @@
     </select>
 
 
-    <select id="selectListCmtMeetingList" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo"
+    <select id="selectListCmtMeetingList" parameterType="java.util.HashMap"
             resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.vo.MtngAllVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.selectListCmtMeetingList */
 		select
@@ -799,7 +874,7 @@
 		)
 	</insert>
 
-	<select id="selectEbsMasterCmtList" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo"
+	<select id="selectEbsMasterCmtList" parameterType="java.util.HashMap"
 		resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
     	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.selectEbsMasterCmtList */
 		select

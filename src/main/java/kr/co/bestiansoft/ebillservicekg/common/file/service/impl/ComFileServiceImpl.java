@@ -2,28 +2,20 @@ package kr.co.bestiansoft.ebillservicekg.common.file.service.impl;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
-
-import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo;
@@ -31,12 +23,11 @@ import kr.co.bestiansoft.ebillservicekg.common.file.repository.ComFileMapper;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.PdfService;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.ComFileVo;
+import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileUpload;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
-import kr.co.bestiansoft.ebillservicekg.common.utils.FileUtil;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
 import kr.co.bestiansoft.ebillservicekg.document.repository.DocumentMapper;
-import kr.co.bestiansoft.ebillservicekg.document.service.DocumentService;
 import kr.co.bestiansoft.ebillservicekg.document.vo.FileVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -90,18 +81,16 @@ public class ComFileServiceImpl implements ComFileService {
 	}
 	//
 	void convertToPdfComFile(MultipartFile mpf, String orgFileId) {
+		File tmpFile = null;
 		try {
-			String filename = mpf.getOriginalFilename();
-			File tmpFile = File.createTempFile("tmp", null);
+			tmpFile = File.createTempFile("tmp", null);
 			mpf.transferTo(tmpFile);
-
-			convertToPdfComFile(tmpFile, filename, orgFileId);
+			convertToPdfComFile(tmpFile, mpf.getOriginalFilename(), orgFileId);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	void convertToPdfComFile(File tmpFile, String filename, String orgFileId) {
-		//executorService.submit(() -> {
 			File pdfFile = null;
 			try {
 				pdfFile = File.createTempFile("tmp", null);
@@ -136,7 +125,6 @@ public class ComFileServiceImpl implements ComFileService {
 					pdfFile.delete();
 				}
 			}
-		//});
 	}
 
 	void convertToPdfEbs(File tmpFile, String filename, String orgFileId) {
@@ -469,19 +457,32 @@ public class ComFileServiceImpl implements ComFileService {
 
 	@Override
 	public void saveFileBillDetailMng(BillMngVo billMngVo) throws Exception {
-
-		if(billMngVo.getFiles() != null) {
-			for(MultipartFile file : billMngVo.getFiles()) {
-				String opbYn = "Y";
-				saveFileEbs(file, billMngVo.getFileKindCd(), billMngVo.getBillId(), billMngVo.getClsCd(), opbYn, billMngVo.getSeq());
-			}	
+		
+		if(billMngVo.getFileUploads() == null) {
+			return;
 		}
-		if(billMngVo.getMyFileIds() != null) {
-			for(String myFileId : billMngVo.getMyFileIds()) {
-				String opbYn = "Y";
-				saveFileEbs(myFileId, billMngVo.getFileKindCd(), billMngVo.getBillId(), billMngVo.getClsCd(), opbYn, billMngVo.getSeq());
+		
+		for(EbsFileUpload fileUpload : billMngVo.getFileUploads()) {
+			if(fileUpload.getFile() != null) {
+				saveFileEbs(fileUpload.getFile(), fileUpload.getFileKindCd(), billMngVo.getBillId(), billMngVo.getClsCd(), fileUpload.getOpbYn(), billMngVo.getSeq());
+			}
+			else if(fileUpload.getFileId() != null) {
+				saveFileEbs(fileUpload.getFileId(), fileUpload.getFileKindCd(), billMngVo.getBillId(), billMngVo.getClsCd(), fileUpload.getOpbYn(), billMngVo.getSeq());
 			}
 		}
+
+//		if(billMngVo.getFiles() != null) {
+//			for(MultipartFile file : billMngVo.getFiles()) {
+//				String opbYn = "Y";
+//				saveFileEbs(file, billMngVo.getFileKindCd(), billMngVo.getBillId(), billMngVo.getClsCd(), opbYn, billMngVo.getSeq());
+//			}	
+//		}
+//		if(billMngVo.getMyFileIds() != null) {
+//			for(String myFileId : billMngVo.getMyFileIds()) {
+//				String opbYn = "Y";
+//				saveFileEbs(myFileId, billMngVo.getFileKindCd(), billMngVo.getBillId(), billMngVo.getClsCd(), opbYn, billMngVo.getSeq());
+//			}
+//		}
 
 	}
 	
@@ -576,4 +577,12 @@ public class ComFileServiceImpl implements ComFileService {
 		fileMapper.updateFileEbs(ebsFileVo);
 	}
 
+	public void deleteFile(String fileId){
+		try {
+			edv.delete(fileId);
+		} catch (Exception e) {
+            throw new RuntimeException("Failed to delete file:" + e);
+        }
+		fileMapper.deleteServerFile(fileId);
+	}
 }

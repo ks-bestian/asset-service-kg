@@ -81,6 +81,7 @@
 		<if test="updatedBy != null">
 		and law_id = #{lawId}
 		</if>
+		order by id
 	</select>
 
 	<insert id="insertComments" parameterType="kr.co.bestiansoft.ebillservicekg.test.vo.CommentsVo">

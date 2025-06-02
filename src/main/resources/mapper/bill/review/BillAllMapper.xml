@@ -81,7 +81,6 @@
 		    , em.rcp_dt                 -- 안건접수일자
 		    , kgst.fngetlangnm(em.etc_kg,em.etc_ru,em.etc_kg,#{lang}) as etc -- 비고
 		    , em.scl_dsc_rcp_nmb
-		    , em.scl_dsc_rcp_nmb
 		    , ebs.stat_cd
 		    , kgst.fngetbillprogress(ebs.stat_cd) as progress_value
 		FROM ebs_master em
@@ -324,6 +323,7 @@
 		  , ef.pdf_file_nm
 		  , ef.detail_seq
 		  , ef.opb_yn
+		  , ef.file_kind_cd
 		from ebs_master_detail emd
 		join ebs_file ef on (emd.seq = ef.detail_seq)
 		where ef.detail_seq = #{detailSeq}

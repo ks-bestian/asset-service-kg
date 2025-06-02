@@ -45,7 +45,7 @@ public class BillMngController {
 
     @ApiOperation(value = "안건관리 전체 상세 조회", notes = "상세를 조회한다.")
     @GetMapping("/bill/review/billMng/detail")
-    public ResponseEntity<CommonResponse> getBillById(BillMngVo param) {
+    public ResponseEntity<CommonResponse> getBillById(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", billMngService.getBillById(param)), HttpStatus.OK);
     }
 
@@ -63,8 +63,8 @@ public class BillMngController {
 
     @ApiOperation(value = "안건 관리 기타정보 목록조회", notes = "안건 관리 기타정보 조회")
     @GetMapping("/bill/review/billBillEtcInfo")
-    public ResponseEntity<CommonResponse> selectListBillEtcInfo(BillMngVo billMngVo) {
-        return new ResponseEntity<>(new CommonResponse(200, "OK", billMngService.selectListBillEtcInfo(billMngVo)), HttpStatus.OK);
+    public ResponseEntity<CommonResponse> selectListBillEtcInfo(@RequestParam HashMap<String, Object> param) {
+        return new ResponseEntity<>(new CommonResponse(200, "OK", billMngService.selectListBillEtcInfo(param)), HttpStatus.OK);
     }
 
 //    @ApiOperation(value = "안건 관리 법률검토 상세조회", notes = "안건 관리 법률검토 상세조회")

@@ -1,5 +1,7 @@
 package kr.co.bestiansoft.ebillservicekg.form.service.impl;
 
+import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
+import kr.co.bestiansoft.ebillservicekg.common.file.service.impl.EDVHelper;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.form.repository.FormMapper;
 import kr.co.bestiansoft.ebillservicekg.form.service.FormService;
@@ -8,6 +10,7 @@ import kr.co.bestiansoft.ebillservicekg.form.vo.FormWithFieldsVo;
 import kr.co.bestiansoft.ebillservicekg.formField.service.FormFieldService;
 import kr.co.bestiansoft.ebillservicekg.formField.vo.FormFieldVo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -18,12 +21,16 @@ import java.util.List;
 public class FormServiceImpl implements FormService {
 
     private final FormMapper formMapper;
+
     private final FormFieldService formFieldService;
+    private final ComFileService comFileService;
+
+    @Autowired
+    private final EDVHelper edv;
 
     @Override
     public List<FormVo> getFormList() {
-        List<FormVo> result = formMapper.selectFormList();
-        return result;
+        return formMapper.selectFormList();
     }
 
     @Override
@@ -34,14 +41,13 @@ public class FormServiceImpl implements FormService {
         int formId = formWithFieldsVo.getFormId();
 
         //insert fields
-        int i = 1;
-
-        if(formWithFieldsVo.getFields() != null) {
-            for(FormFieldVo field : formWithFieldsVo.getFields()) {
+        List<FormFieldVo> fields = formWithFieldsVo.getFields();
+        if(fields != null && !fields.isEmpty()) {
+            for(int i = 0; i < fields.size(); i++) {
+                FormFieldVo field = fields.get(i);
                 field.setFormId(formId);
-                field.setFieldSeq(i);
+                field.setFieldSeq(i+1);
                 formFieldService.createFormField(field);
-                i++;
             }
         }
         return formWithFieldsVo;
@@ -60,7 +66,13 @@ public class FormServiceImpl implements FormService {
     @Override
     public void deleteFormWithFields(Integer formId) {
         formFieldService.deleteFormFields(formId);
-        formMapper.deleteForm(formId);
-    }
-}
 
+        FormWithFieldsVo formWithFieldsVo = formMapper.selectFormById(formId);
+        String fileId = formWithFieldsVo.getFileId();
+
+        if (!fileId.isEmpty()) {
+            comFileService.deleteFile(fileId);
+        }
+        formMapper.deleteForm(formId);
+        }
+}

@@ -36,14 +36,6 @@ public class FormController {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "OK", formService.getFormWithFieldsById(Integer.valueOf(formId))), HttpStatus.OK);
     }
 
-    /*
-    @ApiOperation(value = "서식 삭제", notes = "서식을 삭제한다.")
-    @DeleteMapping("/form")
-    public ResponseEntity<CommonResponse>deleteFormWithFields(@RequestBody List<Integer> formIds) {
-        formService.deleteFormWithFields(formIds);
-        return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "OK", "Form deleted successfully"), HttpStatus.OK);
-    }
-     */
     @ApiOperation(value = "서식 삭제", notes = "서식을 삭제한다.")
     @DeleteMapping("/form")
     public ResponseEntity<CommonResponse> deleteFormWithFields(@RequestParam String formId) {

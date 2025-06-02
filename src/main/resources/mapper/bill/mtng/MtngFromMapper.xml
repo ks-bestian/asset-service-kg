@@ -118,6 +118,7 @@
 			, ema.bill_id
 			, ema.rslt_cd
 			, ema.ord as agendaOrd
+			, ema.submitted
 			, kgst.fngetcodenm('1008',ema.rslt_cd,#{lang}) as rslt_nm
 			, kgst.fngetlangnm(em.bill_name_kg ,em.bill_name_ru ,em.bill_name_kg ,#{lang}) as bill_name
 			, em.bill_no
@@ -303,12 +304,15 @@
 		  , em.ppsl_dt
 		  , emc.cmt_cd
 		  , emc.cmt_se_cd
+		  , ebs.stat_cd
 		from kgst.ebs_master em
 		join kgst.ebs_bp_instance ebi on (em.bill_id = ebi.bill_id)
+		join kgst.ebs_bp_step ebs on (ebi.bp_df_id = ebs.bp_df_id and ebi.current_step_id = ebs.step_id)
 		join kgst.view_user_member vum on (em.ppsr_id = vum.user_id)
 		join kgst.ebs_master_cmt emc on (em.bill_id = emc.bill_id)
 		where 1=1
-		  and ebi.current_step_id not in ('0','1000','3200','3200','9999')
+		  --and ebi.current_step_id not in ('0','1000','3200','3200','9999')
+		  and ebi.current_step_id in ('1400','1500','1600')
 		<if test="deptCd != null and deptCd != ''">
 		    and emc.cmt_cd = #{deptCd}
 		</if>
@@ -523,6 +527,7 @@
 		join ebs_bp_instance ebi on (em.bill_id = ebi.bill_id)
 		where 1=1
 			and mt.mtng_type_cd = '2'
+			and ema.submitted = true
 
 	    <if test="searchDate != null and searchDate != ''">
 	        and mt.open_dtm LIKE CONCAT(#{searchDate}, '%')
@@ -602,6 +607,16 @@
 			, ord = #{ord}
 		where mtng_id = #{mtngId}
 		 and bill_id = #{billId}
+	</update>
+	
+	<update id="updateHallMtngSubmitted" parameterType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MtngFromVo">
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.repository.MtngFromMapper.updateHallMtngResult */
+		update kgst.ebs_mtng_agenda
+		  set mod_id = #{modId}
+			, mod_dt = now()
+			, submitted = #{submitted}
+		where mtng_id = #{mtngId}
+		  and bill_id = #{billId}
 	</update>
 
 

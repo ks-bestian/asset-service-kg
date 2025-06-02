@@ -32,5 +32,6 @@ public class AgendaVo extends ComDefaultVO {
 	private String openDtm;
 	private int agendaOrd;
 
+	private Boolean submitted;
 
 }

@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.repository.AgreeMapper;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.vo.AgreeVo;
+import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.vo.MtngAllVo;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.vo.MtngFileVo;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper;
@@ -29,7 +30,7 @@ public class BillAllServiceImpl implements BillAllService {
 
     private final BillAllMapper billAllMapper;
     private final AgreeMapper agreeMapper;
-
+	private final ApplyMapper applyMapper;
 
     @Override
     public List<BillAllVo> getBillList(HashMap<String, Object> param) {
@@ -44,13 +45,8 @@ public class BillAllServiceImpl implements BillAllService {
     	BillAllResponse billRespanse = new BillAllResponse();
     	param.put("billId", billId);
 
-		System.out.println("!5");
-		System.out.println(param.get("billId"));
-		System.out.println(param);
     	/* Bill basic info */
     	BillAllVo billBasicInfo = billAllMapper.selectBill(param);
-		System.out.println("!2");
-		System.out.println(billBasicInfo.toString());
     	/* Proposer List */
     	List<AgreeVo> proposerList = agreeMapper.selectAgreeProposerList(billId);
 
@@ -60,11 +56,17 @@ public class BillAllServiceImpl implements BillAllService {
         	billBasicInfo.setProposerItems(proposerItem);	
     	}
 
-    	/* Bill doc list*/
-    	List<EbsFileVo> billFileList = billAllMapper.selectListBillFile(param);
-
-    	/* Bill Etc doc list*/
-    	List<EbsFileVo> etcFileList = billAllMapper.selectListBillEtcFile(param);
+//    	/* Bill doc list*/
+//    	List<EbsFileVo> billFileList = billAllMapper.selectListBillFile(param);
+//
+//    	/* Bill Etc doc list*/
+//    	List<EbsFileVo> etcFileList = billAllMapper.selectListBillEtcFile(param);
+    	
+    	//파일 리스트
+		List<EbsFileVo> fileList = applyMapper.selectBillFileList(param);
+		
+		//발의문서 리스트
+		List<EbsFileVo> applyFileList = applyMapper.selectApplyFileList(param);
 
     	/*committee list*/
     	List<BillAllVo> cmtList = billAllMapper.selectListBillCmt(param);
@@ -72,7 +74,7 @@ public class BillAllServiceImpl implements BillAllService {
     	for(BillAllVo cmtVo: cmtList) {
 
     		List<EbsFileVo> cmtReviewFileList = new ArrayList<EbsFileVo>();
-    		for(EbsFileVo fileVo:etcFileList) {
+    		for(EbsFileVo fileVo:fileList) {
 
     			if(    cmtVo.getCmtCd().equals(fileVo.getDeptCd())
     				&& ("160".equals(fileVo.getClsCd()) || "190".equals(fileVo.getClsCd())) ) {//Bill Committee Review
@@ -108,16 +110,13 @@ public class BillAllServiceImpl implements BillAllService {
     	/* Bill etc info */
     	List<BillAllVo> etcInfoList = billAllMapper.selectListBillEtcInfo(param);
 
-
-
     	BillAllVo billlegalReviewVo = new BillAllVo();//bill legal review department
     	List<BillAllVo> billLangReviewVoList = new ArrayList<BillAllVo>();//bill Language review department
-//    	List<BillAllVo> billCmtReviewList = new ArrayList<BillAllVo>();//bill Committee review department
 
     	for(BillAllVo listVo : etcInfoList) {
 
     		List<EbsFileVo> detailFileList = new ArrayList<>();
-    		for(EbsFileVo file : billFileList) {
+    		for(EbsFileVo file : fileList) {
     			if(listVo.getSeq().equals(file.getDetailSeq())) {
     				detailFileList.add(file);
     			}
@@ -130,33 +129,16 @@ public class BillAllServiceImpl implements BillAllService {
     		} else if("120".equals(clsCd)) {//위원언어전문파트
     			billLangReviewVoList.add(listVo);
     		}
-//    		else if("140".equals(clsCd)) {// Bill detail info Committee Review
-//    			billCmtReviewList.add(listVo);
-//    		}
     	}
-
-
-//    	for(BillAllVo vo : billCmtReviewList) {
-//    		Long seq = vo.getSeq();
-//    		List<EbsFileVo> cmtFileList = new ArrayList<EbsFileVo>();
-//    		for(EbsFileVo fvo:billFileList) {
-//    			if(seq.equals(fvo.getDetailSeq())) {
-//    				cmtFileList.add(fvo);
-//    			}
-//    		}
-//    		vo.setFileList(cmtFileList);
-//    	}
-
 
     	billRespanse.setBillBasicInfo(billBasicInfo);
     	billRespanse.setProposerList(proposerList);
-    	billRespanse.setBillFileList(billFileList);
+    	billRespanse.setBillFileList(applyFileList);
     	billRespanse.setCmtList(cmtList);
     	billRespanse.setCmtMtList(cmtMtList);
     	billRespanse.setMainMtList(mainMtList);
     	billRespanse.setPartyMtList(partyMtList);
     	billRespanse.setBillLangReviewVoList(billLangReviewVoList);
-//    	billRespanse.setBillCmtReviewVoList(billCmtReviewList);
     	billRespanse.setBilllegalReviewVo(billlegalReviewVo);
     	billRespanse.setEtcInfoList(etcInfoList);
 

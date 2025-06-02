@@ -532,12 +532,23 @@
     <select id="selectBillFileList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo">
 		/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.selectApplyFileList */
 		select
-			  ef.file_kind_cd
-			, org_file_id
-			, org_file_nm
-			, pdf_file_id
-			, pdf_file_nm
-			, opb_yn
+			  ef.seq
+		    , ef.bill_id
+		    , ef.file_kind_cd
+		    , ef.cls_cd
+		    , ef.org_file_id
+		    , ef.org_file_nm
+		    , ef.pdf_file_id
+		    , ef.pdf_file_nm
+		    , ef.rmk
+		    , ef.opb_yn
+		    , ef.delete_yn
+		    , ef.file_size
+		    , ef.reg_id
+		    , ef.reg_dt
+		    , ef.mod_id
+		    , ef.mod_dt
+			, ef.detail_seq
 		from kgst.ebs_file ef
 		where ef.bill_id = #{billId}
 			and ef.delete_yn = 'N'
@@ -547,12 +558,23 @@
     <select id="selectApplyFileList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo">
 		/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.selectApplyFileList */
 		select
-			  ef.file_kind_cd
-			, org_file_id
-			, org_file_nm
-			, pdf_file_id
-			, pdf_file_nm
-			, opb_yn
+			  ef.seq
+		    , ef.bill_id
+		    , ef.file_kind_cd
+		    , ef.cls_cd
+		    , ef.org_file_id
+		    , ef.org_file_nm
+		    , ef.pdf_file_id
+		    , ef.pdf_file_nm
+		    , ef.rmk
+		    , ef.opb_yn
+		    , ef.delete_yn
+		    , ef.file_size
+		    , ef.reg_id
+		    , ef.reg_dt
+		    , ef.mod_id
+		    , ef.mod_dt
+			, ef.detail_seq
 		from kgst.ebs_file ef
 		where ef.bill_id = #{billId}
 			and ef.delete_yn = 'N'
