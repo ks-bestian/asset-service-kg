@@ -296,7 +296,10 @@ public class ProcessServiceImpl implements ProcessService {
 		void executeService_1200(ProcessVo argVo) {
 
 			String currentStepId = processMapper.selectCurrentStepId(argVo.getBillId());
-			if(!"1000".equals(currentStepId)) {
+//			if(!"1000".equals(currentStepId)) {
+//				throw new IllegalArgumentException();
+//			}
+			if("1200".equals(currentStepId)) {
 				throw new IllegalArgumentException();
 			}
 			

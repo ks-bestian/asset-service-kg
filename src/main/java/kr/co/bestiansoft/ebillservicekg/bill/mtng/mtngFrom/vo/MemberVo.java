@@ -38,6 +38,8 @@ public class MemberVo extends ComDefaultVO {
     private String atdtDivCd;
     private String atdtDivNm;
     private String atdtDeptNm;
+    
+    private String atdtPosition;
 
 
 }

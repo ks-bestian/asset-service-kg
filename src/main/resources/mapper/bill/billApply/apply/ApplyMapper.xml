@@ -530,7 +530,7 @@
     </insert>
     
     <select id="selectBillFileList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo">
-		/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.selectApplyFileList */
+		/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.selectBillFileList */
 		select
 			  ef.seq
 		    , ef.bill_id
@@ -549,9 +549,13 @@
 		    , ef.mod_id
 		    , ef.mod_dt
 			, ef.detail_seq
+			, ef.lng_type
 		from kgst.ebs_file ef
 		where ef.bill_id = #{billId}
 			and ef.delete_yn = 'N'
+		<if test="lngType != null and lngType != ''">
+			and ef.lng_type = #{lngType}
+		</if>
 		order by file_kind_cd asc, ef.reg_dt asc
     </select>
 
@@ -575,15 +579,14 @@
 		    , ef.mod_id
 		    , ef.mod_dt
 			, ef.detail_seq
+			, ef.lng_type
 		from kgst.ebs_file ef
 		where ef.bill_id = #{billId}
 			and ef.delete_yn = 'N'
-		<if test="lang == 'lng_type_1' or lang == 'lng_type_3'">
 	    	and file_kind_cd in ('110', '120', '130')
-	    </if>
-	    <if test="lang == 'lng_type_2'">
-	    	and file_kind_cd in ('140', '150', '160')
-	    </if>
+		<if test="lngType != null and lngType != ''">
+			and ef.lng_type = #{lngType}
+		</if>
 		order by file_kind_cd asc, ef.reg_dt asc
     </select>
 

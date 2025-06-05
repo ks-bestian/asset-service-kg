@@ -97,6 +97,7 @@ public class MtngFromServiceImpl implements MtngFromService {
 			memberVo.setAtdtUserNm(memVo.getMemberNm());
 			memberVo.setAtdtKind(memVo.getAtdtKind());
 			memberVo.setAtdtDeptNm(memVo.getPolyNm());
+			memberVo.setAtdtPosition(memVo.getAtdtPosition());
 			memberVo.setRegId(regId);
 			mtngFromMapper.insertEbsMtngAttendant(memberVo);
 		}
@@ -200,6 +201,7 @@ public class MtngFromServiceImpl implements MtngFromService {
 				memberVo.setAtdtKind(vo.getAtdtKind());
 				memberVo.setRegId(userId);
 				memberVo.setAtdtDeptNm(vo.getPolyNm());
+				memberVo.setAtdtPosition(vo.getAtdtPosition());
 				mtngFromMapper.insertEbsMtngAttendant(memberVo);
 			}
 		}

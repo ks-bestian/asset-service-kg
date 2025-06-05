@@ -129,6 +129,7 @@
 			, ef.reg_dt
 			, ef.reg_id
 			, ef.detail_seq
+			, ef.lng_type
 		FROM kgst.ebs_file ef
 		WHERE 1=1
 		  AND ef.delete_yn = 'N'
@@ -296,6 +297,7 @@
 		  , ef.pdf_file_id
 		  , ef.pdf_file_nm
 		  , ef.detail_seq
+		  , ef.lng_type
 		from ebs_master_cmt emc
 		join ebs_master_detail emd on (emc.bill_id = emd.bill_id)
 		join ebs_file ef on (emd.seq = ef.detail_seq)
@@ -324,6 +326,7 @@
 		  , ef.detail_seq
 		  , ef.opb_yn
 		  , ef.file_kind_cd
+		  , ef.lng_type
 		from ebs_master_detail emd
 		join ebs_file ef on (emd.seq = ef.detail_seq)
 		where ef.detail_seq = #{detailSeq}

@@ -10,4 +10,5 @@ public class EbsFileUpload {
 	private String fileId;
 	private String fileKindCd;
 	private String opbYn;
+	private String lngType;
 }

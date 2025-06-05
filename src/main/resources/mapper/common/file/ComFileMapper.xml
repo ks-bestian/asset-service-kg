@@ -103,6 +103,7 @@
 			, reg_dt
 			<if test="clsCd != null"> , cls_cd </if>
 			<if test="detailSeq != null"> , detail_seq </if>
+			, lng_type
 		)
 		values (
 			  #{billId}
@@ -119,6 +120,7 @@
 			, now()
 			<if test="clsCd != null"> , #{clsCd} </if>
 			<if test="detailSeq != null"> , #{detailSeq} </if>
+			, #{lngType}
 		)
     </insert>
 

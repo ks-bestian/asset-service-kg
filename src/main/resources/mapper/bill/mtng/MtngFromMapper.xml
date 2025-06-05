@@ -94,6 +94,7 @@
 			, atdt_user_nm  as member_nm
 			, atdt_dept_nm  as dept_nm
 			, atdt_dept_nm  as poly_nm
+			, atdt_position
 			, vum.dept_cd
 			, vum.poly_cd
 			, vum.poly_nm
@@ -235,6 +236,7 @@
 		     , ATDT_USER_NM
 		     , ATDT_KIND
 		     , atdt_dept_nm
+		     , atdt_position
 		     , REG_ID
 		     , REG_DT
 		     )
@@ -245,6 +247,7 @@
 		     ,  #{atdtUserNm}
 		     ,  #{atdtKind}
 		     ,  #{atdtDeptNm}
+		     ,  #{atdtPosition}
 		     ,  #{regId}
 		     ,  now()
 		    )

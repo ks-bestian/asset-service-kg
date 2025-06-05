@@ -61,14 +61,20 @@ public class ApplyServiceImpl implements ApplyService {
 		applyVo.setRegId(ppsrId);
 		applyMapper.insertApplyBill(applyVo);
 
-		//파일등록
-		comFileService.saveFileEbs(applyVo.getFiles(), applyVo.getFileKindCds(), applyVo.getOpbYns(), billId);
+//		//파일등록
+//		comFileService.saveFileEbs(applyVo.getFiles(), applyVo.getFileKindCds(), applyVo.getOpbYns(), billId);
+//
+//		//추가 - 내 문서함에서 파일 업로드(20250221 조진호)
+//		comFileService.saveFileEbs(applyVo.getMyFileIds(), applyVo.getFileKindCds2(), applyVo.getOpbYns2(), billId);
 
-		//추가 - 내 문서함에서 파일 업로드(20250221 조진호)
-		comFileService.saveFileEbs(applyVo.getMyFileIds(), applyVo.getFileKindCds2(), applyVo.getOpbYns2(), billId);
+		BillMngVo billMngVo = new BillMngVo();
+		billMngVo.setFileUploads(applyVo.getFileUploads());
+		billMngVo.setBillId(applyVo.getBillId());
+		comFileService.saveFileBillDetailMng(billMngVo);
 
 		//파일 정보를 가지고 있어서 null처리
 		applyVo.setFiles(null);
+		applyVo.setFileUploads(null);
 
 		//발의자 요청
 		List<String> proposerList = applyVo.getProposerList();
@@ -116,14 +122,20 @@ public class ApplyServiceImpl implements ApplyService {
 		
 		applyMapper.insertApplyBill(applyVo);
 
-		//파일등록
-		comFileService.saveFileEbs(applyVo.getFiles(), applyVo.getFileKindCds(), applyVo.getOpbYns(), billId);
+//		//파일등록
+//		comFileService.saveFileEbs(applyVo.getFiles(), applyVo.getFileKindCds(), applyVo.getOpbYns(), billId);
+//
+//		//추가 - 내 문서함에서 파일 업로드(20250221 조진호)
+//		comFileService.saveFileEbs(applyVo.getMyFileIds(), applyVo.getFileKindCds2(), applyVo.getOpbYns2(), billId);
 
-		//추가 - 내 문서함에서 파일 업로드(20250221 조진호)
-		comFileService.saveFileEbs(applyVo.getMyFileIds(), applyVo.getFileKindCds2(), applyVo.getOpbYns2(), billId);
-
+		BillMngVo billMngVo = new BillMngVo();
+		billMngVo.setFileUploads(applyVo.getFileUploads());
+		billMngVo.setBillId(applyVo.getBillId());
+		comFileService.saveFileBillDetailMng(billMngVo);
+		
 		//파일 정보를 가지고 있어서 null처리
 		applyVo.setFiles(null);
+		applyVo.setFileUploads(null);
 
 		//발의자 요청
 		List<String> proposerList = applyVo.getProposerList();
@@ -158,15 +170,14 @@ public class ApplyServiceImpl implements ApplyService {
 		pVo.setStepId("PC_START");//안건생성 프로세스시작
 		processService.handleProcess(pVo);
 		
-		
 		//안건접수
-		BillMngVo billMngVo = new BillMngVo();
-		billMngVo.setBillId(billId);
-		billMngVo.setRcpDt(applyVo.getRcpDt());
-		billMngVo.setStepId(applyVo.getStepId());
-		billMngService.billRegisterMng(billMngVo);
+		BillMngVo billMngVo2 = new BillMngVo();
+		billMngVo2.setBillId(billId);
+		billMngVo2.setRcpDt(applyVo.getRcpDt());
+		billMngVo2.setStepId(applyVo.getStepId());
+		billMngService.billRegisterMng(billMngVo2);
 		
-		applyVo.setBillNo(billMngVo.getBillNo());
+		applyVo.setBillNo(billMngVo2.getBillNo());
 		
 		return applyVo;
 	}
@@ -228,14 +239,18 @@ public class ApplyServiceImpl implements ApplyService {
 			}
 	    }
 
-		//파일변경
-		if (applyVo.getFiles() != null) {
-			comFileService.saveFileEbs(applyVo.getFiles(), applyVo.getFileKindCds(), applyVo.getOpbYns(), billId);
-			applyVo.setFiles(null);
-		}
-		if(applyVo.getMyFileIds() != null) {
-			comFileService.saveFileEbs(applyVo.getMyFileIds(), applyVo.getFileKindCds2(), applyVo.getOpbYns2(), billId);	
-		}
+//		//파일변경
+//		if (applyVo.getFiles() != null) {
+//			comFileService.saveFileEbs(applyVo.getFiles(), applyVo.getFileKindCds(), applyVo.getOpbYns(), billId);
+//			applyVo.setFiles(null);
+//		}
+//		if(applyVo.getMyFileIds() != null) {
+//			comFileService.saveFileEbs(applyVo.getMyFileIds(), applyVo.getFileKindCds2(), applyVo.getOpbYns2(), billId);	
+//		}
+	    BillMngVo billMngVo = new BillMngVo();
+		billMngVo.setFileUploads(applyVo.getFileUploads());
+		billMngVo.setBillId(billId);
+		comFileService.saveFileBillDetailMng(billMngVo);
 		
 
 		//bill update

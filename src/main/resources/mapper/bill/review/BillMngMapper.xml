@@ -834,6 +834,7 @@
 		    , ef.mod_dt
 			, ef.detail_seq
 			, kgst.fngetlangnm(vum.member_nm_kg, vum.member_nm_ru, vum.member_nm_kg, #{lang}) as ppsr_nm -- 제안자 이름
+			, ef.lng_type
 		FROM kgst.ebs_file ef
 		left join view_user_member vum on vum.user_id = ef.reg_id
 		WHERE ef.delete_yn = 'N'

@@ -238,7 +238,7 @@ public class ComFileServiceImpl implements ComFileService {
 			String opbYn = opbYnList[i];
 			String clsCd = null;
 			Long detailSeq = null;
-			saveFileEbs(file, fileKindCd, billId, clsCd, opbYn, detailSeq);
+			saveFileEbs(file, fileKindCd, billId, clsCd, opbYn, detailSeq, null);
 		}
 	}
 
@@ -254,7 +254,7 @@ public class ComFileServiceImpl implements ComFileService {
 			String opbYn = opbYnList[i];
 			String clsCd = null;
 			Long detailSeq = null;
-			saveFileEbs(myFileId, fileKindCd, billId, clsCd, opbYn, detailSeq);
+			saveFileEbs(myFileId, fileKindCd, billId, clsCd, opbYn, detailSeq, null);
 		}
 	}
 
@@ -464,10 +464,10 @@ public class ComFileServiceImpl implements ComFileService {
 		
 		for(EbsFileUpload fileUpload : billMngVo.getFileUploads()) {
 			if(fileUpload.getFile() != null) {
-				saveFileEbs(fileUpload.getFile(), fileUpload.getFileKindCd(), billMngVo.getBillId(), billMngVo.getClsCd(), fileUpload.getOpbYn(), billMngVo.getSeq());
+				saveFileEbs(fileUpload.getFile(), fileUpload.getFileKindCd(), billMngVo.getBillId(), billMngVo.getClsCd(), fileUpload.getOpbYn(), billMngVo.getSeq(), fileUpload.getLngType());
 			}
 			else if(fileUpload.getFileId() != null) {
-				saveFileEbs(fileUpload.getFileId(), fileUpload.getFileKindCd(), billMngVo.getBillId(), billMngVo.getClsCd(), fileUpload.getOpbYn(), billMngVo.getSeq());
+				saveFileEbs(fileUpload.getFileId(), fileUpload.getFileKindCd(), billMngVo.getBillId(), billMngVo.getClsCd(), fileUpload.getOpbYn(), billMngVo.getSeq(), fileUpload.getLngType());
 			}
 		}
 
@@ -483,12 +483,11 @@ public class ComFileServiceImpl implements ComFileService {
 //				saveFileEbs(myFileId, billMngVo.getFileKindCd(), billMngVo.getBillId(), billMngVo.getClsCd(), opbYn, billMngVo.getSeq());
 //			}
 //		}
-
 	}
 	
 	@Transactional
 	@Override
-	public void saveFileEbs(MultipartFile file, String fileKindCd, String billId, String clsCd, String opbYn, Long detailSeq) {
+	public void saveFileEbs(MultipartFile file, String fileKindCd, String billId, String clsCd, String opbYn, Long detailSeq, String lngType) {
 		if(file == null) return;
 
 		String orgFileId = StringUtil.getUUUID();
@@ -514,6 +513,7 @@ public class ComFileServiceImpl implements ComFileService {
 		fileVo.setDetailSeq(detailSeq);
 		fileVo.setClsCd(clsCd);
 		fileVo.setRegId(new SecurityInfoUtil().getAccountId());
+		fileVo.setLngType(lngType);
 		
 		fileMapper.insertFileEbs(fileVo);
 
@@ -523,7 +523,7 @@ public class ComFileServiceImpl implements ComFileService {
 	
 	@Transactional
 	@Override
-	public void saveFileEbs(String myFileId, String fileKindCd, String billId, String clsCd, String opbYn, Long detailSeq) throws Exception {
+	public void saveFileEbs(String myFileId, String fileKindCd, String billId, String clsCd, String opbYn, Long detailSeq, String lngType) throws Exception {
 		
 		if(myFileId == null) return;
 
@@ -562,6 +562,7 @@ public class ComFileServiceImpl implements ComFileService {
 		fileVo.setDetailSeq(detailSeq);
 		fileVo.setClsCd(clsCd);
 		fileVo.setRegId(new SecurityInfoUtil().getAccountId());
+		fileVo.setLngType(lngType);
 		
 		fileMapper.insertFileEbs(fileVo);
 

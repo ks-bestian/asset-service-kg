@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileUpload;
 import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
 
@@ -115,4 +116,6 @@ public class ApplyVo extends ComDefaultVO {
     private LocalDateTime revokeRegDt;
     private LocalDateTime wtDt;
 	private LocalDateTime wtCncDt;
+	
+	private List<EbsFileUpload> fileUploads;
 }

@@ -24,8 +24,8 @@ public interface ComFileService {
 
 	void saveFileBillDetailMng(BillMngVo billMngVo) throws Exception;
 	
-	void saveFileEbs(MultipartFile file, String fileKindCd, String billId, String clsCd, String opbYn, Long detailSeq);
-	void saveFileEbs(String myFileId, String fileKindCd, String billId, String clsCd, String opbYn, Long detailSeq) throws Exception;
+	void saveFileEbs(MultipartFile file, String fileKindCd, String billId, String clsCd, String opbYn, Long detailSeq, String lng_type);
+	void saveFileEbs(String myFileId, String fileKindCd, String billId, String clsCd, String opbYn, Long detailSeq, String lng_type) throws Exception;
 	
 	void updateEbsFile(EbsFileVo ebsFileVo);
 	void deleteFile(String fieldId);
