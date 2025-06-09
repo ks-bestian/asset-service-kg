@@ -39,5 +39,25 @@ public class BillAllController {
     public ResponseEntity<CommonResponse> selectListBillMonitor(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", billAllService.selectListBillMonitor(param)), HttpStatus.OK);
     }
+    
+    @ApiOperation(value = "의안 통계 조회", notes = "의안 통계를 조회한다.")
+    @GetMapping("/bill/search/statistics")
+    public ResponseEntity<CommonResponse> selectListBillStatistics(@RequestParam HashMap<String, Object> param) {
+    	Object statisticsKind = param.get("statisticsKind");
+    	
+    	if("ppslKnd".equals(statisticsKind)) {
+    		return new ResponseEntity<>(new CommonResponse(200, "OK", billAllService.countBillByPpslKnd(param)), HttpStatus.OK);	
+    	}
+    	else if("cmt".equals(statisticsKind)) {
+    		return new ResponseEntity<>(new CommonResponse(200, "OK", billAllService.countBillByCmt(param)), HttpStatus.OK);
+    	}
+    	else if("poly".equals(statisticsKind)) {
+    		return new ResponseEntity<>(new CommonResponse(200, "OK", billAllService.countBillByPoly(param)), HttpStatus.OK);
+    	}
+    	else {
+    		throw new IllegalArgumentException();
+    	}
+        
+    }
 
 }

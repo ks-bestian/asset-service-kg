@@ -13,5 +13,8 @@ public interface BillAllService {
 
     List<BillAllVo> selectListBillMonitor(HashMap<String, Object> param);
 
+    List<BillAllVo> countBillByPpslKnd(HashMap<String, Object> param);
+    List<BillAllVo> countBillByPoly(HashMap<String, Object> param);
+    List<BillAllVo> countBillByCmt(HashMap<String, Object> param);
 
 }

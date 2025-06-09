@@ -397,5 +397,72 @@
         order by A.ppsl_dt desc
 
     </select>
+    
+    <select id="countBillByPpslKnd" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billAll.vo.BillAllVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper.countBillByPpslKnd */
+		select 
+			  em.ppsl_knd_cd 
+			, fngetcodenm('1005', em.ppsl_knd_cd, #{lang}) as ppsl_knd_nm   
+			, count(*) as cnt
+		from ebs_master em 
+		where 1=1
+		<if test="ppslDtFrom != null and ppslDtFrom != ''">
+		    and em.ppsl_dt <![CDATA[ >= ]]> #{ppslDtFrom}
+		</if>
+		<if test="ppslDtTo != null and ppslDtTo != ''">
+		    and em.ppsl_dt <![CDATA[ <= ]]> #{ppslDtTo}
+		</if>
+		group by ppsl_knd_cd 
+    </select>
+    
+    <select id="countBillByPoly" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billAll.vo.BillAllVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper.countBillByPoly */
+		select 
+			  vum.poly_cd
+			, vum.poly_nm
+			, count(*) as cnt
+		from ebs_master em 
+		inner join view_user_member vum 
+		on em.ppsr_id = vum.user_id 
+		where 1=1
+		<if test="ppslDtFrom != null and ppslDtFrom != ''">
+		    and em.ppsl_dt <![CDATA[ >= ]]> #{ppslDtFrom}
+		</if>
+		<if test="ppslDtTo != null and ppslDtTo != ''">
+		    and em.ppsl_dt <![CDATA[ <= ]]> #{ppslDtTo}
+		</if>
+		group by vum.poly_cd, vum.poly_nm
+    </select>
+    
+    <select id="countBillByCmt" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billAll.vo.BillAllVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billAll.repository.BillAllMapper.countBillByCmt */
+		select
+			  A.cmt_cd
+			, A.cnt
+			, fngetlangnm(cd.dept_nm1, cd.dept_nm2, cd.dept_nm3, #{lang}) as cmt_nm
+		from (
+			select 
+				  emc.cmt_cd
+				, count(*) as cnt
+			from ebs_master em 
+			inner join ebs_master_cmt emc 
+			on em.bill_id = emc.bill_id 
+			and emc.cmt_se_cd = 'M'
+			and emc.use_yn = 'Y'
+			where 1=1
+			<if test="ppslDtFrom != null and ppslDtFrom != ''">
+			    and em.ppsl_dt <![CDATA[ >= ]]> #{ppslDtFrom}
+			</if>
+			<if test="ppslDtTo != null and ppslDtTo != ''">
+			    and em.ppsl_dt <![CDATA[ <= ]]> #{ppslDtTo}
+			</if>
+			group by emc.cmt_cd
+		) A
+		inner join com_dept cd 
+		on A.cmt_cd = cd.dept_cd
+    </select>
 
 </mapper>

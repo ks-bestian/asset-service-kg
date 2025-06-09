@@ -138,5 +138,8 @@ public class BillAllVo extends ComDefaultVO {
     private String pdfFileId;
     private String pdfFileNm;
     private String detailSeq;
-
+    
+    private Long cnt;
+    private String polyCd;
+    private String polyNm;
 }

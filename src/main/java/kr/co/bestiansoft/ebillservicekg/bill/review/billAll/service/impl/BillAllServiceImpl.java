@@ -152,5 +152,25 @@ public class BillAllServiceImpl implements BillAllService {
         return result;
 	}
 
+	@Override
+	public List<BillAllVo> countBillByPpslKnd(HashMap<String, Object> param) {
+
+        List<BillAllVo> result = billAllMapper.countBillByPpslKnd(param);
+        return result;
+	}
+	
+	@Override
+	public List<BillAllVo> countBillByPoly(HashMap<String, Object> param) {
+
+        List<BillAllVo> result = billAllMapper.countBillByPoly(param);
+        return result;
+	}
+	
+	@Override
+	public List<BillAllVo> countBillByCmt(HashMap<String, Object> param) {
+
+        List<BillAllVo> result = billAllMapper.countBillByCmt(param);
+        return result;
+	}
 
 }
