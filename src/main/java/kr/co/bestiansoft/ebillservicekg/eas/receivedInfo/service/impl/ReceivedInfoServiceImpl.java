@@ -49,5 +49,7 @@ public class ReceivedInfoServiceImpl implements ReceivedInfoService {
     public List<ReceivedInfoVo> getReceivedInfo(String docId) {
         return receivedInfoRepository.getReceivedInfo(docId);
     }
-
+    public boolean isReceipt(String docId) {
+        return receivedInfoRepository.isReceipt(docId);
+    }
 }

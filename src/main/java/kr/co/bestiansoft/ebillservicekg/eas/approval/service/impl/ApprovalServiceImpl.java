@@ -1,25 +1,16 @@
 package kr.co.bestiansoft.ebillservicekg.eas.approval.service.impl;
 
-import kr.co.bestiansoft.ebillservicekg.admin.user.service.UserService;
-import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.eas.approval.repository.ApprovalRepository;
 import kr.co.bestiansoft.ebillservicekg.eas.approval.service.ApprovalService;
 import kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalLIstDto;
 import kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalVo;
 import kr.co.bestiansoft.ebillservicekg.eas.approval.vo.UpdateApprovalVo;
-import kr.co.bestiansoft.ebillservicekg.eas.history.service.HistoryService;
-import kr.co.bestiansoft.ebillservicekg.eas.history.vo.HistoryVo;
-import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.service.OfficialDocumentService;
 import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.SearchDocumentVo;
-import kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.service.ReceivedInfoService;
-import kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.vo.ReceivedInfoVo;
-import kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.vo.UpdateReceivedInfoVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -65,7 +56,7 @@ public class ApprovalServiceImpl implements ApprovalService {
      * @param docId the unique identifier of the document for which approval records are to be fetched
      * @return a list of ApprovalVo objects containing the approval details
      */
-    public List<ApprovalVo> getApproval(String docId){
+    public List<ApprovalVo> getApprovals(String docId){
         return  approvalRepository.getApprovals(docId);
     }
 

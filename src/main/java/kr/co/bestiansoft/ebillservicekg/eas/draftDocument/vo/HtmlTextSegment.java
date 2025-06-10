@@ -20,6 +20,38 @@ public class HtmlTextSegment {
 
     private String alignment;
 
+    // 리스트 관련 필드 추가
+    private boolean listStart;
+    private boolean listEnd;
+    private boolean listItemStart;
+    private boolean listItemEnd;
+    private int listLevel;
+    private int listItemNumber;
+    private boolean orderedList;
+
+    // 테이블 관련 필드 추가
+    private boolean tableStart;
+    private boolean tableEnd;
+    private boolean tableRowStart;
+    private boolean tableRowEnd;
+    private boolean tableCellStart;
+    private boolean tableCellEnd;
+    private int tableRows;
+    private int tableCols;
+    private double tableWidth;
+    private double tableBorderSize;
+    private String tableStyle;
+    private String tableRowStyle;
+    private double tableRowHeight;
+    private int tableRowIndex;
+    private int tableColIndex;
+    private int tableRowSpan = 1;
+    private int tableColSpan = 1;
+    private String tableCellStyle;
+    private String tableCellBgColor;
+    private String tableCellVerticalAlign;
+
+
     public HtmlTextSegment(String text) {
         this.text = text;
     }

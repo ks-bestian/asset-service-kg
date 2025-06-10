@@ -13,4 +13,9 @@ public interface OfficialDocumentService {
     DocumentDetailDto getDocumentDetail(String docId);
     List<DocumentUserDto> getDocumentUser(String docId);
     Boolean isReject(String docId);
+    List<DocumentListDto> getRejectDocumentList(SearchDocumentVo vo);
+    int countRejectDocument();
+    List<DocumentListDto> getEndDocumentList(SearchDocumentVo vo);
+    List<DocumentListDto> getMyDocumentList(SearchDocumentVo vo);
+
 }

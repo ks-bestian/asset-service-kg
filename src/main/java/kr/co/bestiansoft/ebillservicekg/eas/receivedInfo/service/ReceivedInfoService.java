@@ -9,4 +9,5 @@ public interface ReceivedInfoService {
     int insertReceivedInfo (ReceivedInfoVo vo);
     int updateReceivedInfo (UpdateReceivedInfoVo vo);
     List<ReceivedInfoVo> getReceivedInfo(String docId);
+    boolean isReceipt(String docId);
 }

@@ -7,6 +7,6 @@ import java.util.Map;
 public interface DraftDocumentService {
 
     DraftDocumentVo insertDraftDocument(int formId,  Map<String, String> map);
-    void updateDraftStatus(String aarsDocId, String aarsStatusCd);
+    void updateDraftStatus(int aarsDocId, String aarsStatusCd);
     DraftDocumentVo getDraftDocument(String aarsDocId);
 }

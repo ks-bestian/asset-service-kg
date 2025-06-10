@@ -17,13 +17,19 @@
             <if test="rcpDtm"> rcp_dtm = #{rcpDtm} , </if>
             <if test="rjctDtm"> rjct_dtm = #{rjctDtm} , </if>
             <if test="rjctCn"> rjct_cn = #{rjctCn} , </if>
+            <if test="workId"> worker_id = ${workerId} </if>
         </set>
-        where doc_id = #{docId}
-          and user_id = #{userId}
+        where rcv_id = #{rcvId}
     </update>
     <select id="getReceivedInfo" resultType="kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.vo.ReceivedInfoVo">
         select rcv_id, doc_id, user_id, user_nm, dept_cd, ext_orgn_cd, rcv_status, rcv_dtm, check_dtm, rcp_dtm, rjct_dtm, rjct_cn, rcv_ord
           from kgst.eas_received_info
          where doc_id =#{docId}
     </select>
+    <select id="isReceipt" resultType="boolean">
+        select r.rcv_status = 'RS03'
+          from eas_received_info r
+         where r.doc_id = #{docId}
+    </select>
+
 </mapper>

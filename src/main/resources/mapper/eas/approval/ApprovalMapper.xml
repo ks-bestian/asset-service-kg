@@ -4,8 +4,8 @@
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.eas.approval.repository.ApprovalRepository">
     <insert id="insertApproval" parameterType="kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalVo">
         INSERT INTO kgst.eas_approval
-        (doc_id, user_id, user_nm, dept_cd, job_cd, apvl_ord, apvl_dtm, rcv_dtm, check_dtm, apvl_file_id, apvl_opinion, apvl_status_cd)
-        VALUES(#{docId}, #{userId}, #{userNm}, #{deptCd}, #{jobCd}, #{apvlOrd}, #{apvlDtm}, #{rcvDtm}, #{checkDtm}, #{apvlFileId}, #{apvlOpinion}, #{apvlStatusCd});
+        (doc_id, user_id, user_nm, dept_cd, job_cd, apvl_ord, res_dtm, rcv_dtm, check_dtm, apvl_file_id, res_opinion, apvl_status_cd)
+        VALUES(#{docId}, #{userId}, #{userNm}, #{deptCd}, #{jobCd}, #{apvlOrd}, #{resDtm}, #{rcvDtm}, #{checkDtm}, #{apvlFileId}, #{resOpinion}, #{apvlStatusCd});
     </insert>
     <update id="updateStatus">
         update kgst.eas_approval
@@ -15,17 +15,17 @@
     <update id="updateApproval" parameterType="kr.co.bestiansoft.ebillservicekg.eas.approval.vo.UpdateApprovalVo">
         update kgst.eas_approval
         <set>
-            <if test="apvlDtm != null">  apvl_dtm = #{apvlDtm}, </if>
+            <if test="resDtm != null">  res_dtm = #{resDtm}, </if>
             <if test="rcvDtm != null"> rcv_dtm = #{rcvDtm},  </if>
             <if test="checkDtm != null">  check_dtm = #{checkDtm},  </if>
-            <if test="apvlOpinion != null"> apvl_opinion = #{apvlOpinion},  </if>
+            <if test="resOpinion != null"> res_opinion = #{resOpinion},  </if>
             <if test="apvlFileId != null"> apvl_file_id = #{apvlFileId}, </if>
             <if test="apvlStatusCd != null"> apvl_status_cd = #{apvlStatusCd}, </if>
         </set>
         where apvl_id = #{apvlId}
     </update>
     <select id="getApprovals" resultType="kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalVo">
-        select apvl_id, doc_id, user_id, user_nm, dept_cd, job_cd, apvl_ord, apvl_dtm, rcv_dtm, check_dtm, apvl_file_id, apvl_opinion, apvl_status_cd
+        select apvl_id, doc_id, user_id, user_nm, dept_cd, job_cd, apvl_ord, res_dtm, rcv_dtm, check_dtm, apvl_file_id, res_opinion, apvl_status_cd
           from kgst.eas_approval
          where doc_id =#{docId}
          order by apvl_ord
@@ -35,7 +35,7 @@
           from eas_document d, eas_approval a
          where d.doc_id = a.doc_id
            and d.doc_status_cd ='DMS01'
-           and a.apvl_status_cd ='AS02'
+           and a.apvl_status_cd in('AS02', 'AS03')
            and a.user_id = #{userId}
         <if test="docSubtle != null "> and doc_subtle like '%'||#{docSubtle}||'%' </if>
         <if test="fromRcvDtm != null and toRcvDtm != null"> and rcv_dtm between #{fromRcvDtm} and #{toRcvDtm} </if>
@@ -57,7 +57,7 @@
         );
     </select>
     <select id="getApproval" resultType="kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalVo">
-        select apvl_id, doc_id, user_id, user_nm, dept_cd, job_cd, apvl_ord, apvl_dtm, rcv_dtm, check_dtm, apvl_file_id, apvl_opinion, apvl_status_cd
+        select apvl_id, doc_id, user_id, user_nm, dept_cd, job_cd, apvl_ord, res_dtm, rcv_dtm, check_dtm, apvl_file_id, res_opinion, apvl_status_cd
           from eas_approval
          where apvl_id =#{apvlId}
     </select>

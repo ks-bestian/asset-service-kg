@@ -12,7 +12,7 @@ public interface ApprovalService {
     int insertApproval(ApprovalVo vo);
     void updateStatus(String apvlId, String apvlStatusCd);
     void updateApproval(UpdateApprovalVo vo);
-    List<ApprovalVo> getApproval (String docId);
+    List<ApprovalVo> getApprovals (String docId);
     List<ApprovalLIstDto> getApprovalList(SearchDocumentVo vo);
     int countApprovalList();
     ApprovalVo getApproval(int apvlId);

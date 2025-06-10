@@ -54,13 +54,23 @@ public class OfficialDocumentController {
         return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.getDocumentUser(docId)), HttpStatus.OK);
     }
     @ApiOperation(value = "updateReadDatetime", notes = "updateReadDatetime")
-    @PutMapping("/eas/document/read/{docId}")
-    public ResponseEntity<CommonResponse> updateStatusOfficialDocument (@PathVariable String docId){
-        return new ResponseEntity<>(new CommonResponse(200, "OK", documentWorkFlowService.updateReadDateTime(docId)), HttpStatus.OK);
+    @PutMapping("/eas/document/read/{rcvId}")
+    public ResponseEntity<CommonResponse> updateStatusOfficialDocument (@PathVariable int rcvId){
+        return new ResponseEntity<>(new CommonResponse(200, "OK", documentWorkFlowService.updateReadDateTime(rcvId)), HttpStatus.OK);
     }
-    @ApiOperation(value = "is Rejecct", notes="is Reject docId")
+    @ApiOperation(value = "is Reject", notes="is Reject docId")
     @GetMapping("/eas/reject/{docId}")
     public ResponseEntity<CommonResponse> isReject(@PathVariable String docId){
         return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.isReject(docId)), HttpStatus.OK);
+    }
+    @ApiOperation(value = "get reject list", notes="get reject list")
+    @GetMapping("/eas/document/reject")
+    public ResponseEntity<CommonResponse> getReject(SearchDocumentVo vo){
+        return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.getRejectDocumentList(vo)), HttpStatus.OK);
+    }
+    @ApiOperation(value = "get my document list", notes="get my document list")
+    @GetMapping("/eas/document/myDocument")
+    public ResponseEntity<CommonResponse> getMyDocument(SearchDocumentVo vo){
+        return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.getMyDocumentList(vo)), HttpStatus.OK);
     }
 }

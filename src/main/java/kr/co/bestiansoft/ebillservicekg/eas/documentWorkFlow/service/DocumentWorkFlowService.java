@@ -6,5 +6,10 @@ import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.InsertDocumentVo
 public interface DocumentWorkFlowService {
     int saveAllDocument(InsertDocumentVo vo);
     void approve(UpdateApprovalVo vo);
-    int updateReadDateTime(String docId);
+    int updateReadDateTime(int rcvId);
+    void updateReadApproval(int apvlId);
+    void approveReject(UpdateApprovalVo vo);
+    void reception();
+    void rejectReception();
+    void endDocument();
 }

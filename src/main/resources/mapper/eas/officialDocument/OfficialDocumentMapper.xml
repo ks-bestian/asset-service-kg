@@ -13,12 +13,12 @@
          where doc_id = #{docId}
     </update>
     <select id="getDocumentList" parameterType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.SearchDocumentVo" resultType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.DocumentListDto">
-        select d.doc_id, doc_attrb_cd, d.tmlmt_yn, d.tmlmt_Dtm, doc_subtle, sender_id, sender_nm, doc_no, rcv_dtm, check_dtm, rcv_id
+        select d.doc_id, doc_attrb_cd, d.tmlmt_yn, d.tmlmt_Dtm, doc_subtle, sender_id, sender_nm, doc_no, rcv_dtm, check_dtm, rcv_id, doc_type_cd
           from eas_document d, eas_received_info r
          where d.doc_id = r.doc_id
-           and rcv_status = 'RS01'
-           and doc_status_cd = 'DMS02'
            and r.user_id = #{userId}
+           and doc_status_cd = 'DMS02'
+           and rcv_status in ('RS01', 'RS02')
           <if test="docSubtle != null "> and doc_subtle like '%'||#{docSubtle}||'%' </if>
           <if test="tmlmtDtm != null"> and tmlmt_dtm = #{tmlmtDtm} </if>
           <if test="fromRcvDtm != null and toRcvDtm != null"> and rcv_dtm between #{fromRcvDtm} and #{toRcvDtm} </if>
@@ -67,5 +67,28 @@
     </select>
     <select id="isReject" resultType="boolean">
         select doc_status_cd ='DMS04' from eas_document where doc_id = #{docId} ;
+    </select>
+    <select id ="getEndDocumentList" parameterType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.SearchDocumentVo" resultType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.DocumentListDto">
+
+    </select>
+    <!--  todo 검색 조건 추가하기  -->
+    <select id="getRejectDocumentList" parameterType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.SearchDocumentVo" resultType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.DocumentListDto">
+        select doc_id, doc_attrb_cd, doc_subtle, sender_id, sender_nm, doc_no
+          from eas_document d
+         where d.user_id= #{userId}
+           and d.doc_status_cd ='DMS04'
+         order by reg_dtm desc;
+    </select>
+    <select id="countRejectDocument" resultType="int">
+        select count(1)
+          from eas_document d
+         where d.user_id= #{userId}
+           and d.doc_status_cd = 'DMS02'
+    </select>
+    <select id="getMyDocumentList" parameterType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.SearchDocumentVo" resultType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.DocumentListDto">
+        select doc_id, doc_attrb_cd, doc_subtle, sender_id, sender_nm, doc_no
+          from eas_document d
+         where d.user_id= #{userId}
+         order by reg_dtm desc;
     </select>
 </mapper>

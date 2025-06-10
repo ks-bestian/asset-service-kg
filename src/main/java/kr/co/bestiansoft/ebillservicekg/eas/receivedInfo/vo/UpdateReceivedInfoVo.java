@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Data
 public class UpdateReceivedInfoVo {
-    String docId;
+
     int rcvId;
     String rcvStatus;
     LocalDateTime rcvDtm;
@@ -17,11 +17,11 @@ public class UpdateReceivedInfoVo {
     LocalDateTime rcpDtm;
     LocalDateTime rjctDtm;
     String rjctCn;
-    String userId;
+    String workerId;
+
 
     @Builder
-    public UpdateReceivedInfoVo(String docId, int rcvId, String rcvStatus, LocalDateTime rcvDtm, LocalDateTime checkDtm, LocalDateTime rcpDtm, LocalDateTime rjctDtm, String rjctCn, String userId) {
-        this.docId = docId;
+    public UpdateReceivedInfoVo(int rcvId, String rcvStatus, LocalDateTime rcvDtm, LocalDateTime checkDtm, LocalDateTime rcpDtm, LocalDateTime rjctDtm, String rjctCn, String workerId) {
         this.rcvId = rcvId;
         this.rcvStatus = rcvStatus;
         this.rcvDtm = rcvDtm;
@@ -29,6 +29,6 @@ public class UpdateReceivedInfoVo {
         this.rcpDtm = rcpDtm;
         this.rjctDtm = rjctDtm;
         this.rjctCn = rjctCn;
-        this.userId = userId;
+        this.workerId = workerId;
     }
 }

@@ -11,22 +11,22 @@ import java.time.LocalDateTime;
 public class UpdateApprovalVo {
     String docId;
     int apvlId;
-    LocalDateTime apvlDtm ;
+    LocalDateTime resDtm ;
     LocalDateTime rcvDtm;
     LocalDateTime checkDtm;
     String apvlFileId;
-    String apvlOpinion;
+    String resOpinion;
     String apvlStatusCd;
 
     @Builder
-    public UpdateApprovalVo(String docId, int apvlId, LocalDateTime apvlDtm, LocalDateTime rcvDtm, LocalDateTime checkDtm, String apvlFileId, String apvlOpinion, String apvlStatusCd) {
+    public UpdateApprovalVo(String docId, int apvlId, LocalDateTime resDtm, LocalDateTime rcvDtm, LocalDateTime checkDtm, String apvlFileId, String resOpinion, String apvlStatusCd) {
         this.docId = docId;
         this.apvlId = apvlId;
-        this.apvlDtm = apvlDtm;
+        this.resDtm = resDtm;
         this.rcvDtm = rcvDtm;
         this.checkDtm = checkDtm;
         this.apvlFileId = apvlFileId;
-        this.apvlOpinion = apvlOpinion;
+        this.resOpinion = resOpinion;
         this.apvlStatusCd = apvlStatusCd;
     }
 }

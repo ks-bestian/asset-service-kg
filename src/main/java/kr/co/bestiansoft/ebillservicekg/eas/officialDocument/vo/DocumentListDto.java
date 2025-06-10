@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 public class DocumentListDto {
     String docId;
     String docAttrbCd;
+    String docTypeCd;
     String tmlmtYn;
     LocalDateTime tmlmtDtm;
     String docSubtle;

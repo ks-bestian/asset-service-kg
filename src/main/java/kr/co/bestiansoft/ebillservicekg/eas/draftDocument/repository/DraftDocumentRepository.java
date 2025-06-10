@@ -6,6 +6,6 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface DraftDocumentRepository {
     int insertDraftDocument(DraftDocumentVo vo);
-    void updateDraftStatus(String aarsDocId, String aarsStatusCd);
+    void updateDraftStatus(int aarsDocId, String aarsStatusCd);
     DraftDocumentVo getDraftDocument(String aarsDocId);
 }

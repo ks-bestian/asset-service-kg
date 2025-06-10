@@ -39,7 +39,7 @@
 			<url>file://${project.basedir}/lib</url>
 		</repository>
 	</repositories>
-    
+
     <dependencies>
     	<!--
         <dependency>

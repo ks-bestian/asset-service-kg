@@ -32,7 +32,7 @@ public class ApprovalController {
 
     @GetMapping("/eas/approval/{docId}")
     public ResponseEntity<CommonResponse> getApproval(@PathVariable String docId){
-        return new ResponseEntity<>(new CommonResponse(200, "OK", approvalService.getApproval(docId)), HttpStatus.OK);
+        return new ResponseEntity<>(new CommonResponse(200, "OK", approvalService.getApprovals(docId)), HttpStatus.OK);
     }
     @ApiOperation(value="getApproval List", notes = "getApproval List")
     @GetMapping("/eas/approval")
@@ -47,18 +47,19 @@ public class ApprovalController {
     @ApiOperation(value = "Read Approval", notes = "Read Approval")
     @PutMapping("/eas/approval/read/{apvlId}")
     public ResponseEntity<CommonResponse> readApproval( @PathVariable int apvlId) {
-        UpdateApprovalVo vo = UpdateApprovalVo.builder()
-                .apvlId(apvlId)
-                .checkDtm(LocalDateTime.now())
-                .apvlStatusCd("AS03")
-                .build();
-        approvalService.updateApproval(vo);
+        documentWorkFlowService.updateReadApproval(apvlId);
         return new ResponseEntity<>(new CommonResponse(200, "OK", apvlId ),HttpStatus.OK);
     }
-    @ApiOperation(value = "Approval", notes = "Approval")
-    @PostMapping("/eas/approval/approve")
+    @ApiOperation(value = "Approve", notes = "Approve")
+    @PutMapping("/eas/approval/approve")
     public ResponseEntity<CommonResponse> approval(@RequestBody UpdateApprovalVo vo) {
         documentWorkFlowService.approve(vo);
+        return new ResponseEntity<>(new CommonResponse(200, "OK", vo.getApvlId() ),HttpStatus.OK);
+    }
+    @ApiOperation(value="Reject", notes = "reject")
+    @PutMapping("/eas/approval/reject")
+    public ResponseEntity<CommonResponse> approveReject(@RequestBody UpdateApprovalVo vo) {
+        documentWorkFlowService.approveReject(vo);
         return new ResponseEntity<>(new CommonResponse(200, "OK", vo.getApvlId() ),HttpStatus.OK);
     }
 }

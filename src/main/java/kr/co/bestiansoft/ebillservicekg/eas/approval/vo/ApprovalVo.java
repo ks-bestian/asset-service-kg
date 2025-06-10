@@ -16,15 +16,15 @@ public class ApprovalVo  {
     private String deptCd;
     private String jobCd;
     private int apvlOrd;
-    private LocalDateTime apvlDtm;
+    private LocalDateTime resDtm;
     private LocalDateTime rcvDtm;
     private LocalDateTime checkDtm;
     private String apvlFileId;
-    private String apvlOpinion;
+    private String resOpinion;
     private String apvlStatusCd;
 
     @Builder
-    public ApprovalVo(int apvlId, String docId, String userId, String userNm, String deptCd, String jobCd, int apvlOrd, LocalDateTime apvlDtm, LocalDateTime rcvDtm, LocalDateTime checkDtm, String apvlFileId, String apvlOpinion, String apvlStatusCd) {
+    public ApprovalVo(int apvlId, String docId, String userId, String userNm, String deptCd, String jobCd, int apvlOrd, LocalDateTime resDtm, LocalDateTime rcvDtm, LocalDateTime checkDtm, String apvlFileId, String resOpinion, String apvlStatusCd) {
         this.apvlId = apvlId;
         this.docId = docId;
         this.userId = userId;
@@ -32,11 +32,11 @@ public class ApprovalVo  {
         this.deptCd = deptCd;
         this.jobCd = jobCd;
         this.apvlOrd = apvlOrd;
-        this.apvlDtm = apvlDtm;
+        this.resDtm = resDtm;
         this.rcvDtm = rcvDtm;
         this.checkDtm = checkDtm;
         this.apvlFileId = apvlFileId;
-        this.apvlOpinion = apvlOpinion;
+        this.resOpinion = resOpinion;
         this.apvlStatusCd = apvlStatusCd;
     }
 }

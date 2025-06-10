@@ -120,5 +120,25 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
         return officialDocumentMapper.isReject(docId);
     }
 
+    @Override
+    public List<DocumentListDto> getRejectDocumentList(SearchDocumentVo vo) {
+        vo.setUserId(new SecurityInfoUtil().getAccountId());
+        return officialDocumentMapper.getRejectDocumentList(vo);
+    }
 
+    @Override
+    public int countRejectDocument() {
+        return officialDocumentMapper.countRejectDocument(new SecurityInfoUtil().getAccountId());
+    }
+
+    @Override
+    public List<DocumentListDto> getEndDocumentList(SearchDocumentVo vo) {
+        return officialDocumentMapper.getEndDocumentList(vo);
+    }
+
+    @Override
+    public List<DocumentListDto> getMyDocumentList(SearchDocumentVo vo) {
+        vo.setUserId(new SecurityInfoUtil().getAccountId());
+        return officialDocumentMapper.getMyDocumentList(vo);
+    }
 }

@@ -34,4 +34,9 @@ public class ReceivedInfoController {
     public ResponseEntity<CommonResponse> getReceivedInfo(@PathVariable String docId){
         return new ResponseEntity<>(new CommonResponse(200, "OK", infoService.getReceivedInfo(docId)), HttpStatus.OK);
     }
+    @ApiOperation(value="get is receipt", notes = "get is receipt")
+    @GetMapping("/eas/isReceipt/{docId}")
+    public ResponseEntity<CommonResponse> getIsReceipt(@PathVariable String docId){
+        return new ResponseEntity<>(new CommonResponse(200, "OK", infoService.isReceipt(docId)), HttpStatus.OK);
+    }
 }

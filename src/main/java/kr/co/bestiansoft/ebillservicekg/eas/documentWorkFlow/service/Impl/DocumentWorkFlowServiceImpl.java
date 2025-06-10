@@ -7,6 +7,8 @@ import kr.co.bestiansoft.ebillservicekg.eas.approval.service.ApprovalService;
 import kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalVo;
 import kr.co.bestiansoft.ebillservicekg.eas.approval.vo.UpdateApprovalVo;
 import kr.co.bestiansoft.ebillservicekg.eas.documentWorkFlow.service.DocumentWorkFlowService;
+import kr.co.bestiansoft.ebillservicekg.eas.draftDocument.service.DraftDocumentService;
+import kr.co.bestiansoft.ebillservicekg.eas.draftDocument.vo.DraftDocumentVo;
 import kr.co.bestiansoft.ebillservicekg.eas.history.service.HistoryService;
 import kr.co.bestiansoft.ebillservicekg.eas.history.vo.HistoryVo;
 import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.service.OfficialDocumentService;
@@ -15,6 +17,8 @@ import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.OfficialDocument
 import kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.service.ReceivedInfoService;
 import kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.vo.ReceivedInfoVo;
 import kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.vo.UpdateReceivedInfoVo;
+import kr.co.bestiansoft.ebillservicekg.eas.workRequest.service.impl.WorkRequestServiceImpl;
+import kr.co.bestiansoft.ebillservicekg.eas.workResponse.service.impl.WorkResponseServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,6 +28,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -33,7 +38,10 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
     private final ReceivedInfoService receivedInfoService;
     private final HistoryService historyService;
     private final UserService userService;
-    private final OfficialDocumentService officialDocumentService;
+    private final OfficialDocumentService documentService;
+    private final DraftDocumentService draftDocumentService;
+    private final WorkRequestServiceImpl workRequestService;
+    private final WorkResponseServiceImpl workResponseService;
 
     /**
      * Saves all document-related data including official document, approvals, received information, and history.
@@ -74,7 +82,7 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                 .docSubtle(vo.getDocSubtle())
                 .senderId(loginId)
                 .docStatusCd("DMS01")
-                .digitalYn('N')
+                .digitalYn('Y')
                 .userId(loginId)
                 .docLng(arrayToString(vo.getDocLng()))
                 .docAttrbCd(arrayToString(vo.getDocAttrbCd()))
@@ -85,7 +93,10 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
 
 
 
-        result += officialDocumentService.saveOfficialDocument(documentVo);
+        result += documentService.saveOfficialDocument(documentVo);
+
+        draftDocumentService.updateDraftStatus(vo.getAarsDocId(), "DS02");
+
 
         /* save eas_approval */
         String[] approvalIds = vo.getApprovalIds();
@@ -111,7 +122,6 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
 
         /* eas_received_info */
         List<Map<String, String>> receivedIds = vo.getReceiverIds();
-        log.info("receivedIds.size() = {}",receivedIds.size());
         for(int i=0 ; i < receivedIds.size() ; i++){
             log.info("receivedIds.get({}).get(\"isExternal\") = {}",i,receivedIds.get(i).get("isExternal"));
             if(receivedIds.get(i).get("isExternal").equals("false")){
@@ -151,43 +161,51 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
 
     @Override
     public void approve(UpdateApprovalVo vo) {
-        List<ApprovalVo> approvalVoList = approvalService.getApproval(vo.getDocId());
+        List<ApprovalVo> approvalVoList = approvalService.getApprovals(vo.getDocId());
         ApprovalVo approvalVo = approvalService.getApproval(vo.getApvlId());
         UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
-
+        log.info(approvalVoList.toString());
         /** AS01 대기, AS02 발송, AS03 열람, AS04 승인, AS05 반려*/
-        log.info("approvalOrd : {} , approvalSize : {}",approvalVo.getApvlOrd(), approvalVoList.size()-1);
-        if(approvalVo.getApvlOrd() == approvalVoList.size()-1) {
+        log.info("approvalOrd : {} , approvalSize : {}",approvalVo.getApvlOrd(), approvalVoList.size());
+        if(approvalVo.getApvlOrd() == approvalVoList.size()) {
             List<ReceivedInfoVo> receivedInfoVo =  receivedInfoService.getReceivedInfo(vo.getDocId());
             receivedInfoVo.forEach(rcvInfoVo -> {
                 UpdateReceivedInfoVo updateReceivedInfoVo = UpdateReceivedInfoVo.builder()
                         .rcvId(rcvInfoVo.getRcvId())
-                        .rcpDtm(LocalDateTime.now())
+                        .rcvDtm(LocalDateTime.now())
                         .rcvStatus("RS01")
                         .build();
                 // 받는사람들 상태 변경
                 receivedInfoService.updateReceivedInfo(updateReceivedInfoVo);
             });
             // 전송 상태로 변경
-//            officialDocumentService.updateStatusOfficialDocument(vo.getDocId(), "DMS02");
-
+            documentService.updateStatusOfficialDocument(vo.getDocId(), "DMS02");
+            // todo 번호 부여
         }else{
-            ApprovalVo nextApprovalVo = approvalVoList.get(approvalVo.getApvlOrd()+1);
-            if(nextApprovalVo.getApvlStatusCd().equals("AS01")){
+            Optional<ApprovalVo> nextApprovalVo = approvalVoList.stream().filter(s-> s.getApvlOrd() == approvalVo.getApvlOrd()+1).findFirst();
 
-                UpdateApprovalVo updateApprovalVo = UpdateApprovalVo
+            if(nextApprovalVo.get().getApvlStatusCd().equals("AS01")){
+
+                UpdateApprovalVo  nextUpdateApprovalVo= UpdateApprovalVo
                         .builder()
-                        .apvlId(nextApprovalVo.getApvlId())
+                        .apvlId(nextApprovalVo.get().getApvlId())
+                        .resDtm(LocalDateTime.now())
                         .apvlStatusCd("AS02")
                         .build();
-                nextApprovalVo.setApvlDtm(LocalDateTime.now());
-                nextApprovalVo.setApvlStatusCd("AS02");
+
+                UpdateApprovalVo  updateApprovalVo= UpdateApprovalVo.builder()
+                        .apvlId(vo.getApvlId())
+                        .resDtm(LocalDateTime.now())
+                        .apvlStatusCd("AS04")
+                        .build();
+
+                approvalService.updateApproval(nextUpdateApprovalVo);
                 approvalService.updateApproval(updateApprovalVo);
             }
         }
 
         // 기존 approval 변경
-        vo.setApvlDtm(LocalDateTime.now());
+        vo.setResDtm(LocalDateTime.now());
         vo.setApvlStatusCd("AS04");
         approvalService.updateApproval(vo);
 
@@ -195,24 +213,69 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
         HistoryVo historyVo = HistoryVo.builder()
                 .userId(loginUser.getUserId())
                 .docId(vo.getDocId())
-                .actType("AS04")
+                .actType(vo.getApvlStatusCd())
                 .actDtm(LocalDateTime.now())
-                .actDetail(historyService.getActionDetail("AS04",loginUser.getUserNm()))
+                .actDetail(historyService.getActionDetail(vo.getApvlStatusCd(),loginUser.getUserNm()))
                 .userNm(loginUser.getUserNm())
                 .build();
         historyService.insertHistory(historyVo);
+    }
+    // DMS04
+    public void approveReject(UpdateApprovalVo vo){
+        UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
+
+        vo.setResDtm(LocalDateTime.now());
+        vo.setApvlStatusCd("AS05");
+        // approval update
+        approvalService.updateApproval(vo);
+        // document Status 변경
+        documentService.updateStatusOfficialDocument(vo.getDocId(), "DMS04");
+
+        // history
+        HistoryVo historyVo = HistoryVo.builder()
+                .userId(loginUser.getUserId())
+                .docId(vo.getDocId())
+                .actType(vo.getApvlStatusCd())
+                .actDtm(LocalDateTime.now())
+                .actDetail(historyService.getActionDetail(vo.getApvlStatusCd(),loginUser.getUserNm()))
+                .userNm(loginUser.getUserNm())
+                .build();
+        historyService.insertHistory(historyVo);
+    }
+
+    public void reception(){
+        //type dms01
+
+        //type dms02
+
+    }
+
+    public void rejectReception(){
+
+    }
+
+    public void endDocument(){
 
     }
     @Override
-    public int updateReadDateTime(String docId) {
-        UpdateReceivedInfoVo vo = new UpdateReceivedInfoVo();
-        vo.setDocId(docId);
-        vo.setCheckDtm(LocalDateTime.now());
-        vo.setUserId(new SecurityInfoUtil().getAccountId());
-        vo.setRcvStatus("RS02");
+    public int updateReadDateTime(int rcvId) {
+        UpdateReceivedInfoVo vo = UpdateReceivedInfoVo.builder()
+                .rcvId(rcvId)
+                .checkDtm(LocalDateTime.now())
+                .rcvStatus("RS02")
+                .build();
         return receivedInfoService.updateReceivedInfo(vo);
+    }
+    public void updateReadApproval(int apvlId){
+        UpdateApprovalVo vo = UpdateApprovalVo.builder()
+                .apvlId(apvlId)
+                .checkDtm(LocalDateTime.now())
+                .apvlStatusCd("AS03")
+                .build();
+         approvalService.updateApproval(vo);
     }
     public String arrayToString(String[] arrayS){
         return String.join(",", arrayS);
     }
+
 }
