@@ -256,7 +256,7 @@
 		  , emd.reg_id
 		  , kgst.fngetlangnm(vum.user_nm_kg,vum.user_nm_ru,vum.user_nm_kg,#{lang}) as regNm
 		from kgst.ebs_master_detail emd
-		join kgst.view_user_member vum on (emd.reg_id = vum.user_id)
+		left outer join kgst.view_user_member vum on (emd.reg_id = vum.user_id)
 		where bill_id = #{billId}
 		<if test="clsCd != null and clsCd != ''">
 			and emd.cls_cd = #{clsCd}
@@ -372,7 +372,7 @@
 			    , ebs.stat_cd
 			    , kgst.fngetcodenm('1010', ebs.stat_cd, #{lang}) as stat_nm
 			FROM ebs_master em
-			join view_user_member vum on (em.ppsr_id = vum.user_id)
+			left outer join view_user_member vum on (em.ppsr_id = vum.user_id)
 			left outer join ebs_bp_instance ebi on (em.bill_id = ebi.bill_id)
 			join ebs_bp_step ebs on (ebs.step_id = ebi.current_step_id and ebs.bp_df_id = ebi.bp_df_id)
 		) A

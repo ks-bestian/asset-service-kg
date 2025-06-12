@@ -38,7 +38,7 @@
 			  , pl.task_reg_dt
 			  , TO_CHAR(pl.completed_dt, 'DD/MM/YYYY') as completed_dt
 			from kgst.view_bill_process_list pl
-			join kgst.view_user_member vum on (pl.ppsr_id = vum.user_id)
+			left outer join kgst.view_user_member vum on (pl.ppsr_id = vum.user_id)
 			where 1=1
 
 			  <if test="assignedTo != null and assignedTo != ''">
@@ -184,7 +184,7 @@
 		    , ebi.current_step_id
 		    , ebs.stat_cd
 		FROM ebs_master em
-		join view_user_member vum on (em.ppsr_id = vum.user_id)
+		left outer join view_user_member vum on (em.ppsr_id = vum.user_id)
 		left outer join ebs_bp_instance ebi on (em.bill_id = ebi.bill_id)
 		left outer join ebs_bp_step ebs on (ebi.bp_df_id = ebs.bp_df_id and ebi.current_step_id = ebs.step_id)
 		where em.bill_id = #{billId}
@@ -217,7 +217,7 @@
 		  , pl.trgt_user_id
 		  , pl.rcp_dt
 		from kgst.view_bill_process_list pl
-		join kgst.view_user_member vum on (pl.ppsr_id = vum.user_id)
+		left outer join kgst.view_user_member vum on (pl.ppsr_id = vum.user_id)
 		where 1=1
 		  and pl.bill_id = #{billId}
 		  and pl.assigned_to = #{assignedTo}
@@ -255,7 +255,7 @@
 		  , pl.assigned_to
 		  , pl.trgt_user_id
 		from kgst.view_bill_process_list pl
-		join kgst.view_user_member vum on (pl.ppsr_id = vum.user_id)
+		left outer join kgst.view_user_member vum on (pl.ppsr_id = vum.user_id)
 		where 1=1
 		  and pl.assigned_to = #{deptCd}
 
@@ -298,7 +298,7 @@
 		    , emt.session_no
 		    , emt.session_ord
 		from kgst.ebs_master_detail emd
-		join kgst.view_user_member vum on (emd.reg_id = vum.user_id)
+		left outer join kgst.view_user_member vum on (emd.reg_id = vum.user_id)
 		left outer join kgst.ebs_mtng emt on (emd.mtng_id = emt.mtng_id)
 		where emd.bill_id = #{billId}
 		<if test="clsCd != null and clsCd != ''">
@@ -454,7 +454,7 @@
 			join kgst.ebs_master_cmt emc on (em.bill_id = emc.bill_id)
 			join kgst.ebs_mtng_agenda ema on (em.bill_id = ema.bill_id)
 			join kgst.ebs_mtng emt on (ema.mtng_id = emt.mtng_id)
-			join kgst.view_user_member vum on (em.ppsr_id = vum.user_id)
+			left outer join kgst.view_user_member vum on (em.ppsr_id = vum.user_id)
 			join kgst.ebs_bp_instance ebi on (em.bill_id = ebi.bill_id)
 			join kgst.ebs_bp_step step on (ebi.bp_df_id = step.bp_df_id and ebi.current_step_id = step.step_id)
 			where 1=1
@@ -647,7 +647,7 @@
 		    , kgst.fngetcodenm('1010',step.stat_cd,#{lang}) as stat_nm
 		from ebs_bp_instance ebi
 		join ebs_master em on (ebi.bill_id = em.bill_id)
-		join view_user_member vum on (em.ppsr_id = vum.user_id)
+		left outer join view_user_member vum on (em.ppsr_id = vum.user_id)
 		join ebs_bp_step step on (ebi.current_step_id = step.step_id)
 		where ebi.current_step_id in ('1400','1500','1600')
 		  AND em.na_term_cd = #{naTermCd}

@@ -583,7 +583,7 @@
 		from kgst.ebs_file ef
 		where ef.bill_id = #{billId}
 			and ef.delete_yn = 'N'
-	    	and file_kind_cd in ('110', '120', '130')
+	    	and file_kind_cd in ('110', '120', '130', '100')
 		<if test="lngType != null and lngType != ''">
 			and ef.lng_type = #{lngType}
 		</if>
@@ -695,7 +695,7 @@
 
     <!-- Reception request date update -->
     <update id="updateBillRecptnDt" parameterType="kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo">
-    	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.updateBillHome */
+    	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper.updateBillRecptnDt */
         update kgst.ebs_master
 		set
 		    rcp_req_dt  = to_char(now(),'YYYYMMDD')		-- Reception request date

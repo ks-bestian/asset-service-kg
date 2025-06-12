@@ -170,11 +170,27 @@ public class ApplyServiceImpl implements ApplyService {
 		pVo.setStepId("PC_START");//안건생성 프로세스시작
 		processService.handleProcess(pVo);
 		
+		//접수요청 프로세스
+		pVo = new ProcessVo();
+		pVo.setBillId(billId);
+		pVo.setStepId("0");
+		ProcessVo task = processMapper.selectBpStepTasks(pVo).get(0);
+		
+		applyVo.setTaskId(task.getTaskId());
+		applyVo.setStepId("1000");
+		this.saveBillAccept(billId, applyVo);
+		
 		//안건접수
+		pVo = new ProcessVo();
+		pVo.setBillId(billId);
+		pVo.setStepId("1000");
+		task = processMapper.selectBpStepTasks(pVo).get(0);
+		
 		BillMngVo billMngVo2 = new BillMngVo();
 		billMngVo2.setBillId(billId);
 		billMngVo2.setRcpDt(applyVo.getRcpDt());
-		billMngVo2.setStepId(applyVo.getStepId());
+		billMngVo2.setStepId("1200");
+		billMngVo2.setTaskId(task.getTaskId());
 		billMngService.billRegisterMng(billMngVo2);
 		
 		applyVo.setBillNo(billMngVo2.getBillNo());

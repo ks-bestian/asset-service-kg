@@ -140,7 +140,7 @@
 		from kgst.ebs_mtng emt
 		join kgst.EBS_MTNG_AGENDA ema on (emt.mtng_id = ema.mtng_id)
 		join kgst.EBS_MASTER em on (ema.bill_id = em.bill_id)
-		join kgst.view_user_member vum on (em.ppsr_id = vum.member_id)
+		left outer join kgst.view_user_member vum on (em.ppsr_id = vum.member_id)
 		where emt.mtng_id = #{mtngId}
 		order by ema.ord
 

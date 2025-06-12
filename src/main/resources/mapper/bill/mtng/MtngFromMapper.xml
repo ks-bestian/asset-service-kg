@@ -132,7 +132,7 @@
 		from ebs_mtng emt
 		join ebs_mtng_agenda ema on (emt.mtng_id = ema.mtng_id)
 		join ebs_master em on (ema.bill_id = em.bill_id)
-		join kgst.view_user_member vum on (em.ppsr_id = vum.user_id)
+		left outer join kgst.view_user_member vum on (em.ppsr_id = vum.user_id)
 		join ebs_bp_instance ebi on (em.bill_id = ebi.bill_id)
 		join ebs_bp_step ebs on (ebi.current_step_id = ebs.step_id)
 		where emt.mtng_id = #{mtngId}
@@ -311,7 +311,7 @@
 		from kgst.ebs_master em
 		join kgst.ebs_bp_instance ebi on (em.bill_id = ebi.bill_id)
 		join kgst.ebs_bp_step ebs on (ebi.bp_df_id = ebs.bp_df_id and ebi.current_step_id = ebs.step_id)
-		join kgst.view_user_member vum on (em.ppsr_id = vum.user_id)
+		left outer join kgst.view_user_member vum on (em.ppsr_id = vum.user_id)
 		join kgst.ebs_master_cmt emc on (em.bill_id = emc.bill_id)
 		where 1=1
 		  --and ebi.current_step_id not in ('0','1000','3200','3200','9999')
@@ -347,7 +347,7 @@
 		  , em.ppsl_dt
 		from kgst.ebs_master em
 		join kgst.ebs_bp_instance ebi on (em.bill_id = ebi.bill_id)
-		join kgst.view_user_member vum on (em.ppsr_id = vum.user_id)
+		left outer join kgst.view_user_member vum on (em.ppsr_id = vum.user_id)
 		where 1=1
 		  and ebi.current_step_id in ('1400','1500','1600')
 		<if test="billNo != null and billNo != ''">
@@ -502,7 +502,7 @@
 		from ebs_mtng mt
 		join ebs_mtng_agenda ema on (mt.mtng_id = ema.mtng_id)
 		join ebs_master em on (em.bill_id = ema.bill_id)
-		join kgst.view_user_member vum on (em.ppsr_id = vum.user_id)
+		left outer join kgst.view_user_member vum on (em.ppsr_id = vum.user_id)
 		where 1=1
 		  and mt.mtng_id = #{mtngId}
 		order by ema.ord
@@ -526,7 +526,7 @@
 		from ebs_mtng mt
 		join ebs_mtng_agenda ema on (mt.mtng_id = ema.mtng_id)
 		join ebs_master em on (em.bill_id = ema.bill_id)
-		join kgst.view_user_member vum on (em.ppsr_id = vum.user_id)
+		left outer join kgst.view_user_member vum on (em.ppsr_id = vum.user_id)
 		join ebs_bp_instance ebi on (em.bill_id = ebi.bill_id)
 		where 1=1
 			and mt.mtng_type_cd = '2'
