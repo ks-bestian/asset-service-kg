@@ -56,16 +56,18 @@
             , kgst.fngetlangnm(view.cmit_nm_kg,view.cmit_nm_ru,view.cmit_nm_kg,#{lang}) as cmit_nm
             , view.poly_cd
             , view.poly_nm
+            , view.is_member
         from kgst.view_user_member view
         left join com_code_detail cc on cc.code_id = view.job_cd
         where 1=1
         <if test="deptCd != null and deptCd != ''">
-            AND (view.dept_cd = #{deptCd} OR view.poly_cd = #{deptCd} OR view.cmit_cd = #{deptCd})
+            AND (view.dept_cd = #{deptCd} OR view.poly_cd = #{deptCd})
             or exists (
             select 1 from com_ccof co
             where co.user_id = view.user_id and co.dept_cd = #{deptCd}
             )
         </if>
+        order by reg_dt desc
     </select>
 
 
@@ -227,6 +229,20 @@
         update com_user
         set
             user_password = #{userPassword}
+        where user_id = #{userId}
+    </update>
+
+    <update id="updateCmit" parameterType="java.lang.String">
+        update com_user
+        set
+            dept_cd = null
+        where user_id = #{userId}
+    </update>
+
+    <update id="updateJob" parameterType="java.util.HashMap">
+        update com_user
+        set
+        job_cd = #{jobCd}
         where user_id = #{userId}
     </update>
 

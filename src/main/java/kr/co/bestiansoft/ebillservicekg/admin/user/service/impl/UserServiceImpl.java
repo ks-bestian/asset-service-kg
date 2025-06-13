@@ -119,4 +119,9 @@ public class UserServiceImpl implements UserService {
             userMapper.updatePswd(param);
         }
     }
+
+    @Override
+    public void updateJob(HashMap<String, Object> param) {
+        userMapper.updateJob(param);
+    }
 }

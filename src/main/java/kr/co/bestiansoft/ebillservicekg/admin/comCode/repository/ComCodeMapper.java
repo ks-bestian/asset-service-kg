@@ -19,5 +19,5 @@ public interface ComCodeMapper {
     int updateGrpCode(ComCodeVo comCodeVo);
     int updateComCode(ComCodeDetailVo comCodeDetailVo);
     void deleteGrpCode(Long codeId);
-    void deleteComCode(String codeId);
+    void deleteComCode(String codeId, int grpCode);
 }

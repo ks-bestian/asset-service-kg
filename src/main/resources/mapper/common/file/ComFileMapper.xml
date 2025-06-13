@@ -51,7 +51,7 @@
 		from
 			kgst.com_file
 		where 1=1
-		and file_group_id = #{fileGroupId}
+		and file_id = #{fileGroupId}
 	</select>
 
 	<select id="findByFileId" resultType="kr.co.bestiansoft.ebillservicekg.common.file.vo.ComFileVo">

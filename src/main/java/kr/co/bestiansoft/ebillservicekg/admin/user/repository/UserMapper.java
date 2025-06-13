@@ -21,4 +21,6 @@ public interface UserMapper {
 
     int updateMyInfoMember(UserMemberVo userMemberVo);
     int updateMyInfoUser(UserMemberVo userMemberVo);
+    void updateCmit(String userId);
+    void updateJob(HashMap<String, Object> param);
 }

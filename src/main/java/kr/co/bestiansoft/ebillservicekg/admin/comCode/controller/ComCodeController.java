@@ -81,9 +81,9 @@ public class ComCodeController {
     }
 
     @ApiOperation(value = "하위코드 삭제", notes = "하위코드를 정보를 삭제한다.")
-    @DeleteMapping("/admin/comCode")
-    public ResponseEntity<CommonResponse> deleteComCode(@RequestBody List<String> codeIds) {
-        comCodeService.deleteComCode(codeIds);
+    @DeleteMapping("/admin/comCode/{grpCode}")
+    public ResponseEntity<CommonResponse> deleteComCode(@RequestBody List<String> codeIds, @PathVariable int grpCode) {
+        comCodeService.deleteComCode(codeIds, grpCode);
         return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "OK", "code deleted successfully"), HttpStatus.OK);
     }
 }

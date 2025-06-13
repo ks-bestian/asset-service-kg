@@ -13,5 +13,6 @@ public interface UserService {
     void deleteUser(List<String> seq);
     String resetPswd(HashMap<String, Object> param);
     void updatePswd(HashMap<String, Object> param);
+    void updateJob(HashMap<String, Object> param);
     List<UserVo> getUserByDept(HashMap<String, Object> param);
 }

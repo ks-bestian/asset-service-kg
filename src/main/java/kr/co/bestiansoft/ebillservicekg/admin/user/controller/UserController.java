@@ -71,4 +71,15 @@ public class UserController {
         userService.updatePswd(param);
         return new ResponseEntity<>(new CommonResponse(200, "ok", "updated successfully"), HttpStatus.OK);
     }
+
+
+
+    @ApiOperation(value = "직급 수정", notes = "직급을 수정한다.")
+    @PutMapping("admin/user/job")
+    public ResponseEntity<CommonResponse> updateJob(@RequestBody HashMap<String, Object> param) {
+        userService.updateJob(param);
+        return new ResponseEntity<>(new CommonResponse(200, "ok", "updated successfully"), HttpStatus.OK);
+    }
+
+
 }

@@ -14,4 +14,5 @@ public interface CcofMapper {
     int insertCcofInUser(UserVo userVo);
     int updateCcof(UserVo ccofVo);
     void deleteCcof(String userId);
+    void deleteCmit(String deptCd, String userId);
 }

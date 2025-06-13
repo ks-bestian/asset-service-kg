@@ -76,9 +76,9 @@ public class ComCodeServiceImpl implements ComCodeService {
     }
 
     @Override
-    public void deleteComCode(List<String> codeIds) {
+    public void deleteComCode(List<String> codeIds, int grpCode) {
         for(String codeId : codeIds) {
-            comCodeMapper.deleteComCode(codeId);
+            comCodeMapper.deleteComCode(codeId, grpCode);
         }
     }
 }

@@ -16,5 +16,5 @@ public interface ComCodeService {
     int updateGrpCode(ComCodeVo comCodeVo);
     int updateComCode(ComCodeDetailVo comCodeDetailVo);
     void deleteGrpCode(List<Long> grpCodes);
-    void deleteComCode(List<String> codeIds);
+    void deleteComCode(List<String> codeIds, int grpCode);
 }

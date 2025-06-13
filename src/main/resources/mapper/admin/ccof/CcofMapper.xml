@@ -56,4 +56,9 @@
         delete from com_ccof
         where user_id = #{userId}
     </delete>
+
+    <delete id="deleteCmit" parameterType="java.lang.String">
+        delete from com_ccof
+        where user_id = #{userId} and dept_cd = #{deptCd}
+    </delete>
 </mapper>

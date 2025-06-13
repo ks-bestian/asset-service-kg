@@ -32,6 +32,28 @@
         order by ord
     </select>
 
+    <select id="getCmitList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.dept.vo.DeptVo">
+        select
+              dept_cd
+            , kgst.fngetlangnm(dept_nm1, dept_nm2, dept_nm3, #{lang}) as dept_nm
+            , kgst.fngetlangnm(shrt_nm1, shrt_nm2, shrt_nm3, #{lang}) as shrt_nm
+            , dept_nm1
+            , dept_nm2
+            , dept_nm3
+            , shrt_nm1
+            , shrt_nm2
+            , shrt_nm3
+            , ord
+            , upr_dept_cd
+            , use_yn
+        from com_dept
+        where upr_dept_cd = 'CMT'
+        <if test="deptNm != null and deptNm != ''">
+            and kgst.fngetlangnm(dept_nm1, dept_nm2, dept_nm3, #{lang}) like concat ('%', #{deptNm}, '%')
+        </if>
+        order by ord
+    </select>
+
     <select id="selectDept" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.admin.dept.vo.DeptVo">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.dept.repository.DeptMapper.selectDept */
         select
@@ -49,6 +71,7 @@
             , reg_id --등록자
             , mod_id --수정자
             , mod_dt --수정일자
+            , kgst.fngetlangnm(dept_nm1, dept_nm2, dept_nm3, #{lang}) as dept_nm
         from com_dept
         where dept_cd = #{deptCd}
     </select>

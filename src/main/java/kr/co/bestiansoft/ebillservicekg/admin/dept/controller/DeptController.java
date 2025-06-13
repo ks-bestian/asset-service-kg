@@ -5,7 +5,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import kr.co.bestiansoft.ebillservicekg.admin.dept.service.DeptService;
 import kr.co.bestiansoft.ebillservicekg.admin.dept.vo.DeptVo;
-import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserVo;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -37,8 +36,8 @@ public class DeptController {
 
     @ApiOperation(value = "부서 상세 조회", notes = "부서를 상세 조회한다.")
     @GetMapping("admin/dept/{deptCd}")
-    public ResponseEntity<CommonResponse> getDeptById(@PathVariable String deptCd) {
-        return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "ok", deptService.getComDeptById(deptCd)), HttpStatus.OK);
+    public ResponseEntity<CommonResponse> getDeptById(@PathVariable String deptCd, @RequestParam String lang) {
+        return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "ok", deptService.getComDeptById(deptCd, lang)), HttpStatus.OK);
     }
 
 
@@ -60,6 +59,25 @@ public class DeptController {
         deptService.deleteDept(deptCd);
         return new ResponseEntity<>(new CommonResponse(200, "ok", "Department code deleted successfully."), HttpStatus.OK);
 
+    }
+
+    @ApiOperation(value = "위원회 리스트 조회", notes = "위원회 리스트를 조회한다.")
+    @GetMapping("admin/cmit")
+    public ResponseEntity<CommonResponse> getCmit(@RequestParam HashMap<String, Object> param) {
+        return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "ok", deptService.getCmitList(param)), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "사용자 겸직들 저장", notes = "사용자 겸직을 저장한다.")
+    @PostMapping("admin/ccof/users")
+    public ResponseEntity<CommonResponse> saveUsersCcofs(@RequestBody HashMap<String, Object> params) {
+        return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Cmit created successfully.", deptService.saveUsersCcofs(params)), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "위원회 삭제", notes = "위원회를 삭제한다")
+    @DeleteMapping("admin/ccof/{deptCd}")
+    public ResponseEntity<CommonResponse> deleteCmit(@PathVariable String deptCd, @RequestBody List<String> userIds) {
+        deptService.deleteCmit(deptCd, userIds);
+        return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "apply delete successfully"), HttpStatus.OK);
     }
 
 }

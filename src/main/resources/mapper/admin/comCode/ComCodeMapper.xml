@@ -193,7 +193,7 @@
         where grp_code = #{grpCode}
     </delete>
 
-    <delete id="deleteComCode" parameterType="java.lang.String">
+    <delete id="deleteComCode" parameterType="java.lang.Object">
         /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.comCode.repository.ComCodeMapper.deleteComCode */
         delete from com_code_detail
         WHERE code_id = #{codeId}

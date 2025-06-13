@@ -10,7 +10,8 @@ import java.util.List;
 @Mapper
 public interface DeptMapper {
     List<DeptVo> selectListDept(HashMap<String, Object> param);
-    DeptVo selectDept(String deptCd);
+    List<DeptVo> getCmitList(HashMap<String, Object> param);
+    DeptVo selectDept(String deptCd, String lang);
     int insertDept(DeptVo deptVo);
     int updateDept(DeptVo deptVo);
     void deleteDept(String deptCd);
