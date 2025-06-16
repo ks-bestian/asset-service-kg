@@ -6,10 +6,7 @@ import kr.co.bestiansoft.ebillservicekg.eas.workRequest.vo.WorkRequestVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
@@ -24,9 +21,19 @@ public class WorkRequestController {
         System.out.println(vo.toString());
         return new ResponseEntity<>(new CommonResponse(200, "OK", workRequestService.insertWorkRequest(vo)), HttpStatus.OK);
     }
-    @ApiOperation(value = "getWortRequest", notes = "getWortRequest")
-    @GetMapping("/eas/workRequest")
-    public ResponseEntity<CommonResponse> getWorkRequestList(String docId){
+    @ApiOperation(value = "to RcvId getWortRequest", notes = "to RcvId getWortRequest")
+    @GetMapping("/eas/workRequest/{rcvId}")
+    public ResponseEntity<CommonResponse> toRcvIdGetWorkRequestList(@PathVariable Integer rcvId){
+        return new ResponseEntity<>(new CommonResponse(200, "OK", workRequestService.getWorkRequestList(rcvId)), HttpStatus.OK);
+    }
+    @ApiOperation(value = "to docId getWortRequest", notes = "to docId getWortRequest")
+    @GetMapping("/eas/workRequest/document/{docId}")
+    public ResponseEntity<CommonResponse> toDocIdGetWorkRequestList(@PathVariable String docId){
         return new ResponseEntity<>(new CommonResponse(200, "OK", workRequestService.getWorkRequestList(docId)), HttpStatus.OK);
+    }
+    @ApiOperation(value = "to docId getWortRequest", notes = "to docId getWortRequest")
+    @GetMapping("/eas/workRequest/user/{docId}")
+    public ResponseEntity<CommonResponse> workListAndResponse(@PathVariable String docId){
+        return new ResponseEntity<>(new CommonResponse(200, "OK", workRequestService.getWorkRequestAndResponseList(docId)), HttpStatus.OK);
     }
 }

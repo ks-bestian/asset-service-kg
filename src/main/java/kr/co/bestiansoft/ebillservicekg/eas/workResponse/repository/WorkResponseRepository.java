@@ -3,6 +3,7 @@ package kr.co.bestiansoft.ebillservicekg.eas.workResponse.repository;
 import kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.UpdateWorkResponseVo;
 import kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.WorkResponseVo;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -11,5 +12,6 @@ public interface WorkResponseRepository {
     int insertWorkResponse (WorkResponseVo vo);
     int updateWorkContents (UpdateWorkResponseVo vo);
     int deleteWorkRequestId(String workReqId);
-    List<WorkResponseVo> getWorkResponse(int workReqId);
+    List<WorkResponseVo> getWorkResponse(@Param("rcvId") Integer rcvId, @Param("docId") String docId);
+    List<WorkResponseVo> getWorkResponseByUserId(Integer rcvId, String docId);
 }

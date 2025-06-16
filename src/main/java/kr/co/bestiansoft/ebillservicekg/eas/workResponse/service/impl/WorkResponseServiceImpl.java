@@ -1,6 +1,7 @@
 package kr.co.bestiansoft.ebillservicekg.eas.workResponse.service.impl;
 
 
+import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.eas.workResponse.repository.WorkResponseRepository;
 import kr.co.bestiansoft.ebillservicekg.eas.workResponse.service.WorkResponseService;
 import kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.UpdateWorkResponseVo;
@@ -48,8 +49,15 @@ public class WorkResponseServiceImpl implements WorkResponseService {
         return workResponseRepository.deleteWorkRequestId(workReqId);
     }
 
+
     @Override
-    public List<WorkResponseVo> getWorkResponse(int workReqId) {
-        return workResponseRepository.getWorkResponse(workReqId);
+    public List<WorkResponseVo> getWorkResponse(int rcvId) {
+        return workResponseRepository.getWorkResponse(rcvId, null);
+    }
+    public List<WorkResponseVo> getWorkResponse(String docId) {
+        return workResponseRepository.getWorkResponse(null, docId);
+    }
+    public List<WorkResponseVo> getWorkResponseByUserId(int rcvId) {
+        return workResponseRepository.getWorkResponseByUserId(rcvId, new SecurityInfoUtil().getAccountId());
     }
 }

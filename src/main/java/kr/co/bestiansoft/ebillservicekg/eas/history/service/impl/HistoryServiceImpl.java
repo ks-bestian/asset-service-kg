@@ -2,6 +2,7 @@ package kr.co.bestiansoft.ebillservicekg.eas.history.service.impl;
 
 import kr.co.bestiansoft.ebillservicekg.admin.comCode.service.ComCodeService;
 import kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeDetailVo;
+import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.eas.history.repository.HistoryRepository;
 import kr.co.bestiansoft.ebillservicekg.eas.history.service.HistoryService;
 import kr.co.bestiansoft.ebillservicekg.eas.history.vo.HistoryVo;
@@ -49,6 +50,10 @@ public class HistoryServiceImpl implements HistoryService {
     @Override
     public List<HistoryVo> getHistory(String docId) {
         return historyRepository.getHistory(docId);
+    }
+
+    public List<HistoryVo> getHistoryByUserId(String docId){
+        return historyRepository.getHistoryByUserId(docId, new SecurityInfoUtil().getAccountId());
     }
 
 }

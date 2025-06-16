@@ -75,4 +75,8 @@ public class ApprovalServiceImpl implements ApprovalService {
         return approvalRepository.getApproval(apvlId);
     }
 
+    public ApprovalVo getApprovalsByUserId(String docId){
+        return approvalRepository.getApprovalsByUserId(new SecurityInfoUtil().getAccountId(), docId);
+    }
+
 }

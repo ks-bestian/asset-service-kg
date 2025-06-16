@@ -17,4 +17,5 @@ public interface ApprovalRepository {
     List<ApprovalLIstDto> getApprovalList(SearchDocumentVo vo);
     int countApprovalList(String userId);
     ApprovalVo getApproval(int apvlId);
+    ApprovalVo getApprovalsByUserId(String userId, String docId);
 }

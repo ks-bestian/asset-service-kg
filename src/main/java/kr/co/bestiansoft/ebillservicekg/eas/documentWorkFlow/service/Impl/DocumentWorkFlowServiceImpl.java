@@ -18,6 +18,8 @@ import kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.service.ReceivedInfoSer
 import kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.vo.ReceivedInfoVo;
 import kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.vo.UpdateReceivedInfoVo;
 import kr.co.bestiansoft.ebillservicekg.eas.workRequest.service.impl.WorkRequestServiceImpl;
+import kr.co.bestiansoft.ebillservicekg.eas.workRequest.vo.WorkRequestAndResponseVo;
+import kr.co.bestiansoft.ebillservicekg.eas.workRequest.vo.WorkRequestVo;
 import kr.co.bestiansoft.ebillservicekg.eas.workResponse.service.impl.WorkResponseServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -158,7 +160,7 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
         return result;
 
     }
-
+    @Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
     @Override
     public void approve(UpdateApprovalVo vo) {
         List<ApprovalVo> approvalVoList = approvalService.getApprovals(vo.getDocId());
@@ -221,6 +223,7 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
         historyService.insertHistory(historyVo);
     }
     // DMS04
+    @Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
     public void approveReject(UpdateApprovalVo vo){
         UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
 
@@ -242,20 +245,138 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                 .build();
         historyService.insertHistory(historyVo);
     }
+    @Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
+    public void reception(WorkRequestAndResponseVo vo){
+        if(vo.getDocTypeCd() == null){}
+        else if(vo.getDocTypeCd().equals("DMT01")){
+            //답변용
 
-    public void reception(){
-        //type dms01
+            // 이행요청 추가
+            vo.setRegDt(LocalDateTime.now());
+            vo.setRegId(new SecurityInfoUtil().getAccountId());
+            vo.setWorkStatus("WS01");
+            workRequestService.insertWorkRequest(vo.toRequestVo());
+            // 이행자 추가
+            vo.getWorkResponseVos().forEach(workResponseVo -> {
+                UserMemberVo loginUser = userService.getUserMemberDetail(workResponseVo.getUserId());
+                workResponseVo.setDeptCd(loginUser.getDeptCd());
+                workResponseVo.setJobCd(loginUser.getJobCd());
+                workResponseVo.setUserNm(loginUser.getUserNm());
 
-        //type dms02
+                workResponseService.insertWorkResponse(workResponseVo);
+            });
+            // receivedInfo 상태 변경, 주 이행자 추가
+            UpdateReceivedInfoVo updateReceivedInfoVo = UpdateReceivedInfoVo.builder()
+                    .rcvId(vo.getRcvId())
+                    .workerId(vo.getWorkerId())
+                    .rcpDtm(LocalDateTime.now())
+                    .rcvStatus("RS03")
+                    .build();
+            receivedInfoService.updateReceivedInfo(updateReceivedInfoVo);
+            // document status 변경
+            documentService.updateStatusOfficialDocument(vo.getDocId() , "DMS03");
+            // history
+            UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
+            HistoryVo historyVo = HistoryVo.builder()
+                    .userId(loginUser.getUserId())
+                    .docId(vo.getDocId())
+                    .actType("RS03")
+                    .actDtm(LocalDateTime.now())
+                    .actDetail(historyService.getActionDetail("RS03",loginUser.getUserNm()))
+                    .userNm(loginUser.getUserNm())
+                    .build();
+            historyService.insertHistory(historyVo);
 
+
+        }else if(vo.getDocTypeCd().equals("DMT02")){
+            // 확인용 - 종료
+            // receivedInfo Update
+            UpdateReceivedInfoVo updateReceivedInfoVo = UpdateReceivedInfoVo.builder()
+                    .rcvId(vo.getRcvId())
+                    .rcpDtm(LocalDateTime.now())
+                    .rcvStatus("RS05")
+                    .build();
+            receivedInfoService.updateReceivedInfo(updateReceivedInfoVo);
+            endDocument(vo.getDocId());
+        }else if(vo.getDocTypeCd().equals("DMT03")){
+            //서명용 - 서명
+            UpdateReceivedInfoVo updateReceivedInfoVo = UpdateReceivedInfoVo.builder()
+                    .rcvId(vo.getRcvId())
+                    .rcpDtm(LocalDateTime.now())
+                    .hashFileId(vo.getHashFileId())
+                    .rcvStatus("RS05")
+                    .build();
+            receivedInfoService.updateReceivedInfo(updateReceivedInfoVo);
+
+            UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
+            HistoryVo historyVo = HistoryVo.builder()
+                    .userId(loginUser.getUserId())
+                    .docId(vo.getDocId())
+                    .actType("RS05")
+                    .actDtm(LocalDateTime.now())
+                    .actDetail(historyService.getActionDetail("RS05",loginUser.getUserNm()))
+                    .userNm(loginUser.getUserNm())
+                    .build();
+            historyService.insertHistory(historyVo);
+
+            endDocument(vo.getDocId());
+            // 서명하는 거 하나 endDocument;
+        }
     }
-
-    public void rejectReception(){
-
+    @Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
+    public void rejectReception(UpdateReceivedInfoVo vo){
+        //receivedInfo update
+        vo.setRjctDtm(LocalDateTime.now());
+        vo.setRcvStatus("RS04");
+        receivedInfoService.updateReceivedInfo(vo);
+        // documentStatus update
+        documentService.updateStatusOfficialDocument(vo.getDocId(), "DMS04");
+        //insert history
+        UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
+        HistoryVo historyVo = HistoryVo.builder()
+                .userId(loginUser.getUserId())
+                .docId(vo.getDocId())
+                .actType("RS04")
+                .actDtm(LocalDateTime.now())
+                .actDetail(historyService.getActionDetail("RS04",loginUser.getUserNm()))
+                .userNm(loginUser.getUserNm())
+                .build();
+        historyService.insertHistory(historyVo);
     }
-
-    public void endDocument(){
-
+    public void endDocument(String docId){
+       if(isEnd(docId)){
+           UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
+           HistoryVo historyVo = HistoryVo.builder()
+                   .userId(loginUser.getUserId())
+                   .docId(docId)
+                   .actType("DMS05")
+                   .actDtm(LocalDateTime.now())
+                   .actDetail(historyService.getActionDetail("DMS05",loginUser.getUserNm()))
+                   .userNm(loginUser.getUserNm())
+                   .build();
+           historyService.insertHistory(historyVo);
+            documentService.updateStatusOfficialDocument(docId, "DMS05");
+       }else{
+           UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
+           HistoryVo historyVo = HistoryVo.builder()
+                   .userId(loginUser.getUserId())
+                   .docId(docId)
+                   .actType("DMS03")
+                   .actDtm(LocalDateTime.now())
+                   .actDetail(historyService.getActionDetail("DMS03",loginUser.getUserNm()))
+                   .userNm(loginUser.getUserNm())
+                   .build();
+           historyService.insertHistory(historyVo);
+           documentService.updateStatusOfficialDocument(docId, "DMS03");
+       }
+    }
+    public boolean isEnd(String docId){
+        boolean result = true;
+        List<ReceivedInfoVo>receivedInfo = receivedInfoService.getReceivedInfo(docId);
+        for(ReceivedInfoVo rcvInfoVo : receivedInfo){
+            if(!rcvInfoVo.getRcvStatus().equals("RS05")) result = false;
+        }
+        return result;
     }
     @Override
     public int updateReadDateTime(int rcvId) {

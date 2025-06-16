@@ -9,5 +9,7 @@ public interface WorkResponseService {
     int insertWorkResponse(WorkResponseVo vo);
     int updateWorkResponse(UpdateWorkResponseVo vo);
     int deleteWorkRequestId(String workReqId);
-    List<WorkResponseVo> getWorkResponse(int workReqId);
+    List<WorkResponseVo> getWorkResponse(int rcvId);
+    List<WorkResponseVo> getWorkResponse(String docId);
+    List<WorkResponseVo> getWorkResponseByUserId(int rcvId);
 }

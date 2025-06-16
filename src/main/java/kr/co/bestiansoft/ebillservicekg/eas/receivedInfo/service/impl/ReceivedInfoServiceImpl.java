@@ -1,5 +1,8 @@
 package kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.service.impl;
 
+import kr.co.bestiansoft.ebillservicekg.admin.user.service.UserService;
+import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo;
+import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.repository.ReceivedInfoRepository;
 import kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.service.ReceivedInfoService;
 import kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.vo.ReceivedInfoVo;
@@ -16,6 +19,7 @@ import java.util.List;
 public class ReceivedInfoServiceImpl implements ReceivedInfoService {
 
     private final ReceivedInfoRepository receivedInfoRepository;
+    private final UserService userService;
 
     /**
      * Inserts the received information into the repository.
@@ -49,7 +53,17 @@ public class ReceivedInfoServiceImpl implements ReceivedInfoService {
     public List<ReceivedInfoVo> getReceivedInfo(String docId) {
         return receivedInfoRepository.getReceivedInfo(docId);
     }
-    public boolean isReceipt(String docId) {
+    public boolean isReceipt(int docId) {
         return receivedInfoRepository.isReceipt(docId);
+    }
+
+    @Override
+    public UserMemberVo getMainWorkerInfo(int rcvId) {
+        return userService.getUserMemberDetail(receivedInfoRepository.getMainWorker(rcvId));
+    }
+
+    @Override
+    public ReceivedInfoVo getReceivedInfoByUserId(String docId) {
+        return receivedInfoRepository.getReceivedInfoByUserId(docId, new SecurityInfoUtil().getAccountId());
     }
 }

@@ -73,4 +73,14 @@ public class OfficialDocumentController {
     public ResponseEntity<CommonResponse> getMyDocument(SearchDocumentVo vo){
         return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.getMyDocumentList(vo)), HttpStatus.OK);
     }
+    @ApiOperation(value = "get work document list", notes="get work document list")
+    @GetMapping("/eas/document/work")
+    public ResponseEntity<CommonResponse> getWorkDocument(SearchDocumentVo vo){
+        return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.getWorkList(vo)), HttpStatus.OK);
+    }
+    @ApiOperation(value = "get processed document list", notes="get processed document list")
+    @GetMapping("/eas/document/processed")
+    public ResponseEntity<CommonResponse> getProcessedDocument(SearchDocumentVo vo){
+        return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.getProcessedList(vo)), HttpStatus.OK);
+    }
 }

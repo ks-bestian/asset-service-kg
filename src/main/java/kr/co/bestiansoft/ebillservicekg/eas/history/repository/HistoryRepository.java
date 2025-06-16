@@ -9,4 +9,5 @@ import java.util.List;
 public interface HistoryRepository {
     int insertHistory (HistoryVo vo);
     List<HistoryVo> getHistory (String docId);
+    List<HistoryVo> getHistoryByUserId (String docId, String userId);
 }

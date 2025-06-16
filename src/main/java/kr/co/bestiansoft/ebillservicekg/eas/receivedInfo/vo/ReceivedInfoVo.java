@@ -21,9 +21,11 @@ public class ReceivedInfoVo {
     private LocalDateTime rjctDtm;
     private String rjctCn;
     private int rcvOrd;
+    private String workerId;
+    private String hashFileId;
 
     @Builder
-    public ReceivedInfoVo(int rcvId, String docId, String userId, String userNm, String deptCd, String extOrgnCd, String rcvStatus, LocalDateTime rcvDtm, LocalDateTime checkDtm, LocalDateTime rcpDtm, LocalDateTime rjctDtm, String rjctCn, int rcvOrd) {
+    public ReceivedInfoVo(int rcvId, String docId, String userId, String userNm, String deptCd, String extOrgnCd, String rcvStatus, LocalDateTime rcvDtm, LocalDateTime checkDtm, LocalDateTime rcpDtm, LocalDateTime rjctDtm, String rjctCn, int rcvOrd, String workerId, String hashFileId) {
         this.rcvId = rcvId;
         this.docId = docId;
         this.userId = userId;
@@ -37,5 +39,7 @@ public class ReceivedInfoVo {
         this.rjctDtm = rjctDtm;
         this.rjctCn = rjctCn;
         this.rcvOrd = rcvOrd;
+        this.workerId = workerId;
+        this.hashFileId = hashFileId;
     }
 }

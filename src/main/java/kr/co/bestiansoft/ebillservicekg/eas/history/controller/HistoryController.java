@@ -30,4 +30,10 @@ public class HistoryController {
     public ResponseEntity<CommonResponse> getHistory(@PathVariable String docId){
         return  new ResponseEntity<>(new CommonResponse(200, "OK", historyService.getHistory(docId)), HttpStatus.OK);
     }
+    @ApiOperation(value="getHistoryByUserIdAndDocument" , notes = "get history by userId and document id ")
+    @GetMapping("/eas/history/user/{docId}")
+    public ResponseEntity<CommonResponse> getHistoryByUserId(@PathVariable String docId){
+        return  new ResponseEntity<>(new CommonResponse(200, "OK", historyService.getHistoryByUserId(docId)), HttpStatus.OK);
+    }
+
 }

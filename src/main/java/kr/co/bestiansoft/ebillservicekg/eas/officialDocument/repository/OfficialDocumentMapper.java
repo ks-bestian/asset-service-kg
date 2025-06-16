@@ -19,4 +19,6 @@ public interface OfficialDocumentMapper {
     List<DocumentListDto> getRejectDocumentList(SearchDocumentVo vo);
     int countRejectDocument(String userId);
     List<DocumentListDto> getMyDocumentList(SearchDocumentVo vo);
+    List<DocumentListDto> getWorkList(SearchDocumentVo vo);
+    List<DocumentListDto> getProcessedList(SearchDocumentVo vo);
 }

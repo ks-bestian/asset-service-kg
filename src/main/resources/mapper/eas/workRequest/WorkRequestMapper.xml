@@ -5,11 +5,11 @@
 
     <insert id="insertWorkRequest" parameterType="kr.co.bestiansoft.ebillservicekg.eas.workRequest.vo.WorkRequestVo">
         INSERT INTO kgst.eas_work_request
-        (doc_id, work_cn, tmlmt_yn, tmlmt_dtm, info_yn, work_cycle_cd, reg_id, reg_dt, work_status, work_req_id)
-        VALUES(#{docId}, #{workCn}, #{tmlmtYn}, #{tmlmtDtm}, #{infoYn}, #{workCycleCd}, #{regId}, #{regDt}, #{workStatus}, #{workReqId});
+        (rcv_id, work_cn, tmlmt_yn, tmlmt_dtm, info_yn, work_cycle_cd, reg_id, reg_dt, work_status, doc_id)
+        VALUES(#{rcvId}, #{workCn}, #{tmlmtYn}, #{tmlmtDtm}, #{infoYn}, #{workCycleCd}, #{regId}, #{regDt}, #{workStatus}, #{docId});
     </insert>
     <delete id="deleteWorkRequest">
-        delete kgst.eas_work_request
+        delete from eas_work_request
          where work_req_id = #{workReqId}
     </delete>
     <update id="updateWorkStatus">
@@ -18,9 +18,25 @@
          where work_req_id = #{workReqId}
     </update>
     <select id="getWorkRequestList" resultType="kr.co.bestiansoft.ebillservicekg.eas.workRequest.vo.WorkRequestVo">
-        select work_req_id, doc_id, work_cn, tmlmt_yn, tmlmt_dtm, info_yn, work_cycle_cd, reg_id, reg_dt, work_status
-          from kgst.eas_work_request
-         where doc_id = #{docId}
+        select work_req_id, doc_id, work_cn, tmlmt_yn, tmlmt_dtm, info_yn, work_cycle_cd, work_status, reg_id, reg_dt, rcv_id
+        from eas_work_request
+        <where>
+            <choose>
+                <when test="rcvId != null and rcvId != 0">
+                    rcv_id = #{rcvId}
+                </when>
+                <when test="docId != null and docId != ''">
+                    doc_id = #{docId}
+                </when>
+            </choose>
+        </where>
+        order by reg_dt desc
     </select>
-
+    <select id="getWorkRequestListByUserId" resultType="kr.co.bestiansoft.ebillservicekg.eas.workRequest.vo.WorkRequestVo">
+        select req.work_req_id, work_cn, tmlmt_yn, tmlmt_dtm, info_yn, work_cycle_cd, reg_id, reg_dt, work_status, rcv_id, doc_id
+          from eas_work_request req , eas_work_response res
+         where req.work_req_id = res.work_req_id
+           and req.doc_id = #{docId}
+           and res.user_id = #{userId}
+    </select>
 </mapper>

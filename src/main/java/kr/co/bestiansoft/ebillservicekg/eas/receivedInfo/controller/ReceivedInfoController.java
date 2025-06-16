@@ -1,9 +1,11 @@
 package kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.controller;
 
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
+import kr.co.bestiansoft.ebillservicekg.eas.documentWorkFlow.service.DocumentWorkFlowService;
 import kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.service.ReceivedInfoService;
 import kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.vo.ReceivedInfoVo;
 import kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.vo.UpdateReceivedInfoVo;
+import kr.co.bestiansoft.ebillservicekg.eas.workRequest.vo.WorkRequestAndResponseVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
@@ -15,7 +17,8 @@ import io.swagger.annotations.ApiOperation;
 @RequiredArgsConstructor
 public class ReceivedInfoController {
 
-    final ReceivedInfoService infoService;
+    private final ReceivedInfoService infoService;
+    private final DocumentWorkFlowService documentWorkFlowService;
 
     @ApiOperation(value="insertReceivedInfo", notes = "insertReceivedInfo")
     @PostMapping("/eas/receivedInfo")
@@ -35,8 +38,31 @@ public class ReceivedInfoController {
         return new ResponseEntity<>(new CommonResponse(200, "OK", infoService.getReceivedInfo(docId)), HttpStatus.OK);
     }
     @ApiOperation(value="get is receipt", notes = "get is receipt")
-    @GetMapping("/eas/isReceipt/{docId}")
-    public ResponseEntity<CommonResponse> getIsReceipt(@PathVariable String docId){
-        return new ResponseEntity<>(new CommonResponse(200, "OK", infoService.isReceipt(docId)), HttpStatus.OK);
+    @GetMapping("/eas/isReceipt/{rcvId}")
+    public ResponseEntity<CommonResponse> getIsReceipt(@PathVariable int rcvId){
+        return new ResponseEntity<>(new CommonResponse(200, "OK", infoService.isReceipt(rcvId)), HttpStatus.OK);
     }
+    @ApiOperation(value = "reception" , notes = "reception")
+    @PutMapping("/eas/reception")
+    public ResponseEntity<CommonResponse> reception(@RequestBody WorkRequestAndResponseVo vo) {
+        documentWorkFlowService.reception(vo);
+        return new ResponseEntity<>(new CommonResponse(200, "OK", vo.getDocId() ),HttpStatus.OK);
+    }
+    @ApiOperation(value = "get Main worker", notes = "get Main Worker")
+    @GetMapping("/eas/receivedInfo/worker/{rcvId}")
+    public ResponseEntity<CommonResponse> getMainWorker(@PathVariable int rcvId) {
+        return new ResponseEntity<>(new CommonResponse(200, "OK",infoService.getMainWorkerInfo(rcvId)  ),HttpStatus.OK);
+    }
+    @ApiOperation(value="reject", notes = "reject")
+    @PutMapping("/eas/reject")
+    public ResponseEntity<CommonResponse> reject (@RequestBody UpdateReceivedInfoVo vo) {
+        documentWorkFlowService.rejectReception(vo);
+        return new ResponseEntity<>(new CommonResponse(200, "OK", vo.getRcvId()), HttpStatus.OK);
+    }
+    @ApiOperation(value="get ReceivedInfo by userId", notes = "get ReceivedInfo by userId")
+    @GetMapping("/eas/receivedInfo/user/{docId}")
+    public ResponseEntity<CommonResponse> getReceivedInfoByUserId(@PathVariable String docId){
+        return  new ResponseEntity<>(new CommonResponse(200, "OK",infoService.getReceivedInfoByUserId(docId)), HttpStatus.OK);
+    }
+
 }

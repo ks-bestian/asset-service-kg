@@ -62,4 +62,10 @@ public class ApprovalController {
         documentWorkFlowService.approveReject(vo);
         return new ResponseEntity<>(new CommonResponse(200, "OK", vo.getApvlId() ),HttpStatus.OK);
     }
+
+    @ApiOperation(value = "get approvals by docId", notes = "get approvals by docId")
+    @GetMapping("/eas/approval/user/{docId}")
+    public ResponseEntity<CommonResponse> getApprovalsByUserId(@PathVariable String docId) {
+        return new ResponseEntity<>(new CommonResponse(200, "OK", approvalService.getApprovalsByUserId(docId)),HttpStatus.OK);
+    }
 }

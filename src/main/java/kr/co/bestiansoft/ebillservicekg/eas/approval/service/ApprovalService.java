@@ -16,4 +16,5 @@ public interface ApprovalService {
     List<ApprovalLIstDto> getApprovalList(SearchDocumentVo vo);
     int countApprovalList();
     ApprovalVo getApproval(int apvlId);
+    ApprovalVo getApprovalsByUserId(String docId);
 }

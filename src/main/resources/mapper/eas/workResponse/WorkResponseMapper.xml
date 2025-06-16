@@ -5,8 +5,8 @@
 
     <insert id="insertWorkResponse" parameterType="kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.WorkResponseVo">
         INSERT INTO kgst.eas_work_response
-        (work_req_id, user_id, dept_cd, job_cd, check_dtm, rspns_dtm, rspns_cn, file_id, rspns_id)
-        VALUES(#{workReqId}, #{userId}, #{deptCd}, #{jobCd}, #{checkDtm}, #{rspnsDtm}, #{rspnsCn}, #{fileId}, #{rspnsId});
+        (work_req_id, user_id, dept_cd, job_cd, check_dtm, rspns_dtm, rspns_cn, file_id, file_nm)
+        VALUES(#{workReqId}, #{userId}, #{deptCd}, #{jobCd}, #{checkDtm}, #{rspnsDtm}, #{rspnsCn}, #{fileId}, #{fileNm});
     </insert>
     <update id="updateWorkContents" parameterType="kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.UpdateWorkResponseVo">
         update kgst.eas_work_response
@@ -19,12 +19,30 @@
         where rspns_id = #{rspnsId}
     </update>
     <delete id="deleteWorkRequestId">
-        delete kgst.eas_work_response
+        delete from kgst.eas_work_response
          where work_req_id =#{workReqId}
     </delete>
     <select id="getWorkResponse" resultType="kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.WorkResponseVo">
-        select rspns_id, work_req_id, user_id, dept_cd, job_cd, check_dtm, rspns_dtm, rspns_cn, file_id, user_nm
-          from eas_work_response
-         where work_req_id =#{workReqId}
+        select res.rspns_id, res.work_req_id, user_id, dept_cd, job_cd, check_dtm, rspns_dtm, rspns_cn, file_id, user_nm, file_nm, rcv_dtm
+        from eas_work_response res, eas_work_request req
+        where res.work_req_id = req.work_req_id
+        <choose>
+            <when test="rcvId != null and rcvId != 0">
+                and req.rcv_id = #{rcvId}
+            </when>
+            <when test="docId != null and docId != ''">
+                and req.doc_id = #{docId}
+            </when>
+        </choose>
+        order by req.work_req_id desc
     </select>
+    <select id ="getWorkResponseByUserId" resultType="kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.WorkResponseVo">
+        select res.rspns_id, res.work_req_id, user_id, dept_cd, job_cd, check_dtm, rspns_dtm, rspns_cn, file_id, user_nm, file_nm, rcv_dtm
+          from eas_work_response res, eas_work_request req
+         where res.work_req_id = req.work_req_id
+           and req.rcv_id = #{rcvId}
+           and res.user_id = #{userId}
+         order by req.work_req_id desc
+    </select>
+
 </mapper>

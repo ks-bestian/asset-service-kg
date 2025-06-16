@@ -11,5 +11,7 @@ public interface ReceivedInfoRepository {
     int insertReceivedInfo(ReceivedInfoVo vo);
     int updateReceivedInfo(UpdateReceivedInfoVo vo);
     List<ReceivedInfoVo> getReceivedInfo(String docId);
-    boolean isReceipt(String docId);
+    boolean isReceipt(int rcvId);
+    String getMainWorker(int rcvId);
+    ReceivedInfoVo getReceivedInfoByUserId(String docId, String userId);
 }

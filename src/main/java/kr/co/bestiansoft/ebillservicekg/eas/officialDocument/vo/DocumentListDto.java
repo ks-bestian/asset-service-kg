@@ -20,4 +20,6 @@ public class DocumentListDto {
     LocalDateTime rcvDtm;
     LocalDateTime checkDtm;
     String rcvId;
+    int id;
+    String status;
 }

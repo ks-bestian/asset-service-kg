@@ -1,5 +1,6 @@
 package kr.co.bestiansoft.ebillservicekg.eas.workRequest.service.impl;
 
+import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.eas.workRequest.repository.WorkRequestRepository;
 import kr.co.bestiansoft.ebillservicekg.eas.workRequest.service.WorkRequestService;
 import kr.co.bestiansoft.ebillservicekg.eas.workRequest.vo.WorkRequestAndResponseVo;
@@ -57,17 +58,14 @@ public class WorkRequestServiceImpl implements WorkRequestService {
 
 
     /**
-     * Retrieves a list of work requests associated with the specified document ID,
-     * and enriches each work request with its corresponding responses.
+     * Retrieves a list of work requests based on the specified receiver ID.
      *
-     * @param docId the document ID used to filter work requests
-     * @return a list of WorkRequestAndResponseVo objects, where each object contains
-     *         details of the work request and its associated responses
+     * @param rcvId the unique identifier of the receiver whose work requests are to be fetched
+     * @return a list of WorkRequestVo objects representing the work requests associated with the given receiver ID
      */
     @Override
-    public List<WorkRequestAndResponseVo> getWorkRequestList(String docId) {
-        return workRequestRepository.getWorkRequestList(docId)
-                .stream()
+    public List<WorkRequestAndResponseVo> getWorkRequestList(int rcvId) {
+        return workRequestRepository.getWorkRequestList(rcvId, null).stream()
                 .map(request -> {
                     List<WorkResponseVo> responses = workResponseService.getWorkResponse(request.getWorkReqId());
                     return new WorkRequestAndResponseVo().from(request, responses);
@@ -75,4 +73,26 @@ public class WorkRequestServiceImpl implements WorkRequestService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<WorkRequestAndResponseVo> getWorkRequestList(String docId) {
+        return workRequestRepository.getWorkRequestList(null, docId).stream()
+                .map(request -> {
+                    List<WorkResponseVo> responses = workResponseService.getWorkResponse(request.getWorkReqId());
+                    return new WorkRequestAndResponseVo().from(request, responses);
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public WorkRequestAndResponseVo getWorkRequestAndResponseList(String docId) {
+        WorkRequestAndResponseVo workRequestAndResponseVo = new WorkRequestAndResponseVo();
+
+        WorkRequestVo workRequestVo = workRequestRepository.getWorkRequestListByUserId(docId, new SecurityInfoUtil().getAccountId());
+        if(workRequestVo != null){
+            workRequestAndResponseVo.from(workRequestVo,workResponseService.getWorkResponseByUserId(workRequestVo.getRcvId()));
+            return workRequestAndResponseVo;
+        }else{
+            return null;
+        }
+    }
 }

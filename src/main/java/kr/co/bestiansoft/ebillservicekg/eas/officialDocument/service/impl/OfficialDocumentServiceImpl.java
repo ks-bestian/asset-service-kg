@@ -141,4 +141,16 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
         vo.setUserId(new SecurityInfoUtil().getAccountId());
         return officialDocumentMapper.getMyDocumentList(vo);
     }
+
+    @Override
+    public List<DocumentListDto> getWorkList(SearchDocumentVo vo) {
+        vo.setUserId(new SecurityInfoUtil().getAccountId());
+        return officialDocumentMapper.getWorkList(vo);
+    }
+
+    @Override
+    public List<DocumentListDto> getProcessedList(SearchDocumentVo vo) {
+        vo.setUserId(new SecurityInfoUtil().getAccountId());
+        return officialDocumentMapper.getProcessedList(vo);
+    }
 }

@@ -61,4 +61,11 @@
           from eas_approval
          where apvl_id =#{apvlId}
     </select>
+    <select id="getApprovalsByUserId" resultType="kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalVo">
+        select apvl_id, doc_id, user_id, user_nm, dept_cd, job_cd, apvl_ord, res_dtm, rcv_dtm, check_dtm, apvl_file_id, res_opinion, apvl_status_cd
+          from kgst.eas_approval
+         where doc_id =#{docId}
+           and user_id = #{userId}
+         order by apvl_ord
+    </select>
 </mapper>
