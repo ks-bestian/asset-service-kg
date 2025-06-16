@@ -67,16 +67,20 @@ public class DeptServiceImpl implements DeptService {
     @Override
     public DeptVo saveUsersCcofs(HashMap<String, Object> params) {
         List<String> userIds = (List<String>) params.get("userList");
+        List<String> deptCds = (List<String>) params.get("deptList");
+
 
         int ord = 1;
         for(String userId : userIds) {
-            UserVo userVo = new UserVo();
-            userVo.setDeptCd((String)params.get("deptCd"));
-            userVo.setUserId(userId);
-            userVo.setOrd(ord);
+            for (String deptCd : deptCds) {
+                UserVo userVo = new UserVo();
+                userVo.setDeptCd(deptCd);
+                userVo.setUserId(userId);
+                userVo.setOrd(ord);
 
-            ccofMapper.insertCcofInUser(userVo);
-            ord++;
+                ccofMapper.insertCcofInUser(userVo);
+                ord++;
+            }
         }
 
         return null;

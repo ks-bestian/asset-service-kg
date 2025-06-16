@@ -4,6 +4,7 @@ import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class MemberVo extends ComDefaultVO {
@@ -25,4 +26,5 @@ public class MemberVo extends ComDefaultVO {
     private String docMgrYn;
     private String deptNm;
     private String userPassword;
+    private List<String> cmitList;
 }

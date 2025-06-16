@@ -62,6 +62,7 @@ public class DeptHierarchy {
         ObjectNode jsonNode = mapper.createObjectNode();
         jsonNode.put("key", deptVo.getDeptCd());
         jsonNode.put("label", deptVo.getDeptNm());
+        jsonNode.put("uprCd", deptVo.getUprDeptCd());
 
         ArrayNode childrenNode = mapper.createArrayNode();
         for (DeptVo child : deptVo.getChildren()) {
