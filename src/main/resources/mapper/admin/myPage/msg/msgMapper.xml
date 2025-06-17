@@ -130,71 +130,42 @@
         where rcv_id = #{rcvId} and msg_group_id = #{msgGroupId}
     </update>
 
-
     <select id="selectUserMember" parameterType="kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo">
         SELECT
-              user_id
-            , user_nm
-            , STRING_AGG(dept_nm, ',  ') AS dept_nm
-            , cmit_nm
-            , poly_nm
-            , is_member
-        FROM (
-            SELECT
-              user_id
-            , kgst.fngetlangnm(user_nm_kg, user_nm_ru, user_nm_kg, #{lang}) as user_nm
-            , (CASE
-                WHEN is_member = 'Y' THEN kgst.fngetlangnm(cmit_nm_kg, cmit_nm_ru, cmit_nm_ko, #{lang})
-                ELSE kgst.fngetlangnm(dept_nm_kg, dept_nm_ru, dept_nm_ko, #{lang})
-              END) AS dept_nm
-            , kgst.fngetlangnm(cmit_nm_kg, cmit_nm_ru, cmit_nm_ko, #{lang}) as cmit_nm
-            , poly_nm
-            , is_member
-            FROM view_user_member
-            where msg_rcv_yn is distinct from 'N'
-            <if test="selectTab != null and selectTab != ''">
-                <choose>
-                    <when test="selectTab == 'cmit'">
-                        and (is_member = 'Y' and cmit_cd like concat ('%', #{cmitCd}, '%')) or (is_member = 'N' and dept_cd like 'CMT%' and dept_cd like concat('%', #{cmitCd}, '%') and dept_cd not in ('CMT'))
-                    </when>
-                    <when test="selectTab == 'member' and polyCd != null and polyCd != ''">
-                        and poly_cd = #{polyCd}
-                    </when>
-                    <when test="selectTab == 'user' and deptCd != null and deptCd != ''">
-                        and dept_cd = #{deptCd}
-                    </when>
-                </choose>
-            </if>
-            UNION ALL
-             SELECT
-              cc.user_id
-            , kgst.fngetlangnm(cu.user_nm_kg, cu.user_nm_ru, cu.user_nm_kg, #{lang}) as user_nm
-            , STRING_AGG(kgst.fngetlangnm(cd.dept_nm1, cd.dept_nm2, cd.dept_nm3, #{lang}), ',') AS dept_nm
-            , '' as cmit_nm
-            , '' as poly_nm
-            , 'N' as is_member
-            FROM com_ccof cc
-            INNER JOIN com_user cu ON cu.user_id = cc.user_id
-            INNER JOIN com_dept cd ON cd.dept_cd = cc.dept_cd
-            where cu.msg_rcv_yn is distinct from 'N'
-            <if test="selectTab != null and selectTab != ''">
-                <choose>
-                    <when test="selectTab == 'cmit'">
-                        and cc.dept_cd like 'CMT%' and cc.dept_cd like concat ('%', #{cmitCd}, '%')
-                    </when>
-                    <when test="selectTab == 'user' and deptCd != null and deptCd != ''">
-                        and cc.dept_cd = #{deptCd}
-                    </when>
-                </choose>
-            </if>
-            group by cc.user_id, user_nm, cmit_nm, poly_nm, is_member
-        ) t
-        where 1=1
+              vw.user_id
+            , kgst.fngetlangnm(vw.user_nm_kg, vw.user_nm_ru, vw.user_nm_kg, #{lang}) as user_nm
+            , kgst.fngetlangnm(vw.dept_nm_kg, vw.dept_nm_ru, vw.dept_nm_ko, #{lang}) as dept_nm
+            , vw.poly_nm
+            , vw.is_member
+            , vw.dept_cd
+            , string_agg(coalesce(kgst.fngetlangnm(cd.dept_nm1, cd.dept_nm2, cd.dept_nm3, #{lang}), ''), ' / ') as cmit_nm
+        FROM view_user_member vw
+        left join com_ccof cc on cc.user_id = vw.user_id
+        left join com_dept cd on cd.dept_cd = cc.dept_cd
+        where vw.msg_rcv_yn is distinct from 'N'
         <if test="searchNm != null and searchNm != ''">
-            AND user_nm LIKE CONCAT('%', #{searchNm}, '%')
+            AND kgst.fngetlangnm(vw.user_nm_kg, vw.user_nm_ru, vw.user_nm_kg, #{lang}) LIKE CONCAT('%', #{searchNm}, '%')
         </if>
-        GROUP BY
-        user_id, user_nm, cmit_nm, poly_nm, is_member
+        <if test="selectTab != null and selectTab != ''">
+            <choose>
+                <when test="selectTab == 'cmit'">
+                    AND cc.dept_cd LIKE 'CMT%' and (
+                        vw.is_member = 'N'
+                        AND vw.dept_cd LIKE 'CMT%'
+                        AND vw.dept_cd not in ('CMT')
+                        and vw.dept_cd LIKE CONCAT('%', #{cmitCd}, '%')
+                        OR cc.dept_cd like concat ('%', #{cmitCd}, '%')
+                    )
+                </when>
+                <when test="selectTab == 'member' and polyCd != null and polyCd != ''">
+                    and vw.poly_cd = #{polyCd}
+                </when>
+                <when test="selectTab == 'user' and deptCd != null and deptCd != ''">
+                    and vw.dept_cd = #{deptCd}
+                </when>
+            </choose>
+        </if>
+        group by vw.user_id, user_nm, dept_nm, vw.poly_nm, vw.is_member, vw.dept_cd;
     </select>
 
     <delete id="deleteMsg" parameterType="java.lang.Long">
