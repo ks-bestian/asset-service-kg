@@ -9,16 +9,16 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Data
 public class UpdateReceivedInfoVo {
-    String docId;
-    int rcvId;
-    String rcvStatus;
-    LocalDateTime rcvDtm;
-    LocalDateTime checkDtm;
-    LocalDateTime rcpDtm;
-    LocalDateTime rjctDtm;
-    String rjctCn;
-    String workerId;
-    String hashFileId;
+    private String docId;
+    private int rcvId;
+    private String rcvStatus;
+    private LocalDateTime rcvDtm;
+    private LocalDateTime checkDtm;
+    private LocalDateTime rcpDtm;
+    private LocalDateTime rjctDtm;
+    private String rjctCn;
+    private String workerId;
+    private String hashFileId;
 
     @Builder
     public UpdateReceivedInfoVo(String docId, int rcvId, String rcvStatus, LocalDateTime rcvDtm, LocalDateTime checkDtm, LocalDateTime rcpDtm, LocalDateTime rjctDtm, String rjctCn, String workerId, String hashFileId) {

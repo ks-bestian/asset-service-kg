@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
@@ -44,12 +45,13 @@ public class EasFileServiceImpl implements EasFileService {
      *           and information necessary for saving file details.
      */
     @Override
-    public void uploadEasFile(EasFileVo vo){
+    public List<String> uploadEasFile(EasFileVo vo){
+        log.info(vo.toString());
         String userId = new SecurityInfoUtil().getAccountId();
         vo.setRegId(userId);
         vo.setRegDt(LocalDateTime.now());
         vo.setDeleteYn('N');
-
+        List<String> ids = new ArrayList<>();
         for(MultipartFile file : vo.getFiles()){
             EasFileVo fileVo = createFileVoFrom(vo);
             SaveFileDto savedFileDto = saveFile(file);
@@ -69,7 +71,9 @@ public class EasFileServiceImpl implements EasFileService {
                 }
             }
 
+            ids.add(fileVo.getFileId());
         }
+        return ids;
     }
 
     /**

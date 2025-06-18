@@ -8,18 +8,17 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Data
 public class DocumentListDto {
-    String docId;
-    String docAttrbCd;
-    String docTypeCd;
-    String tmlmtYn;
-    LocalDateTime tmlmtDtm;
-    String docSubtle;
-    String senderId;
-    String senderNm;
-    String docNo;
-    LocalDateTime rcvDtm;
-    LocalDateTime checkDtm;
-    String rcvId;
-    int id;
-    String status;
+    private String docId;
+    private String docAttrbCd;
+    private String docTypeCd;
+    private String tmlmtYn;
+    private LocalDateTime tmlmtDtm;
+    private String docSubtle;
+    private String senderId;
+    private String senderNm;
+    private String docNo;
+    private LocalDateTime rcvDtm;
+    private LocalDateTime checkDtm;
+    private String rcvId;
+
 }

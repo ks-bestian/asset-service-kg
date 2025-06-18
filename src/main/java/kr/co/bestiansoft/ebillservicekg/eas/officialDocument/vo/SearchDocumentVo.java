@@ -6,15 +6,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class SearchDocumentVo {
-    String userId;
-    String docSubtle;
-    String tmlmtYn;
-    String tmlmtDtm;
-    String fromRcvDtm;
-    String toRcvDtm;
-    String docNo;
-    String docTypeCd;
-    String senderNm;
+    private String userId;
+    private String docSubtle;
+    private String tmlmtYn;
+    private String tmlmtDtm;
+    private String fromRcvDtm;
+    private String toRcvDtm;
+    private String docNo;
+    private String docTypeCd;
+    private String senderNm;
 
-    String rcvId;
+    private String rcvId;
 }

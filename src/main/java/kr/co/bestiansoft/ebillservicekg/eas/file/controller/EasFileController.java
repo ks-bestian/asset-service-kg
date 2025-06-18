@@ -22,7 +22,6 @@ public class EasFileController {
     @ApiOperation(value="uploadEasFile", notes = "uploadEasFile")
     @PostMapping(value="/eas/file", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<CommonResponse> uploadEasFile (EasFileVo fileVo){
-        easFileService.uploadEasFile(fileVo);
-        return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "file create successfully"), HttpStatus.CREATED);
+        return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(),"Ok",easFileService.uploadEasFile(fileVo)), HttpStatus.CREATED);
     }
 }

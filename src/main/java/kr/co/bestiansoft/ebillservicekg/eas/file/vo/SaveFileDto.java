@@ -6,8 +6,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class SaveFileDto {
-    String orgFileNm;
-    String fileId;
-    int fileSize;
-    String fileExt;
+    private String orgFileNm;
+    private String fileId;
+    private int fileSize;
+    private String fileExt;
 }
