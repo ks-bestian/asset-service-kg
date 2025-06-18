@@ -48,7 +48,7 @@ public class MsgServiceImpl implements MsgService {
     }
 
     @Override
-    public MsgRequest sendMsg(MsgRequest msgRequest) {
+    public boolean sendMsg(MsgRequest msgRequest) {
         msgRequest.setSendId(new SecurityInfoUtil().getAccountId());
         String fileGroupId = null;
 
@@ -76,8 +76,9 @@ public class MsgServiceImpl implements MsgService {
             msgRequest.setMsgDiv("S");
             msgMapper.insertMsg(msgRequest);
         }
-        fileGroupId = null;
-        return msgRequest;
+//        fileGroupId = null;
+//        return msgRequest;
+        return true;
     }
 
     @Override
