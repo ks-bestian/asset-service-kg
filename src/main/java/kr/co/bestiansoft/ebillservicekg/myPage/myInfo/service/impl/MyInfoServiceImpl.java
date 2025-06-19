@@ -64,7 +64,7 @@ public class MyInfoServiceImpl implements MyInfoService {
     @Override
     public UserMemberVo updateMyInfo(UserMemberVo userMemberVo) {
         if(userMemberVo.getFiles() != null) {
-            String fileGroupId = comFileService.saveFile(userMemberVo.getFiles());
+            String fileGroupId = comFileService.saveFileList(userMemberVo.getFiles());
             userMemberVo.setProfileImgPath(fileGroupId);
         }
 
