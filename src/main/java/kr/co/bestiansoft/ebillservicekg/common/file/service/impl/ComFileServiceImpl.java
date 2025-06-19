@@ -77,7 +77,7 @@ public class ComFileServiceImpl implements ComFileService {
 			fileMapper.insertFile(fileVo);
 			convertToPdfComFile(file, fileVo.getFileId());
 		}
-		return fileGroupId;
+		return fileId;
 	}
 	//
 	void convertToPdfComFile(MultipartFile mpf, String orgFileId) {

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.bestiansoft.ebillservicekg.eas.draftData.repository.DraftDataRepository">
+    <insert id="insertDraftData" parameterType="kr.co.bestiansoft.ebillservicekg.eas.draftData.vo.DraftDataVo">
+        insert into eas_draft_data
+        (aars_doc_id, form_id, field_seq, data_cn  )
+        values (#{aarsDocId}, #{formId}, #{fieldSeq} , #{dataCn} )
+    </insert>
+    <select id="getDraftData" resultType="kr.co.bestiansoft.ebillservicekg.eas.draftData.vo.DraftDataVo">
+        select d.data_seq, aars_doc_id, form_id, field_seq, data_cn
+          from eas_draft_data d
+         where aars_doc_id = #{aarsDocId}
+    </select>
+</mapper>

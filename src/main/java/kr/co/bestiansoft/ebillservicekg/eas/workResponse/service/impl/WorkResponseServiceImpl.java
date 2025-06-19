@@ -37,6 +37,7 @@ public class WorkResponseServiceImpl implements WorkResponseService {
     @Override
     public int updateWorkResponse(UpdateWorkResponseVo vo) {
         vo.setUserId(new SecurityInfoUtil().getAccountId());
+        vo.setRspnsDtm(LocalDateTime.now());
         return workResponseRepository.updateWorkContents(vo);
     }
 

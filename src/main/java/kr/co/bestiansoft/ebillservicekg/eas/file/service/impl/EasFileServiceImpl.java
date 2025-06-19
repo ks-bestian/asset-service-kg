@@ -129,8 +129,8 @@ public class EasFileServiceImpl implements EasFileService {
      *         an empty list if no files are attached to the specified document
      */
     @Override
-    public List<EasFileVo> getAttachFiles(String docId) {
-        return easFileRepository.getAttachFiles(docId);
+    public List<EasFileVo> getAttachFiles(String docId, String fileType) {
+        return easFileRepository.getAttachFiles(docId , fileType);
     }
 
     /**

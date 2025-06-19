@@ -112,7 +112,7 @@
            and res.user_id = #{userId}
     </select>
     <select id="getWorkList" parameterType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.SearchDocumentVo" resultType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.DocumentListDto">
-        select d.doc_id, doc_attrb_cd, d.tmlmt_yn, d.tmlmt_Dtm, doc_subtle, sender_id, sender_nm, doc_no, rcv_dtm, check_dtm, rcv_id, doc_type_cd
+        select d.doc_id, doc_attrb_cd, d.tmlmt_yn, d.tmlmt_Dtm, doc_subtle, sender_id, sender_nm, doc_no, rcv_dtm, check_dtm, rspns_id , doc_type_cd ,rcv_id
         from eas_work_request req, eas_work_response res, eas_document d
         where req.work_req_id = res.work_req_id
           and d.doc_id = req.doc_id

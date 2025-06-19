@@ -20,5 +20,6 @@ public class DocumentListDto {
     private LocalDateTime rcvDtm;
     private LocalDateTime checkDtm;
     private String rcvId;
-
+    private int rspnsId;
+    private String externalYn;
 }

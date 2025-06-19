@@ -27,6 +27,7 @@ public class DocumentDetailDto {
     private String deptCd;
     private String docNo;
     private LocalDateTime regDtm;
+    private String externalYn;
 
     private List<EasFileVo> files;
 }
