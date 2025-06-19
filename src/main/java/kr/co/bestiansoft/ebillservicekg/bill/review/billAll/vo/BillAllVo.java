@@ -142,4 +142,7 @@ public class BillAllVo extends ComDefaultVO {
     private Long cnt;
     private String polyCd;
     private String polyNm;
+    
+    // 대통령거부번호
+    private String prsdRjctNo;
 }
