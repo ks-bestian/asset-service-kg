@@ -8,7 +8,7 @@ import java.util.List;
 @Mapper
 public interface EasFileRepository {
     int insertEasFile (EasFileVo vo);
-    List<EasFileVo> getAttachFiles(String docId);
+    List<EasFileVo> getAttachFiles(String docId , String fileType);
     void updatePdfFileInfo(EasFileVo vo);
     EasFileVo getFileById(String fileId);
 }

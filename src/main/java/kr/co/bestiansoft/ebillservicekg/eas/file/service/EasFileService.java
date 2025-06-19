@@ -9,9 +9,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface EasFileService {
-    void uploadEasFile (EasFileVo vo);
+    List<String> uploadEasFile (EasFileVo vo);
     int saveEasFile(EasFileVo vo);
-    List<EasFileVo> getAttachFiles(String docId);
+    List<EasFileVo> getAttachFiles(String docId, String fileType);
 
 //    공통 save file(edv) , pdf file
     SaveFileDto saveFile(MultipartFile file);

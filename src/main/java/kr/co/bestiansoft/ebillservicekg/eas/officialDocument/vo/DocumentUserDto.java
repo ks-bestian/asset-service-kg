@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class DocumentUserDto {
-    String userId;
-    String userNm;
-    String deptCd;
+    private String userId;
+    private String userNm;
+    private String deptCd;
 }

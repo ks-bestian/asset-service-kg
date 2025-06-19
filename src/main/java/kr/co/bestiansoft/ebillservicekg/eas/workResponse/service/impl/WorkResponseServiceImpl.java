@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -35,6 +36,8 @@ public class WorkResponseServiceImpl implements WorkResponseService {
      */
     @Override
     public int updateWorkResponse(UpdateWorkResponseVo vo) {
+        vo.setUserId(new SecurityInfoUtil().getAccountId());
+        vo.setRspnsDtm(LocalDateTime.now());
         return workResponseRepository.updateWorkContents(vo);
     }
 
@@ -57,7 +60,16 @@ public class WorkResponseServiceImpl implements WorkResponseService {
     public List<WorkResponseVo> getWorkResponse(String docId) {
         return workResponseRepository.getWorkResponse(null, docId);
     }
-    public List<WorkResponseVo> getWorkResponseByUserId(int rcvId) {
-        return workResponseRepository.getWorkResponseByUserId(rcvId, new SecurityInfoUtil().getAccountId());
+    public List<WorkResponseVo> getWorkResponseByUserId(int workReqId) {
+        return workResponseRepository.getWorkResponseByUserId(workReqId, new SecurityInfoUtil().getAccountId());
+    }
+
+    public void updateReadDtm(int rspnsId) {
+        UpdateWorkResponseVo vo = UpdateWorkResponseVo.builder()
+                .rspnsId(rspnsId)
+                .checkDtm(LocalDateTime.now())
+                .build();
+
+        workResponseRepository.updateWorkContents(vo);
     }
 }

@@ -1,31 +1,18 @@
 package kr.co.bestiansoft.ebillservicekg.eas.officialDocument.service.impl;
 
 
-import kr.co.bestiansoft.ebillservicekg.admin.user.service.UserService;
-import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
-import kr.co.bestiansoft.ebillservicekg.eas.approval.service.ApprovalService;
-import kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalVo;
+import kr.co.bestiansoft.ebillservicekg.eas.documentWorkFlow.enums.EasFileType;
 import kr.co.bestiansoft.ebillservicekg.eas.file.service.EasFileService;
-import kr.co.bestiansoft.ebillservicekg.eas.file.vo.EasFileVo;
-import kr.co.bestiansoft.ebillservicekg.eas.history.service.HistoryService;
-import kr.co.bestiansoft.ebillservicekg.eas.history.vo.HistoryVo;
 import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.repository.OfficialDocumentMapper;
 import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.service.OfficialDocumentService;
 import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.*;
-import kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.service.ReceivedInfoService;
-import kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.vo.ReceivedInfoVo;
-import kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.vo.UpdateReceivedInfoVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 
 @Slf4j
@@ -98,7 +85,7 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
     @Override
     public DocumentDetailDto getDocumentDetail(String docId) {
         DocumentDetailDto documentDetailDto = officialDocumentMapper.getDocumentDetail(docId);
-        documentDetailDto.setFiles(easFileService.getAttachFiles(docId));
+        documentDetailDto.setFiles(easFileService.getAttachFiles(docId, EasFileType.ATTACHMENT_FILE.getCodeId()));
         return documentDetailDto;
     }
 

@@ -5,6 +5,8 @@ import kr.co.bestiansoft.ebillservicekg.common.file.service.PdfService;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.impl.EDVHelper;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
+import kr.co.bestiansoft.ebillservicekg.eas.draftData.service.DraftDataService;
+import kr.co.bestiansoft.ebillservicekg.eas.draftData.vo.DraftDataVo;
 import kr.co.bestiansoft.ebillservicekg.eas.draftDocument.repository.DraftDocumentRepository;
 import kr.co.bestiansoft.ebillservicekg.eas.draftDocument.service.DraftDocumentService;
 import kr.co.bestiansoft.ebillservicekg.eas.draftDocument.vo.DraftDocumentVo;
@@ -12,6 +14,7 @@ import kr.co.bestiansoft.ebillservicekg.eas.draftDocument.vo.HtmlTextSegment;
 import kr.co.bestiansoft.ebillservicekg.eas.draftDocument.vo.SetFileIdVo;
 import kr.co.bestiansoft.ebillservicekg.form.service.FormService;
 import kr.co.bestiansoft.ebillservicekg.form.vo.FormWithFieldsVo;
+import kr.co.bestiansoft.ebillservicekg.formField.vo.FormFieldVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xwpf.usermodel.*;
@@ -43,6 +46,7 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
     private final FormService formService;
     private final EDVHelper edv;
     private final PdfService pdfService;
+    private final DraftDataService draftDataService;
 
     @Override
     public DraftDocumentVo insertDraftDocument(int formId, Map<String, String> map) {
@@ -57,11 +61,26 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
             SetFileIdVo fileIdVo = applyWordToPdf(map, vo.getFormId());
             vo.setAarsFileId(fileIdVo.getFileId());
             vo.setAarsPdfFileId(fileIdVo.getPdfFileId());
+            draftDocumentRepository.insertDraftDocument(vo);
+
+            List<FormFieldVo> fieldVo = formService.getFormWithFieldsById(vo.getFormId()).getFields();
+            fieldVo.forEach(field -> {
+               if(map.containsKey(field.getFieldValue())){
+                   DraftDataVo dataVo = DraftDataVo.builder()
+                           .aarsDocId(vo.getAarsDocId())
+                           .formId(field.getFormId())
+                           .fieldSeq(field.getFieldSeq())
+                           .dataCn(map.get(field.getFieldValue()))
+                           .build();
+
+                   draftDataService.insertDraftData(dataVo);
+               };
+            });
         }catch (Exception e){
             e.printStackTrace();
         }
 
-        draftDocumentRepository.insertDraftDocument(vo);
+
         return vo;
     }
     
@@ -180,7 +199,6 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
             return;
         }
 
-        // ★ 핵심 수정: 변수별로 개별 처리하여 앞뒤 텍스트 보존
         for (Map.Entry<String, String> entry : map.entrySet()) {
             String variable = "${" + entry.getKey() + "}";
             if (text.contains(variable)) {

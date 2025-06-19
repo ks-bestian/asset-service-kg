@@ -12,7 +12,7 @@ public interface MsgService {
     List<MsgVo> getRcvList(HashMap<String, Object> param);
     List<MsgVo> getSendList(HashMap<String, Object> param);
     MsgVo getMsgDetail(Long msgId, String lang);
-    MsgRequest sendMsg(MsgRequest msgRequest);
+    boolean sendMsg(MsgRequest msgRequest);
     int msgRcvDt(HashMap<String, Object> param);
     void deleteMsg(List<Long> msgIds);
     List<UserMemberVo> getUserMember(HashMap<String, Object> param);

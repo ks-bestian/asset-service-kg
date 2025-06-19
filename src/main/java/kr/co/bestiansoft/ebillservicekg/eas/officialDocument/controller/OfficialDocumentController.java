@@ -3,6 +3,7 @@ package kr.co.bestiansoft.ebillservicekg.eas.officialDocument.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
+import kr.co.bestiansoft.ebillservicekg.eas.documentWorkFlow.enums.ReceiveStatus;
 import kr.co.bestiansoft.ebillservicekg.eas.documentWorkFlow.service.DocumentWorkFlowService;
 import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.service.OfficialDocumentService;
 import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.InsertDocumentVo;
@@ -83,4 +84,5 @@ public class OfficialDocumentController {
     public ResponseEntity<CommonResponse> getProcessedDocument(SearchDocumentVo vo){
         return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.getProcessedList(vo)), HttpStatus.OK);
     }
+
 }
