@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class DraftDataController {
     private final DraftDataService draftDataService;
 
-//    @ApiOperation(value="getDataByAarsDocId", notes ="getDataByAarsDocId")
-//    @GetMapping("/eas/draftData/{aarsDocId}")
-//    public ResponseEntity<CommonResponse> getDataByAarsDocId(@PathVariable String aarsDocId) {
-//        return new ResponseEntity<>(new CommonResponse(200, "OK", draftDataService.)), HttpStatus.OK);
-//    }
+    @ApiOperation(value="getDataByAarsDocId", notes ="getDataByAarsDocId")
+    @GetMapping("/eas/draftData/{aarsDocId}")
+    public ResponseEntity<CommonResponse> getDataByAarsDocId(@PathVariable int aarsDocId) {
+        return new ResponseEntity<>(new CommonResponse(200, "OK", draftDataService.getDraftData(aarsDocId)), HttpStatus.OK);
+    }
 }
