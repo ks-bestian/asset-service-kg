@@ -31,6 +31,10 @@ public class InsertDocumentVo {
     private String regDtm;
     private char externalYn;
 
+    private String fromDocId;
+    private int rcvId;
+    private String[] alreadyUploadFiles;
+
     private String[] approvalIds;
 
     private List<Map<String, String>> receiverIds;

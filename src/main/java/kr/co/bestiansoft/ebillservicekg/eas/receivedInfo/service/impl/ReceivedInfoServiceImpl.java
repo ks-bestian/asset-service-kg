@@ -66,4 +66,9 @@ public class ReceivedInfoServiceImpl implements ReceivedInfoService {
     public ReceivedInfoVo getReceivedInfoByUserId(String docId) {
         return receivedInfoRepository.getReceivedInfoByUserId(docId, new SecurityInfoUtil().getAccountId());
     }
+
+    @Override
+    public ReceivedInfoVo getReceivedInfoByRcpDocId(String rcpDocId) {
+        return receivedInfoRepository.getReceivedInfoByRcpDocId(rcpDocId);
+    }
 }

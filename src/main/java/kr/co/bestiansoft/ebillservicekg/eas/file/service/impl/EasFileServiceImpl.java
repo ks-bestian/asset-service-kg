@@ -133,6 +133,11 @@ public class EasFileServiceImpl implements EasFileService {
         return easFileRepository.getAttachFiles(docId , fileType);
     }
 
+    @Override
+    public EasFileVo getFileById(String fileId) {
+        return easFileRepository.getFileById(fileId);
+    }
+
     /**
      * Saves the provided file and generates metadata related to the saved file.
      * The file is stored using a unique file ID, and its metadata includes 

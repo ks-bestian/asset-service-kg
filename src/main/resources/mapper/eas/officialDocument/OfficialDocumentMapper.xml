@@ -18,7 +18,7 @@
          where d.doc_id = r.doc_id
            and r.user_id = #{userId}
            and doc_status_cd in ('DMS02', 'DMS03')
-           and rcv_status in ('RS01', 'RS02', 'RS03')
+           and rcv_status in ('RS01', 'RS02', 'RS03', 'RS06')
           <if test="docSubtle != null "> and doc_subtle like '%'||#{docSubtle}||'%' </if>
           <if test="tmlmtDtm != null"> and tmlmt_dtm = #{tmlmtDtm} </if>
           <if test="fromRcvDtm != null and toRcvDtm != null"> and rcv_dtm between #{fromRcvDtm} and #{toRcvDtm} </if>
@@ -60,7 +60,7 @@
            and doc_id = #{docId};
     </select>
     <select id="getDocumentDetail" resultType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.DocumentDetailDto">
-        select d.doc_id, aars_file_id,  d.doc_type_cd, d.doc_attrb_cd, bill_id, (select bill_no from ebs_master where bill_id= d.bill_id ) bill_no, tmlmt_yn, tmlmt_dtm, doc_lng, doc_subtle, digital_yn, sender_id, d.sender_nm, d.dept_cd, doc_no, d.reg_dtm, ed.aars_pdf_file_id
+        select d.doc_id, aars_file_id,  d.doc_type_cd, d.doc_attrb_cd, bill_id, (select bill_no from ebs_master where bill_id= d.bill_id ) bill_no, tmlmt_yn, tmlmt_dtm, doc_lng, doc_subtle, digital_yn, sender_id, d.sender_nm, d.dept_cd, doc_no, d.reg_dtm, ed.aars_pdf_file_id, d.external_yn
           from eas_document d, eas_draft ed
          where d.aars_doc_id = ed.aars_doc_id
            and d.doc_id = #{docId}
@@ -118,6 +118,6 @@
           and d.doc_id = req.doc_id
           and d.doc_status_cd = 'DMS03'
           and res.user_id = #{userId}
-        order by reg_dt ;
+        order by reg_dt desc;
     </select>
 </mapper>

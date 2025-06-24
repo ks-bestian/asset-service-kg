@@ -4,21 +4,32 @@
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.eas.linkDocument.repository.LinkDocumentRepository">
     <insert id="insertLinkDocument" parameterType="kr.co.bestiansoft.ebillservicekg.eas.linkDocument.vo.LinkDocumentVo">
         INSERT INTO kgst.eas_link_document
-            (from_doc_id, to_doc_id, link_type, reg_dt, reg_id, link_id)
-        VALUES(#{fromDocId}, #{toDocId}, #{linkType}, #{regDt}, #{regId}, #{linkId});
+            (from_doc_id, to_doc_id, link_type, reg_dtm, reg_id)
+        VALUES(#{fromDocId}, #{toDocId}, #{linkType}, #{regDtm}, #{regId});
     </insert>
     <delete id="deleteLinkDocument">
         delete kgst.eas_link_document
          where from_doc_id =#{fromDocId}
            and to_doc_id =#{toDocId}
     </delete>
-    <select id="getLinkDocument" resultType="kr.co.bestiansoft.ebillservicekg.eas.linkDocument.vo.LinkDocumentVo">
-        select link_id, from_doc_id, to_doc_id, link_type, reg_dt, reg_id
+    <select id="getLinkDocumentByDocId" resultType="kr.co.bestiansoft.ebillservicekg.eas.linkDocument.vo.LinkDocumentVo">
+        select link_id, from_doc_id, to_doc_id, link_type, reg_dtm, reg_id
         from kgst.eas_link_document
         where from_doc_id = #{docId}
         union distinct
-        select link_id, from_doc_id, to_doc_id, link_type, reg_dt, reg_id
+        select link_id, from_doc_id, to_doc_id, link_type, reg_dtm, reg_id
         from kgst.eas_link_document
-        where to_doc_id = #{docId};
+        where to_doc_id = #{docId}
+    </select>
+    <select id="getLinkDocumentByDocIdAndType" resultType="kr.co.bestiansoft.ebillservicekg.eas.linkDocument.vo.LinkDocumentVo">
+        select link_id, from_doc_id, to_doc_id, link_type, reg_dtm, reg_id
+          from kgst.eas_link_document
+         where to_doc_id = #{docId}
+           and link_type = #{linkType}
+    </select>
+    <select id="getLinkDocument" resultType="kr.co.bestiansoft.ebillservicekg.eas.linkDocument.vo.LinkDocumentVo">
+        select link_id, from_doc_id, to_doc_id, link_type, reg_dtm, reg_id
+        from kgst.eas_link_document
+        where link_id = #{linkId}
     </select>
 </mapper>

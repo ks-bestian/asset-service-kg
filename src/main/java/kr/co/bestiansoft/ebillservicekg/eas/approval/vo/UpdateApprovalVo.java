@@ -17,9 +17,10 @@ public class UpdateApprovalVo {
     private String apvlFileId;
     private String resOpinion;
     private String apvlStatusCd;
+    private String apvlType;
 
     @Builder
-    public UpdateApprovalVo(String docId, int apvlId, LocalDateTime resDtm, LocalDateTime rcvDtm, LocalDateTime checkDtm, String apvlFileId, String resOpinion, String apvlStatusCd) {
+    public UpdateApprovalVo(String docId, int apvlId, LocalDateTime resDtm, LocalDateTime rcvDtm, LocalDateTime checkDtm, String apvlFileId, String resOpinion, String apvlStatusCd, String apvlType) {
         this.docId = docId;
         this.apvlId = apvlId;
         this.resDtm = resDtm;
@@ -28,5 +29,6 @@ public class UpdateApprovalVo {
         this.apvlFileId = apvlFileId;
         this.resOpinion = resOpinion;
         this.apvlStatusCd = apvlStatusCd;
+        this.apvlType = apvlType;
     }
 }

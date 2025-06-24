@@ -18,6 +18,8 @@
             <if test="rjctDtm"> rjct_dtm = #{rjctDtm} , </if>
             <if test="rjctCn"> rjct_cn = #{rjctCn} , </if>
             <if test="workerId"> worker_id = #{workerId} </if>
+            <if test="hashFileId"> hash_file_id = #{hashFileId} </if>
+            <if test="rcpDocId"> rcp_doc_id = #{rcpDocId} </if>
         </set>
         where rcv_id = #{rcvId}
     </update>
@@ -37,10 +39,15 @@
          where r.rcv_id = #{rcvId}
      </select>
     <select id="getReceivedInfoByUserId" resultType="kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.vo.ReceivedInfoVo">
-        select rcv_id, doc_id, user_id, user_nm, dept_cd, ext_orgn_cd, rcv_status, rcv_dtm, check_dtm, rcp_dtm, rjct_dtm, rjct_cn, rcv_ord, worker_id, hash_file_jd
+        select rcv_id, doc_id, user_id, user_nm, dept_cd, ext_orgn_cd, rcv_status, rcv_dtm, check_dtm, rcp_dtm, rjct_dtm, rjct_cn, rcv_ord, worker_id, hash_file_jd, rcp_doc_id
           from eas_received_info
          where doc_id = #{docId}
            and user_id = #{userId}
          order by rcp_dtm desc
+    </select>
+    <select id="getReceivedInfoByRcpDocId" resultType="kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.vo.ReceivedInfoVo">
+        select rcv_id, doc_id, user_id, user_nm, dept_cd, ext_orgn_cd, rcv_status, rcv_dtm, check_dtm, rcp_dtm, rjct_dtm, rjct_cn, rcv_ord, worker_id, hash_file_jd, rcp_doc_id
+          from eas_received_info
+         where rcp_doc_id =#{rcpDocId}
     </select>
 </mapper>

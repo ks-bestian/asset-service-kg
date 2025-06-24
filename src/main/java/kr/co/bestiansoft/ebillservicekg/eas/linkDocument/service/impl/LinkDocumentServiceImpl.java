@@ -46,7 +46,17 @@ public class LinkDocumentServiceImpl implements LinkDocumentService {
      * @return a list of LinkDocumentVo objects representing the linked documents
      */
     @Override
-    public List<LinkDocumentVo> getLinkDocument(String docId) {
-        return linkDocumentRepository.getLinkDocument(docId);
+    public List<LinkDocumentVo> getLinkDocumentByDocId(String docId) {
+        return linkDocumentRepository.getLinkDocumentByDocId(docId);
+    }
+
+    @Override
+    public LinkDocumentVo getLinkDocumentByDocIdAndType(String docId, String linkType) {
+        return linkDocumentRepository.getLinkDocumentByDocIdAndType(docId, linkType);
+    }
+
+    @Override
+    public List<LinkDocumentVo> getLinkDocument(int linkId) {
+        return linkDocumentRepository.getLinkDocument(linkId);
     }
 }

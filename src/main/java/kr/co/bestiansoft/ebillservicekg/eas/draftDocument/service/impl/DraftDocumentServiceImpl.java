@@ -74,7 +74,7 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
                            .build();
 
                    draftDataService.insertDraftData(dataVo);
-               };
+               }
             });
         }catch (Exception e){
             e.printStackTrace();

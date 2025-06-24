@@ -9,8 +9,10 @@ public enum ReceiveStatus {
     VIEWED              ("RS02", "열람"),
     REGISTERED          ("RS03", "등록"),
     REJECTED            ("RS04", "반려"),
-    COMPLETED_RESPONSE  ("RS05", "답변완료");
+    COMPLETED_RESPONSE  ("RS05", "답변완료"),
+    APPROVING_RESPONSE  ("RS06", "답변 승인 중");
 
+    // todo 답변 승인 중
     private final String codeId;
     private final String codeNm;
 
