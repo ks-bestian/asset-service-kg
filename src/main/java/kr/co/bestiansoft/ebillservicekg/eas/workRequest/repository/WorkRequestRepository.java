@@ -13,4 +13,5 @@ public interface WorkRequestRepository {
     int updateWorkStatus (String workReqId, String workStatus);
     List<WorkRequestVo> getWorkRequestList(@Param("rcvId") Integer rcvId, @Param("docId") String docId);
     WorkRequestVo getWorkRequestListByUserId(String docId, String userId);
+    void deleteDocument(String docId);
 }

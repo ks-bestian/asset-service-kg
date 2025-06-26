@@ -50,4 +50,8 @@
           from eas_received_info
          where rcp_doc_id =#{rcpDocId}
     </select>
+    <delete id="deleteDocument">
+        delete from eas_received_info
+         where doc_id =#{docId}
+    </delete>
 </mapper>

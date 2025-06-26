@@ -9,4 +9,5 @@ public interface HistoryService {
     String getActionDetail(String actionType, String userNm);
     List<HistoryVo> getHistory(String docId);
     List<HistoryVo> getHistoryByUserId(String docId);
+    void deleteDocument(String docId);
 }

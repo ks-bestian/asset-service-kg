@@ -95,9 +95,10 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
         draftDocumentRepository.updateDraftStatus(aarsDocId, aarsStatusCd);
     }
 
-    public DraftDocumentVo getDraftDocument(String aarsDocId){
+    public DraftDocumentVo getDraftDocument(int aarsDocId){
         return draftDocumentRepository.getDraftDocument(aarsDocId);
     }
+
 
     public SetFileIdVo applyWordToPdf(Map<String, String> paramMap, int formId) throws Exception {
         FormWithFieldsVo formList = formService.getFormWithFieldsById(formId);

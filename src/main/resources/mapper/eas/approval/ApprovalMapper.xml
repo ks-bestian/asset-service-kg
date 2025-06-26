@@ -68,4 +68,8 @@
            and user_id = #{userId}
          order by apvl_ord
     </select>
+    <delete id="deleteDocument">
+        delete from eas_approval
+        where doc_id =#{docId}
+    </delete>
 </mapper>

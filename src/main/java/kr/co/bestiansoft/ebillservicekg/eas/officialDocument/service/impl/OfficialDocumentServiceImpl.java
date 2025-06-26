@@ -140,4 +140,9 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
         vo.setUserId(new SecurityInfoUtil().getAccountId());
         return officialDocumentMapper.getProcessedList(vo);
     }
+
+    @Override
+    public void deleteDocument(String docId) {
+        officialDocumentMapper.deleteDocument(docId);
+    }
 }

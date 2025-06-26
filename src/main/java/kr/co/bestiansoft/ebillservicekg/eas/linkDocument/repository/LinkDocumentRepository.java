@@ -12,4 +12,5 @@ public interface LinkDocumentRepository {
     List<LinkDocumentVo> getLinkDocumentByDocId (String docId);
     LinkDocumentVo getLinkDocumentByDocIdAndType (String docId, String linkType);
     List<LinkDocumentVo> getLinkDocument (int linkId);
+
 }

@@ -16,4 +16,5 @@ public interface EasFileService {
 //    공통 save file(edv) , pdf file
     SaveFileDto saveFile(MultipartFile file);
     UpdatePdfFileDto savePdfFile(MultipartFile file);
+    void deleteDocument(String docId);
 }

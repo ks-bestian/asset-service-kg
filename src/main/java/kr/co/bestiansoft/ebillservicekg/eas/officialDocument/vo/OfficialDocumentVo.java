@@ -24,7 +24,7 @@ public class OfficialDocumentVo extends ComDefaultVO {
     private char digitalYn;
     private String senderId;
     private String senderNm;
-    private String deptCd;
+    private String senderDeptCd;
     private String docNo;
     private LocalDateTime regDtm;
     private String externalYn;
@@ -46,7 +46,7 @@ public class OfficialDocumentVo extends ComDefaultVO {
         this.digitalYn = digitalYn;
         this.senderId = senderId;
         this.senderNm = senderNm;
-        this.deptCd = deptCd;
+        this.senderDeptCd = deptCd;
         this.docNo = docNo;
         this.regDtm = regDtm;
         this.externalYn = externalYn;

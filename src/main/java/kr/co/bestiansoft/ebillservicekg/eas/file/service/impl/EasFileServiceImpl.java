@@ -213,6 +213,11 @@ public class EasFileServiceImpl implements EasFileService {
         return result;
     }
 
+    @Override
+    public void deleteDocument(String docId) {
+        easFileRepository.deleteDocument(docId);
+    }
+
     /**
      * Determines if a given file extension represents a PDF file.
      *

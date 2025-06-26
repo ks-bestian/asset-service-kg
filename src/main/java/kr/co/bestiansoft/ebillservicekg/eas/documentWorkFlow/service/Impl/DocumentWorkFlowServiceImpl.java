@@ -83,7 +83,7 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                 .billId(vo.getBillId())
                 .docId(vo.getDocId())
                 .docNo(vo.getDocNo())
-                .deptCd(vo.getDeptCd())
+                .deptCd(vo.getSenderDeptCd())
                 .docTypeCd(vo.getDocTypeCd())
                 .tmlmtYn(vo.getTmlmtYn())
                 .tmlmtDtm(vo.getTmlmtDtm() != null ?vo.getTmlmtDtm().atStartOfDay() : null)
@@ -104,45 +104,53 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
 
         draftDocumentService.updateDraftStatus(vo.getAarsDocId(), DraftStatus.DISPATCHED.getCodeId());
 
+        int addApprovalCount = 1;
 
         /* save eas_approval */
         String[] approvalIds = vo.getApprovalIds();
-        for(int i =0 ; i < approvalIds.length ; i ++){
-            UserMemberVo user = userService.getUserMemberDetail(approvalIds[i]);
-            ApprovalVo approvalVo = ApprovalVo.builder()
-                    .docId(vo.getDocId())
-                    .apvlStatusCd(ApprovalStatus.PENDING.getCodeId())
-                    .apvlOrd(i+1)
-                    .userId(user.getUserId())
-                    .userNm(user.getUserNm())
-                    .deptCd(user.getDeptCd())
-                    .jobCd(user.getJobCd())
-                    .apvlType(ApprovalType.REQUEST_APPROVAL.getCodeId())
-                    .build();
-            if(i ==0) {
-                approvalVo.setRcvDtm(now);
-                approvalVo.setApvlStatusCd(ApprovalStatus.SENT.getCodeId());
-            }
 
-            result += approvalService.insertApproval(approvalVo);
+        for (String approvalId : approvalIds) {
+            if (approvalId != null) {
+                UserMemberVo user = userService.getUserMemberDetail(approvalId);
+                ApprovalVo approvalVo = ApprovalVo.builder()
+                        .docId(vo.getDocId())
+                        .apvlStatusCd(ApprovalStatus.PENDING.getCodeId())
+                        .apvlOrd(addApprovalCount)
+                        .userId(user.getUserId())
+                        .userNm(user.getUserNm())
+                        .deptCd(user.getDeptCd())
+                        .jobCd(user.getJobCd())
+                        .apvlType(ApprovalType.REQUEST_APPROVAL.getCodeId())
+                        .build();
+                if (addApprovalCount == 1) {
+                    approvalVo.setRcvDtm(now);
+                    approvalVo.setApvlStatusCd(ApprovalStatus.SENT.getCodeId());
+                }
+                addApprovalCount++;
+                result += approvalService.insertApproval(approvalVo);
+            }
         }
         // document Attribute
-        if(Arrays.stream(vo.getDocAttrbCd()).allMatch(a -> a.equals("DMA02"))){
-            //todo userId, userNm, deptCd, jobCd ;
-            ApprovalVo approvalVo = ApprovalVo.builder()
-                    .docId(vo.getDocId())
-                    .apvlOrd(approvalIds.length+1)
-                    .apvlType(ApprovalType.REQUEST_REVIEW_AND_APPROVAL.getCodeId())
-                    .userId("gduser1")
-                    .build();
 
-            if(approvalIds.length == 0){
-                approvalVo.setRcvDtm(now);
-                approvalVo.setApvlStatusCd(ApprovalStatus.SENT.getCodeId());
-            }else{
-                approvalVo.setApvlStatusCd(ApprovalStatus.PENDING.getCodeId());
+        for(String attrbCd : vo.getDocAttrbCd() ){
+            if(attrbCd.equals("DMA02")){
+                //todo userId, userNm, deptCd, jobCd ;
+                ApprovalVo approvalVo = ApprovalVo.builder()
+                        .docId(vo.getDocId())
+                        .apvlOrd(addApprovalCount)
+                        .apvlType(ApprovalType.REQUEST_REVIEW_AND_APPROVAL.getCodeId())
+                        .userId("gduser1")
+                        .build();
+
+                if(addApprovalCount == 1){
+                    approvalVo.setRcvDtm(now);
+                    approvalVo.setApvlStatusCd(ApprovalStatus.SENT.getCodeId());
+                }else{
+                    approvalVo.setApvlStatusCd(ApprovalStatus.PENDING.getCodeId());
+                }
+                addApprovalCount++;
+                approvalService.insertApproval(approvalVo);
             }
-            approvalService.insertApproval(approvalVo);
         }
 
         /* eas_received_info */
@@ -152,12 +160,16 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                 UserMemberVo user = userService.getUserMemberDetail(receivedIds.get(i).get("userId"));
                 ReceivedInfoVo receivedInfoVo = ReceivedInfoVo.builder()
                         .docId(vo.getDocId())
-                        .rcvStatus(ReceiveStatus.BEFORE_SEND.getCodeId())
                         .userId(user.getUserId())
                         .userNm(user.getUserNm())
                         .deptCd(user.getDeptCd())
                         .rcvOrd(i+1)
                         .build();
+                if(addApprovalCount ==1){
+                    receivedInfoVo.setRcvStatus(ReceiveStatus.SENT.getCodeId());
+                }else{
+                    receivedInfoVo.setRcvStatus(ReceiveStatus.BEFORE_SEND.getCodeId());
+                }
 
                 result += receivedInfoService.insertReceivedInfo(receivedInfoVo);
             }else{
@@ -177,6 +189,10 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                 .build();
 
         result += historyService.insertHistory(historyVo);
+
+        if(addApprovalCount ==1){
+            documentService.updateStatusOfficialDocument(documentVo.getDocId(), DocumentStatus.TRANSMITTED.getCodeId());
+        }
 
         return result;
 
@@ -323,7 +339,7 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                 .build();
         historyService.insertHistory(historyVo);
     }
-
+    @Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
     public void endDocument(String docId){
        UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
        HistoryVo historyVo = HistoryVo.builder()
@@ -337,10 +353,9 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
        historyService.insertHistory(historyVo);
        documentService.updateStatusOfficialDocument(docId, DocumentStatus.COMPLETED.getCodeId());
     }
-
+    @Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
     @Override
     public void saveReplyDocument(InsertDocumentVo vo) {
-        log.info(vo.toString());
         String loginId = new SecurityInfoUtil().getAccountId();
         UserMemberVo loginUser = userService.getUserMemberDetail(loginId);
         LocalDateTime now = LocalDateTime.now();
@@ -367,6 +382,55 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
         documentService.saveOfficialDocument(documentVo);
         // draft status 변경
         draftDocumentService.updateDraftStatus(vo.getAarsDocId(), DraftStatus.DISPATCHED.getCodeId());
+
+
+        int addApprovalCount = 1;
+
+        //approval Type 변경해서 추가
+        String[] approvalIds = vo.getApprovalIds();
+        for (String approvalId : approvalIds) {
+            if (approvalId != null) {
+                UserMemberVo user = userService.getUserMemberDetail(approvalId);
+                ApprovalVo approvalVo = ApprovalVo.builder()
+                        .docId(vo.getDocId())
+                        .apvlStatusCd(ApprovalStatus.PENDING.getCodeId())
+                        .apvlOrd(addApprovalCount)
+                        .userId(user.getUserId())
+                        .userNm(user.getUserNm())
+                        .deptCd(user.getDeptCd())
+                        .jobCd(user.getJobCd())
+                        .apvlType(ApprovalType.REQUEST_APPROVAL.getCodeId())
+                        .build();
+                if (addApprovalCount == 1) {
+                    approvalVo.setRcvDtm(now);
+                    approvalVo.setApvlStatusCd(ApprovalStatus.SENT.getCodeId());
+                }
+                addApprovalCount++;
+                approvalService.insertApproval(approvalVo);
+            }
+        }
+
+        for(String attrbCd : vo.getDocAttrbCd() ){
+            if(attrbCd.equals("DMA02")){
+                //todo userId, userNm, deptCd, jobCd ;
+                ApprovalVo approvalVo = ApprovalVo.builder()
+                        .docId(vo.getDocId())
+                        .apvlOrd(addApprovalCount)
+                        .apvlType(ApprovalType.REQUEST_REVIEW_AND_APPROVAL.getCodeId())
+                        .userId("gduser1")
+                        .build();
+
+                if(addApprovalCount == 1){
+                    approvalVo.setRcvDtm(now);
+                    approvalVo.setApvlStatusCd(ApprovalStatus.SENT.getCodeId());
+                }else{
+                    approvalVo.setApvlStatusCd(ApprovalStatus.PENDING.getCodeId());
+                }
+                addApprovalCount++;
+                approvalService.insertApproval(approvalVo);
+            }
+        }
+
         //document 연결
         LinkDocumentVo linkDocumentVo = LinkDocumentVo
                 .builder()
@@ -380,31 +444,10 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
         //ReceivedStatus 변경
         UpdateReceivedInfoVo updateReceivedInfoVo = UpdateReceivedInfoVo.builder()
                 .rcvStatus(ReceiveStatus.APPROVING_RESPONSE.getCodeId())
-                .rcpDocId(vo.getDocId())
+                .rcpDocId(vo.getFromDocId())
                 .rcvId(vo.getRcvId())
                 .build();
         receivedInfoService.updateReceivedInfo(updateReceivedInfoVo);
-        //approval Type 변경해서 추가
-        String[] approvalIds = vo.getApprovalIds();
-        for(int i =0 ; i < approvalIds.length ; i ++){
-            UserMemberVo user = userService.getUserMemberDetail(approvalIds[i]);
-            ApprovalVo approvalVo = ApprovalVo.builder()
-                    .docId(vo.getDocId())
-                    .apvlStatusCd(ApprovalStatus.PENDING.getCodeId())
-                    .apvlOrd(i+1)
-                    .userId(user.getUserId())
-                    .userNm(user.getUserNm())
-                    .deptCd(user.getDeptCd())
-                    .jobCd(user.getJobCd())
-                    .apvlType(ApprovalType.REQUEST_REPLY_APPROVAL.getCodeId())
-                    .build();
-            if(i ==0) {
-                approvalVo.setRcvDtm(now);
-                approvalVo.setApvlStatusCd(ApprovalStatus.SENT.getCodeId());
-            }
-
-            approvalService.insertApproval(approvalVo);
-        }
         // 이행 파일 가져와서 추가하기
         String[] alreadyUploadFiles = vo.getAlreadyUploadFiles();
         for(String fileId : alreadyUploadFiles){
@@ -428,7 +471,11 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                         .deptCd(user.getDeptCd())
                         .rcvOrd(i+1)
                         .build();
-
+                if(addApprovalCount ==1){
+                    receivedInfoVo.setRcvStatus(ReceiveStatus.SENT.getCodeId());
+                }else{
+                    receivedInfoVo.setRcvStatus(ReceiveStatus.BEFORE_SEND.getCodeId());
+                }
                 receivedInfoService.insertReceivedInfo(receivedInfoVo);
             }else{
                 /* todo 외부기관 */
@@ -445,7 +492,44 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                 .userNm(loginUser.getUserNm())
                 .build();
         historyService.insertHistory(historyVo);
+
+        if(addApprovalCount ==1){
+            documentService.updateStatusOfficialDocument(documentVo.getDocId(), DocumentStatus.TRANSMITTED.getCodeId());
+        }
     }
+    @Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
+    @Override
+    public void rewriteDocument(InsertDocumentVo vo) {
+        saveAllDocument(vo);
+
+        String[] alreadyUploadFiles = vo.getAlreadyUploadFiles();
+        for(String fileId : alreadyUploadFiles){
+            EasFileVo easFileVo =  easFileService.getFileById(fileId);
+            easFileVo.setFileId(UUID.randomUUID().toString());
+            easFileVo.setDocId(vo.getDocId());
+            easFileVo.setFileType(EasFileType.ATTACHMENT_FILE.getCodeId());
+            easFileService.saveEasFile(easFileVo);
+        }
+
+        deleteDocument(vo.getFromDocId());
+    }
+
+    @Override
+    public void endRejectedDocument(String docId) {
+        UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
+        documentService.updateStatusOfficialDocument(docId, DocumentStatus.COMPLETED.getCodeId());
+        HistoryVo historyVo = HistoryVo.builder()
+                .docId(docId)
+                .userId(loginUser.getUserId())
+                .actType(ActionType.COMPLETE_DOCUMENT.getCodeId())
+                .actDtm(LocalDateTime.now())
+                .actDetail(historyService.getActionDetail(ActionType.COMPLETE_DOCUMENT.getCodeId(), loginUser.getUserNm()))
+                .userNm(loginUser.getUserNm())
+                .build();
+        historyService.insertHistory(historyVo);
+    }
+
+    @Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
     public void RequestApprove(UpdateApprovalVo vo){
         UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
         List<ApprovalVo> approvalVoList = approvalService.getApprovals(vo.getDocId());
@@ -502,6 +586,7 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                 .build();
         historyService.insertHistory(historyVo);
     }
+    @Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
     public void ReplyApprove(UpdateApprovalVo vo) {
         UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
         List<ApprovalVo> approvalVoList = approvalService.getApprovals(vo.getDocId());
@@ -583,7 +668,7 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                 .build();
         historyService.insertHistory(historyVo);
     }
-
+    @Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
     public void RequestReviewAndApprove(UpdateApprovalVo vo){
         UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
         List<ApprovalVo> approvalVoList = approvalService.getApprovals(vo.getDocId());
@@ -651,13 +736,20 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
 
     }
     public boolean isEnd(String docId){
-        boolean result = true;
-        List<ReceivedInfoVo>receivedInfo = receivedInfoService.getReceivedInfo(docId);
-        for(ReceivedInfoVo rcvInfoVo : receivedInfo){
-            if(!rcvInfoVo.getRcvStatus().equals(ReceiveStatus.COMPLETED_RESPONSE.getCodeId())) result = false;
+        List<ReceivedInfoVo> receivedInfo = receivedInfoService.getReceivedInfo(docId);
+        // 수신자가 없는 경우 처리 (비즈니스 로직에 따라 결정)
+        if (receivedInfo.isEmpty()) {
+            return false; // 또는 true (비즈니스 요구사항에 따라 결정)
         }
-        return result;
+        // 모든 수신자가 답변 완료 상태인지 확인
+        for (ReceivedInfoVo rcvInfoVo : receivedInfo) {
+            if (!rcvInfoVo.getRcvStatus().equals(ReceiveStatus.COMPLETED_RESPONSE.getCodeId())) {
+                return false; // 하나라도 답변 완료가 아니면 즉시 false 반환
+            }
+        }
+        return true; // 모든 수신자가 답변 완료 상태면 true 반환
     }
+
     @Override
     public int updateReadDateTime(int rcvId) {
         UpdateReceivedInfoVo vo = UpdateReceivedInfoVo.builder()
@@ -679,5 +771,14 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
     public String arrayToString(String[] arrayS){
         return String.join(",", arrayS);
     }
-
+    @Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
+    public void deleteDocument(String docId){
+        documentService.deleteDocument(docId);
+        approvalService.deleteDocument(docId);
+        receivedInfoService.deleteDocument(docId);
+        historyService.deleteDocument(docId);
+        workRequestService.deleteDocument(docId);
+        workResponseService.deleteDocument(docId);
+        easFileService.deleteDocument(docId);
+    }
 }

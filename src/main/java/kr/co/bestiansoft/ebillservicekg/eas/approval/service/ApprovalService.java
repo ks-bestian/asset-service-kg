@@ -17,4 +17,5 @@ public interface ApprovalService {
     int countApprovalList();
     ApprovalVo getApproval(int apvlId);
     ApprovalVo getApprovalsByUserId(String docId);
+    void deleteDocument(String docId);
 }

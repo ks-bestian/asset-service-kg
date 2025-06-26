@@ -71,4 +71,9 @@ public class ReceivedInfoServiceImpl implements ReceivedInfoService {
     public ReceivedInfoVo getReceivedInfoByRcpDocId(String rcpDocId) {
         return receivedInfoRepository.getReceivedInfoByRcpDocId(rcpDocId);
     }
+
+    @Override
+    public void deleteDocument(String docId) {
+        receivedInfoRepository.deleteDocument(docId);
+    }
 }

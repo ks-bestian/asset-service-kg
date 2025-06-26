@@ -57,4 +57,9 @@ public class HistoryServiceImpl implements HistoryService {
         return historyRepository.getHistoryByUserId(docId, new SecurityInfoUtil().getAccountId());
     }
 
+    @Override
+    public void deleteDocument(String docId) {
+        historyRepository.deleteDocument(docId);
+    }
+
 }

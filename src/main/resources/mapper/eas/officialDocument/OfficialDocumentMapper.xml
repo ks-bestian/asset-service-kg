@@ -4,7 +4,7 @@
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.repository.OfficialDocumentMapper">
     <insert id="saveOfficialDocument" parameterType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.OfficialDocumentVo">
         INSERT INTO kgst.eas_document
-        (doc_id, aars_doc_id, user_id, doc_type_cd, doc_attrb_cd, bill_id, tmlmt_yn, tmlmt_dtm, doc_lng, doc_subtle, doc_status_cd, digital_yn, sender_id, sender_nm, dept_cd, doc_no, reg_dtm)
+        (doc_id, aars_doc_id, user_id, doc_type_cd, doc_attrb_cd, bill_id, tmlmt_yn, tmlmt_dtm, doc_lng, doc_subtle, doc_status_cd, digital_yn, sender_id, sender_nm, sender_dept_cd, doc_no, reg_dtm)
         VALUES(#{docId}, #{aarsDocId}, #{userId}, #{docTypeCd}, #{docAttrbCd}, #{billId}, #{tmlmtYn}, #{tmlmtDtm}, #{docLng}, #{docSubtle}, #{docStatusCd}, #{digitalYn}, #{senderId}, #{senderNm}, #{deptCd}, #{docNo}, #{regDtm});
     </insert>
     <update id="updateStatus">
@@ -42,7 +42,7 @@
 
     </select>
     <select id="getDocumentUser" resultType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.DocumentUserDto">
-        select sender_id as user_id , sender_nm as user_nm ,dept_cd
+        select sender_id as user_id , sender_nm as user_nm , sender_dept_cd as dept_cd
           from eas_document ed
          where doc_id = #{docId}
          union distinct
@@ -60,7 +60,7 @@
            and doc_id = #{docId};
     </select>
     <select id="getDocumentDetail" resultType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.DocumentDetailDto">
-        select d.doc_id, aars_file_id,  d.doc_type_cd, d.doc_attrb_cd, bill_id, (select bill_no from ebs_master where bill_id= d.bill_id ) bill_no, tmlmt_yn, tmlmt_dtm, doc_lng, doc_subtle, digital_yn, sender_id, d.sender_nm, d.dept_cd, doc_no, d.reg_dtm, ed.aars_pdf_file_id, d.external_yn
+        select d.doc_id, aars_file_id,  d.doc_type_cd, d.doc_attrb_cd, bill_id, (select bill_no from ebs_master where bill_id= d.bill_id ) bill_no, tmlmt_yn, tmlmt_dtm, doc_lng, doc_subtle, digital_yn, sender_id, d.sender_nm, d.sender_dept_cd, doc_no, d.reg_dtm, ed.aars_pdf_file_id, d.external_yn
           from eas_document d, eas_draft ed
          where d.aars_doc_id = ed.aars_doc_id
            and d.doc_id = #{docId}
@@ -73,7 +73,7 @@
     </select>
     <!--  todo 검색 조건 추가하기  -->
     <select id="getRejectDocumentList" parameterType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.SearchDocumentVo" resultType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.DocumentListDto">
-        select doc_id, doc_attrb_cd, doc_subtle, sender_id, sender_nm, doc_no
+        select doc_id, doc_attrb_cd, doc_subtle, sender_id, sender_nm, doc_no, aars_doc_id
           from eas_document d
          where d.user_id= #{userId}
            and d.doc_status_cd ='DMS04'
@@ -120,4 +120,9 @@
           and res.user_id = #{userId}
         order by reg_dt desc;
     </select>
+    <delete id="deleteDocument">
+        delete from eas_document
+         where doc_id = #{docId}
+    </delete>
+
 </mapper>

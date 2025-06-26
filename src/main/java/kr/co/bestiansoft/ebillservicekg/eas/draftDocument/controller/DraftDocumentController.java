@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,5 +27,10 @@ public class DraftDocumentController {
     public ResponseEntity<CommonResponse> insertDraftDocument(@PathVariable int formId, @RequestBody Map<String, String> map) {
         System.out.println(map.toString());
         return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.insertDraftDocument(formId,map)), HttpStatus.OK);
+    }
+    @ApiOperation(value="getDraftDocument", notes = "getDraftDocument")
+    @GetMapping("/eas/draftDocument/{aarsDocId}")
+    public ResponseEntity<CommonResponse> getDraftDocument(@PathVariable int aarsDocId) {
+        return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.getDraftDocument(aarsDocId)), HttpStatus.OK);
     }
 }

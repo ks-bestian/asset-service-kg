@@ -10,4 +10,5 @@ public interface HistoryRepository {
     int insertHistory (HistoryVo vo);
     List<HistoryVo> getHistory (String docId);
     List<HistoryVo> getHistoryByUserId (String docId, String userId);
+    void deleteDocument(String docId);
 }

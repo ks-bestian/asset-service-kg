@@ -45,5 +45,13 @@
            and res.user_id = #{userId}
          order by req.work_req_id desc
     </select>
+    <delete id="deleteDocument">
+        delete from eas_work_response
+        where work_req_id in (
+            select work_req_id
+            from eas_work_request
+            where doc_id = #{docId}
+        )
+    </delete>
 
 </mapper>

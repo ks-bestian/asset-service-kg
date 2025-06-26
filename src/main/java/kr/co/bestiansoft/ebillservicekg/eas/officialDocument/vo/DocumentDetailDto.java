@@ -24,7 +24,7 @@ public class DocumentDetailDto {
     private String digitalYn;
     private String senderId;
     private String senderNm;
-    private String deptCd;
+    private String senderDeptCd;
     private String docNo;
     private LocalDateTime regDtm;
     private String externalYn;

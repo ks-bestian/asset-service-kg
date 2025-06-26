@@ -8,7 +8,8 @@
         VALUES(#{fromDocId}, #{toDocId}, #{linkType}, #{regDtm}, #{regId});
     </insert>
     <delete id="deleteLinkDocument">
-        delete kgst.eas_link_document
+        delete
+          from kgst.eas_link_document
          where from_doc_id =#{fromDocId}
            and to_doc_id =#{toDocId}
     </delete>
