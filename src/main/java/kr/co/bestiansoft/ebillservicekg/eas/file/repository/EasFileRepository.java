@@ -11,4 +11,5 @@ public interface EasFileRepository {
     List<EasFileVo> getAttachFiles(String docId , String fileType);
     void updatePdfFileInfo(EasFileVo vo);
     EasFileVo getFileById(String fileId);
+    void deleteDocument(String docId);
 }

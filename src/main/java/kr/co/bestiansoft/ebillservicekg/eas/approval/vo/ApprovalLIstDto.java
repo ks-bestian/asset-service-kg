@@ -17,4 +17,5 @@ public class ApprovalLIstDto {
     private LocalDateTime rcvDtm;
     private LocalDateTime checkDtm;
     private String apvlId;
+    private String apvlType;
 }

@@ -19,4 +19,8 @@
         where doc_id = #{docId}
           and user_id = #{userId}
     </select>
+    <delete id="deleteDocument">
+        delete from eas_history
+        where doc_id= #{docId}
+    </delete>
 </mapper>

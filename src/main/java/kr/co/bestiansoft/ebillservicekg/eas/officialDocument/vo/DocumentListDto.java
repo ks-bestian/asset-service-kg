@@ -22,4 +22,5 @@ public class DocumentListDto {
     private String rcvId;
     private int rspnsId;
     private String externalYn;
+    private String aarsDocId;
 }

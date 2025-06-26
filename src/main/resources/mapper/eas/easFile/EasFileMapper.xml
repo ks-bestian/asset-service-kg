@@ -25,4 +25,8 @@
           from eas_file f
          where f.file_id = #{fileId}
     </select>
+    <delete id="deleteDocument">
+        delete from eas_file
+         where doc_id =#{docId}
+    </delete>
 </mapper>

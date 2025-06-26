@@ -79,4 +79,9 @@ public class ApprovalServiceImpl implements ApprovalService {
         return approvalRepository.getApprovalsByUserId(new SecurityInfoUtil().getAccountId(), docId);
     }
 
+    @Override
+    public void deleteDocument(String docId) {
+        approvalRepository.deleteDocument(docId);
+    }
+
 }

@@ -72,4 +72,9 @@ public class WorkResponseServiceImpl implements WorkResponseService {
 
         workResponseRepository.updateWorkContents(vo);
     }
+
+    @Override
+    public void deleteDocument(String docId) {
+        workResponseRepository.deleteDocument(docId);
+    }
 }

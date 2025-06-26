@@ -12,4 +12,5 @@ public interface WorkRequestService {
     List<WorkRequestAndResponseVo> getWorkRequestList(int rcvId);
     List<WorkRequestAndResponseVo> getWorkRequestList(String docId);
     WorkRequestAndResponseVo getWorkRequestAndResponseList(String docId);
+    void deleteDocument(String docId);
 }

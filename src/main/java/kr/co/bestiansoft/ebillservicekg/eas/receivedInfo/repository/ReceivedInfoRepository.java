@@ -14,4 +14,6 @@ public interface ReceivedInfoRepository {
     boolean isReceipt(int rcvId);
     String getMainWorker(int rcvId);
     ReceivedInfoVo getReceivedInfoByUserId(String docId, String userId);
+    ReceivedInfoVo getReceivedInfoByRcpDocId(String rcpDocId);
+    void deleteDocument(String docId);
 }

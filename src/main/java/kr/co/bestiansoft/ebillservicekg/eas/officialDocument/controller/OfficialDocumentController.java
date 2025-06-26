@@ -84,5 +84,22 @@ public class OfficialDocumentController {
     public ResponseEntity<CommonResponse> getProcessedDocument(SearchDocumentVo vo){
         return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.getProcessedList(vo)), HttpStatus.OK);
     }
-
+    @ApiOperation(value = "save Reply Document", notes="save Reply Document")
+    @PostMapping("/eas/document/reply")
+    public ResponseEntity<CommonResponse> saveReplyDocument(@RequestBody InsertDocumentVo vo){
+        documentWorkFlowService.saveReplyDocument(vo);
+        return new ResponseEntity<>(new CommonResponse(200, "OK"), HttpStatus.OK);
+    }
+    @ApiOperation(value=" rewrite reject document", notes="rewrite")
+    @PostMapping("/eas/document/rewrite")
+    public ResponseEntity<CommonResponse> rewriteDocument(@RequestBody InsertDocumentVo vo){
+         documentWorkFlowService.rewriteDocument(vo);
+        return new ResponseEntity<>(new CommonResponse(200, "OK"), HttpStatus.OK);
+    }
+    @ApiOperation(value ="end rejected document", notes="end rejected document")
+    @PutMapping("/eas/document/reject/end/{docId}")
+    public ResponseEntity<CommonResponse> endRejectedDocument (@PathVariable String docId){
+        documentWorkFlowService.endRejectedDocument(docId);
+        return new ResponseEntity<>(new CommonResponse(200, "OK"), HttpStatus.OK);
+    }
 }

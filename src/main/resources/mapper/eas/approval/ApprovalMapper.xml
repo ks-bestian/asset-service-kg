@@ -4,8 +4,8 @@
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.eas.approval.repository.ApprovalRepository">
     <insert id="insertApproval" parameterType="kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalVo">
         INSERT INTO kgst.eas_approval
-        (doc_id, user_id, user_nm, dept_cd, job_cd, apvl_ord, res_dtm, rcv_dtm, check_dtm, apvl_file_id, res_opinion, apvl_status_cd)
-        VALUES(#{docId}, #{userId}, #{userNm}, #{deptCd}, #{jobCd}, #{apvlOrd}, #{resDtm}, #{rcvDtm}, #{checkDtm}, #{apvlFileId}, #{resOpinion}, #{apvlStatusCd});
+        (doc_id, user_id, user_nm, dept_cd, job_cd, apvl_ord, res_dtm, rcv_dtm, check_dtm, apvl_file_id, res_opinion, apvl_status_cd, apvl_type)
+        VALUES(#{docId}, #{userId}, #{userNm}, #{deptCd}, #{jobCd}, #{apvlOrd}, #{resDtm}, #{rcvDtm}, #{checkDtm}, #{apvlFileId}, #{resOpinion}, #{apvlStatusCd}, #{apvlType});
     </insert>
     <update id="updateStatus">
         update kgst.eas_approval
@@ -25,13 +25,13 @@
         where apvl_id = #{apvlId}
     </update>
     <select id="getApprovals" resultType="kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalVo">
-        select apvl_id, doc_id, user_id, user_nm, dept_cd, job_cd, apvl_ord, res_dtm, rcv_dtm, check_dtm, apvl_file_id, res_opinion, apvl_status_cd
+        select apvl_id, doc_id, user_id, user_nm, dept_cd, job_cd, apvl_ord, res_dtm, rcv_dtm, check_dtm, apvl_file_id, res_opinion, apvl_status_cd, apvl_type
           from kgst.eas_approval
          where doc_id =#{docId}
          order by apvl_ord
     </select>
     <select id="getApprovalList" resultType="kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalLIstDto" parameterType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.SearchDocumentVo">
-        select d.doc_id, doc_attrb_cd, doc_subtle, sender_id, sender_nm, doc_no, rcv_dtm, check_dtm, apvl_id
+        select d.doc_id, doc_attrb_cd, doc_subtle, sender_id, sender_nm, doc_no, rcv_dtm, check_dtm, apvl_id, apvl_type
           from eas_document d, eas_approval a
          where d.doc_id = a.doc_id
            and d.doc_status_cd ='DMS01'
@@ -57,15 +57,19 @@
         );
     </select>
     <select id="getApproval" resultType="kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalVo">
-        select apvl_id, doc_id, user_id, user_nm, dept_cd, job_cd, apvl_ord, res_dtm, rcv_dtm, check_dtm, apvl_file_id, res_opinion, apvl_status_cd
+        select apvl_id, doc_id, user_id, user_nm, dept_cd, job_cd, apvl_ord, res_dtm, rcv_dtm, check_dtm, apvl_file_id, res_opinion, apvl_status_cd, apvl_type
           from eas_approval
          where apvl_id =#{apvlId}
     </select>
     <select id="getApprovalsByUserId" resultType="kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalVo">
-        select apvl_id, doc_id, user_id, user_nm, dept_cd, job_cd, apvl_ord, res_dtm, rcv_dtm, check_dtm, apvl_file_id, res_opinion, apvl_status_cd
+        select apvl_id, doc_id, user_id, user_nm, dept_cd, job_cd, apvl_ord, res_dtm, rcv_dtm, check_dtm, apvl_file_id, res_opinion, apvl_status_cd, apvl_type
           from kgst.eas_approval
          where doc_id =#{docId}
            and user_id = #{userId}
          order by apvl_ord
     </select>
+    <delete id="deleteDocument">
+        delete from eas_approval
+        where doc_id =#{docId}
+    </delete>
 </mapper>

@@ -95,4 +95,9 @@ public class WorkRequestServiceImpl implements WorkRequestService {
             return null;
         }
     }
+
+    @Override
+    public void deleteDocument(String docId) {
+        workRequestRepository.deleteDocument(docId);
+    }
 }

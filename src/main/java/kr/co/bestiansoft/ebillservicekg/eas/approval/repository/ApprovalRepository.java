@@ -18,4 +18,5 @@ public interface ApprovalRepository {
     int countApprovalList(String userId);
     ApprovalVo getApproval(int apvlId);
     ApprovalVo getApprovalsByUserId(String userId, String docId);
+    void deleteDocument(String docId);
 }

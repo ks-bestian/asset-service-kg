@@ -26,10 +26,14 @@ public class InsertDocumentVo {
     private String senderId;
     private String senderNm;
     private String docNo;
-    private String deptCd;
+    private String senderDeptCd;
     private String jobCd;
     private String regDtm;
     private char externalYn;
+
+    private String fromDocId;
+    private int rcvId;
+    private String[] alreadyUploadFiles;
 
     private String[] approvalIds;
 

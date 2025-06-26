@@ -8,5 +8,5 @@ public interface DraftDocumentService {
 
     DraftDocumentVo insertDraftDocument(int formId,  Map<String, String> map);
     void updateDraftStatus(int aarsDocId, String aarsStatusCd);
-    DraftDocumentVo getDraftDocument(String aarsDocId);
+    DraftDocumentVo getDraftDocument(int aarsDocId);
 }

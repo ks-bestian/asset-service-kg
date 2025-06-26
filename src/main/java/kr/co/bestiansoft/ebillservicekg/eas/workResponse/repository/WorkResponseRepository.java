@@ -14,4 +14,5 @@ public interface WorkResponseRepository {
     int deleteWorkRequestId(String workReqId);
     List<WorkResponseVo> getWorkResponse(@Param("rcvId") Integer rcvId, @Param("docId") String docId);
     List<WorkResponseVo> getWorkResponseByUserId(Integer workReqId, String docId);
+    void deleteDocument(String docId);
 }
