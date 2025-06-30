@@ -44,6 +44,9 @@ public class SecurityConfig {
         	.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeHttpRequests((authorize) -> authorize
+                .antMatchers(
+                        "/v3/api-docs",
+                        "/swagger*/**").permitAll()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/com/file/pdf").permitAll()
                 .antMatchers("/com/file/down").permitAll()

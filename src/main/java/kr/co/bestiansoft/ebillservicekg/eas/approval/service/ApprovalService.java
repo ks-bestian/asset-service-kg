@@ -13,8 +13,6 @@ public interface ApprovalService {
     void updateStatus(String apvlId, String apvlStatusCd);
     void updateApproval(UpdateApprovalVo vo);
     List<ApprovalVo> getApprovals (String docId);
-    List<ApprovalLIstDto> getApprovalList(SearchDocumentVo vo);
-    int countApprovalList();
     ApprovalVo getApproval(int apvlId);
     ApprovalVo getApprovalsByUserId(String docId);
     void deleteDocument(String docId);

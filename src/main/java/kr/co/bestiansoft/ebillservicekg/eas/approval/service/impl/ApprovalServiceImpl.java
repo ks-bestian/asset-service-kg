@@ -60,16 +60,6 @@ public class ApprovalServiceImpl implements ApprovalService {
         return  approvalRepository.getApprovals(docId);
     }
 
-    @Override
-    public List<ApprovalLIstDto> getApprovalList(SearchDocumentVo vo) {
-        vo.setUserId(new SecurityInfoUtil().getAccountId());
-
-        return approvalRepository.getApprovalList(vo);
-    }
-
-    public int countApprovalList(){
-        return approvalRepository.countApprovalList(new SecurityInfoUtil().getAccountId());
-    }
 
     public ApprovalVo getApproval(int apvlId){
         return approvalRepository.getApproval(apvlId);

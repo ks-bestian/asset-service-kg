@@ -19,8 +19,11 @@ public class DocumentListDto {
     private String docNo;
     private LocalDateTime rcvDtm;
     private LocalDateTime checkDtm;
+    private LocalDateTime resDtm;
     private String rcvId;
     private int rspnsId;
     private String externalYn;
     private String aarsDocId;
+
+    private String resUserId;
 }

@@ -32,6 +32,7 @@ public class OfficialDocumentController {
     @ApiOperation(value = "getDocumentLists", notes = "getDocumentLists")
     @GetMapping("/eas/documents")
     public ResponseEntity<CommonResponse> getOfficialDocument (SearchDocumentVo vo){
+        System.out.println(vo.toString());
         return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.getDocumentList(vo)), HttpStatus.OK);
     }
     @ApiOperation(value = "getDocumentDetail", notes = "getDocumentDetail")
@@ -43,6 +44,16 @@ public class OfficialDocumentController {
     @GetMapping("/eas/document/receive/count")
     public ResponseEntity<CommonResponse> getDocumentCount (){
         return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.countDocumentList()), HttpStatus.OK);
+    }
+    @ApiOperation(value = "getCountWorkList", notes ="getCountWorkList")
+    @GetMapping("/eas/document/work/count")
+    public ResponseEntity<CommonResponse> getCountWorkList (){
+        return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.countWorkList()), HttpStatus.OK);
+    }
+    @ApiOperation(value = "getCountRejectList", notes ="getCountRejectList")
+    @GetMapping("/eas/document/reject/count")
+    public ResponseEntity<CommonResponse> getCountRejectList (){
+        return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.countRejectDocument()), HttpStatus.OK);
     }
     @ApiOperation(value = "updateDocumentStatus", notes = "updateDocumentStatus")
     @PutMapping("/eas/document/status")
@@ -101,5 +112,15 @@ public class OfficialDocumentController {
     public ResponseEntity<CommonResponse> endRejectedDocument (@PathVariable String docId){
         documentWorkFlowService.endRejectedDocument(docId);
         return new ResponseEntity<>(new CommonResponse(200, "OK"), HttpStatus.OK);
+    }
+    @ApiOperation(value="getApproval List", notes = "getApproval List")
+    @GetMapping("/eas/approval")
+    public ResponseEntity<CommonResponse> getApprovals(SearchDocumentVo vo) {
+        return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.getApprovalList(vo)), HttpStatus.OK);
+    }
+    @ApiOperation(value="count Approval List", notes = "count Approval List")
+    @GetMapping("/eas/approval/count")
+    public ResponseEntity<CommonResponse> countApprovalList() {
+        return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.countApprovalList()), HttpStatus.OK);
     }
 }

@@ -2,6 +2,7 @@ package kr.co.bestiansoft.ebillservicekg.eas.officialDocument.service.impl;
 
 
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
+import kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalLIstDto;
 import kr.co.bestiansoft.ebillservicekg.eas.documentWorkFlow.enums.EasFileType;
 import kr.co.bestiansoft.ebillservicekg.eas.file.service.EasFileService;
 import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.repository.OfficialDocumentMapper;
@@ -12,6 +13,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 
@@ -37,6 +42,10 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
      */
     @Override
     public List<DocumentListDto> getDocumentList(SearchDocumentVo vo) {
+        if(vo.getBetweenRcvDtm() != null) {
+            vo.setFromRcvDtm(parseFromDateRange(vo.getBetweenRcvDtm()));
+            vo.setToRcvDtm(parseToDateRange(vo.getBetweenRcvDtm()));
+        }
         vo.setUserId(new SecurityInfoUtil().getAccountId());
         return officialDocumentMapper.getDocumentList(vo);
     }
@@ -145,4 +154,128 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
     public void deleteDocument(String docId) {
         officialDocumentMapper.deleteDocument(docId);
     }
+
+    @Override
+    public int countWorkList() {
+        return officialDocumentMapper.countWorkList(new SecurityInfoUtil().getAccountId());
+    }
+
+    public LocalDateTime parseFromDateRange(String dateRangeStr) {
+        if (dateRangeStr == null || dateRangeStr.trim().isEmpty()) {
+            return null;
+        }
+
+        try {
+            String[] dates = dateRangeStr.split("~");
+            if (dates.length > 0 && !dates[0].trim().isEmpty()) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                LocalDate fromDate = LocalDate.parse(dates[0].trim(), formatter);
+                return fromDate.atStartOfDay(); // 00:00:00으로 설정
+            }
+        } catch (DateTimeParseException e) {
+            // 로깅 또는 다른 예외 처리
+            System.err.println("날짜 형식이 올바르지 않습니다: " + dateRangeStr);
+        }
+
+        return null;
+    }
+
+    public static LocalDateTime parseToDateRange(String dateRangeStr) {
+        if (dateRangeStr == null || dateRangeStr.trim().isEmpty()) {
+            return null;
+        }
+
+        try {
+            String[] dates = dateRangeStr.split("~");
+            LocalDate toDate;
+
+            if (dates.length > 1 && !dates[1].trim().isEmpty()) {
+                // 종료일이 있는 경우
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                toDate = LocalDate.parse(dates[1].trim(), formatter);
+            } else if (dates.length > 0 && !dates[0].trim().isEmpty()) {
+                // 종료일이 없고 시작일만 있는 경우, 시작일을 종료일로 사용
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                toDate = LocalDate.parse(dates[0].trim(), formatter);
+            } else {
+                return null;
+            }
+
+            return toDate.atTime(23, 59, 59); // 23:59:59로 설정
+        } catch (DateTimeParseException e) {
+            // 로깅 또는 다른 예외 처리
+            System.err.println("날짜 형식이 올바르지 않습니다: " + dateRangeStr);
+        }
+
+        return null;
+    }
+    @Override
+    public List<ApprovalLIstDto> getApprovalList(SearchDocumentVo vo) {
+        vo.setUserId(new SecurityInfoUtil().getAccountId());
+
+        return officialDocumentMapper.getApprovalList(vo);
+    }
+
+    public int countApprovalList(){
+        return officialDocumentMapper.countApprovalList(new SecurityInfoUtil().getAccountId());
+    }
+    /**
+     * 문자열 날짜를 LocalDateTime으로 변환
+     *
+     * @param dateStr "yyyy-MM-dd" 형식의 문자열
+     * @param startOfDay true면 00:00:00, false면 23:59:59로 시간 설정
+     * @return 변환된 LocalDateTime 객체
+     */
+    public static LocalDateTime parseDate(String dateStr, boolean startOfDay) {
+        if (dateStr == null || dateStr.trim().isEmpty()) {
+            return null;
+        }
+
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate date = LocalDate.parse(dateStr.trim(), formatter);
+
+            if (startOfDay) {
+                return date.atStartOfDay();
+            } else {
+                return date.atTime(23, 59, 59);
+            }
+        } catch (DateTimeParseException e) {
+            // 로깅 또는 다른 예외 처리
+            System.err.println("날짜 형식이 올바르지 않습니다: " + dateStr);
+        }
+
+        return null;
+    }
+
+    /**
+     * 문자열 날짜와 시간을 LocalDateTime으로 변환
+     *
+     * @param dateTimeStr "yyyy-MM-dd HH:mm:ss" 형식의 문자열
+     * @return 변환된 LocalDateTime 객체
+     */
+    public static LocalDateTime parseDateTime(String dateTimeStr) {
+        if (dateTimeStr == null || dateTimeStr.trim().isEmpty()) {
+            return null;
+        }
+
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            return LocalDateTime.parse(dateTimeStr.trim(), formatter);
+        } catch (DateTimeParseException e) {
+            // 잘못된 형식일 경우 다른 형식 시도
+            try {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                return LocalDate.parse(dateTimeStr.trim(), formatter).atStartOfDay();
+            } catch (DateTimeParseException e2) {
+                // 로깅 또는 다른 예외 처리
+                System.err.println("날짜 형식이 올바르지 않습니다: " + dateTimeStr);
+            }
+        }
+
+        return null;
+    }
+
+
+
 }

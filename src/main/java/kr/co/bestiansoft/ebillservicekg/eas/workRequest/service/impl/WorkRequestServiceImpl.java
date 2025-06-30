@@ -67,7 +67,7 @@ public class WorkRequestServiceImpl implements WorkRequestService {
     public List<WorkRequestAndResponseVo> getWorkRequestList(int rcvId) {
         return workRequestRepository.getWorkRequestList(rcvId, null).stream()
                 .map(request -> {
-                    List<WorkResponseVo> responses = workResponseService.getWorkResponse(request.getRcvId());
+                    List<WorkResponseVo> responses = workResponseService.getWorkResponses(request.getWorkReqId());
                     return new WorkRequestAndResponseVo().from(request, responses);
                 })
                 .collect(Collectors.toList());
@@ -77,7 +77,7 @@ public class WorkRequestServiceImpl implements WorkRequestService {
     public List<WorkRequestAndResponseVo> getWorkRequestList(String docId) {
         return workRequestRepository.getWorkRequestList(null, docId).stream()
                 .map(request -> {
-                    List<WorkResponseVo> responses = workResponseService.getWorkResponse(docId);
+                    List<WorkResponseVo> responses = workResponseService.getWorkResponses(request.getWorkReqId());
                     return new WorkRequestAndResponseVo().from(request, responses);
                 })
                 .collect(Collectors.toList());

@@ -14,4 +14,5 @@ public interface WorkResponseService {
     List<WorkResponseVo> getWorkResponseByUserId(int workReqId);
     void updateReadDtm(int rspnsId);
     void deleteDocument(String docId);
+    List<WorkResponseVo> getWorkResponses(int workReqId);
 }

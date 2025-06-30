@@ -53,5 +53,9 @@
             where doc_id = #{docId}
         )
     </delete>
-
+    <select id="getWorkResponses" resultType="kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.WorkResponseVo">
+        select res.rspns_id, work_req_id, user_id, dept_cd, job_cd, check_dtm, rspns_dtm, rspns_cn, file_id, user_nm, file_nm, rcv_dtm
+          from eas_work_response res
+         where res.work_req_id =#{workReqId}
+    </select>
 </mapper>
