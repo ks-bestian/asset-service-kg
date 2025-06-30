@@ -79,16 +79,16 @@
             , view.user_nm_kg
             , view.user_nm_ru
             , view.dept_cd
-            , kgst.fngetlangnm(view.dept_nm_kg,view.dept_nm_ru,view.dept_nm_kg,#{lang}) as dept_nm
+--             , kgst.fngetlangnm(view.dept_nm_kg,view.dept_nm_ru,view.dept_nm_kg,#{lang}) as dept_nm
             , view.email
             , view.gen_cd
             , view.job_cd
             , view.msg_rcv_yn
-            , kgst.fngetlangnm(cc.code_nm1,cc.code_nm2,cc.code_nm1,#{lang}) as user_nm
+--             , kgst.fngetlangnm(cc.code_nm1,cc.code_nm2,cc.code_nm1,#{lang}) as user_nm
             , view.pos_cd
             , view.age_cd
             , view.cmit_cd
-            , kgst.fngetlangnm(view.cmit_nm_kg,view.cmit_nm_ru,view.cmit_nm_kg,#{lang}) as cmit_nm
+--             , kgst.fngetlangnm(view.cmit_nm_kg,view.cmit_nm_ru,view.cmit_nm_kg,#{lang}) as cmit_nm
             , view.poly_cd
             , view.poly_nm
             , cm.mbl_no

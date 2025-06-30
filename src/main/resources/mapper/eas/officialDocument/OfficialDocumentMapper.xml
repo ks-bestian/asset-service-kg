@@ -5,7 +5,7 @@
     <insert id="saveOfficialDocument" parameterType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.OfficialDocumentVo">
         INSERT INTO kgst.eas_document
         (doc_id, aars_doc_id, user_id, doc_type_cd, doc_attrb_cd, bill_id, tmlmt_yn, tmlmt_dtm, doc_lng, doc_subtle, doc_status_cd, digital_yn, sender_id, sender_nm, sender_dept_cd, doc_no, reg_dtm)
-        VALUES(#{docId}, #{aarsDocId}, #{userId}, #{docTypeCd}, #{docAttrbCd}, #{billId}, #{tmlmtYn}, #{tmlmtDtm}, #{docLng}, #{docSubtle}, #{docStatusCd}, #{digitalYn}, #{senderId}, #{senderNm}, #{deptCd}, #{docNo}, #{regDtm});
+        VALUES(#{docId}, #{aarsDocId}, #{userId}, #{docTypeCd}, #{docAttrbCd}, #{billId}, #{tmlmtYn}, #{tmlmtDtm}, #{docLng}, #{docSubtle}, #{docStatusCd}, #{digitalYn}, #{senderId}, #{senderNm}, #{senderDeptCd}, #{docNo}, #{regDtm});
     </insert>
     <update id="updateStatus">
         update kgst.eas_document
@@ -86,7 +86,7 @@
         select count(1)
           from eas_document d
          where d.user_id= #{userId}
-           and d.doc_status_cd = 'DMS02'
+           and d.doc_status_cd = 'DMS04'
     </select>
     <select id="getMyDocumentList" parameterType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.SearchDocumentVo" resultType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.DocumentListDto">
         select doc_id, doc_attrb_cd, doc_subtle, sender_id, sender_nm, doc_no
