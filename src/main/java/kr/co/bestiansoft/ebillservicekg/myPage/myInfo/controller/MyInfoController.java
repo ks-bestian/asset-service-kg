@@ -40,7 +40,7 @@ public class MyInfoController {
 
     @ApiOperation(value = "내정보 이미지", notes="내정보 이미지를 조회한다.")
     @GetMapping("myPage/myInfo/img")
-    public ResponseEntity<?> getMyInfoImg(HashMap<String, Object> param) {
+    public ResponseEntity<?> getMyInfoImg(@RequestParam HashMap<String, Object> param) {
         InputStream content = myInfoService.getFileContentByPath(param);
         Resource resource = content != null ? new InputStreamResource(content) : null;
 
