@@ -83,4 +83,9 @@ public class BoardServiceImpl implements BoardService {
     	boardVo.setFiles(null);
     	return boardVo;
     }
+    
+    @Override
+    public List<BoardVo> getBoardMainList() {
+    	return boardMapper.getBoardMainList();
+    }
 }

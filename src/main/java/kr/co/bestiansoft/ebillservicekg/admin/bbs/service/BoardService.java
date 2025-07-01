@@ -12,4 +12,5 @@ public interface BoardService {
     void deleteBoard(List<Long> boardIds);
     BoardVo getBoardById(Long brdId, String lang);
     BoardVo createBoardFile(BoardVo boardVo, String brdType);
+    List<BoardVo> getBoardMainList();
 }

@@ -13,7 +13,7 @@ public interface BoardMapper {
     void deleteById(Long id);
     int updateById(BoardVo boardVo);
 
-    List<BoardVo> getBoardMainList (String brdType);
+    List<BoardVo> getBoardMainList ();
     List<BoardVo> getBoardMainPopupList ();
     int updateNotiInqCnt(Long brdId, Long notiInqCnt);
     
