@@ -3,18 +3,29 @@ package kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @NoArgsConstructor
 @Data
 public class SearchDocumentVo {
-    String userId;
-    String docSubtle;
-    String tmlmtYn;
-    String tmlmtDtm;
-    String fromRcvDtm;
-    String toRcvDtm;
-    String docNo;
-    String docTypeCd;
-    String senderNm;
+    private String userId;
+    private String docSubtle;
+    private String tmlmtYn;
+    private LocalDateTime tmlmtDtm;
+    private LocalDateTime fromRcvDtm;
+    private LocalDateTime toRcvDtm;
+    String betweenRcvDtm;
+    private String docNo;
+    private String docTypeCd;
+    private String senderNm;
 
-    String rcvId;
+    private String rcvId;
+
+    private String searchContent;
+
+    private LocalDateTime fromResDtm;
+    private LocalDateTime toResDtm;
+
+    private int page;
+    private int size;
 }

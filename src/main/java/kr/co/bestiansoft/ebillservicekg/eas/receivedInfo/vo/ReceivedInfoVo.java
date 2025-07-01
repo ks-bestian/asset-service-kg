@@ -23,9 +23,10 @@ public class ReceivedInfoVo {
     private int rcvOrd;
     private String workerId;
     private String hashFileId;
+    private String rcpDocId;
 
     @Builder
-    public ReceivedInfoVo(int rcvId, String docId, String userId, String userNm, String deptCd, String extOrgnCd, String rcvStatus, LocalDateTime rcvDtm, LocalDateTime checkDtm, LocalDateTime rcpDtm, LocalDateTime rjctDtm, String rjctCn, int rcvOrd, String workerId, String hashFileId) {
+    public ReceivedInfoVo(int rcvId, String docId, String userId, String userNm, String deptCd, String extOrgnCd, String rcvStatus, LocalDateTime rcvDtm, LocalDateTime checkDtm, LocalDateTime rcpDtm, LocalDateTime rjctDtm, String rjctCn, int rcvOrd, String workerId, String hashFileId, String rcpDocId) {
         this.rcvId = rcvId;
         this.docId = docId;
         this.userId = userId;
@@ -41,5 +42,6 @@ public class ReceivedInfoVo {
         this.rcvOrd = rcvOrd;
         this.workerId = workerId;
         this.hashFileId = hashFileId;
+        this.rcpDocId = rcpDocId;
     }
 }

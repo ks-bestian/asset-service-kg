@@ -7,5 +7,7 @@ import java.util.List;
 public interface LinkDocumentService {
     int insertLinkDocument(LinkDocumentVo vo);
     int deleteLinkDocument(String fromDocId, String toDocId);
-    List<LinkDocumentVo> getLinkDocument(String docId);
+    List<LinkDocumentVo> getLinkDocumentByDocId(String docId);
+    LinkDocumentVo getLinkDocumentByDocIdAndType(String docId, String linkType);
+    List<LinkDocumentVo> getLinkDocument(int linkId);
 }

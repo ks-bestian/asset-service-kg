@@ -70,7 +70,7 @@ public class FormServiceImpl implements FormService {
         FormWithFieldsVo formWithFieldsVo = formMapper.selectFormById(formId);
         String fileId = formWithFieldsVo.getFileId();
 
-        if (!fileId.isEmpty()) {
+        if (fileId != null) {
             comFileService.deleteFile(fileId);
         }
         formMapper.deleteForm(formId);

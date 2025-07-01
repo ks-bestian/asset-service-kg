@@ -64,6 +64,7 @@ public class WorkRequestAndResponseVo {
                 .workStatus(vo.getWorkStatus())
                 .workResponseVos(workResponseVo)
                 .rcvId(vo.getRcvId())
+                .docId(vo.getDocId())
                 .build();
     }
 

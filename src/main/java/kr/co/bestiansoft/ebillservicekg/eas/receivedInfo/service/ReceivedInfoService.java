@@ -13,4 +13,6 @@ public interface ReceivedInfoService {
     boolean isReceipt(int docId);
     UserMemberVo getMainWorkerInfo(int rcvId);
     ReceivedInfoVo getReceivedInfoByUserId(String docId);
+    ReceivedInfoVo getReceivedInfoByRcpDocId(String rcpDocId);
+    void deleteDocument(String docId);
 }

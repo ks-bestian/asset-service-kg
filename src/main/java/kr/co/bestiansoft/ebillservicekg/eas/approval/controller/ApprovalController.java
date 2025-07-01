@@ -34,16 +34,6 @@ public class ApprovalController {
     public ResponseEntity<CommonResponse> getApproval(@PathVariable String docId){
         return new ResponseEntity<>(new CommonResponse(200, "OK", approvalService.getApprovals(docId)), HttpStatus.OK);
     }
-    @ApiOperation(value="getApproval List", notes = "getApproval List")
-    @GetMapping("/eas/approval")
-    public ResponseEntity<CommonResponse> getApprovals(SearchDocumentVo vo) {
-        return new ResponseEntity<>(new CommonResponse(200, "OK", approvalService.getApprovalList(vo)), HttpStatus.OK);
-    }
-    @ApiOperation(value="count Approval List", notes = "count Approval List")
-    @GetMapping("/eas/approval/count")
-    public ResponseEntity<CommonResponse> countApprovalList() {
-        return new ResponseEntity<>(new CommonResponse(200, "OK", approvalService.countApprovalList()), HttpStatus.OK);
-    }
     @ApiOperation(value = "Read Approval", notes = "Read Approval")
     @PutMapping("/eas/approval/read/{apvlId}")
     public ResponseEntity<CommonResponse> readApproval( @PathVariable int apvlId) {
@@ -62,7 +52,6 @@ public class ApprovalController {
         documentWorkFlowService.approveReject(vo);
         return new ResponseEntity<>(new CommonResponse(200, "OK", vo.getApvlId() ),HttpStatus.OK);
     }
-
     @ApiOperation(value = "get approvals by docId", notes = "get approvals by docId")
     @GetMapping("/eas/approval/user/{docId}")
     public ResponseEntity<CommonResponse> getApprovalsByUserId(@PathVariable String docId) {

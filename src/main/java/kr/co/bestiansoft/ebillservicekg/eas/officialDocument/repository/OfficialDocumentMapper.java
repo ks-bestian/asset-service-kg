@@ -1,6 +1,7 @@
 package kr.co.bestiansoft.ebillservicekg.eas.officialDocument.repository;
 
 import com.aspose.cells.DateTime;
+import kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalLIstDto;
 import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.*;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -20,5 +21,9 @@ public interface OfficialDocumentMapper {
     int countRejectDocument(String userId);
     List<DocumentListDto> getMyDocumentList(SearchDocumentVo vo);
     List<DocumentListDto> getWorkList(SearchDocumentVo vo);
+    int countWorkList(String userId);
     List<DocumentListDto> getProcessedList(SearchDocumentVo vo);
+    void deleteDocument(String docId);
+    List<ApprovalLIstDto> getApprovalList(SearchDocumentVo vo);
+    int countApprovalList(String userId);
 }

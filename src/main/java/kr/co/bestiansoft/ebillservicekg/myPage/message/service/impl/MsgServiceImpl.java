@@ -50,13 +50,11 @@ public class MsgServiceImpl implements MsgService {
     @Override
     public boolean sendMsg(MsgRequest msgRequest) {
         msgRequest.setSendId(new SecurityInfoUtil().getAccountId());
-        String fileGroupId = null;
 
         if (msgRequest.getFiles() != null) {
-            fileGroupId = comFileService.saveFile(msgRequest.getFiles());
+            String fileGroupId = comFileService.saveFileList(msgRequest.getFiles());
+            msgRequest.setFileGroupId(fileGroupId);
         }
-
-        msgRequest.setFileGroupId(fileGroupId);
 
         List<String> rcvIds = msgRequest.getRcvIds();
         msgRequest.setMsgGroupId(StringUtil.getUUUID());
@@ -69,13 +67,10 @@ public class MsgServiceImpl implements MsgService {
             // WebSocket을 통해 실시간 알림 전송
             messagingTemplate.convertAndSend("/topic/messages/" + rcvId, "새 쪽지가 도착했습니다!");
 
-        }
-
-        for (String rcvId : rcvIds) {
-            msgRequest.setRcvId(rcvId);
             msgRequest.setMsgDiv("S");
             msgMapper.insertMsg(msgRequest);
         }
+
 //        fileGroupId = null;
 //        return msgRequest;
         return true;

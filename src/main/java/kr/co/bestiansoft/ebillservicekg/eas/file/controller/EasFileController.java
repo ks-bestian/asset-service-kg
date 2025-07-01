@@ -2,6 +2,7 @@ package kr.co.bestiansoft.ebillservicekg.eas.file.controller;
 
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
 import kr.co.bestiansoft.ebillservicekg.document.vo.FileVo;
+import kr.co.bestiansoft.ebillservicekg.eas.documentWorkFlow.enums.EasFileType;
 import kr.co.bestiansoft.ebillservicekg.eas.file.service.EasFileService;
 import kr.co.bestiansoft.ebillservicekg.eas.file.vo.EasFileVo;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import io.swagger.annotations.ApiOperation;
@@ -22,7 +25,11 @@ public class EasFileController {
     @ApiOperation(value="uploadEasFile", notes = "uploadEasFile")
     @PostMapping(value="/eas/file", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<CommonResponse> uploadEasFile (EasFileVo fileVo){
-        easFileService.uploadEasFile(fileVo);
-        return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "file create successfully"), HttpStatus.CREATED);
+        return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(),"Ok",easFileService.uploadEasFile(fileVo)), HttpStatus.CREATED);
+    }
+    @ApiOperation(value="getWorkResponseFiles", notes = "getWorkResponseFiles")
+    @GetMapping(value = "/eas/file/workResponse/{docId}")
+    public ResponseEntity<CommonResponse> getWorkResponseFiles (@PathVariable String docId){
+        return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(),"Ok",easFileService.getAttachFiles(docId, EasFileType.EXECUTION_REPLY_FILE.getCodeId())), HttpStatus.OK);
     }
 }

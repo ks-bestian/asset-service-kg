@@ -5,8 +5,8 @@
 
     <insert id="insertWorkResponse" parameterType="kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.WorkResponseVo">
         INSERT INTO kgst.eas_work_response
-        (work_req_id, user_id, dept_cd, job_cd, check_dtm, rspns_dtm, rspns_cn, file_id, file_nm)
-        VALUES(#{workReqId}, #{userId}, #{deptCd}, #{jobCd}, #{checkDtm}, #{rspnsDtm}, #{rspnsCn}, #{fileId}, #{fileNm});
+        (work_req_id, user_id, dept_cd, job_cd, check_dtm, rspns_dtm, rspns_cn, file_id, file_nm , rcv_dtm)
+        VALUES(#{workReqId}, #{userId}, #{deptCd}, #{jobCd}, #{checkDtm}, #{rspnsDtm}, #{rspnsCn}, #{fileId}, #{fileNm}, #{rcvDtm});
     </insert>
     <update id="updateWorkContents" parameterType="kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.UpdateWorkResponseVo">
         update kgst.eas_work_response
@@ -14,7 +14,8 @@
             <if test="checkDtm != null"> check_dtm =  #{checkDtm} , </if>
             <if test="rspnsDtm != null"> rspns_dtm = #{rspnsDtm} , </if>
             <if test="rspnsCn != null"> rspns_cn = #{rspnsCn} , </if>
-            <if test="fileId != null"> file_iid =#{fileId} , </if>
+            <if test="fileId != null"> file_id =#{fileId} , </if>
+            <if test="fileId != null"> file_nm =#{fileNm} , </if>
         </set>
         where rspns_id = #{rspnsId}
     </update>
@@ -40,9 +41,21 @@
         select res.rspns_id, res.work_req_id, user_id, dept_cd, job_cd, check_dtm, rspns_dtm, rspns_cn, file_id, user_nm, file_nm, rcv_dtm
           from eas_work_response res, eas_work_request req
          where res.work_req_id = req.work_req_id
-           and req.rcv_id = #{rcvId}
+           and req.work_req_id = #{workReqId}
            and res.user_id = #{userId}
          order by req.work_req_id desc
     </select>
-
+    <delete id="deleteDocument">
+        delete from eas_work_response
+        where work_req_id in (
+            select work_req_id
+            from eas_work_request
+            where doc_id = #{docId}
+        )
+    </delete>
+    <select id="getWorkResponses" resultType="kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.WorkResponseVo">
+        select res.rspns_id, work_req_id, user_id, dept_cd, job_cd, check_dtm, rspns_dtm, rspns_cn, file_id, user_nm, file_nm, rcv_dtm
+          from eas_work_response res
+         where res.work_req_id =#{workReqId}
+    </select>
 </mapper>

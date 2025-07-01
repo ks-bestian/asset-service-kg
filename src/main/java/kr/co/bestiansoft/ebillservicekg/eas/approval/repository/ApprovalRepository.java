@@ -14,8 +14,7 @@ public interface ApprovalRepository {
     void updateStatus(String apvlId, String apvlStatusCd);
     void updateApproval(UpdateApprovalVo vo);
     List<ApprovalVo> getApprovals(String docId);
-    List<ApprovalLIstDto> getApprovalList(SearchDocumentVo vo);
-    int countApprovalList(String userId);
     ApprovalVo getApproval(int apvlId);
     ApprovalVo getApprovalsByUserId(String userId, String docId);
+    void deleteDocument(String docId);
 }

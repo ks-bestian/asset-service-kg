@@ -16,6 +16,7 @@ public class WorkResponseVo {
     private String userNm;
     private LocalDateTime checkDtm;
     private LocalDateTime rspnsDtm;
+    private LocalDateTime rcvDtm;
     private String rspnsCn;
     private String fileId;
     private String fileNm;

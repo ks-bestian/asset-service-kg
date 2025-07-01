@@ -41,8 +41,9 @@ public class HistoryServiceImpl implements HistoryService {
      *         or an empty string if no code name is found for the given action type
      */
     public String getActionDetail(String actionType, String userNm){
+        //todo 배포하기전 nm1 으로 바꾸기
         return Optional.ofNullable(codeService.getComCodeById(actionType))
-                .map(ComCodeDetailVo::getCodeNm1)
+                .map(ComCodeDetailVo::getCodeNm3)
                 .map(codeName -> userNm + " " + codeName)
                 .orElse("");
     }
@@ -54,6 +55,11 @@ public class HistoryServiceImpl implements HistoryService {
 
     public List<HistoryVo> getHistoryByUserId(String docId){
         return historyRepository.getHistoryByUserId(docId, new SecurityInfoUtil().getAccountId());
+    }
+
+    @Override
+    public void deleteDocument(String docId) {
+        historyRepository.deleteDocument(docId);
     }
 
 }

@@ -10,23 +10,24 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class DocumentDetailDto {
-    String docId;
-    String aarsFileId;
-    String aarsPdfFileId;
-    String docTypeCd;
-    String docAttrbCd;
-    String billId;
-    String billNo;
-    String tmlmtYn;
-    LocalDateTime tmlmtDtm;
-    String docLng;
-    String docSubtle;
-    String digitalYn;
-    String senderId;
-    String senderNm;
-    String deptCd;
-    String docNo;
-    LocalDateTime regDtm;
+    private String docId;
+    private String aarsFileId;
+    private String aarsPdfFileId;
+    private String docTypeCd;
+    private String docAttrbCd;
+    private String billId;
+    private String billNo;
+    private String tmlmtYn;
+    private LocalDateTime tmlmtDtm;
+    private String docLng;
+    private String docSubtle;
+    private String digitalYn;
+    private String senderId;
+    private String senderNm;
+    private String senderDeptCd;
+    private String docNo;
+    private LocalDateTime regDtm;
+    private String externalYn;
 
-    List<EasFileVo> files;
+    private List<EasFileVo> files;
 }

@@ -8,13 +8,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Data
 public class ApprovalLIstDto {
-    String docId;
-    String docAttrbCd;
-    String docSubtle;
-    String senderId;
-    String senderNm;
-    String docNo;
-    LocalDateTime rcvDtm;
-    LocalDateTime checkDtm;
-    String apvlId;
+    private String docId;
+    private String docAttrbCd;
+    private String docSubtle;
+    private String senderId;
+    private String senderNm;
+    private String docNo;
+    private LocalDateTime rcvDtm;
+    private LocalDateTime checkDtm;
+    private String apvlId;
+    private String apvlType;
 }

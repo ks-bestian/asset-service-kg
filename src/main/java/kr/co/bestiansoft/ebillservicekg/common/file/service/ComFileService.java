@@ -10,6 +10,7 @@ import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 public interface ComFileService {
 
 	String saveFile(MultipartFile[] files);
+	String saveFileList(MultipartFile[] files);
 	List<ComFileVo> getFileList(String fileGroupId);
 	ComFileVo getFile(String fileId);
 	void batchFileDelete();

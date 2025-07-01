@@ -22,9 +22,10 @@ public class ApprovalVo  {
     private String apvlFileId;
     private String resOpinion;
     private String apvlStatusCd;
+    private String apvlType;
 
     @Builder
-    public ApprovalVo(int apvlId, String docId, String userId, String userNm, String deptCd, String jobCd, int apvlOrd, LocalDateTime resDtm, LocalDateTime rcvDtm, LocalDateTime checkDtm, String apvlFileId, String resOpinion, String apvlStatusCd) {
+    public ApprovalVo(int apvlId, String docId, String userId, String userNm, String deptCd, String jobCd, int apvlOrd, LocalDateTime resDtm, LocalDateTime rcvDtm, LocalDateTime checkDtm, String apvlFileId, String resOpinion, String apvlStatusCd, String apvlType) {
         this.apvlId = apvlId;
         this.docId = docId;
         this.userId = userId;
@@ -38,5 +39,6 @@ public class ApprovalVo  {
         this.apvlFileId = apvlFileId;
         this.resOpinion = resOpinion;
         this.apvlStatusCd = apvlStatusCd;
+        this.apvlType = apvlType;
     }
 }

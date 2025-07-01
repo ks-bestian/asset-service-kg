@@ -1,5 +1,7 @@
 package kr.co.bestiansoft.ebillservicekg.eas.officialDocument.service;
 
+import kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalLIstDto;
+import kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalVo;
 import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.*;
 
 import java.util.List;
@@ -19,5 +21,8 @@ public interface OfficialDocumentService {
     List<DocumentListDto> getMyDocumentList(SearchDocumentVo vo);
     List<DocumentListDto> getWorkList(SearchDocumentVo vo);
     List<DocumentListDto> getProcessedList(SearchDocumentVo vo);
-
+    void deleteDocument(String docId);
+    int countWorkList();
+    int countApprovalList();
+    List<ApprovalLIstDto> getApprovalList(SearchDocumentVo vo);
 }

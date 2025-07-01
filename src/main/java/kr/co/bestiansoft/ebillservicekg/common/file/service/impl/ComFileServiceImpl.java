@@ -59,11 +59,47 @@ public class ComFileServiceImpl implements ComFileService {
 
     		////////////////////////
 			try (InputStream edvIs = file.getInputStream()){
+				System.out.println(file.getInputStream());
 				edv.save(fileId, edvIs);
 			} catch (Exception edvEx) {
 				throw new RuntimeException("EDV_NOT_WORK", edvEx);
 			}
     		////////////////////////
+
+			ComFileVo fileVo = new ComFileVo();
+			fileVo.setFileGroupId(fileGroupId);
+			fileVo.setFileId(fileId);
+			fileVo.setOrgFileNm(orgFileNm);
+			fileVo.setFileSize(file.getSize());
+			fileVo.setUploadYn("Y");
+			fileVo.setDeleteYn("N");
+			fileVo.setRegId(userId);
+
+			fileMapper.insertFile(fileVo);
+			convertToPdfComFile(file, fileVo.getFileId());
+		}
+		return fileId;
+	}
+
+	@Override
+	public String saveFileList(MultipartFile[] files) {
+		String userId = new SecurityInfoUtil().getAccountId();
+		String fileGroupId = StringUtil.getUUUID();
+		String fileId = null;
+
+		for(MultipartFile file:files) {
+
+			fileId = StringUtil.getUUUID();
+			String orgFileNm = file.getOriginalFilename();
+
+			////////////////////////
+			try (InputStream edvIs = file.getInputStream()){
+				System.out.println(file.getInputStream());
+				edv.save(fileId, edvIs);
+			} catch (Exception edvEx) {
+				throw new RuntimeException("EDV_NOT_WORK", edvEx);
+			}
+			////////////////////////
 
 			ComFileVo fileVo = new ComFileVo();
 			fileVo.setFileGroupId(fileGroupId);

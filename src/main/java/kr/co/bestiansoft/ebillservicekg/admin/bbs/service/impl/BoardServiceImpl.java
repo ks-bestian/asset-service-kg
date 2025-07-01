@@ -72,7 +72,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public BoardVo createBoardFile(BoardVo boardVo, String brdType) {
         if(boardVo.getFiles() != null) {
-            String fileGroupId = comFileService.saveFile(boardVo.getFiles());
+            String fileGroupId = comFileService.saveFileList(boardVo.getFiles());
             boardVo.setFileGroupId(fileGroupId);
         }
     	

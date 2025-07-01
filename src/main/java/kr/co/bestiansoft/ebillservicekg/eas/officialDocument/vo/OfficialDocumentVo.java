@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Data
-public class OfficialDocumentVo extends ComDefaultVO {
+public class OfficialDocumentVo {
     private String docId;
     private int aarsDocId;
     private String userId;
@@ -24,12 +24,15 @@ public class OfficialDocumentVo extends ComDefaultVO {
     private char digitalYn;
     private String senderId;
     private String senderNm;
-    private String deptCd;
+    private String senderDeptCd;
     private String docNo;
     private LocalDateTime regDtm;
+    private String externalYn;
+    private String regId;
+    private LocalDateTime regDt;
 
     @Builder
-    public OfficialDocumentVo(String docId, int aarsDocId, String userId, String docTypeCd, String docAttrbCd, String billId, char tmlmtYn, LocalDateTime tmlmtDtm, String docLng, String docSubtle, String docStatusCd, char digitalYn, String senderId, String senderNm, String deptCd, String docNo, LocalDateTime regDtm) {
+    public OfficialDocumentVo(String docId, int aarsDocId, String userId, String docTypeCd, String docAttrbCd, String billId, char tmlmtYn, LocalDateTime tmlmtDtm, String docLng, String docSubtle, String docStatusCd, char digitalYn, String senderId, String senderNm, String senderDeptCd, String docNo, LocalDateTime regDtm, String externalYn, String regId, LocalDateTime regDt) {
         this.docId = docId;
         this.aarsDocId = aarsDocId;
         this.userId = userId;
@@ -44,8 +47,11 @@ public class OfficialDocumentVo extends ComDefaultVO {
         this.digitalYn = digitalYn;
         this.senderId = senderId;
         this.senderNm = senderNm;
-        this.deptCd = deptCd;
+        this.senderDeptCd = senderDeptCd;
         this.docNo = docNo;
         this.regDtm = regDtm;
+        this.externalYn = externalYn;
+        this.regId = regId;
+        this.regDt = regDt;
     }
 }
