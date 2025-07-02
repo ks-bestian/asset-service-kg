@@ -98,16 +98,18 @@
     </update>
 
 
-    <select id="getBoardMainList" parameterType="java.lang.String"   resultType="kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo">
+    <select id="getBoardMainList"  resultType="kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo">
 		select
 		    brd_id
 		  , brd_type
 		  , brd_sj
 		  , brd_cn
-		  , TO_CHAR(reg_dt, 'DD/MM/YY') AS reg_dt
+		  , reg_dt
 		from com_board
-		where brd_type = #{brdType}
-		order by brd_id desc
+		where 1=1
+		and brd_type = 'NOTI'
+		and hidden_yn = 'N'
+		order by reg_dt desc
 		limit 5
     </select>
 
@@ -127,7 +129,7 @@
 			, reg_dt
 			, mod_id
 			, mod_dt
-		from sndb.com_board
+		from com_board
 		where 1=1
 		and brd_type = 'NOTI'
 		and pup_yn = 'Y'

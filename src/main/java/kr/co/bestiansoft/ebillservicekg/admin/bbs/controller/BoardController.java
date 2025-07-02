@@ -56,5 +56,11 @@ public class BoardController {
     public ResponseEntity<CommonResponse> createBoardFile(BoardVo boardVo, @PathVariable String brdType) {
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Board created successfully", boardService.createBoardFile(boardVo, brdType)), HttpStatus.CREATED);
     }
+    
+    @ApiOperation(value = "게시판 리스트(메인화면) 조회", notes = "게시판 리스트(메인화면)를 조회한다.")
+    @GetMapping("/admin/board_main")
+    public ResponseEntity<CommonResponse> getBoardMainList() {
+        return new ResponseEntity<>(new CommonResponse(200, "OK", boardService.getBoardMainList()), HttpStatus.OK);
+    }
 
 }
