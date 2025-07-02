@@ -58,4 +58,17 @@
           from eas_work_response res
          where res.work_req_id =#{workReqId}
     </select>
+
+    <select id="getRespondedUsers" parameterType="int" resultType="string">
+        SELECT user_id
+        FROM eas_work_response
+        WHERE work_req_id = #{workReqId}
+        AND rspns_cn IS NOT NULL
+    </select>
+
+    <delete id="delete" parameterType="int">
+        DELETE FROM kgst.eas_work_response
+        WHERE work_req_id = #{workReqId}
+    </delete>
+
 </mapper>

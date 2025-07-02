@@ -234,7 +234,7 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
     @Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
     public void reception(WorkRequestAndResponseVo vo){
         if(vo.getDocTypeCd() == null){}
-        else if(vo.getDocTypeCd().equals(DocumentType.REPLY_PURPOSE.getCodeId())){
+        else if(vo.getDocTypeCd().equals(DocumentType.REPLY_PURPOSE.getCodeId())) {
             //답변용
 
             // 이행요청 추가
@@ -242,13 +242,18 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
             vo.setRegId(new SecurityInfoUtil().getAccountId());
             vo.setWorkStatus(WorkStatus.DISPATCHED.getCodeId());
 
-
-
             WorkRequestVo requestVo = vo.toRequestVo();
-            workRequestService.insertWorkRequest(requestVo);
+
+            if (requestVo.getWorkReqId() == 0) {
+                workRequestService.insertWorkRequest(requestVo);
+            } else {
+                workRequestService.updateWorkRequest(requestVo);
+            }
 
             log.info("workReqId : " + requestVo.toString());
-            // 이행자 추가
+
+            workResponseService.delete(requestVo.getWorkReqId());
+            //// 이행자 추가
             vo.getWorkResponseVos().forEach(workResponseVo -> {
                 UserMemberVo loginUser = userService.getUserMemberDetail(workResponseVo.getUserId());
                 workResponseVo.setWorkReqId(requestVo.getWorkReqId());
@@ -256,7 +261,9 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                 workResponseVo.setJobCd(loginUser.getJobCd());
                 workResponseVo.setUserNm(loginUser.getUserNm());
                 workResponseVo.setRcvDtm(LocalDateTime.now());
+
                 workResponseService.insertWorkResponse(workResponseVo);
+
             });
             // receivedInfo 상태 변경, 주 이행자 추가
             UpdateReceivedInfoVo updateReceivedInfoVo = UpdateReceivedInfoVo.builder()

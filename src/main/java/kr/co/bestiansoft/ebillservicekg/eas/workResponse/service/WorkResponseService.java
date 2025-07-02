@@ -2,6 +2,7 @@ package kr.co.bestiansoft.ebillservicekg.eas.workResponse.service;
 
 import kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.UpdateWorkResponseVo;
 import kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.WorkResponseVo;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -15,4 +16,10 @@ public interface WorkResponseService {
     void updateReadDtm(int rspnsId);
     void deleteDocument(String docId);
     List<WorkResponseVo> getWorkResponses(int workReqId);
+    List<String> getRespondedUsers(int workReqId);
+
+    //int countWorkResponse(@Param("workReqId") Long workReqId, @Param("userId") String userId);
+    //void updateWorkResponse(WorkResponseVo workResponseVo);
+    void delete(int workReqId);
+
 }

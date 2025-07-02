@@ -70,6 +70,7 @@ public class WorkRequestAndResponseVo {
 
     public WorkRequestVo toRequestVo (){
         return WorkRequestVo.builder()
+                .workReqId(this.getWorkReqId())
                 .docId(this.getDocId())
                 .workCn(this.getWorkCn())
                 .infoYn(this.getInfoYn())
