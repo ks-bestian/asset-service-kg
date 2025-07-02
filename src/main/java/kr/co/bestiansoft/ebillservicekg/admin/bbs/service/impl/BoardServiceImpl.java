@@ -23,6 +23,16 @@ public class BoardServiceImpl implements BoardService {
     private final BoardMapper boardMapper;
     private final ComFileService comFileService;
 
+    /**
+     *
+     * @param param Param containing the data required to get board:
+     *              - lang
+     *              - brdSj
+     *              - regNm
+     *              - deptNm
+     * @param brdType
+     * @return
+     */
     @Override
     public List<BoardVo> getBoardList(HashMap<String, Object> param, String brdType) {
         param.put("brdType", brdType);
@@ -30,6 +40,13 @@ public class BoardServiceImpl implements BoardService {
         return result;
     }
 
+
+    /**
+     *
+     * @param boardVo
+     * @param brdType
+     * @return
+     */
     @Transactional
     @Override
     public BoardVo createBoard(BoardVo boardVo, String brdType) {
