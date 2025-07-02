@@ -2,7 +2,9 @@ package kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
@@ -11,7 +13,8 @@ public class SearchDocumentVo {
     private String userId;
     private String docSubtle;
     private String tmlmtYn;
-    private LocalDateTime tmlmtDtm;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private LocalDate tmlmtDtm;
     private LocalDateTime fromRcvDtm;
     private LocalDateTime toRcvDtm;
     String betweenRcvDtm;
@@ -25,6 +28,7 @@ public class SearchDocumentVo {
 
     private LocalDateTime fromResDtm;
     private LocalDateTime toResDtm;
+    String betweenResDtm;
 
     private int page;
     private int size;

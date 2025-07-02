@@ -100,18 +100,23 @@
     <select id="getProcessedList" parameterType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.SearchDocumentVo" resultType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.DocumentListDto">
         select s.doc_id, doc_attrb_cd, doc_status_cd, doc_subtle, sender_id, sender_nm, doc_no, res_dtm, res_user_id
         from kgst.vw_eas_file_search s
+        where s.res_user_id = #{userId}
         <if test="docSubtle != null "> and doc_subtle like '%'||#{docSubtle}||'%' </if>
         <if test="docNo != null"> and doc_no like '%'||#{docNo}||'%' </if>
         <if test="fromResDtm != null and toResDtm != null"> and res_dtm between #{fromResDtm} and #{toResDtm} </if>
-        where s.res_user_id = #{userId}
+        <if test="docTypeCd != null"> and doc_type_cd = #{docTypeCd} </if>
     </select>
     <select id="getWorkList" parameterType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.SearchDocumentVo" resultType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.DocumentListDto">
-        select d.doc_id, doc_attrb_cd, d.tmlmt_yn, d.tmlmt_Dtm, doc_subtle, sender_id, sender_nm, doc_no, rcv_dtm, check_dtm, rspns_id , doc_type_cd ,rcv_id
+        select d.doc_id, doc_attrb_cd, d.tmlmt_yn, d.tmlmt_Dtm, doc_subtle, sender_id, sender_nm, doc_no, req.reg_dt as rcv_dtm, check_dtm, rspns_id , doc_type_cd ,rcv_id
         from eas_work_request req, eas_work_response res, eas_document d
         where req.work_req_id = res.work_req_id
           and d.doc_id = req.doc_id
           and d.doc_status_cd = 'DMS03'
           and res.user_id = #{userId}
+        <if test="docSubtle != null "> and doc_subtle like '%'||#{docSubtle}||'%' </if>
+        <if test="fromRcvDtm != null and toRcvDtm != null"> and rcv_dtm between #{fromRcvDtm} and #{toRcvDtm} </if>
+        <if test="docNo != null"> and doc_no like '%'||#{docNo}||'%' </if>
+        <if test="docTypeCd != null"> and doc_type_cd = #{docTypeCd} </if>
         order by reg_dt desc;
     </select>
     <select id="countWorkList" resultType="int">
@@ -124,7 +129,7 @@
           and res.check_dtm is null
     </select>
     <select id="getApprovalList" resultType="kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalLIstDto" parameterType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.SearchDocumentVo">
-        select d.doc_id, doc_attrb_cd, doc_subtle, sender_id, sender_nm, doc_no, rcv_dtm, check_dtm, apvl_id, apvl_type
+        select d.doc_id, doc_attrb_cd, doc_subtle, sender_id, sender_nm, doc_no, a.rcv_dtm, check_dtm, apvl_id, apvl_type
         from eas_document d, eas_approval a
         where d.doc_id = a.doc_id
         and d.doc_status_cd ='DMS01'
@@ -133,7 +138,7 @@
         <if test="docSubtle != null "> and doc_subtle like '%'||#{docSubtle}||'%' </if>
         <if test="fromRcvDtm != null and toRcvDtm != null"> and rcv_dtm between #{fromRcvDtm} and #{toRcvDtm} </if>
         <if test="docNo != null"> and doc_no like '%'||#{docNo}||'%' </if>
-        <if test="senderNm != null"> and sender_nm like '%'||#{senderNm}||'%' </if>
+        <if test="docTypeCd != null"> and doc_type_cd = #{docTypeCd} </if>
         order by rcv_dtm desc
     </select>
     <select id="countApprovalList" resultType="int">
