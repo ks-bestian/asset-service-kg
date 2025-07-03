@@ -4,8 +4,8 @@ import lombok.Getter;
 
 @Getter
 public enum LinkType {
-    LINK_DOCUMENT("LT01", "문서 연결"),
-    LINK_REPLY("LT02", "답변 연결");
+    LINK_DOCUMENT("LT01", "LINK_DOCUMENT"),
+    LINK_REPLY("LT02", "LINK_REPLY");
 
     private final String codeId;
     private final String codeNm;

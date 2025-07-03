@@ -27,11 +27,11 @@ public class makeCRUD {
 
 		makeCRUD o = new makeCRUD();
 		try {
-			o.generateSQL("sponet.co.kr:3306"	//db아이피
-					     ,"dev_bm_manager"	//db명
-					     , "best"	//계정
-					     , "best1234"	//비밀번호
-					     , "c:\\starproject_file"	//저장경로
+			o.generateSQL("sponet.co.kr:3306"	//dbIP
+					     ,"dev_bm_manager"	//db name
+					     , "best"	//account
+					     , "best1234"	//password
+					     , "c:\\starproject_file"	//Storage path
 					     );
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -73,7 +73,7 @@ public class makeCRUD {
 
 			stmt = conn.createStatement();
 
-			//테이블 목록
+			//table list
 			//ResultSet rsTables = dmd.getTables(conn.getCatalog(), null, "%", null);
 
 			ArrayList<String> tableList = new ArrayList<String>();
@@ -90,7 +90,7 @@ public class makeCRUD {
 			    ArrayList<String> arrPkColumns = new ArrayList<String>();
 				String tableName = tableList.get(i);
 
-				//컬럼 목록
+				//column list
 				ResultSet rs = stmt.executeQuery("SELECT * FROM "+tableName);
 				ResultSetMetaData rsmd = rs.getMetaData();
 
@@ -184,7 +184,7 @@ public class makeCRUD {
 		System.out.println(sb.toString());
 		return sb.toString();
 	}
-	/** 테이블에서 자동증가여부 컬럼 찾는다
+	/** Find a column whether automatic increase in the table
 	 * @param conn
 	 * @param tableName
 	 * @return
@@ -213,7 +213,7 @@ public class makeCRUD {
 		return null;
 	}
 
-	/** 파일쓰기
+	/** File writing
 	 * @param src
 	 * @param fileName
 	 * @param txt
@@ -238,7 +238,7 @@ public class makeCRUD {
 	}
 
 
-	/** 업데이트문
+	/** Update query
 	 * @param tableName
 	 * @param columns
 	 * @param pkColumns
@@ -281,7 +281,7 @@ public class makeCRUD {
 	}
 
 
-	/** pk 컬럼인지여부 비교
+	/** Comparison of PK Column
 	 * @param target
 	 * @param arrPK
 	 * @return
@@ -296,7 +296,7 @@ public class makeCRUD {
 		return false;
 	}
 
-	/** delete 문
+	/** delete query
 	 * @param tableName
 	 * @param columns
 	 * @param pkColumns
@@ -323,7 +323,7 @@ public class makeCRUD {
 		return sb.toString();
 	}
 
-	/** select 문(where절 PK)
+	/** SELECT query (where PK)  
 	 * @param tableName
 	 * @param columns
 	 * @param pkColumns
@@ -360,7 +360,7 @@ public class makeCRUD {
 		return sb.toString();
 	}
 
-	/** select 문
+	/** select query
 	 * @param tableName
 	 * @param columns
 	 * @return
@@ -417,13 +417,13 @@ public class makeCRUD {
 	@SuppressWarnings("deprecation")
 	public static String toCamelCase(String input) {
         if (input == null || input.isEmpty()) {
-            return input; // 입력이 비어있으면 그대로 반환
+            return input; //If the input is empty, it is returned as it is
         }
 
-        // 공백, 밑줄, 대시로 단어를 나눈 뒤 첫 글자를 대문자로 변환
+        // After sharing words with blanks, underlines, and dashes, the first letter is converted into an uppercase letter
         String capitalized = WordUtils.capitalizeFully(input, ' ', '_', '-');
 
-        // 공백, 밑줄, 대시 제거 후 첫 글자를 소문자로 변환
+        // Convert the first letter to lowercase after the blank, underlined, and dash removal
         String camelCase = capitalized.replaceAll("[\\s_\\-]", "");
         return camelCase.substring(0, 1).toLowerCase() + camelCase.substring(1);
     }

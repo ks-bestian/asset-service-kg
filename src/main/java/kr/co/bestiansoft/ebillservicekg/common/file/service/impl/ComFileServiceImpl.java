@@ -375,14 +375,14 @@ public class ComFileServiceImpl implements ComFileService {
 			idx++;
 			fileMapper.insertFileEbsMtng(fileVo);
 			
-			// pdf변환작업
+			// pdfConversion
 			Map<String, Object> pdfJob = new HashMap<>();
 			pdfJob.put("file", file);
 			pdfJob.put("orgFileId", orgFileId);
 			pdfJobs.add(pdfJob);
 		}
 		
-		// pdf변환
+		// pdfconversion
 		for(Map<String, Object> job : pdfJobs) {
 			MultipartFile file = (MultipartFile)job.get("file");
 			String orgFileId = (String)job.get("orgFileId");
@@ -440,7 +440,7 @@ public class ComFileServiceImpl implements ComFileService {
 			idx++;
 			fileMapper.insertFileEbsMtng(fileVo);
 			
-			// pdf변환작업
+			// pdfConversion
 			Map<String, Object> pdfJob = new HashMap<>();
 			pdfJob.put("tmpFile", tmpFile);
 			pdfJob.put("filename", myFile.getFileNm());
@@ -450,7 +450,7 @@ public class ComFileServiceImpl implements ComFileService {
 			myFileIs.close();
 		}
 		
-		// pdf변환
+		// pdfconversion
 		for(Map<String, Object> job : pdfJobs) {
 			File tmpFile = (File)job.get("tmpFile");
 			String filename = (String)job.get("filename");
@@ -553,7 +553,7 @@ public class ComFileServiceImpl implements ComFileService {
 		
 		fileMapper.insertFileEbs(fileVo);
 
-		// pdf변환
+		// pdf conversion
 		convertToPdfEbs(file, orgFileId);
 	}
 	
@@ -604,7 +604,7 @@ public class ComFileServiceImpl implements ComFileService {
 
 		myFileIs.close();
 		
-		// pdf변환
+		// pdf conversion
 		convertToPdfEbs(tmpFile, myFile.getFileNm(), orgFileId);
 	}
 

@@ -11,9 +11,12 @@ import java.util.List;
 public interface WorkResponseRepository {
     int insertWorkResponse (WorkResponseVo vo);
     int updateWorkContents (UpdateWorkResponseVo vo);
-    int deleteWorkRequestId(String workReqId);
+    void delete(int workReqId);
     List<WorkResponseVo> getWorkResponse(@Param("rcvId") Integer rcvId, @Param("docId") String docId);
-    List<WorkResponseVo> getWorkResponseByUserId(Integer workReqId, String docId);
+    List<WorkResponseVo> getWorkResponseByUserId(Integer workReqId, String userId);
     void deleteDocument(String docId);
     List<WorkResponseVo> getWorkResponses( int workReqId);
+
+    List<String> getRespondedUsers(int workReqId);
+    int deleteWorkRequestId(String workReqId);
 }

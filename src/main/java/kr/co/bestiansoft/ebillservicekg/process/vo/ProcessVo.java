@@ -24,16 +24,16 @@ public class ProcessVo extends ComDefaultVO {
 	private Long taskId;
 	private String taskNm;
 	private String assignedTo;
-	private String trgtUserId;//작업할당상요자아이디
+	private String trgtUserId;//Work Allocation Status ID
 	private String dueDt;
 	private String completedDt;
 	private String billAprvNo;
-	private String taskStatus;//작업상태 P:진행 및 할당 C:완료
+	private String taskStatus;//Work status P: Progress and Allocation C: Completion
 	private String deptCd;// dept code
 
 	private String srvcCd;
 	private String jobCd;
-	private String atrzMngNo;//결재관리번호
+	private String atrzMngNo;//Payment management number
 
 	private String cmtCd;
 	private String cmtSeCd;

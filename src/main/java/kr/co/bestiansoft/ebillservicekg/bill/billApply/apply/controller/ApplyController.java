@@ -26,7 +26,7 @@ import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 import lombok.RequiredArgsConstructor;
 
-@Api(tags = "안건제출 API")
+@Api(tags = "agenda submission API")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequiredArgsConstructor
 @RestController
@@ -35,99 +35,99 @@ public class ApplyController {
     private final ApplyService applyService;
     private final ComFileService comFileService;
 
-    @ApiOperation(value = "안건제출", notes = "안건을 생성한다")
+    @ApiOperation(value = "Agenda", notes = "Agenda Create")
     @PostMapping(value = "/bill/apply", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<CommonResponse> createBillApply(ApplyVo applyVo) throws Exception {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "apply create successfully", applyService.createApply(applyVo)), HttpStatus.CREATED);
     }
     
-    @ApiOperation(value = "안건접수 등록", notes = "안건접수 등록한다")
+    @ApiOperation(value = "Agenda registration", notes = "Agenda Register")
     @PostMapping(value = "/bill/apply/register", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<CommonResponse> createBillApplySubmit(ApplyVo applyVo) throws Exception {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "apply create successfully", applyService.createApplyRegister(applyVo)), HttpStatus.CREATED);
     }
 
-    @ApiOperation(value = "목록 조회", notes = "안건제출 목록을 조회한다")
+    @ApiOperation(value = "inventory check", notes = "Agenda List Inquiry")
     @GetMapping("/bill/apply")
     public ResponseEntity<CommonResponse> getApplyList(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", applyService.getApplyList(param)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "안건 수정", notes = "안건을 수정한다")
+    @ApiOperation(value = "Agenda correction", notes = "Agenda Modify")
     @PostMapping(value = "/bill/apply/update/{billId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<CommonResponse> updateBillUpdate(@ModelAttribute ApplyVo applyVo, @PathVariable String billId) throws Exception {
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "apply updated successfully", applyService.updateApply(applyVo, billId)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "안건 삭제", notes = "안건을 삭제한다")
+    @ApiOperation(value = "Agenda delete", notes = "Agenda Delete")
     @DeleteMapping("/bill/apply/{billId}")
     public ResponseEntity<CommonResponse> deleteApply(@PathVariable String billId) {
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "apply delete successfully", applyService.deleteApply(billId)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "안건 상세 조회", notes = "안건의 상세를 조회한다")
+    @ApiOperation(value = "Agenda particular check", notes = "Agenda Details Inquiry")
     @GetMapping("/bill/apply/{billId}")
     public ResponseEntity<CommonResponse> getBillDetail(@PathVariable String billId, @RequestParam HashMap<String, Object> param) {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", applyService.getApplyDetail(billId, param)), HttpStatus.OK);
     }
 
-//    @ApiOperation(value = "안건접수", notes = "안건을 접수한다.")
+//    @ApiOperation(value = "Agenda", notes = "Agenda Receive.")
 //    @PutMapping("/bill/apply/update/{billId}")
 //    public ResponseEntity<CommonResponse> applyBill(@PathVariable String billId) {
 //    	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill apply successfully", applyService.applyBill(billId)), HttpStatus.OK);
 //    }
 
-    @ApiOperation(value = "안건철회", notes = "안건을 철회한다.")
+    @ApiOperation(value = "Withdrawal", notes = "Agenda Withdraw.")
     @PutMapping("/bill/apply/revoke/{billId}")
     public ResponseEntity<CommonResponse> revokeBill(@PathVariable String billId, @RequestBody ApplyVo applyVo) {
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill apply successfully", applyService.revokeBill(billId, applyVo)), HttpStatus.OK);
     }
 
-//    @ApiOperation(value = "상태값 변경", notes = "안건의 상태값을 변경한다")
+//    @ApiOperation(value = "State value change", notes = "Agenda Status value Change")
 //    @PutMapping("/bill/apply/status/{billId}")
 //    public ResponseEntity<CommonResponse> updateBillState(@PathVariable String billId, @RequestBody ApplyVo applyVo) {
 //    	return new  ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill status update successfully", applyService.updateBillStatus(billId, applyVo)), HttpStatus.OK);
 //    }
 
-    @ApiOperation(value = "안건 접수", notes = "안건 접수")
+    @ApiOperation(value = "Agenda receipt", notes = "Agenda receipt")
     @PostMapping("/bill/apply/accept/{billId}")
     public ResponseEntity<CommonResponse> saveBillAccept(@PathVariable String billId, @RequestBody ApplyVo applyVo) {
     	return new  ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill status update successfully", applyService.saveBillAccept(billId, applyVo)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "파일 삭제", notes = "안건 수정에서 파일을 삭제한다")
+    @ApiOperation(value = "file delete", notes = "Agenda In modification File Delete")
     @PutMapping("/bill/file/delete")
     public ResponseEntity<CommonResponse> deleteBillFile(@RequestBody EbsFileVo ebsFileVo){
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill file delete successfully", applyService.deleteBillFile(ebsFileVo)), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "파일 공개여부 수정", notes = "파일 공개여부를 수정한다")
+    @ApiOperation(value = "Modify whether the file is disclosed", notes = "Modify whether the file is disclosed")
     @PutMapping("/bill/file/updateopen")
     public ResponseEntity<CommonResponse> updateopenBillFile(@RequestBody EbsFileVo ebsFileVo){
     	applyService.updateFileOpbYn(ebsFileVo);
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "OK", "updated successfully"), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "안건 전체 조회", notes = "안건전체를 조회한다")
+    @ApiOperation(value = "Agenda entire check", notes = "The entire agenda Inquiry")
     @GetMapping("/bill/all")
     public ResponseEntity<CommonResponse> selectBillAll(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", applyService.selectBillAll(param)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "홈페이지 게재", notes = "안건을 홈페이지에 게재한다")
+    @ApiOperation(value = "Homepage Publication", notes = "Agenda On the homepage Post")
     @PostMapping(value = "/bill/apply/home")
     public ResponseEntity<CommonResponse> createBillHome(@RequestBody ApplyVo applyVo) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "insert homepage successfully", applyService.createBillHome(applyVo)), HttpStatus.CREATED);
     }
     
-    @ApiOperation(value = "홈페이지 게재 중지", notes = "안건을 홈페이지에 게재 중지한다")
+    @ApiOperation(value = "Homepage Publication stop", notes = "Agenda On the homepage Publication Stop")
     @PostMapping(value = "/bill/apply/home/stop")
     public ResponseEntity<CommonResponse> stopBillHome(@RequestBody ApplyVo applyVo) {
     	applyService.stopBillHome(applyVo);
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "OK", "stopped successfully"), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "홈페이지 답글 등록", notes = "홈페이지 답글 등록")
+    @ApiOperation(value = "Homepage Reply registration", notes = "Homepage Reply registration")
     @PostMapping(value = "law/comment")
     public ResponseEntity<CommonResponse> createComment(@RequestBody CommentsVo commentsVo) {
         applyService.createComments(commentsVo);

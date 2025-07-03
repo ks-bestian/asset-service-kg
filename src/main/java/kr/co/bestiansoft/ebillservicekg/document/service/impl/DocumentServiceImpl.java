@@ -377,7 +377,7 @@ public class DocumentServiceImpl implements DocumentService {
 			if (mpf.isEmpty()) break;
 			ret += saveFile(vo, mpf, map);
 
-			// 묶음업로드 아닌경우 각 파일의 썸네일 생성
+			// Create a thumbnail of each file if it is not a bundle -up load
 			if(!"Y".equals(vo.getGroupYn())) {
 				try {
 					Map<String, Object> thumbnailJob = new HashMap<>();
@@ -394,7 +394,7 @@ public class DocumentServiceImpl implements DocumentService {
 			}
 		}
 		
-		// 썸네일 생성
+		// Create thumbnail
 		for(Map<String, Object> job : thumbnailJobs) {
 			File file = (File)job.get("file");
 			String filename = (String)job.get("filename");
@@ -428,7 +428,7 @@ public class DocumentServiceImpl implements DocumentService {
 //    	
 //    	int ret = uploadFile(vo);
 //    	
-//    	//중요여부 저장
+//    	//Save importance status.
 //		String favoriteYn = vo.getFavoriteYn();
 //		if("Y".equals(favoriteYn)) {
 //			vo.setUserId(tmpUserId);
@@ -438,7 +438,7 @@ public class DocumentServiceImpl implements DocumentService {
 //		return ret;
 //    }
     
-    // 폴더 업로드시 - 폴더 생성
+    // Folder When uploading - Folder generation
     private Long createFolder(String path, Map<String, Long> map) {
 		if(path == null || path.isEmpty()) {
 			return null;
@@ -468,7 +468,7 @@ public class DocumentServiceImpl implements DocumentService {
 		return folderVo.getFolderId();
 	}
 	
-    // 폴더업로드 - 파일 및 경로상의 폴더 저장
+    // Folder - file and Path Folder save
     @Transactional
 	private int saveFile(FileVo vo, MultipartFile mpf, Map<String, Long> map) {
 		String orgFileNm = mpf.getOriginalFilename();
@@ -540,7 +540,7 @@ public class DocumentServiceImpl implements DocumentService {
 		
 		int ret = documentMapper.insertFile(fileVo);
 		
-		//중요여부 저장(묶음업로드 아닌경우)
+		//Save importance status.(If not Bundle)
 		if(!"Y".equals(groupYn)) {
 			String favoriteYn = vo.getFavoriteYn();
 			if("Y".equals(favoriteYn)) {
@@ -826,7 +826,7 @@ public class DocumentServiceImpl implements DocumentService {
 //    	// update thumbnail
 //    	MultipartFile thumbnailImage = vo.getThumbnailImage();
 //    	if(thumbnailImage != null) {
-//    		//TODO 기존 썸네일 삭제(EDV)
+//    		//TODO 기존 썸네일 삭제 EDV)
 //    		
 //    		String thumbnailFileId = StringUtil.getUUUID();
 //    		try (InputStream edvIs = thumbnailImage.getInputStream()){

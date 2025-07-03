@@ -36,7 +36,7 @@ import kr.co.bestiansoft.ebillservicekg.document.vo.FolderVo;
 import kr.co.bestiansoft.ebillservicekg.document.vo.UserMemberAuthMappVo;
 import lombok.RequiredArgsConstructor;
 
-@Api(tags = "문서관리 API")
+@Api(tags = "Document management API")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequiredArgsConstructor
 @RestController
@@ -47,155 +47,155 @@ public class DocumentController {
     private final DocumentMapper documentMapper;
     
 
-    @ApiOperation(value = "부서 폴더 등록", notes = "부서 폴더 등록")
+    @ApiOperation(value = "department Folder registration", notes = "department Folder registration")
     @PostMapping("/document/dept/folders")
     public ResponseEntity<CommonResponse> insertDeptFolder(@RequestBody FolderVo vo) {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.insertDeptFolder(vo)), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "내 폴더 등록", notes = "내 폴더 등록")
+    @ApiOperation(value = "my Folder registration", notes = "my Folder registration")
     @PostMapping("/document/my/folders")
     public ResponseEntity<CommonResponse> insertMyFolder(@RequestBody FolderVo vo) {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.insertMyFolder(vo)), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "폴더 수정", notes = "폴더 수정")
+    @ApiOperation(value = "Folder correction", notes = "Folder modify")
     @PutMapping("/document/folders")
     public ResponseEntity<CommonResponse> updateFolder(@RequestBody FolderVo vo) {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.updateFolder(vo)), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "부서 폴더 전체목록 조회", notes = "부서 폴더 전체목록 조회")
+    @ApiOperation(value = "department Folder Full list check", notes = "department Folder Full list check")
     @GetMapping("/document/dept/folders/all")
     public ResponseEntity<CommonResponse> selectDeptFolderListAll(FolderVo vo) {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.selectDeptFolderListAll(vo)), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "내 폴더 전체목록 조회", notes = "내 폴더 전체목록 조회")
+    @ApiOperation(value = "my Folder Full list check", notes = "my Folder Full list check")
     @GetMapping("/document/my/folders/all")
     public ResponseEntity<CommonResponse> selectMyFolderListAll(FolderVo vo) {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.selectMyFolderListAll(vo)), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "부서 폴더 목록 조회", notes = "부서 폴더 목록 조회")
+    @ApiOperation(value = "department Folder inventory check", notes = "department Folder inventory check")
     @GetMapping("/document/dept/folders")
     public ResponseEntity<CommonResponse> selectDeptFolderList(FolderVo vo) {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.selectDeptFolderList(vo)), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "내 폴더 목록 조회", notes = "내 폴더 목록 조회")
+    @ApiOperation(value = "my Folder inventory check", notes = "my Folder inventory check")
     @GetMapping("/document/my/folders")
     public ResponseEntity<CommonResponse> selectMyFolderList(FolderVo vo) {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.selectMyFolderList(vo)), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "공유 폴더 목록 조회", notes = "공유 폴더 목록 조회")
+    @ApiOperation(value = "Retrieve subfolders within the shared folder.", notes = "Retrieve subfolders within the shared folder.")
     @GetMapping("/document/share/folders")
     public ResponseEntity<CommonResponse> selectShareFolderList(FolderVo vo) {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.selectShareFolderList(vo)), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "공유 폴더 내부폴더 조회", notes = "공유 폴더 내부폴더 조회")
+    @ApiOperation(value = "share Folder Interior folder check", notes = "share Folder Interior folder check")
     @GetMapping("/document/share/folders/content")
     public ResponseEntity<CommonResponse> selectShareFolderListByFolderId(FolderVo vo) {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.selectShareFolderListByFolderId(vo)), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "공유 폴더 내부파일 조회", notes = "공유 폴더 내부파일 조회")
+    @ApiOperation(value = "share Folder Inner file check", notes = "share Folder Inner file check")
     @GetMapping("/document/share/files/content")
     public ResponseEntity<CommonResponse> selectShareFileListByFolderId(FileVo vo) {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.selectShareFileListByFolderId(vo)), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "삭제 폴더 목록 조회", notes = "삭제 폴더 목록 조회")
+    @ApiOperation(value = "delete Folder inventory check", notes = "delete Folder inventory check")
     @GetMapping("/document/trash/folders")
     public ResponseEntity<CommonResponse> selectDeleteFolderList(FolderVo vo) {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.selectDeleteFolderList(vo)), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "폴더/파일 삭제", notes = "폴더/파일 삭제")
+    @ApiOperation(value = "Folder/file delete", notes = "Folder/file delete")
     @DeleteMapping("/document/files")
     public ResponseEntity<CommonResponse> deleteFoldersAndFiles(@RequestBody FileVo vo) {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.deleteFoldersAndFiles(vo.getFolderIds(), vo.getFileGroupIds())), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "폴더/파일 복원", notes = "폴더/파일 복원")
+    @ApiOperation(value = "Folder/file Restoration", notes = "Folder/file Restoration")
     @PutMapping("/document/files/restore")
     public ResponseEntity<CommonResponse> restoreFoldersAndFiles(@RequestBody FileVo vo) {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.restoreFoldersAndFiles(vo.getFolderIds(), vo.getFileGroupIds())), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "폴더/파일 영구삭제", notes = "폴더/파일 영구삭제")
+    @ApiOperation(value = "Folder/file Permanent deletion", notes = "Folder/file Permanent deletion")
     @DeleteMapping("/document/files/remove")
     public ResponseEntity<CommonResponse> removeFoldersAndFiles(@RequestBody FileVo vo) throws Exception {
     	documentService.removeFoldersAndFiles(vo.getFolderIds(), vo.getFileGroupIds());
     	return new ResponseEntity<>(new CommonResponse(200, "OK", null), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "부서 파일 업로드", notes = "부서 파일 업로드")
+    @ApiOperation(value = "department file Upload", notes = "department file Upload")
     @PostMapping(value = "/document/dept/files", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<CommonResponse> uploadDeptFile(FileVo vo) {
     	vo.setDeptFileYn("Y");
     	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.uploadFile(vo)), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "내 파일 업로드", notes = "내 파일 업로드")
+    @ApiOperation(value = "my file Upload", notes = "my file Upload")
     @PostMapping(value = "/document/my/files", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<CommonResponse> uploadMyFile(FileVo vo) {
     	vo.setDeptFileYn("N");
     	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.uploadFile(vo)), HttpStatus.OK);
     }
     
-//    @ApiOperation(value = "부서 파일 묶음 업로드", notes = "부서 파일 묶음 업로드")
+//    @ApiOperation(value = "department file bundle Upload", notes = "department file bundle Upload")
 //    @PostMapping(value = "/document/dept/files/group", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 //    public ResponseEntity<CommonResponse> uploadFileGroup(FileVo vo) {
 //    	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.uploadFileGroup(vo)), HttpStatus.OK);
 //    }
     
-//    @ApiOperation(value = "폴더 업로드", notes = "폴더 업로드")
+//    @ApiOperation(value = "Folder Upload", notes = "Folder Upload")
 //    @PostMapping(value = "/document/dept/files/folder", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 //    public ResponseEntity<CommonResponse> uploadFolder(FileVo vo) {
 //    	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.uploadFile(vo)), HttpStatus.OK);
 //    }
     
-    @ApiOperation(value = "부서 파일 목록 조회", notes = "부서 파일 목록 조회")
+    @ApiOperation(value = "department file inventory check", notes = "department file inventory check")
     @GetMapping("/document/dept/files")
     public ResponseEntity<CommonResponse> selectDeptFileList(FileVo vo) {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.selectDeptFileList(vo)), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "내 파일 목록 조회", notes = "내 파일 목록 조회")
+    @ApiOperation(value = "my file inventory check", notes = "my file inventory check")
     @GetMapping("/document/my/files")
     public ResponseEntity<CommonResponse> selectMyFileList(FileVo vo) {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.selectMyFileList(vo)), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "공유 파일 목록 조회", notes = "공유 파일 목록 조회")
+    @ApiOperation(value = "share file inventory check", notes = "share file inventory check")
     @GetMapping("/document/share/files")
     public ResponseEntity<CommonResponse> selectShareFileList(FileVo vo) {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.selectShareFileList(vo)), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "중요 파일 목록 조회", notes = "중요 파일 목록 조회")
+    @ApiOperation(value = "importance file inventory check", notes = "importance file inventory check")
     @GetMapping("/document/star/files")
     public ResponseEntity<CommonResponse> selectStarFileList(FileVo vo) {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.selectStarFileList(vo)), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "삭제 파일 목록 조회", notes = "삭제 파일 목록 조회")
+    @ApiOperation(value = "delete file inventory check", notes = "delete file inventory check")
     @GetMapping("/document/trash/files")
     public ResponseEntity<CommonResponse> selectDeleteFileList(FileVo vo) {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.selectDeleteFileList(vo)), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "묶음 파일 조회", notes = "묶음 파일 조회")
+    @ApiOperation(value = "bundle file check", notes = "bundle file check")
     @GetMapping("/document/dept/files/group")
     public ResponseEntity<CommonResponse> selectFileGroup(FileVo vo) {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.selectFileGroup(vo)), HttpStatus.OK);
     }
     
     
-    @ApiOperation(value = "파일다운로드", notes = "파일을 다운로드한다.")
+    @ApiOperation(value = "File download", notes = "File Download.")
     @GetMapping("/document/files/download")
     public ResponseEntity<?> fileDownLoad(@RequestParam String fileId, HttpServletResponse response, HttpServletRequest request) throws Exception{
     	
@@ -218,70 +218,70 @@ public class DocumentController {
     					.body(resource);
     }
     
-    @ApiOperation(value = "파일 수정", notes = "파일 수정")
+    @ApiOperation(value = "file correction", notes = "file correction")
     @PutMapping("/document/files")
     public ResponseEntity<CommonResponse> updateFile(@RequestBody FileVo vo) {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.updateFile(vo)), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "파일 중요여부 수정", notes = "파일 중요여부 수정")
+    @ApiOperation(value = "file Or correction", notes = "file Or correction")
     @PutMapping("/document/files/star")
     public ResponseEntity<CommonResponse> updateFileStar(@RequestBody FileVo vo) {
     	documentService.saveFavorite(vo);
     	return new ResponseEntity<>(new CommonResponse(200, "OK", null), HttpStatus.OK);
     }
     
-//    @ApiOperation(value = "부서 파일 수정(파일묶음)", notes = "부서 파일 수정(파일묶음)")
+//    @ApiOperation(value = "department file correction(File bundle)", notes = "department file correction(File bundle)")
 //    @PutMapping(value = "/document/dept/files/group", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 //    public ResponseEntity<CommonResponse> updateFileGroup(FileVo vo) throws Exception {
 //    	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.updateFileGroup(vo)), HttpStatus.OK);
 //    }
     
-    @ApiOperation(value = "부서 파일 이동", notes = "부서 파일 이동")
+    @ApiOperation(value = "department file movement", notes = "department file movement")
     @PutMapping("/document/dept/files/move")
     public ResponseEntity<CommonResponse> moveFoldersAndFiles(@RequestBody FileVo vo) throws Exception {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.moveFoldersAndFiles(vo.getFolderIds(), vo.getFileGroupIds(), vo.getToFolderId())), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "파일 공유", notes = "파일 공유")
+    @ApiOperation(value = "file share", notes = "file share")
     @PostMapping("/document/files/share")
     public ResponseEntity<CommonResponse> shareFile(@RequestBody FileShareVo vo) {
     	documentService.shareFile(vo);
     	return new ResponseEntity<>(new CommonResponse(200, "OK", null), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "파일 공유 중지", notes = "파일 공유 중지")
+    @ApiOperation(value = "file share stop", notes = "file share stop")
     @PostMapping("/document/files/unshare")
     public ResponseEntity<CommonResponse> unshareFile(@RequestBody FileShareVo vo) {
     	documentService.unshareFile(vo);
     	return new ResponseEntity<>(new CommonResponse(200, "OK", null), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "파일 공유대상 목록", notes = "파일 공유대상 목록")
+    @ApiOperation(value = "file Shared target inventory", notes = "file Shared target inventory")
     @GetMapping("/document/files/share")
     public ResponseEntity<CommonResponse> selectShareTargetList(FileShareVo vo) {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.selectShareTargetList(vo)), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "파일 공유대상 사용자 조회", notes = "파일 공유대상 사용자 조회")
+    @ApiOperation(value = "file Shared target user check", notes = "file Shared target user check")
     @GetMapping("/document/files/share/users")
     public ResponseEntity<CommonResponse> selectListUserMember(@RequestParam HashMap<String, Object> param) {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.selectListUserMember(param)), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "사용용량 조회", notes = "사용용량 조회")
+    @ApiOperation(value = "Usage capacity check", notes = "Usage capacity check")
     @GetMapping("/document/files/diskspace")
     public ResponseEntity<CommonResponse> selectUseCpct() {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.selectUseCpct()), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "사용자별 폴더권한 조회", notes = "사용자별 폴더권한 조회")
+    @ApiOperation(value = "User Folder check", notes = "User Folder check")
     @GetMapping("/document/files/authmapp")
     public ResponseEntity<CommonResponse> selectListUserAuthMapp(@RequestParam HashMap<String, Object> param) {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.selectListUserAuthMapp(param)), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "사용자별 폴더권한 저장", notes = "사용자별 폴더권한 저장")
+    @ApiOperation(value = "User Folder save", notes = "User Folder save")
     @PostMapping("/document/files/authmapp")
     public ResponseEntity<CommonResponse> saveFolderAuthMapp(@RequestBody List<UserMemberAuthMappVo> list) {
     	documentService.saveFolderAuthMapp(list);

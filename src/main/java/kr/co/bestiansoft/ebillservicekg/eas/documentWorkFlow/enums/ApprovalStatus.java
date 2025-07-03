@@ -4,11 +4,11 @@ import lombok.Getter;
 
 @Getter
 public enum ApprovalStatus {
-    PENDING     ("AS01", "대기"),
-    SENT        ("AS02", "발송"),
-    VIEWED      ("AS03", "열람"),
-    APPROVED    ("AS04", "승인"),
-    REJECTED    ("AS05", "반려");
+    PENDING     ("AS01", "PENDING"),
+    SENT        ("AS02", "SENT"),
+    VIEWED      ("AS03", "VIEWED"),
+    APPROVED    ("AS04", "APPROVED"),
+    REJECTED    ("AS05", "REJECTED");
 
     final private String codeId;
     final private String codeNm;

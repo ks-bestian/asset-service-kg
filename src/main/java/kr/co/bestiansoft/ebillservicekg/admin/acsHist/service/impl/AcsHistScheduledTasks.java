@@ -23,27 +23,27 @@ public class AcsHistScheduledTasks {
 	@Autowired
 	private AcsHistMapper acsHistMapper;
 	
-	//@Scheduled(cron = "0 0/5 * * * ?") // 매 5분마다
-    ///@Scheduled(fixedRate = 300000) // 300000 밀리초 = 5분  5 60 1000
-//    @Scheduled(fixedRate = 3600000) // 300000 밀리초 = 5분  5 60 1000  60 60 1000
-	@Scheduled(cron = "0 0 0 * * *") // 매일 0시에 실행
+	//@Scheduled(cron = "0 0/5 * * * ?") // Every 5 minutes
+    ///@Scheduled(fixedRate = 300000) // 300000 milliseconds = 5 minutes  5 60 1000
+//    @Scheduled(fixedRate = 3600000) // 300000 milliseconds = 5 minutes5 60 1000  60 60 1000
+	@Scheduled(cron = "0 0 0 * * *") // Run at 0 o'clock every day
     public void oldAcsHistDeleteTask() {
     	String formattedDate = dateFormat.format(new Date(System.currentTimeMillis()));
-        logger.info("접속이력 정리 배치 작업이 실행됩니다: " + formattedDate);
+        logger.info("The arrangement of connection history is executed: " + formattedDate);
         acsHistMapper.deleteOldAcsHist();
         formattedDate = dateFormat.format(new Date(System.currentTimeMillis()));
-        logger.info("접속이력 정리 배치 작업이 종료됩니다: " + formattedDate);
+        logger.info("The arrangement of connection history is terminated: " + formattedDate);
     }
 	
-	//@Scheduled(cron = "0 0/5 * * * ?") // 매 5분마다
-    ///@Scheduled(fixedRate = 300000) // 300000 밀리초 = 5분  5 60 1000
-//    @Scheduled(fixedRate = 3600000) // 300000 밀리초 = 5분  5 60 1000  60 60 1000
-	@Scheduled(cron = "0 0 0 * * *") // 매일 0시에 실행
+	//@Scheduled(cron = "0 0/5 * * * ?") //Every 5 minutes
+    ///@Scheduled(fixedRate = 300000) //300000 milliseconds = 5 minutes  5 60 1000
+//    @Scheduled(fixedRate = 3600000) //300000 milliseconds = 5 minutes 5 60 1000  60 60 1000
+	@Scheduled(cron = "0 0 0 * * *") //Run at 0 o'clock every day
     public void oldEbsAcsHistDeleteTask() {
     	String formattedDate = dateFormat.format(new Date(System.currentTimeMillis()));
-        logger.info("ebs 접속이력 정리 배치 작업이 실행됩니다: " + formattedDate);
+        logger.info("ebs The arrangement of connection history is executed: " + formattedDate);
         acsHistMapper.deleteOldBillHist();
         formattedDate = dateFormat.format(new Date(System.currentTimeMillis()));
-        logger.info("ebs 접속이력 정리 배치 작업이 종료됩니다: " + formattedDate);
+        logger.info("EBS access history arrangement is terminated: " + formattedDate);
     }
 }

@@ -9,14 +9,14 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Data;
 
-@ApiModel(description = "로그인 조회")
+@ApiModel(description = "log in check")
 @Data
 public class LoginRequest {
 
-	@ApiModelProperty(value = "사용자 아이디")
+	@ApiModelProperty(value = "user id")
     private String userId;
 
-	@ApiModelProperty(value = "사용자 패스워드")
+	@ApiModelProperty(value = "user Password")
     private String pswd;
 
 	private String lang;

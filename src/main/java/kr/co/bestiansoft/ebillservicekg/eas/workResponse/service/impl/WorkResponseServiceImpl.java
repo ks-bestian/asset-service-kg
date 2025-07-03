@@ -83,5 +83,13 @@ public class WorkResponseServiceImpl implements WorkResponseService {
         return workResponseRepository.getWorkResponses(workReqId);
     }
 
+    @Override
+    public List<String> getRespondedUsers(int workReqId) {
+        return workResponseRepository.getRespondedUsers(workReqId);
+    }
+    @Override
+    public void delete(int workReqId) {
+        workResponseRepository.delete(workReqId);
+    }
 
 }

@@ -16,11 +16,11 @@ import java.util.HashMap;
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-@Api(tags = "겸직 API")
+@Api(tags = "Concurrent position API")
 public class CcofController {
     private final CcofService ccofService;
 
-    @ApiOperation(value = "사용자 겸직 리스트 조회", notes = "사용자의 겸직 리스트를 조회한다.")
+    @ApiOperation(value = "Retrieves the user's list of concurrent positions.", notes = "Retrieves the user's list of concurrent positions.")
     @GetMapping("admin/ccof")
     public ResponseEntity<CommonResponse> getMenuList(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "ok", ccofService.getCcofList(param)), HttpStatus.OK);

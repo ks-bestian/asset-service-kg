@@ -43,7 +43,7 @@ public class MenuNode {
         this.menuId = menuId;
         this.menuNm = menuNm;
         this.uprMenuId = uprMenuId;
-        this.menuPath = menuPath; // 추가(20250203 조진호)
+        this.menuPath = menuPath; // addition(20250203 Jinho Cho)
     }
 
 }

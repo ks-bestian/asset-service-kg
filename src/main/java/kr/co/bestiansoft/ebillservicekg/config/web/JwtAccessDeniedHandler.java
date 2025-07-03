@@ -23,7 +23,7 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
     	
     	errLogService.saveErrLog(request, HttpServletResponse.SC_FORBIDDEN, "FORBIDDEN");
     	
-        //필요한 권한이 없이 접근하려 할때 403
+        //When trying to approach without the necessary authority 403
         response.sendError(HttpServletResponse.SC_FORBIDDEN);
     }
 }

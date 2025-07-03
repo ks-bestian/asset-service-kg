@@ -11,7 +11,7 @@ public class PasswordUtill {
     private static final String SYMBOL = "!@#$%^&*";
     private static final String ALL =  LOWER + NUM + SYMBOL;
 
-    //비밀번호 초기화 : 특수문자 + 영문 + 숫자 8자리 생성
+    //password reset : Special character + English + number 8seat generation
     public static String generatePassword() {
         SecureRandom random = new SecureRandom();
         List<Character> chars = new ArrayList<>();

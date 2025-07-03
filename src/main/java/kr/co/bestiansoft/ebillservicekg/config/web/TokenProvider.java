@@ -49,7 +49,7 @@ public class TokenProvider implements InitializingBean {
     private CustomUserDetailsService customUserDetailsService;
     private Key key;
 
-    // 빈이 생성되고 주입을 받은 후에 secret값을 변수에 할당하기 위해
+    // In order to assign a Secret value to a variable after bin is generated and injected
     @Override
     public void afterPropertiesSet() {
     	
@@ -61,7 +61,7 @@ public class TokenProvider implements InitializingBean {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
         
-        // 토큰의 expire 시간을 설정
+        // Set the expire time of the token
         long now = (new Date()).getTime();
         Date validity = new Date(now + this.tokenValidityInSeconds*1000);
 
@@ -71,13 +71,13 @@ public class TokenProvider implements InitializingBean {
                 .setSubject(authentication.getName())
                 .claim("deptCd", account.getDeptCd())
                 .claim("deptHeadYn", account.getDeptHeadYn())
-                .claim(AUTHORITIES_KEY, authorities) // 정보 저장
-                .signWith(key, SignatureAlgorithm.HS256) // 사용할 암호화 알고리즘과 , signature 에 들어갈 secret값 세팅
-                .setExpiration(validity) // set Expire Time 해당 옵션 안넣으면 expire안함
+                .claim(AUTHORITIES_KEY, authorities) // Information storage
+                .signWith(key, SignatureAlgorithm.HS256) //Use the encryption algorithm and set the secret value for the signature.
+                .setExpiration(validity) // If the "set Expire Time" option is not specified, expiration will not occur.
                 .compact();
     }
 
-    // 토큰으로 클레임을 만들고 이를 이용해 유저 객체를 만들어서 최종적으로 authentication 객체를 리턴
+    // Create a claim with tokens, use it to create a user object, and finally return the authentication object.
     public UsernamePasswordAuthenticationToken getAuthentication(String token) {
         Claims claims = Jwts
                 .parserBuilder()
@@ -115,23 +115,23 @@ public class TokenProvider implements InitializingBean {
 
     }
 
-    // 토큰의 유효성 검증을 수행
+    // Perform the validation of tokens
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             
-            logger.info("잘못된 JWT 서명입니다.");
+            logger.info("This is the wrong JWT signature.");
         } catch (ExpiredJwtException e) {
             
-            logger.info("만료된 JWT 토큰입니다.");
+            logger.info("This is the expired JWT token.");
         } catch (UnsupportedJwtException e) {
             
-            logger.info("지원되지 않는 JWT 토큰입니다.");
+            logger.info("This is not supported JWT token.");
         } catch (IllegalArgumentException e) {
             
-            logger.info("JWT 토큰이 잘못되었습니다.");
+            logger.info("JWT tokens are wrong.");
         }
         return false;
     }

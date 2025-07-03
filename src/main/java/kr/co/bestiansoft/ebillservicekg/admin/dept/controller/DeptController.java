@@ -15,45 +15,45 @@ import java.util.HashMap;
 import java.util.List;
 
 
-@Api(tags = "부서 API")
+@Api(tags = "department API")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequiredArgsConstructor
 public class DeptController {
     private final DeptService deptService;
 
-    @ApiOperation(value = "부서리스트 조회", notes = "부서리스트를 조회한다.")
+    @ApiOperation(value = "Department list check", notes = "Department list Inquiry.")
     @GetMapping("admin/dept")
     public ResponseEntity<CommonResponse> getDeptList(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "ok", deptService.getComDeptList(param)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "부서 트리 리스트 조회", notes = "부서 트리 리스트를 조회한다.")
+    @ApiOperation(value = "department Tree List check", notes = "department Tree List Inquiry.")
     @GetMapping("admin/dept/tree")
     public ResponseEntity<CommonResponse> getDeptTree(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "ok", deptService.getDeptTree(param)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "부서 상세 조회", notes = "부서를 상세 조회한다.")
+    @ApiOperation(value = "department particular check", notes = "Department particular Inquiry.")
     @GetMapping("admin/dept/{deptCd}")
     public ResponseEntity<CommonResponse> getDeptById(@PathVariable String deptCd, @RequestParam String lang) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "ok", deptService.getComDeptById(deptCd, lang)), HttpStatus.OK);
     }
 
 
-    @ApiOperation(value = "부서 생성", notes = "부서를 생성한다.")
+    @ApiOperation(value = "department generation", notes = "Department Create.")
     @PostMapping("admin/dept")
     public ResponseEntity<CommonResponse> createDept(@RequestBody DeptVo deptVo) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Department created successfully.", deptService.createDept(deptVo)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "부서 수정", notes = "부서를 수정한다.")
+    @ApiOperation(value = "department correction", notes = "Department Modify.")
     @PutMapping("admin/dept")
     public ResponseEntity<CommonResponse> updateDept(@RequestBody DeptVo deptVo) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Department updated successfully", deptService.updateDept(deptVo)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "부서 삭제", notes = "부서를 삭제한다.")
+    @ApiOperation(value = "department delete", notes = "Department Delete.")
     @DeleteMapping("admin/dept")
     public ResponseEntity<CommonResponse> deletedept(@RequestBody List<String> deptCd) {
         deptService.deleteDept(deptCd);
@@ -61,19 +61,19 @@ public class DeptController {
 
     }
 
-    @ApiOperation(value = "위원회 리스트 조회", notes = "위원회 리스트를 조회한다.")
+    @ApiOperation(value = "committee List check", notes = "committee List Inquiry.")
     @GetMapping("admin/cmit")
     public ResponseEntity<CommonResponse> getCmit(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "ok", deptService.getCmitList(param)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "사용자 겸직들 저장", notes = "사용자 겸직을 저장한다.")
+    @ApiOperation(value = "Save user concurrent positions.", notes = "Save user's multiple department assignments.")
     @PostMapping("admin/ccof/users")
     public ResponseEntity<CommonResponse> saveUsersCcofs(@RequestBody HashMap<String, Object> params) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Cmit created successfully.", deptService.saveUsersCcofs(params)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "위원회 삭제", notes = "위원회를 삭제한다")
+    @ApiOperation(value = "committee delete", notes = "Committee Delete")
     @DeleteMapping("admin/ccof/{deptCd}")
     public ResponseEntity<CommonResponse> deleteCmit(@PathVariable String deptCd, @RequestBody List<String> userIds) {
         deptService.deleteCmit(deptCd, userIds);

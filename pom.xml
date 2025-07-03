@@ -143,7 +143,7 @@
         <artifactId>spring-boot-starter-websocket</artifactId>
     </dependency>
 
-    <!-- Spring Boot STOMP 메시징 (선택)
+    <!-- Spring Boot STOMP messaging (choose)
     <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-messaging</artifactId>
@@ -207,7 +207,7 @@
             <systemPath>${project.basedir}/lib/aspose-cells-22.10.jar</systemPath>
         </dependency>
         -->
-        <!--  start 2025.05.15 apache poi 추가 lbs    -->
+        <!--  start 2025.05.15 apache poi add lbs    -->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
@@ -224,7 +224,7 @@
             <version>1.15.3</version>
         </dependency>
 
-        <!--  end 2025.05.15 apache poi 추가 lbs    -->
+        <!--  end 2025.05.15 apache poi add lbs    -->
         <dependency>
             <groupId>com.aspose</groupId>
             <artifactId>aspose-words</artifactId>

@@ -27,8 +27,8 @@ public class JwtFilter extends GenericFilterBean {
     private final TokenProvider tokenProvider;
     private final TokenBlacklist tokenBlacklist;
     
-    // 실제 필터릴 로직
-    // 토큰의 인증정보를 SecurityContext에 저장하는 역할 수행
+    // Logic in the actual filterli
+    // Performing a role to store the authentication information of tokens in SecurityContext
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
@@ -42,19 +42,19 @@ public class JwtFilter extends GenericFilterBean {
             	Authentication authentication = tokenProvider.getAuthentication(jwt);
                 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-                logger.debug("Security Context에 '{}' 인증 정보를 저장했습니다, uri: {}", authentication.getName(), requestURI);
+                logger.debug("I saved the '{}' authentication information in Security Context, URI: {}", authentication.getName(), requestURI);
             } else {
-                logger.debug("블랙리스트에 있는 JWT 토큰입니다, uri: {}", requestURI);
+                logger.debug("JWT token on the blacklist, URI: {}", requestURI);
             }
             
         } else {
-            logger.debug("유효한 JWT 토큰이 없습니다, uri: {}", requestURI);
+            logger.debug("valid JWT Token doesn't exist, uri: {}", requestURI);
         }
 
         filterChain.doFilter(servletRequest, servletResponse);
     }
 
-    // Request Header 에서 토큰 정보를 꺼내오기 위한 메소드
+    // Request Header at token Information Remove For Method
     private String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
 

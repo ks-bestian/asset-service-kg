@@ -131,11 +131,6 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
     }
 
     @Override
-    public List<DocumentListDto> getEndDocumentList(SearchDocumentVo vo) {
-        return officialDocumentMapper.getEndDocumentList(vo);
-    }
-
-    @Override
     public List<DocumentListDto> getMyDocumentList(SearchDocumentVo vo) {
         vo.setUserId(new SecurityInfoUtil().getAccountId());
         return officialDocumentMapper.getMyDocumentList(vo);
@@ -187,11 +182,11 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
             if (dates.length > 0 && !dates[0].trim().isEmpty()) {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                 LocalDate fromDate = LocalDate.parse(dates[0].trim(), formatter);
-                return fromDate.atStartOfDay(); // 00:00:00으로 설정
+                return fromDate.atStartOfDay(); // Set to 00:00:00
             }
         } catch (DateTimeParseException e) {
-            // 로깅 또는 다른 예외 처리
-            System.err.println("날짜 형식이 올바르지 않습니다: " + dateRangeStr);
+            // Logging or other exception processing
+            System.err.println("The date format is not correct: " + dateRangeStr);
         }
 
         return null;
@@ -207,21 +202,21 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
             LocalDate toDate;
 
             if (dates.length > 1 && !dates[1].trim().isEmpty()) {
-                // 종료일이 있는 경우
+                //If there is an end date
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                 toDate = LocalDate.parse(dates[1].trim(), formatter);
             } else if (dates.length > 0 && !dates[0].trim().isEmpty()) {
-                // 종료일이 없고 시작일만 있는 경우, 시작일을 종료일로 사용
+                // If there is no end date and only the start date, the start date is used as the end date
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                 toDate = LocalDate.parse(dates[0].trim(), formatter);
             } else {
                 return null;
             }
 
-            return toDate.atTime(23, 59, 59); // 23:59:59로 설정
+            return toDate.atTime(23, 59, 59); // 23:59:59as setting
         } catch (DateTimeParseException e) {
-            // 로깅 또는 다른 예외 처리
-            System.err.println("날짜 형식이 올바르지 않습니다: " + dateRangeStr);
+            // Logging or different exception treatment
+            System.err.println("The date format is not correct: " + dateRangeStr);
         }
 
         return null;
@@ -244,11 +239,11 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
         return officialDocumentMapper.countApprovalList(new SecurityInfoUtil().getAccountId());
     }
     /**
-     * 문자열 날짜를 LocalDateTime으로 변환
+     * String Date LocalDateTimeby conversion
      *
-     * @param dateStr "yyyy-MM-dd" 형식의 문자열
-     * @param startOfDay true면 00:00:00, false면 23:59:59로 시간 설정
-     * @return 변환된 LocalDateTime 객체
+     * @param dateStr "yyyy-MM-dd" Formal String
+     * @param startOfDay truenoodle 00:00:00, falsenoodle 23:59:59as hour setting
+     * @return Converted LocalDateTime Object
      */
     public static LocalDateTime parseDate(String dateStr, boolean startOfDay) {
         if (dateStr == null || dateStr.trim().isEmpty()) {
@@ -265,18 +260,18 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
                 return date.atTime(23, 59, 59);
             }
         } catch (DateTimeParseException e) {
-            // 로깅 또는 다른 예외 처리
-            System.err.println("날짜 형식이 올바르지 않습니다: " + dateStr);
+            // Logging or different exception treatment
+            System.err.println("The date format is not correct: " + dateStr);
         }
 
         return null;
     }
 
     /**
-     * 문자열 날짜와 시간을 LocalDateTime으로 변환
+     * Convert string date and time to LocalDatetime
      *
-     * @param dateTimeStr "yyyy-MM-dd HH:mm:ss" 형식의 문자열
-     * @return 변환된 LocalDateTime 객체
+     * @param dateTimeStr "yyyy-MM-dd HH:mm:ss" Formal String
+     * @return Converted LocalDateTime Object
      */
     public static LocalDateTime parseDateTime(String dateTimeStr) {
         if (dateTimeStr == null || dateTimeStr.trim().isEmpty()) {
@@ -287,13 +282,13 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             return LocalDateTime.parse(dateTimeStr.trim(), formatter);
         } catch (DateTimeParseException e) {
-            // 잘못된 형식일 경우 다른 형식 시도
+            //An attempt to format in the case of the wrong form
             try {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                 return LocalDate.parse(dateTimeStr.trim(), formatter).atStartOfDay();
             } catch (DateTimeParseException e2) {
-                // 로깅 또는 다른 예외 처리
-                System.err.println("날짜 형식이 올바르지 않습니다: " + dateTimeStr);
+                // Logging or different exception treatment
+                System.err.println("The date format is not correct: " + dateTimeStr);
             }
         }
 

@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 
 
@@ -45,7 +46,7 @@ public class EasFileServiceImpl implements EasFileService {
      *           and information necessary for saving file details.
      */
     @Override
-    public List<String> uploadEasFile(EasFileVo vo){
+    public List<String> uploadEasFileAndConversionPdf(EasFileVo vo){
         log.info(vo.toString());
         String userId = new SecurityInfoUtil().getAccountId();
         vo.setRegId(userId);
@@ -63,11 +64,14 @@ public class EasFileServiceImpl implements EasFileService {
             if (!isPdfFile(fileVo.getFileExt())) {
                 String fileId = fileVo.getFileId();
                 try {
-                    UpdatePdfFileDto pdfDto = savePdfFile(file);
-                    updatePdfInfo(fileId, pdfDto);
-                    log.info("PDF 변환 완료: 원본 파일 ID {}, PDF 파일 ID {}", fileId, pdfDto.getPdfFileId());
+                    CompletableFuture<UpdatePdfFileDto> futureResult = savePdfFile(file);
+                    futureResult.thenAccept(pdfDto -> {
+                        updatePdfInfo(fileId, pdfDto);
+                        log.info("PDF Conversion completed: Original file ID {}, PDF file ID {}", fileId, pdfDto.getPdfFileId());
+                    });
+
                 } catch (Exception e) {
-                    log.error("PDF 변환 실패: 파일 ID {}, 오류: {}", fileId, e.getMessage(), e);
+                    log.error("PDF conversion failure: File ID {}, Error: {}", fileId, e.getMessage(), e);
                 }
             }
 
@@ -109,7 +113,7 @@ public class EasFileServiceImpl implements EasFileService {
     public void updatePdfInfo(String fileId, UpdatePdfFileDto dto){
         EasFileVo fileVo = easFileRepository.getFileById(fileId);
         if (fileVo != null) {
-            // PDF 정보 업데이트
+            // PDF information update
             fileVo.setPdfFileId(dto.getPdfFileId());
             fileVo.setPdfFileNm(dto.getPdfFileNm());
 
@@ -174,6 +178,21 @@ public class EasFileServiceImpl implements EasFileService {
         return result;
     }
 
+    /***
+     *
+     * @param file
+     * @return fileId
+     */
+    public String saveFile(File file){
+        String fileId = StringUtil.getUUUID();
+        try (InputStream edvIs = new FileInputStream(file)){
+            edv.save(fileId, edvIs);
+        } catch (Exception e){
+            throw new RuntimeException("EDV_NOT_WORK", e);
+        }
+        return fileId;
+    }
+
     /**
      * Saves a PDF file by converting the input file to a PDF format and storing it.
      * Handles temporary file creation and ensures proper cleanup post-processing.
@@ -185,32 +204,74 @@ public class EasFileServiceImpl implements EasFileService {
      * @return an UpdatePdfFileDto containing the PDF file's ID and name
      * @throws RuntimeException if the file conversion or saving process fails
      */
-    public UpdatePdfFileDto savePdfFile(MultipartFile file) {
-        UpdatePdfFileDto result = new UpdatePdfFileDto();
-        String fileId = StringUtil.getUUUID();
-        String fileName = file.getOriginalFilename();
-        File tmpFile = null;
-        File tmpPdfFile = null;
+    public CompletableFuture<UpdatePdfFileDto> savePdfFile(MultipartFile file) {
 
-        try{
-            // 임시 파일 생성
-            tmpFile =File.createTempFile("temp", null);
-            tmpPdfFile = File.createTempFile("pdfTemp", null);
-            file.transferTo(tmpFile);
-            boolean pdfResult = pdfService.convertToPdf(tmpFile.getAbsolutePath(), fileName, tmpPdfFile.getAbsolutePath());
-            if(pdfResult){
-                edv.save(fileId, new FileInputStream(tmpPdfFile));
+        return CompletableFuture.supplyAsync(() -> {
+
+            String fileId = StringUtil.getUUUID();
+            String fileName = file.getOriginalFilename();
+            UpdatePdfFileDto result = new UpdatePdfFileDto();
+
+            File tmpFile = null;
+            File tmpPdfFile = null;
+
+            try {
+                //Create temporary file
+                tmpFile = File.createTempFile("temp", ".tmp");
+                tmpPdfFile = File.createTempFile("pdfTemp", ".pdf");
+
+                file.transferTo(tmpFile);
+
+                boolean pdfResult = pdfService.convertToPdf(tmpFile.getAbsolutePath(), fileName, tmpPdfFile.getAbsolutePath());
+
+                if (pdfResult) {
+                    edv.save(fileId, new FileInputStream(tmpPdfFile));
+                }else {
+                    throw new RuntimeException("PDF_CONVERSION_FAILED");
+                }
+                result.setPdfFileId(fileId);
+                result.setPdfFileNm(fileName);
+
+                return result;
+            } catch (Exception e) {
+                throw new RuntimeException("FILE_NOT_SAVE", e);
+            } finally {
+                tmpFile.delete();
+                tmpPdfFile.delete();
             }
-        }catch (Exception e){
-            throw new RuntimeException("FILE_NOT_SAVE", e);
-        }finally {
-            tmpFile.delete();
-            tmpPdfFile.delete();
-        }
 
-        result.setPdfFileId(fileId);
-        result.setPdfFileNm(fileName);
-        return result;
+
+        }, executorService);
+    }
+    public CompletableFuture<UpdatePdfFileDto> savePdfFile(File file) {
+
+        return CompletableFuture.supplyAsync(() -> {
+            String fileId = StringUtil.getUUUID();
+            String fileName = file.getName();
+            UpdatePdfFileDto result = new UpdatePdfFileDto();
+
+
+            File tmpPdfFile = null;
+
+            try{
+                tmpPdfFile = File.createTempFile("pdfTemp", ".pdf");
+                boolean pdfResult = pdfService.convertToPdf(file.getAbsolutePath(), fileName, tmpPdfFile.getAbsolutePath());
+
+                if (pdfResult) {
+                    edv.save(fileId, new FileInputStream(tmpPdfFile));
+                }else {
+                    throw new RuntimeException("PDF_CONVERSION_FAILED");
+                }
+                result.setPdfFileId(fileId);
+                result.setPdfFileNm(fileName);
+
+                return result;
+            }catch (Exception e) {
+                throw new RuntimeException("FILE_NOT_SAVE", e);
+            }finally {
+                tmpPdfFile.delete();
+            }
+        }, executorService);
     }
 
     @Override

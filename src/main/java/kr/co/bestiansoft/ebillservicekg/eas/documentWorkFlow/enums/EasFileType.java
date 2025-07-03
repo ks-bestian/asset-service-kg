@@ -4,9 +4,9 @@ import lombok.Getter;
 
 @Getter
 public enum EasFileType {
-    ATTACHMENT_FILE         ("EFT01", "첨부파일"),
-    DRAFT_DOCUMENT_FILE     ("EFT02", "기안문서파일"),
-    EXECUTION_REPLY_FILE    ("EFT03", "이행답변파일");
+    ATTACHMENT_FILE         ("EFT01", "ATTACHMENT_FILE"),
+    DRAFT_DOCUMENT_FILE     ("EFT02", "DRAFT_DOCUMENT_FILE"),
+    EXECUTION_REPLY_FILE    ("EFT03", "EXECUTION_REPLY_FILE");
 
     private final String codeId;
     private final String codeNm;

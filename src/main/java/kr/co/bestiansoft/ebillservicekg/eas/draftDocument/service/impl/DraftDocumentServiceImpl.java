@@ -112,25 +112,25 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
         try {
             InputStream is = edv.download(formList.getFileId());
             tmpFile = File.createTempFile("temp", null);
-            tmpFile = updateDocument(is, paramMap, tmpFile.getAbsolutePath());
-            edv.save(fileId, new FileInputStream(tmpFile));
-            vo.setFileId(fileId);
-
-            // PDF 변환
             tmpPdfFile = File.createTempFile("pdfTemp", null);
+
+            tmpFile = updateDocument(is, paramMap, tmpFile.getAbsolutePath());
+            // PDF 변환
             boolean pdfResult = pdfService.convertToPdf(tmpFile.getAbsolutePath(), fileName, tmpPdfFile.getAbsolutePath());
 
             if (pdfResult && tmpPdfFile.exists() && tmpPdfFile.length() > 0) {
                 edv.save(pdfFileId, new FileInputStream(tmpPdfFile));
                 vo.setPdfFileId(pdfFileId);
             } else {
-                throw new RuntimeException("PDF 변환 실패");
+                throw new RuntimeException("PDF conversion failure");
             }
+            edv.save(fileId, new FileInputStream(tmpFile));
+            vo.setFileId(fileId);
 
             return vo;
 
         } catch (Exception e) {
-            throw new RuntimeException("파일 처리 중 오류 발생: " + e.getMessage(), e);
+            throw new RuntimeException("Error occurs during file processing:" + e.getMessage(), e);
         } finally {
             // 임시 파일 삭제 시 null 체크
             if (tmpFile != null && tmpFile.exists()) {
@@ -158,7 +158,7 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
     }
 
     private void replaceSimpleText(XWPFDocument doc, Map<String, String> map) {
-        log.info("변수 치환 시작: {}", map.keySet());
+        log.info("Variable substitution starts: {}", map.keySet());
 
         // 모든 단락 처리 - 문서 순서대로 처리
         List<XWPFParagraph> paragraphs = new ArrayList<>(doc.getParagraphs());
@@ -189,7 +189,7 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
             }
         }
 
-        log.info("변수 치환 완료");
+        log.info("Variable substitution completed");
     }
 
     
@@ -335,7 +335,7 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
             return newParagraph != null ? newParagraph : referenceParagraph.getDocument().createParagraph();
 
         } catch (Exception e) {
-            log.error("insertParagraphAfter 중 오류 발생: {}", e.getMessage(), e);
+            log.error("Insertparagraphafters occur in error: {}", e.getMessage(), e);
             return referenceParagraph.getDocument().createParagraph();
         }
     }
@@ -380,7 +380,7 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
                     lastParagraph = listParagraph;
 
                 } catch (Exception itemError) {
-                    log.error("리스트 항목 {} 처리 중 오류: {}", i + 1, itemError.getMessage(), itemError);
+                    log.error("List item {} error during treatment: {}", i + 1, itemError.getMessage(), itemError);
                 }
             }
 
@@ -392,7 +392,7 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
                     try {
                         lastParagraph = processNestedListAfterParagraph(lastParagraph, nestedList, 1);
                     } catch (Exception nestedError) {
-                        log.error("중첩 리스트 처리 중 오류: {}", nestedError.getMessage(), nestedError);
+                        log.error("Error during the overlapping list processing: {}", nestedError.getMessage(), nestedError);
                     }
                 }
             }
@@ -442,17 +442,17 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
                         lastParagraph = listParagraph;
 
                     } catch (Exception itemError) {
-                        log.error("중첩 리스트 항목 {} 처리 중 오류: {}", i + 1, itemError.getMessage());
+                        log.error("Overlooked list items {} error during treatment: {}", i + 1, itemError.getMessage());
                     }
                 } else {
-                    log.warn("중첩 리스트 {}번째 항목에서 텍스트를 추출하지 못함", i + 1);
+                    log.warn("Instest list {} cannot be extracted from text in the first item", i + 1);
                 }
             }
 
             return lastParagraph;
 
         } catch (Exception e) {
-            log.error("중첩 리스트 처리 중 전체 오류: {}", e.getMessage(), e);
+            log.error("All errors in the overlapping list: {}", e.getMessage(), e);
             return referenceParagraph;
         }
     }
@@ -511,7 +511,7 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
 
 
         } catch (Exception e) {
-            log.debug("커서 방식 실패, 대안 사용: {}", e.getMessage());
+            log.debug("Curse method failure, use of alternatives: {}", e.getMessage());
             processHtmlTable(referenceParagraph.getDocument(), tableElement.outerHtml(), referenceParagraph);
         }
     }
@@ -569,7 +569,7 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
                 cursor.toNextToken();
             }
         } catch (Exception e) {
-            log.error("HTML 테이블 처리 중 오류: {}", e.getMessage(), e);
+            log.error("HTML table processing error: {}", e.getMessage(), e);
             processHtmlContent(currentParagraph, htmlContent);
         }
     }
@@ -761,7 +761,7 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
             try {
                 run.setColor(segment.getTextColor());
             } catch (Exception e) {
-                log.error("색상 적용 중 오류: {}", e.getMessage());
+                log.error("Error during color application: {}", e.getMessage());
             }
         }
 
@@ -814,7 +814,7 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
                 }
             }
         } catch (Exception e) {
-            log.error("HTML 태그 분석 중 오류: {}", e.getMessage(), e);
+            log.error("HTML tag analysis error: {}", e.getMessage(), e);
             // 오류 발생 시 원본 텍스트를 그대로 반환
             HtmlTextSegment segment = new HtmlTextSegment(htmlContent);
             segments.add(segment);
@@ -1006,7 +1006,7 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
                     double fontSize = Double.parseDouble(fontSizeStr);
                     segment.setFontSize(fontSize);
                 } catch (NumberFormatException e) {
-                    log.warn("폰트 크기 클래스 파싱 실패: {}", className);
+                    log.warn("Font size class parsing failure: {}", className);
                 }
             }
         }
@@ -1129,7 +1129,7 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
             case "pink": return "FFC0CB";
             case "brown": return "A52A2A";
             default:
-                log.warn("지원되지 않는 색상 값: {}", colorValue);
+                log.warn("Unsupported color value: {}", colorValue);
                 return null;
         }
     }
@@ -1187,7 +1187,7 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
                 return Double.parseDouble(fontSize);
             }
         } catch (NumberFormatException e) {
-            log.warn("폰트 크기 파싱 실패: {}", fontSize);
+            log.warn("Font size parsing failure: {} ", fontSize);
             return -1;
         }
     }
@@ -1403,7 +1403,7 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
                 return Double.parseDouble(sizeStr);
             }
         } catch (NumberFormatException e) {
-            log.warn("크기 파싱 실패: {}", sizeStr);
+            log.warn("Size parsing failure: {}", sizeStr);
             return 0;
         }
     }
@@ -1423,7 +1423,7 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
 
             return 1.0; // 기본 테두리 크기
         } catch (Exception e) {
-            log.warn("테두리 크기 파싱 실패: {}", borderStr);
+            log.warn("Border size parsing failure: {}", borderStr);
             return 1.0;
         }
     }
@@ -1550,7 +1550,7 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
      */
     private void setAlignment(XWPFParagraph paragraph, String alignment) {
         if (alignment == null || alignment.isEmpty()) {
-            log.warn("정렬 값이 null 또는 빈 문자열입니다.");
+            log.warn("The alignment value is null or empty string.");
             return;
         }
 
@@ -1614,7 +1614,7 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
 
 
         } catch (Exception e) {
-            log.error("정렬 설정 중 오류 발생: {}", e.getMessage(), e);
+            log.error("Error occurs during alignment setting: {}", e.getMessage(), e);
         }
     }
 
@@ -1763,7 +1763,7 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
             }
 
         } catch (Exception e) {
-            log.error("CKEditor 테이블 셀 수직 정렬 설정 중 오류: {}", e.getMessage(), e);
+            log.error("Ckeditor table cell vertical alignment error: {}", e.getMessage(), e);
         }
     }
     private void processParagraphContent(XWPFParagraph paragraph, Element pElement) {
@@ -1869,10 +1869,10 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
             }
             ilvl.setVal(BigInteger.valueOf(level));
 
-            log.debug("리스트 레벨 {} 설정 완료: numId={}", level, numId);
+            log.debug("List Level {} Settings Complete: Numid = {}", level, numId);
 
         } catch (Exception e) {
-            log.error("리스트 레벨 설정 중 오류: {}", e.getMessage(), e);
+            log.error("Error during the list level setting: {}", e.getMessage(), e);
         }
     }
 
@@ -1946,7 +1946,7 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
 
 
                 } catch (Exception indentError) {
-                    log.error("번호 매기기 레벨 {} 들여쓰기 설정 중 오류: {}", level, indentError.getMessage());
+                    log.error("Number Magnetic Level {} Error in Filling Settings: {}", level, indentError.getMessage());
                 }
             }
 
@@ -1957,7 +1957,7 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
             return numID;
 
         } catch (Exception e) {
-            log.error("Word 번호 매기기 생성 중 오류: {}", e.getMessage(), e);
+            log.error("Word numbering error during the creation", e.getMessage(), e);
             return BigInteger.valueOf(1);
         }
     }
@@ -1991,7 +1991,7 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
 
         // 직접 텍스트가 없으면 빈 문자열 반환 (중첩 리스트만 있는 경우)
         if (result.isEmpty()) {
-            log.debug("리스트 항목에 직접 텍스트가 없음 - 중첩 리스트만 존재");
+            log.debug("There is no direct text in the list item -Only overlapping lists exist");
         }
 
         return result;

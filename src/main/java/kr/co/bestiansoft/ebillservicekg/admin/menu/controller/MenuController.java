@@ -18,42 +18,42 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-@Api(tags = "메뉴관리 API")
+@Api(tags = "Menu management API")
 public class MenuController {
     private final MenuService menuService;
 
-    @ApiOperation(value = "메뉴 리스트 조회", notes = "메뉴 리스트를 조회한다.")
+    @ApiOperation(value = "menu List check", notes = "menu List Inquiry.")
     @GetMapping("admin/menu")
     public ResponseEntity<CommonResponse> getMenuList(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "ok", menuService.getMenuList(param)), HttpStatus.OK);
     }
     
-    // 추가(20250210 조진호)
-    @ApiOperation(value = "부서메뉴 리스트 조회", notes = "부서메뉴 리스트를 조회한다.")
+    // addition(20250210 Jinho Cho)
+    @ApiOperation(value = "Department menu List check", notes = "Department menu List Inquiry.")
     @GetMapping("admin/deptmenu")
     public ResponseEntity<CommonResponse> getDeptMenuList(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "ok", menuService.getDeptMenuList(param)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "메뉴상세 조회", notes = "메뉴 상세를 조회한다.")
+    @ApiOperation(value = "Menu details check", notes = "menu Details Inquiry.")
     @GetMapping("admin/menu/{menuId}")
     public ResponseEntity<CommonResponse> getMenuDetail(@PathVariable Long menuId, @RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "ok", menuService.getMenuDetail(menuId, param)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "메뉴 생성", notes = "메뉴를 생성한다.")
+    @ApiOperation(value = "menu generation", notes = "Menu Create.")
     @PostMapping("admin/menu")
     public ResponseEntity<CommonResponse> createMenu(@RequestBody MenuVo menuVo) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Menu code created successfully.", menuService.createMenu(menuVo)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "메뉴 수정", notes = "메뉴를 수정한다.")
+    @ApiOperation(value = "menu correction", notes = "Menu Modify.")
     @PutMapping("admin/menu")
     public ResponseEntity<CommonResponse> updateMenu(@RequestBody MenuVo menuVo) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Menu code updated successfully", menuService.updateMenu(menuVo)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "메뉴 삭제", notes = "메뉴 삭제한다.")
+    @ApiOperation(value = "menu delete", notes = "menu Delete.")
     @DeleteMapping("admin/menu")
     public ResponseEntity<CommonResponse> deleteMenu(@RequestBody List<Long> menuIds) {
         menuService.deleteMenu(menuIds);
@@ -61,19 +61,19 @@ public class MenuController {
     }
 
     //--------quick menu--------
-    @ApiOperation(value = "퀵메뉴 리스트 조회", notes = "퀵메뉴 리스트를 조회한다.")
+    @ApiOperation(value = "Quick menu List check", notes = "Quick menu List Inquiry.")
     @GetMapping("admin/quickMenu")
     public ResponseEntity<CommonResponse> getQuickMenuList(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "ok", menuService.getQuickMenuList(param)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "퀵메뉴 생성", notes = "퀵메뉴 리스트를 생성한다.")
+    @ApiOperation(value = "Quick menu generation", notes = "Quick menu List Create.")
     @PostMapping("admin/quickMenu")
     public ResponseEntity<CommonResponse> createQuickMenu(@RequestBody QuickMenuVo quickMenuVo) {
         return new ResponseEntity<>(new CommonResponse(200, "ok", menuService.createQuickMenu(quickMenuVo)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "퀵메뉴 삭제", notes = "퀵메뉴 리스트를 삭제한다.")
+    @ApiOperation(value = "Quick menu delete", notes = "Quick menu List Delete.")
     @DeleteMapping("admin/quickMenu")
     public ResponseEntity<CommonResponse> deleteQuickMenu(@RequestBody QuickMenuVo quickMenuVo) {
         menuService.deleteQuickMenu(quickMenuVo);

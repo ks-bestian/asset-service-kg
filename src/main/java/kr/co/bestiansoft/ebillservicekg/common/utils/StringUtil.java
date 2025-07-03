@@ -3,7 +3,7 @@ package kr.co.bestiansoft.ebillservicekg.common.utils;
 import java.util.UUID;
 
 /*
-StringUtil 사용 예시
+StringUtil use example
 String[] words = {"hello", "world"};
 String joinedString = StringUtil.join(words, ", ");
 

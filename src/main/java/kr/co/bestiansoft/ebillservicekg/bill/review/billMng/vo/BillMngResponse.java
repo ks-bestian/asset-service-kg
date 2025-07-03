@@ -12,13 +12,13 @@ public class BillMngResponse {
 
 	private List<ProposerVo> proposerList;
     private List<BillMngVo> cmtList;
-    private BillMngVo billMngVo;//안건기본
-    private BillMngVo billlegalReviewVo;//법률검토
-    private BillMngVo billLangReviewVo;//위원회언어전문파트
-    private List<BillMngVo> billLangReviewVoList;//위원회언어전문파트
+    private BillMngVo billMngVo;//Agenda
+    private BillMngVo billlegalReviewVo;//Legal review
+    private BillMngVo billLangReviewVo;//Committee language specialty part
+    private List<BillMngVo> billLangReviewVoList;//Committee language specialty part
 
-    private BillMngVo billCmtReviewVo;//위원회심사
-    private List<BillMngVo> billCmtReviewVoList;//위원회심사
+    private BillMngVo billCmtReviewVo;//Committee
+    private List<BillMngVo> billCmtReviewVoList;//Committee
     private ProcessVo processVo;
 
     private List<BillMngVo> billEtcInfoList;

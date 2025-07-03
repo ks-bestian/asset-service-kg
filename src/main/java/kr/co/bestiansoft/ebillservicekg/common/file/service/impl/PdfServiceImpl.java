@@ -67,14 +67,14 @@ public class PdfServiceImpl implements PdfService {
 	
 	/**
 	 * 
-	 * @param pdfPath PDF 파일 경로
-	 * @param imagePath 삽입할 이미지 파일 경로
-	 * @param outputPath 결과 PDF 파일 경로
-	 * @param pageNumber 이미지를 삽입할 페이지 번호 (0부터 시작)
-	 * @param x 이미지가 삽입될 X 좌표 (페이지 좌측 하단 기준, 포인트 단위)
-	 * @param y 이미지가 삽입될 Y 좌표 (페이지 좌측 하단 기준, 포인트 단위)
-	 * @param width 삽입될 이미지의 너비 (포인트 단위)
-	 * @param height 삽입될 이미지의 높이 (포인트 단위)
+	 * @param pdfPath PDF file channel
+	 * @param imagePath To insert image file channel
+	 * @param outputPath result PDF file channel
+	 * @param pageNumber Image To insert page number (0from start)
+	 * @param x Image To be inserted X coordinate (page Left side Bottom standard, point unit)
+	 * @param y Image To be inserted Y coordinate (page Left side Bottom standard, point unit)
+	 * @param width To be inserted Image width (point unit)
+	 * @param height To be inserted Image height (point unit)
 	 * @throws IOException 
 	 */
 	@Override
@@ -82,14 +82,14 @@ public class PdfServiceImpl implements PdfService {
 		try (PDDocument document = PDDocument.load(new File(pdfPath))) {
             PDPage page = document.getPage(pageNumber);
 
-            // 이미지 로드
+            // image Road
             PDImageXObject pdImage = PDImageXObject.createFromFile(imagePath, document);
 
-            // 콘텐츠 스트림을 append 모드로 열어서 기존 콘텐츠 위에 이미지를 추가
+            //Open the content stream in Append mode and add an image on the existing content
             try (PDPageContentStream contentStream = new PDPageContentStream(document, page,
                                                                             PDPageContentStream.AppendMode.APPEND,
                                                                             true, true)) {
-                // 이미지 그리기 (x, y, width, height)
+                // image Drawing (x, y, width, height)
                 contentStream.drawImage(pdImage, x, y, width, height);
             }
 //            document.setAllSecurityToBeRemoved(true);
@@ -113,7 +113,7 @@ public class PdfServiceImpl implements PdfService {
 		try {
 			doc = new Document(docfilepath);
 
-			// 최적화
+			// Optimization
 //			doc.cleanup();
 //			doc.joinRunsWithSameFormatting();
 //			doc.updatePageLayout();

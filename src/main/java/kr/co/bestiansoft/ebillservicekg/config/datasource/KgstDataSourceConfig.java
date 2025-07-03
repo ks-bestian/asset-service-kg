@@ -25,7 +25,7 @@ public class KgstDataSourceConfig {
 			throws Exception {
 		SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();
 		sessionFactoryBean.setDataSource(dataSource);
-		// 중요!
+		// importance!
 //        sessionFactoryBean.setTypeAliasesPackage("com.example.demo.login.vo");
 //        sessionFactoryBean.setTypeHandlersPackage("com.example.demo.login.vo");
 		sessionFactoryBean.setConfigLocation(applicationContext.getResource("classpath:config/mybatis-config.xml"));

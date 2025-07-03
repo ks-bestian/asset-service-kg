@@ -6,15 +6,19 @@ import kr.co.bestiansoft.ebillservicekg.eas.file.vo.UpdatePdfFileDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public interface EasFileService {
-    List<String> uploadEasFile (EasFileVo vo);
+    List<String> uploadEasFileAndConversionPdf (EasFileVo vo);
     int saveEasFile(EasFileVo vo);
     List<EasFileVo> getAttachFiles(String docId, String fileType);
     EasFileVo getFileById(String fileId);
-//    공통 save file(edv) , pdf file
+//    commonness save file(edv) , pdf file
     SaveFileDto saveFile(MultipartFile file);
-    UpdatePdfFileDto savePdfFile(MultipartFile file);
+    String saveFile(File file);
+    CompletableFuture<UpdatePdfFileDto> savePdfFile(MultipartFile file);
+    CompletableFuture<UpdatePdfFileDto> savePdfFile(File file);
     void deleteDocument(String docId);
 }

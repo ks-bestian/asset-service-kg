@@ -20,7 +20,7 @@ public class HtmlTextSegment {
 
     private String alignment;
 
-    // 리스트 관련 필드 추가
+    // List related fields added
     private boolean listStart;
     private boolean listEnd;
     private boolean listItemStart;
@@ -29,7 +29,7 @@ public class HtmlTextSegment {
     private int listItemNumber;
     private boolean orderedList;
 
-    // 테이블 관련 필드 추가
+    // Added tables related fields
     private boolean tableStart;
     private boolean tableEnd;
     private boolean tableRowStart;
