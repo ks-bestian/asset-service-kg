@@ -55,7 +55,7 @@ public class SystemBillController {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "file create successfully", adminBillMngService.createBillFile(systemBillVo)), HttpStatus.CREATED);
     }
     
-    @ApiOperation(value = "legal affairs department", notes = "안건 법적 행위 부서 상세를 입력 및 수정한다")
+    @ApiOperation(value = "legal affairs department", notes = "Enter and update details of the agenda's Legal Affairs Department.")
     @PostMapping(value = "/system/bill/legal", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<CommonResponse> updateBillLegal(SystemBillVo systemBillVo) {
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "file create successfully", adminBillMngService.updateBillLegal(systemBillVo)), HttpStatus.CREATED);
