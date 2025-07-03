@@ -9,7 +9,7 @@ import java.util.List;
 @Mapper
 public interface WorkRequestRepository {
     int insertWorkRequest (WorkRequestVo vo);
-    int deleteWorkRequest (Long workReqId);
+    int deleteWorkRequest (int workReqId);
     int updateWorkStatus (String workReqId, String workStatus);
     List<WorkRequestVo> getWorkRequestList(@Param("rcvId") Integer rcvId, @Param("docId") String docId);
     WorkRequestVo getWorkRequestListByUserId(String docId, String userId);

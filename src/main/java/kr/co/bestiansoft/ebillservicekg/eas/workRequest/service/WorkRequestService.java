@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface WorkRequestService {
     int insertWorkRequest(WorkRequestVo vo);
-    int deleteWorkRequest (Long workReqId);
+    int deleteWorkRequest (int workReqId);
     int updateWorkStatus (String workReqId, String workStatus);
     List<WorkRequestAndResponseVo> getWorkRequestList(int rcvId);
     List<WorkRequestAndResponseVo> getWorkRequestList(String docId);

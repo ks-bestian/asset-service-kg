@@ -40,7 +40,8 @@ public class WorkRequestServiceImpl implements WorkRequestService {
      * @return the number of records deleted, typically 1 if successful
      */
     @Override
-    public int deleteWorkRequest(Long workReqId) {
+    public int deleteWorkRequest(int workReqId) {
+        workResponseService.delete(workReqId);
         return workRequestRepository.deleteWorkRequest(workReqId);
     }
 

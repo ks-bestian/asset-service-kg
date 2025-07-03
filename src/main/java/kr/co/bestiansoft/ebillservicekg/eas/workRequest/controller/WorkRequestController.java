@@ -39,7 +39,7 @@ public class WorkRequestController {
 
     @ApiOperation(value="delete work request", notes= "delete work request")
     @DeleteMapping("/eas/workRequest/{reqId}")
-    public ResponseEntity<CommonResponse> deleteWorkRequest(@PathVariable Long reqId) {
+    public ResponseEntity<CommonResponse> deleteWorkRequest(@PathVariable int reqId) {
         workRequestService.deleteWorkRequest(reqId);
         return new ResponseEntity<>(new CommonResponse(200, "OK" ), HttpStatus.OK);
     }
