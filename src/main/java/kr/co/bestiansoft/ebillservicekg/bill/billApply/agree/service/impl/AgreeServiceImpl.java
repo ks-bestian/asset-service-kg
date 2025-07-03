@@ -45,16 +45,16 @@ public class AgreeServiceImpl implements AgreeService {
 
 		AgreeResponse result = new AgreeResponse();
 
-		//동의 상세
+		//agreement particular
 		String userId = new SecurityInfoUtil().getAccountId();
 		AgreeVo agreeDetail = agreeMapper.selectAgreeDetail(billId, userId, lang);
 		result.setAgreeDetail(agreeDetail);
 
-		//동의서명 목록
+		//Signature inventory
 		List<AgreeVo> proposerList = agreeMapper.selectAgreeProposerList(billId);
 		result.setProposerList(proposerList);
 
-		//파일목록
+		//File list
 		HashMap<String, Object> param = new HashMap<>();
 		param.put("billId", billId);
 		param.put("lang", lang);

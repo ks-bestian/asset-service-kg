@@ -217,7 +217,7 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
         vo.setApvlStatusCd(ApprovalStatus.REJECTED.getCodeId());
         // approval update
         approvalService.updateApproval(vo);
-        // document Status 변경
+        // document Status change
         documentService.updateStatusOfficialDocument(vo.getDocId(), DocumentStatus.REJECTED.getCodeId());
 
         // history
@@ -235,9 +235,9 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
     public void reception(WorkRequestAndResponseVo vo){
         if(vo.getDocTypeCd() == null){}
         else if(vo.getDocTypeCd().equals(DocumentType.REPLY_PURPOSE.getCodeId())){
-            //답변용
+            //Answer
 
-            // 이행요청 추가
+            // Request for implementation addition
             vo.setRegDt(LocalDateTime.now());
             vo.setRegId(new SecurityInfoUtil().getAccountId());
             vo.setWorkStatus(WorkStatus.DISPATCHED.getCodeId());
@@ -248,7 +248,7 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
             workRequestService.insertWorkRequest(requestVo);
 
             log.info("workReqId : " + requestVo.toString());
-            // 이행자 추가
+            // performer addition
             vo.getWorkResponseVos().forEach(workResponseVo -> {
                 UserMemberVo loginUser = userService.getUserMemberDetail(workResponseVo.getUserId());
                 workResponseVo.setWorkReqId(requestVo.getWorkReqId());
@@ -258,7 +258,7 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                 workResponseVo.setRcvDtm(LocalDateTime.now());
                 workResponseService.insertWorkResponse(workResponseVo);
             });
-            // receivedInfo 상태 변경, 주 이행자 추가
+            // receivedInfo situation change, main performer addition
             UpdateReceivedInfoVo updateReceivedInfoVo = UpdateReceivedInfoVo.builder()
                     .rcvId(vo.getRcvId())
                     .workerId(vo.getWorkerId())
@@ -266,7 +266,7 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                     .rcvStatus(ReceiveStatus.REGISTERED.getCodeId())
                     .build();
             receivedInfoService.updateReceivedInfo(updateReceivedInfoVo);
-            // document status 변경
+            // document status change
             documentService.updateStatusOfficialDocument(vo.getDocId() , DocumentStatus.REGISTERED.getCodeId());
             // history
             UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
@@ -282,7 +282,7 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
 
 
         }else if(vo.getDocTypeCd().equals(DocumentType.CONFIRMATION_PURPOSE.getCodeId())){
-            // 확인용 - 종료
+            // Confirmation - end
             // receivedInfo Update
             UpdateReceivedInfoVo updateReceivedInfoVo = UpdateReceivedInfoVo.builder()
                     .rcvId(vo.getRcvId())
@@ -292,7 +292,7 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
             receivedInfoService.updateReceivedInfo(updateReceivedInfoVo);
             endDocument(vo.getDocId());
         }else if(vo.getDocTypeCd().equals(DocumentType.SIGNATURE_PURPOSE.getCodeId())){
-            //서명용 - 서명
+            //Signature - signature
             UpdateReceivedInfoVo updateReceivedInfoVo = UpdateReceivedInfoVo.builder()
                     .rcvId(vo.getRcvId())
                     .rcpDtm(LocalDateTime.now())
@@ -359,7 +359,7 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
         String loginId = new SecurityInfoUtil().getAccountId();
         UserMemberVo loginUser = userService.getUserMemberDetail(loginId);
         LocalDateTime now = LocalDateTime.now();
-        //document 작성
+        //document write
         OfficialDocumentVo documentVo = OfficialDocumentVo
                 .builder()
                 .aarsDocId(vo.getAarsDocId())
@@ -380,13 +380,13 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                 .build();
 
         documentService.saveOfficialDocument(documentVo);
-        // draft status 변경
+        // draft status change
         draftDocumentService.updateDraftStatus(vo.getAarsDocId(), DraftStatus.DISPATCHED.getCodeId());
 
 
         int addApprovalCount = 1;
 
-        //approval Type 변경해서 추가
+        //approval Type Change addition
         String[] approvalIds = vo.getApprovalIds();
         for (String approvalId : approvalIds) {
             if (approvalId != null) {
@@ -431,7 +431,7 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
             }
         }
 
-        //document 연결
+        //document connection
         LinkDocumentVo linkDocumentVo = LinkDocumentVo
                 .builder()
                 .fromDocId(vo.getFromDocId())
@@ -441,14 +441,14 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                 .regDtm(now)
                 .build();
         linkDocumentService.insertLinkDocument(linkDocumentVo);
-        //ReceivedStatus 변경
+        //ReceivedStatus change
         UpdateReceivedInfoVo updateReceivedInfoVo = UpdateReceivedInfoVo.builder()
                 .rcvStatus(ReceiveStatus.APPROVING_RESPONSE.getCodeId())
                 .rcpDocId(vo.getFromDocId())
                 .rcvId(vo.getRcvId())
                 .build();
         receivedInfoService.updateReceivedInfo(updateReceivedInfoVo);
-        // 이행 파일 가져와서 추가하기
+        // implementation file Brought Adding
         String[] alreadyUploadFiles = vo.getAlreadyUploadFiles();
         for(String fileId : alreadyUploadFiles){
             EasFileVo easFileVo =  easFileService.getFileById(fileId);
@@ -458,7 +458,7 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
             easFileService.saveEasFile(easFileVo);
         }
 
-        //ReceivedInfo 추가
+        //ReceivedInfo addition
         List<Map<String, String>> receivedIds = vo.getReceiverIds();
         for(int i=0 ; i < receivedIds.size() ; i++){
             if(receivedIds.get(i).get("isExternal").equals("N")){
@@ -478,7 +478,7 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                 }
                 receivedInfoService.insertReceivedInfo(receivedInfoVo);
             }else{
-                /* todo 외부기관 */
+                /* todo External agency */
             }
         }
 
@@ -542,12 +542,12 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                         .rcvDtm(LocalDateTime.now())
                         .rcvStatus(ReceiveStatus.SENT.getCodeId())
                         .build();
-                // 받는사람들 상태 변경
+                // Recipient situation change
                 receivedInfoService.updateReceivedInfo(updateReceivedInfoVo);
             });
-            // 전송 상태로 변경
+            // forwarding In a state change
             documentService.updateStatusOfficialDocument(vo.getDocId(), DocumentStatus.TRANSMITTED.getCodeId());
-            // todo 번호 부여
+            // todo number grant
         }else{
             Optional<ApprovalVo> nextApprovalVo = approvalVoList.stream().filter(s-> s.getApvlOrd() == approvalVo.getApvlOrd()+1).findFirst();
 
@@ -570,12 +570,12 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                 approvalService.updateApproval(updateApprovalVo);
             }
         }
-        // 기존 approval 변경
+        // existing approval change
         vo.setResDtm(LocalDateTime.now());
         vo.setApvlStatusCd(ApprovalStatus.APPROVED.getCodeId());
         approvalService.updateApproval(vo);
 
-        // history 저장
+        // history save
         HistoryVo historyVo = HistoryVo.builder()
                 .userId(loginUser.getUserId())
                 .docId(vo.getDocId())
@@ -599,22 +599,22 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                         .rcvDtm(LocalDateTime.now())
                         .rcvStatus(ReceiveStatus.SENT.getCodeId())
                         .build();
-                // 받는사람들 상태 변경
+                // Recipient situation change
                 receivedInfoService.updateReceivedInfo(updateReceivedInfoVo);
             });
             documentService.updateStatusOfficialDocument(vo.getDocId(), DocumentStatus.TRANSMITTED.getCodeId());
-            // todo 번호 부여
+            // todo number grant
 
-            // link document 답변된 것 찾아오기
+            // link document Answered thing Come -up
             LinkDocumentVo linkDocumentVo = linkDocumentService.getLinkDocumentByDocIdAndType(vo.getDocId(), LinkType.LINK_REPLY.getCodeId());
-            // ReceiveStatus.COMPLETED_RESPONSE 변경
+            // ReceiveStatus.COMPLETED_RESPONSE change
             ReceivedInfoVo replyReceivedInfo = receivedInfoService.getReceivedInfoByRcpDocId(linkDocumentVo.getToDocId());
             UpdateReceivedInfoVo updateReceivedInfoVo = UpdateReceivedInfoVo.builder()
                     .rcvId(replyReceivedInfo.getRcvId())
                     .rcvStatus(ReceiveStatus.COMPLETED_RESPONSE.getCodeId())
                     .build();
             receivedInfoService.updateReceivedInfo(updateReceivedInfoVo);
-            // 기존 history 변경
+            // existing history change
             HistoryVo historyVo = HistoryVo.builder()
                     .userId(loginUser.getUserId())
                     .docId(linkDocumentVo.getFromDocId())
@@ -624,7 +624,7 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                     .userNm(loginUser.getUserNm())
                     .build();
             historyService.insertHistory(historyVo);
-            // isEnd 확인 후 확인되면 document end
+            // isEnd check after When confirmed document end
 
             if(isEnd(linkDocumentVo.getFromDocId())){
                 endDocument(linkDocumentVo.getFromDocId());
@@ -651,13 +651,13 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                 approvalService.updateApproval(updateApprovalVo);
             }
         }
-        // 기존 approval 변경
+        // existing approval change
         vo.setResDtm(LocalDateTime.now());
         vo.setApvlStatusCd(ApprovalStatus.APPROVED.getCodeId());
         approvalService.updateApproval(vo);
 
 
-        // history 저장
+        // history save
         HistoryVo historyVo = HistoryVo.builder()
                 .userId(loginUser.getUserId())
                 .docId(vo.getDocId())
@@ -683,16 +683,16 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                         .rcvDtm(LocalDateTime.now())
                         .rcvStatus(ReceiveStatus.SENT.getCodeId())
                         .build();
-                // 받는사람들 상태 변경
+                // Recipient situation change
                 receivedInfoService.updateReceivedInfo(updateReceivedInfoVo);
             });
 
 
-            // todo 번호 부여
+            // todo number grant
 
-            // 문서의 외부전송 여부 체크하여 전송상태로 변경
+            // Documentary External transmission Whether it is Check In the state of transmission change
             if(documentVo.getExternalYn().equals("Y")){
-                // todo 외부기관에 전송
+                // todo To external organizations forwarding
             }else{
                 documentService.updateStatusOfficialDocument(vo.getDocId(), DocumentStatus.TRANSMITTED.getCodeId());
             }
@@ -718,12 +718,12 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                 approvalService.updateApproval(updateApprovalVo);
             }
         }
-        // 기존 approval 변경
+        // existing approval change
         vo.setResDtm(LocalDateTime.now());
         vo.setApvlStatusCd(ApprovalStatus.APPROVED.getCodeId());
         approvalService.updateApproval(vo);
 
-        // history 저장
+        // history save
         HistoryVo historyVo = HistoryVo.builder()
                 .userId(loginUser.getUserId())
                 .docId(vo.getDocId())
@@ -737,17 +737,17 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
     }
     public boolean isEnd(String docId){
         List<ReceivedInfoVo> receivedInfo = receivedInfoService.getReceivedInfo(docId);
-        // 수신자가 없는 경우 처리 (비즈니스 로직에 따라 결정)
+        // The recipient no case treatment (Business Logic according to decision)
         if (receivedInfo.isEmpty()) {
-            return false; // 또는 true (비즈니스 요구사항에 따라 결정)
+            return false; // or true (Business To the requirements according to decision)
         }
-        // 모든 수신자가 답변 완료 상태인지 확인
+        // every The recipient answer complete State awareness check
         for (ReceivedInfoVo rcvInfoVo : receivedInfo) {
             if (!rcvInfoVo.getRcvStatus().equals(ReceiveStatus.COMPLETED_RESPONSE.getCodeId())) {
-                return false; // 하나라도 답변 완료가 아니면 즉시 false 반환
+                return false; // One answer Complete or not immediately false return
             }
         }
-        return true; // 모든 수신자가 답변 완료 상태면 true 반환
+        return true; // every The recipient answer complete State true return
     }
 
     @Override

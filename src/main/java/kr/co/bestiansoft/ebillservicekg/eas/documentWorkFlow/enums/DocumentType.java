@@ -4,9 +4,9 @@ import lombok.Getter;
 
 @Getter
 public enum DocumentType {
-    REPLY_PURPOSE       ("DMT01", "답변용"),
-    CONFIRMATION_PURPOSE("DMT02", "확인용"),
-    SIGNATURE_PURPOSE   ("DMT03", "서명용");
+    REPLY_PURPOSE       ("DMT01", "REPLY_PURPOSE"),
+    CONFIRMATION_PURPOSE("DMT02", "CONFIRMATION_PURPOSE"),
+    SIGNATURE_PURPOSE   ("DMT03", "SIGNATURE_PURPOSE");
 
     private final String codeId;
     private final String codeNm;

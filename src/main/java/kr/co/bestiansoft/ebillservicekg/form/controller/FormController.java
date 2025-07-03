@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Api(tags = "서식 API")
+@Api(tags = "Form API")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequiredArgsConstructor
 @RestController
@@ -18,25 +18,25 @@ public class FormController {
 
     private final FormService formService;
 
-    @ApiOperation(value = "서식 리스트 조회", notes = "서식 리스트를 조회한다.")
+    @ApiOperation(value = "Form List check", notes = "Form List Inquiry.")
     @GetMapping("/form")
     public ResponseEntity<CommonResponse> getFormList() {
         return new ResponseEntity<>(new CommonResponse(200, "OK", formService.getFormList()), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "서식과 필드 생성", notes = "서식과 필드를 생성한다.")
+    @ApiOperation(value = "Form Field generation", notes = "Form Field Create.")
     @PostMapping(value = "/formWithFields")
     public ResponseEntity<CommonResponse> createFormWithField(@RequestBody FormWithFieldsVo formWithFieldsVo) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "form and fields created successfully", formService.createFormWithFields(formWithFieldsVo)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "서식과 필드 상세 조회", notes = "서시과 필드를 상세 조회한다.")
+    @ApiOperation(value = "Inquiry and field details", notes = "Search for the form and field details.")
     @GetMapping("/formWithFields/detail/{formId}")
     public ResponseEntity<CommonResponse> getFormById(@PathVariable String formId) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "OK", formService.getFormWithFieldsById(Integer.valueOf(formId))), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "서식 삭제", notes = "서식을 삭제한다.")
+    @ApiOperation(value = "Form delete", notes = "Form Delete.")
     @DeleteMapping("/form")
     public ResponseEntity<CommonResponse> deleteFormWithFields(@RequestParam String formId) {
         formService.deleteFormWithFields(Integer.valueOf(formId));

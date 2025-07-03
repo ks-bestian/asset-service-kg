@@ -62,10 +62,10 @@ public class BillAllServiceImpl implements BillAllService {
 //    	/* Bill Etc doc list*/
 //    	List<EbsFileVo> etcFileList = billAllMapper.selectListBillEtcFile(param);
     	
-    	//파일 리스트
+    	//file List
 		List<EbsFileVo> fileList = applyMapper.selectBillFileList(param);
 		
-		//발의문서 리스트
+		//List of proposed documents
 		List<EbsFileVo> applyFileList = applyMapper.selectApplyFileList(param);
 
     	/*committee list*/
@@ -124,9 +124,9 @@ public class BillAllServiceImpl implements BillAllService {
     		listVo.setFileList(detailFileList);
 
     		String clsCd = listVo.getClsCd();
-    		if("110".equals(clsCd)) {//법률검토결과
+    		if("110".equals(clsCd)) {//Legal review results
     			billlegalReviewVo = listVo;
-    		} else if("120".equals(clsCd)) {//위원언어전문파트
+    		} else if("120".equals(clsCd)) {//Committee language part
     			billLangReviewVoList.add(listVo);
     		}
     	}

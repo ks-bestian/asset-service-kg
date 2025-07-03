@@ -36,7 +36,7 @@ public class MenuServiceImpl implements MenuService {
         return rootNode;
     }
     
-    // 추가(20250210 조진호)
+    // addition(20250210 Jinho Cho)
     @Override
     public ArrayNode getDeptMenuList(HashMap<String, Object> param) {
         String lang = (String) param.get("lang");

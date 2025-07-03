@@ -38,8 +38,8 @@ public class EasFileServiceImpl implements EasFileService {
      * Uploads an EAS (Electronic Approval System) file and processes it accordingly.
      * This method handles file validation, saves file information, and initiates PDF conversion if needed.
      *
-     * EAS(전자결재시스템) 파일을 업로드하고 적절히 처리합니다.
-     * 이 메서드는 파일 유효성 검사, 파일 정보 저장 및 필요한 경우 PDF 변환을 시작합니다.
+     * Upload and properly handle the EAS (electronic payment system) file.
+     * This method starts a file validation, storing file information and PDF conversion if necessary.
      *
      * @param vo an instance of {@code EasFileVo} which contains file metadata, list of MultipartFile objects,
      *           and information necessary for saving file details.
@@ -65,9 +65,9 @@ public class EasFileServiceImpl implements EasFileService {
                 try {
                     UpdatePdfFileDto pdfDto = savePdfFile(file);
                     updatePdfInfo(fileId, pdfDto);
-                    log.info("PDF 변환 완료: 원본 파일 ID {}, PDF 파일 ID {}", fileId, pdfDto.getPdfFileId());
+                    log.info("PDF Conversion completed: Original file ID {}, PDF file ID {}", fileId, pdfDto.getPdfFileId());
                 } catch (Exception e) {
-                    log.error("PDF 변환 실패: 파일 ID {}, 오류: {}", fileId, e.getMessage(), e);
+                    log.error("PDF conversion failure: File ID {}, Error: {}", fileId, e.getMessage(), e);
                 }
             }
 
@@ -80,8 +80,8 @@ public class EasFileServiceImpl implements EasFileService {
      * Saves an EasFileVo object into the repository.
      * This method delegates the save operation to the repository's insertEasFile method.
      *
-     * EasFileVo 객체를 저장소에 저장합니다.
-     * 이 메서드는 저장 작업을 리포지토리의 insertEasFile 메서드에 위임합니다.
+     * Save the Easfilevo object in the repository.
+     * This method delegates the storage task to the inserteasfile method of the repository.
      *
      * @param vo the EasFileVo object containing the file's metadata and other associated details
      * @return an integer representing the result of the database insert operation; typically, 
@@ -97,9 +97,9 @@ public class EasFileServiceImpl implements EasFileService {
      * PDF file ID and name with the information from the DTO, and saves the 
      * changes back to the repository.
      *
-     * 지정된 파일의 PDF 정보를 업데이트합니다. 이 메서드는 제공된 파일 ID를 사용하여
-     * 저장소에서 파일을 검색하고, DTO의 정보로 PDF 파일 ID와 이름을 업데이트한 후,
-     * 변경 사항을 저장소에 다시 저장합니다.
+     * Update the PDF information of the specified file. This method uses the provided file ID
+     *After searching the file in the repository, updating the PDF file ID and name with the information of the DTO,
+     *Save the changes in the repository.
      *
      * @param fileId the ID of the file whose PDF information is to be updated
      * @param dto an UpdatePdfFileDto containing the new PDF file ID and name 
@@ -109,7 +109,7 @@ public class EasFileServiceImpl implements EasFileService {
     public void updatePdfInfo(String fileId, UpdatePdfFileDto dto){
         EasFileVo fileVo = easFileRepository.getFileById(fileId);
         if (fileVo != null) {
-            // PDF 정보 업데이트
+            // PDF information update
             fileVo.setPdfFileId(dto.getPdfFileId());
             fileVo.setPdfFileNm(dto.getPdfFileNm());
 
@@ -121,8 +121,8 @@ public class EasFileServiceImpl implements EasFileService {
      * Retrieves a list of attached files associated with the specified document ID.
      * Queries the repository to fetch file metadata linked to the document.
      *
-     * 지정된 문서 ID와 관련된 첨부 파일 목록을 검색합니다.
-     * 저장소에 쿼리하여 문서에 연결된 파일 메타데이터를 가져옵니다.
+     * Search the list of attachments associated with the specified document ID.
+     *Query in the repository and get the file metadata connected to the document.
      *
      * @param docId the ID of the document for which to retrieve attached files
      * @return a list of EasFileVo objects representing the attached files; 
@@ -143,9 +143,9 @@ public class EasFileServiceImpl implements EasFileService {
      * The file is stored using a unique file ID, and its metadata includes 
      * the original filename, file size, and file extension.
      *
-     * 제공된 파일을 저장하고 저장된 파일과 관련된 메타데이터를 생성합니다.
-     * 파일은 고유한 파일 ID를 사용하여 저장되며, 메타데이터에는 원본 파일명,
-     * 파일 크기 및 파일 확장자가 포함됩니다.
+     * Save the provided files and create metadata associated with the stored file.
+     *The file is stored using a unique file ID, and the original file name for metadata,
+     *File size and file extension are included.
      *
      * @param file the MultipartFile to be saved
      * @return a SaveFileDto containing metadata such as the file ID, original
@@ -178,8 +178,8 @@ public class EasFileServiceImpl implements EasFileService {
      * Saves a PDF file by converting the input file to a PDF format and storing it.
      * Handles temporary file creation and ensures proper cleanup post-processing.
      *
-     * 입력 파일을 PDF 형식으로 변환하여 저장하고 저장합니다.
-     * 임시 파일 생성을 처리하고 처리 후 적절한 정리를 보장합니다.
+     * Convert the input file into a PDF format, save and save.
+     *Process temporary file creation and guarantee appropriate theorem after processing.
      *
      * @param file the multipart file to be converted to a PDF and saved
      * @return an UpdatePdfFileDto containing the PDF file's ID and name
@@ -193,7 +193,7 @@ public class EasFileServiceImpl implements EasFileService {
         File tmpPdfFile = null;
 
         try{
-            // 임시 파일 생성
+            //Create temporary file
             tmpFile =File.createTempFile("temp", null);
             tmpPdfFile = File.createTempFile("pdfTemp", null);
             file.transferTo(tmpFile);
@@ -221,7 +221,7 @@ public class EasFileServiceImpl implements EasFileService {
     /**
      * Determines if a given file extension represents a PDF file.
      *
-     * 주어진 파일 확장자가 PDF 파일인지 확인합니다.
+     * Make sure the given file extension is a PDF file.
      *
      * @param fileExt the file extension to check; expected to be a string, 
      *                such as "pdf" or "PDF"
@@ -236,8 +236,8 @@ public class EasFileServiceImpl implements EasFileService {
      * Creates a new instance of EasFileVo by copying selected properties 
      * from the provided easFileVo object.
      *
-     * 제공된 easFileVo 객체에서 선택된 속성을 복사하여 EasFileVo의 
-     * 새 인스턴스를 생성합니다.
+     * Copy the selected properties from the provided Easfilevo object and 
+     *Create a new instance.
      *
      * @param easFileVo the source EasFileVo instance from which properties 
      *                  will be copied

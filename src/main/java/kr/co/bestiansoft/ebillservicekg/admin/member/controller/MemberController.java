@@ -17,36 +17,36 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@Api(tags = "의원관리 API")
+@Api(tags = "Parliament member management API")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class MemberController {
     private final MemberService memberService;
 
-    @ApiOperation(value = "의원 리스트 조회", notes = "의원 리스트를 조회한다.")
+    @ApiOperation(value = "member List check", notes = "member List Inquiry.")
     @GetMapping("admin/member")
     public ResponseEntity<CommonResponse> getMemberList(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "ok", memberService.getMemberList(param)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "의원상세 조회", notes = "의원 상세를 조회한다.")
+    @ApiOperation(value = "Retrieve member details check", notes = "member Details Inquiry.")
     @GetMapping("admin/member/{memberId}")
     public ResponseEntity<CommonResponse> getMemberDetail(@PathVariable String memberId) {
         return new ResponseEntity<>(new CommonResponse(200, "ok", memberService.getMemberDetail(memberId)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "의원 생성", notes = "의원를 생성한다.")
+    @ApiOperation(value = "member generation", notes = "Member Create.")
     @PostMapping("admin/member")
     public ResponseEntity<CommonResponse> createMember(@RequestBody MemberVo memberVo) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Member created successfully.", memberService.createMember(memberVo)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "의원 수정", notes = "의원을 수정한다.")
+    @ApiOperation(value = "member correction", notes = "Clinic Modify.")
     @PutMapping("admin/member")
     public ResponseEntity<CommonResponse> updateMember(@RequestBody MemberVo memberVo) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Member updated successfully", memberService.updateMember(memberVo)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "의원 삭제", notes = "의원을 삭제한다.")
+    @ApiOperation(value = "member delete", notes = "Member Delete.")
     @DeleteMapping("admin/member")
     public ResponseEntity<CommonResponse> deleteMember(@RequestBody List<String> memberId) {
         memberService.deleteMember(memberId);
@@ -54,13 +54,13 @@ public class MemberController {
 
     }
     
-    @ApiOperation(value = "정당 의원 조회", notes = "정당별 의원을 조회한다.")
+    @ApiOperation(value = "political party member check", notes = "Political party Member Inquiry.")
     @GetMapping("admin/poly/member")
     public ResponseEntity<CommonResponse> getMemberByPoly(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "ok", memberService.getMemberByPoly(param)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "비밀번호 초기화", notes = "비밀번호 초기화한다.")
+    @ApiOperation(value = "password reset", notes = "password Initialize.")
     @PutMapping("admin/member/reset/pswd")
     public ResponseEntity<CommonResponse> resetPswd(@RequestBody HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Member updated successfully", memberService.resetPswd(param)), HttpStatus.OK);

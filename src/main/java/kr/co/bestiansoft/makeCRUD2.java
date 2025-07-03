@@ -23,19 +23,19 @@ public class makeCRUD2 {
 
 		makeCRUD2 o = new makeCRUD2();
 		try {
-//			o.generateSQL("sponet.co.kr:3306"	//db아이피
-//				     ,"dev_bm_manager"	//db명
-//				     , "best"	//계정
-//				     , "best1234"	//비밀번호
-//				     , "c:\\starproject_file"	//저장경로
+//			o.generateSQL("sponet.co.kr:3306"	//dbIP
+//				     ,"dev_bm_manager"	//db name
+//				     , "best"	//account
+//				     , "best1234"	//password
+//				     , "c:\\starproject_file"	//Storage path
 //				     );
 			
-			Map<String, Long> map = o.getTableRowCount("192.168.0.31:1433"	//db아이피
-			     ,"sed"	//db명
-			     , "admin_id"	//계정
-			     , "admin_pass"	//비밀번호
-			     , "c:\\starproject_file"	//저장경로
-			     , "cnt5" // table_div 테이블의 컬럼 이름(cnt1 / cnt2 / cnt3)
+			Map<String, Long> map = o.getTableRowCount("192.168.0.31:1433"	//dbIP
+			     ,"sed"	//db name
+			     , "admin_id"	//account
+			     , "admin_pass"	//password
+			     , "c:\\starproject_file"	//Storage path
+			     , "cnt5" //Table_Div Table Column Name(cnt1 / cnt2 / cnt3)
 		     );
 			
 			for(String tableName : map.keySet()) {
@@ -168,7 +168,7 @@ public class makeCRUD2 {
 
 			stmt = conn.createStatement();
 
-			//테이블 목록
+			//table list
 			//ResultSet rsTables = dmd.getTables(conn.getCatalog(), null, "%", null);
 
 			ArrayList<String> tableList = new ArrayList<String>();
@@ -181,7 +181,7 @@ public class makeCRUD2 {
 			    ArrayList<String> arrPkColumns = new ArrayList<String>();
 				String tableName = tableList.get(i);
 
-				//컬럼 목록
+				//column list
 				ResultSet rs = stmt.executeQuery("SELECT * FROM "+tableName);
 				ResultSetMetaData rsmd = rs.getMetaData();
 
@@ -273,7 +273,7 @@ public class makeCRUD2 {
 		System.out.println(sb.toString());
 		return sb.toString();
 	}
-	/** 테이블에서 자동증가여부 컬럼 찾는다
+	/** Find a column whether automatic increase in the table
 	 * @param conn
 	 * @param tableName
 	 * @return
@@ -302,7 +302,7 @@ public class makeCRUD2 {
 		return null;
 	}
 
-	/** 파일쓰기
+	/** File writing
 	 * @param src
 	 * @param fileName
 	 * @param txt
@@ -327,7 +327,7 @@ public class makeCRUD2 {
 	}
 
 
-	/** 업데이트문
+	/** Update query
 	 * @param tableName
 	 * @param columns
 	 * @param pkColumns
@@ -370,7 +370,7 @@ public class makeCRUD2 {
 	}
 
 
-	/** pk 컬럼인지여부 비교
+	/** Comparison of PK Column
 	 * @param target
 	 * @param arrPK
 	 * @return
@@ -385,7 +385,7 @@ public class makeCRUD2 {
 		return false;
 	}
 
-	/** delete 문
+	/** delete  query
 	 * @param tableName
 	 * @param columns
 	 * @param pkColumns
@@ -412,7 +412,7 @@ public class makeCRUD2 {
 		return sb.toString();
 	}
 
-	/** select 문(where절 PK)
+	/** select query (where PK)
 	 * @param tableName
 	 * @param columns
 	 * @param pkColumns
@@ -449,7 +449,7 @@ public class makeCRUD2 {
 		return sb.toString();
 	}
 
-	/** select 문
+	/** select  query
 	 * @param tableName
 	 * @param columns
 	 * @return

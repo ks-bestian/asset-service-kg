@@ -57,18 +57,18 @@ public class MtngToServiceImpl implements MtngToService {
 
     	param.put("mtngId", mtngId);
 
-    	/* 회의 정보*/
+    	/* meeting information*/
     	MtngToVo dto = mtngToMapper.selectMtngTo(param);
 
-    	/*회의 결과 문서*/
+    	/*meeting result document*/
     	List<MtngFileVo> reportList = mtngAllMapper.selectListMtngFile(param);
     	dto.setReportList(reportList);
 
-    	/* 안건  */
+    	/* Agenda  */
     	List<AgendaVo> agendaList = mtngToMapper.selectListMtngAgenda(param);
     	dto.setAgendaList(agendaList);
 
-    	/* 참석자 - selectListMtngAttendant */
+    	/* participant - selectListMtngAttendant */
     	List<MemberVo> attendantList = mtngToMapper.selectListMtngAttendant(param);
     	String names = attendantList.stream().map(MemberVo::getMemberNm).collect(Collectors.joining(", "));
     	dto.setAttendants(names);
@@ -94,7 +94,7 @@ public class MtngToServiceImpl implements MtngToService {
 		mtngToVo.setModId(loginUserId);
 		mtngToMapper.updateMtngTo(mtngToVo);
 
-		//참석자 수정
+		//participant correction
 		mtngToMapper.deleteMtngToAttendant(mtngToVo);
 
 		for(MemberVo vo:attendantList) {
@@ -106,7 +106,7 @@ public class MtngToServiceImpl implements MtngToService {
 			mtngToMapper.insertEbsMtngAttendant(vo);
 		}
 
-		//안건 수정
+		//Agenda correction
 		mtngToMapper.deleteMtngToAgenda(mtngToVo);
 
 		int idx = 1;
@@ -117,17 +117,17 @@ public class MtngToServiceImpl implements MtngToService {
 			mtngToMapper.insertMtngToAgenda(vo);
 		}
 
-		//회의 결과파일등록
+		//meeting Results file registration
 		comFileService.saveFileEbsMtng(paramVo.getFiles(), paramVo.getFileKindCds(), mtngToVo.getMtngId());
 
-		//추가 - 내 문서함에서 파일 업로드(20250221 조진호)
+		//addition - my In the document box file Upload(20250221 Jinho Cho)
 		comFileService.saveFileEbsMtng(paramVo.getMyFileIds(), paramVo.getFileKindCds2(), mtngToVo.getMtngId());
 
-//		if("2".equals(mtngToVo.getMtngTypeCd())) { //본회의
+//		if("2".equals(mtngToVo.getMtngTypeCd())) { //Plenary
 //			for(AgendaVo aVo:agendaList) {
 //				ProcessVo pVo = new ProcessVo();
 //				pVo.setBillId(aVo.getBillId());
-//				pVo.setStepId("1900");//법적행위관리
+//				pVo.setStepId("1900");//Legal behavior management
 //				processService.handleProcess(pVo);	
 //			}
 //		}
@@ -147,7 +147,7 @@ public class MtngToServiceImpl implements MtngToService {
 //    		}
 //    		ProcessVo pVo = new ProcessVo();
 //			pVo.setBillId(agenda.getBillId());
-//			pVo.setStepId("1900");//법적행위관리
+//			pVo.setStepId("1900");//Legal behavior management
 //			processService.handleProcess(pVo);
 //    	}
 //    }
@@ -171,7 +171,7 @@ public class MtngToServiceImpl implements MtngToService {
     		}
     		ProcessVo pVo = new ProcessVo();
 			pVo.setBillId(agenda.getBillId());
-			pVo.setStepId("1900");//법적행위관리
+			pVo.setStepId("1900");//Legal behavior management
 			processService.handleProcess(pVo);
     	}
     }
@@ -197,12 +197,12 @@ public class MtngToServiceImpl implements MtngToService {
 
 		for(AgendaVo aVo :agendaVo.getAgendaList()) {
 
-			if("M".equals(aVo.getCmtSeCd())) {//소관위
+			if("M".equals(aVo.getCmtSeCd())) {// competent committee
 				ProcessVo pVo = new ProcessVo();
 				pVo.setBillId(aVo.getBillId());
-				pVo.setStepId("1500");//위원회 회의결과등록
+				pVo.setStepId("1500");//Registration of the results of the committee
 				processService.handleProcess(pVo);
-			} else {//관련위
+			} else {//Relevant committee
 
 			}
 		}

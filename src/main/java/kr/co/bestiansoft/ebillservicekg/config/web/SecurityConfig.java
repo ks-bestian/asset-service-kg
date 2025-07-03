@@ -54,14 +54,14 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
         );
 
-        http.apply(new JwtSecurityConfig(tokenProvider, tokenBlacklist, authenticationManagerBuilder)); // JwtFilter를 addFilterBefore로 등록했던 JwtSecurityConfig class 적용
+        http.apply(new JwtSecurityConfig(tokenProvider, tokenBlacklist, authenticationManagerBuilder)); // JwtFilter to registe addFilterBefore JwtSecurityConfig class application
 
 
-        // 로그아웃 처리
+        // log out treatment
         http.logout()
 	        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
 	        .logoutSuccessHandler((request, response, authentication) -> {
-	            // 로그아웃 성공 시 처리할 로직 (예: 토큰 블랙리스트 추가)
+	            // Logic to be processed in the success of logout (for example, token blacklist)
 	    		String bearerToken = request.getHeader("Authorization");
 	    		String jwt ="";
 	            if (bearerToken != null && bearerToken.startsWith("Bearer ")) {

@@ -4,8 +4,8 @@ import lombok.Getter;
 
 @Getter
 public enum DraftStatus {
-    TEMPORARY_SAVE  ("DS01", "임시저장"),
-    DISPATCHED      ("DS02", "발송");
+    TEMPORARY_SAVE  ("DS01", "TEMPORARY_SAVE"),
+    DISPATCHED      ("DS02", "DISPATCHED");
 
     private final String codeId;
     private final String codeNm;

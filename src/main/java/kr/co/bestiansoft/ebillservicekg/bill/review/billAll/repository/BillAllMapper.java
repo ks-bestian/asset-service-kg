@@ -14,9 +14,9 @@ import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 public interface BillAllMapper {
 
     List<BillAllVo> selectListBill(HashMap<String, Object> param);
-    /* 기본정보 */
+    /* Basic information */
     BillAllVo selectBill(HashMap<String, Object> param);
-    /* 문서 */
+    /* document */
     List<EbsFileVo> selectListBillFile(HashMap<String, Object> param);
 
     List<BillAllVo> selectListBillCmt(HashMap<String, Object> param);

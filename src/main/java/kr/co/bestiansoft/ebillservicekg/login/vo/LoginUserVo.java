@@ -45,6 +45,6 @@ public class LoginUserVo extends ComDefaultVO {
 	private String rsdnRgstNmbr;
 	private String uprDeptCd;
 	
-	private String password = "best1234"; //임시 비밀번호
+	private String password = "best1234"; //Temporary password
 	
 }

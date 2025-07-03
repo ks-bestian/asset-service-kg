@@ -48,7 +48,7 @@ public class EasFileVo{
 
     public EasFileVo fromSaveFileDto(SaveFileDto dto, EasFileVo base) {
         EasFileVo result = new EasFileVo();
-        // 기본 정보 복사
+        // Copy of basic information
         result.setDocId(base.getDocId());
         result.setFileType(base.getFileType());
         result.setRegId(base.getRegId());
@@ -59,7 +59,7 @@ public class EasFileVo{
         result.setPdfFileId(base.getPdfFileId());
         result.setPdfFileNm(base.getPdfFileNm());
 
-        // SaveFileDto 정보 설정
+        // SaveFileDto information setting
         result.setFileId(dto.getFileId());
         result.setOrgFileId(dto.getFileId());
         result.setOrgFileNm(dto.getOrgFileNm());

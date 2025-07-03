@@ -23,14 +23,14 @@ public class FileScheduledTasks {
 	@Autowired
 	private EDVHelper edv;
 
-	//@Scheduled(cron = "0 0/5 * * * ?") // 매 5분마다
-    ///@Scheduled(fixedRate = 300000) // 300000 밀리초 = 5분  5 60 1000
-    @Scheduled(fixedRate = 1000 * 60 * 5) // 300000 밀리초 = 5분  5 60 1000  60 60 1000
+	//@Scheduled(cron = "0 0/5 * * * ?") // hawk 5Every minute
+    ///@Scheduled(fixedRate = 300000) // 300000 Millycho = 5minute  5 60 1000
+    @Scheduled(fixedRate = 1000 * 60 * 5) // 300000 Millycho = 5minute  5 60 1000  60 60 1000
     public void edvFileDeleteTask() {
     	String formattedDate = dateFormat.format(new Date(System.currentTimeMillis()));
-        logger.info("배치 작업이 실행됩니다: " + formattedDate);
+        logger.info("Batch work is executed: " + formattedDate);
         storageService.batchFileDelete();
         formattedDate = dateFormat.format(new Date(System.currentTimeMillis()));
-        logger.info("배치 작업이 종료됩니다: " + formattedDate);
+        logger.info("Batch work is terminated:" + formattedDate);
     }
 }

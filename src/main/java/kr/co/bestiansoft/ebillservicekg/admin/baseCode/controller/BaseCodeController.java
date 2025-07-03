@@ -17,20 +17,20 @@ import java.util.HashMap;
 import java.util.List;
 
 @RestController
-@Api(tags = "대별코드 관리 API")
+@Api(tags = "Age code management API")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class BaseCodeController {
 
     private final BaseCodeService basecodeService;
 
-    @ApiOperation(value = "대별코드리스트 조회", notes = "대별 리스트를 조회한다.")
+    @ApiOperation(value = "Code list check", notes = "Age Codes List Inquiry.")
     @GetMapping("/admin/baseCode")
     public ResponseEntity<CommonResponse> getBaseCodeList(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", basecodeService.getBaseCodeList(param)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "대별코드 생성", notes = "대별코드 생성한다.")
+    @ApiOperation(value = "Age code generation", notes = "Age code Create.")
     @PostMapping(value = "/admin/baseCode")
     public ResponseEntity<CommonResponse> createBaseCode(@RequestBody BaseCodeVo baseCodeVo) {
 
@@ -39,20 +39,20 @@ public class BaseCodeController {
 
     }
 
-    @ApiOperation(value = "대별코드 수정", notes = "대별코드를 수정한다.")
+    @ApiOperation(value = "Age Code correction", notes = "Age Code modify.")
     @PutMapping(value = "/admin/baseCode")
     public ResponseEntity<CommonResponse> updateBaseCode(@RequestBody BaseCodeVo baseCodeVo) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "BaseCode updated successfully", basecodeService.updateBaseCode(baseCodeVo)), HttpStatus.CREATED);
     }
 
-    @ApiOperation(value = "대별코드 삭제", notes = "대별코드를 삭제한다.")
+    @ApiOperation(value = "Age Code delete", notes = "Age Code Delete.")
     @DeleteMapping("/admin/baseCode")
     public ResponseEntity<CommonResponse> deleteBaseCode(@RequestBody List<String> ids) {
         basecodeService.deleteBaseCode(ids);
         return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "OK", "BaseCode deleted successfully"), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "대별코드 상세 조회", notes = "대별코드 상세를 조회한다.")
+    @ApiOperation(value = "Code particular check", notes = "Code Details Inquiry.")
     @GetMapping("/admin/baseCode/{baseCode}")
     public ResponseEntity<CommonResponse> getBaseCodeByCd(@PathVariable Long baseCode) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", basecodeService.getBaseCodeById(baseCode)), HttpStatus.OK);

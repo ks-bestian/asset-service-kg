@@ -24,7 +24,7 @@ import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.respon
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 import lombok.RequiredArgsConstructor;
 
-@Api(tags = "안건 관리 API")
+@Api(tags = "Agenda management API")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequiredArgsConstructor
 @RestController
@@ -32,79 +32,79 @@ public class BillMngController {
 
     private final BillMngService billMngService;
 
-    @ApiOperation(value = "안건 관리 리스트 조회", notes = "리스트를 조회한다.")
+    @ApiOperation(value = "Agenda management List check", notes = "List Inquiry.")
     @GetMapping("/bill/review/billMng")
     public ResponseEntity<CommonResponse> getBillList(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", billMngService.getBillList(param)), HttpStatus.OK);
     }
-    @ApiOperation(value = "안건관리 상세조회", notes = "상세를 조회한다.")
+    @ApiOperation(value = "Agenda Details", notes = "Details Inquiry.")
     @GetMapping("/bill/review/billMng/selectOneBill")
     public ResponseEntity<CommonResponse> selectOneBill(BillMngVo param) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", billMngService.selectOneBill(param)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "안건관리 전체 상세 조회", notes = "상세를 조회한다.")
+    @ApiOperation(value = "Agenda entire particular check", notes = "Details Inquiry.")
     @GetMapping("/bill/review/billMng/detail")
     public ResponseEntity<CommonResponse> getBillById(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", billMngService.getBillById(param)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "안건 관리 - 안건접수", notes = "안건접수")
+    @ApiOperation(value = "Agenda management - Agenda", notes = "Agenda")
     @PostMapping(value = "/bill/review/billRegisterMng")
     public ResponseEntity<CommonResponse> billRegisterMng(@RequestBody BillMngVo billMngVo) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Bill created successfully", billMngService.billRegisterMng(billMngVo)), HttpStatus.CREATED);
     }
 
-    @ApiOperation(value = "안건 관리 - 위원회회부", notes = "위원회회부")
+    @ApiOperation(value = "Agenda management - Committee", notes = "Committee")
     @PostMapping(value = "/bill/review/billCmtRegMng")
     public ResponseEntity<CommonResponse> billCmtRegMng(@RequestBody BillMngVo billMngVo) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Bill created successfully", billMngService.billRegisterMng(billMngVo)), HttpStatus.CREATED);
     }
 
-    @ApiOperation(value = "안건 관리 기타정보 목록조회", notes = "안건 관리 기타정보 조회")
+    @ApiOperation(value = "Agenda management Other information List inquiry", notes = "Agenda management Other information check")
     @GetMapping("/bill/review/billBillEtcInfo")
     public ResponseEntity<CommonResponse> selectListBillEtcInfo(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", billMngService.selectListBillEtcInfo(param)), HttpStatus.OK);
     }
 
-//    @ApiOperation(value = "안건 관리 법률검토 상세조회", notes = "안건 관리 법률검토 상세조회")
+//    @ApiOperation(value = "Agenda management Legal review Details", notes = "Agenda management Legal review Details")
 //    @GetMapping("/bill/review/billLegalReview/{billId}")
 //    public ResponseEntity<CommonResponse> selectOnelegalReview(@PathVariable String billId,@RequestParam HashMap<String, Object> param) {
 //    	param.put("billId",billId );
 //        return new ResponseEntity<>(new CommonResponse(200, "OK", billMngService.selectOnelegalReview(param)), HttpStatus.OK);
 //    }
 
-    @ApiOperation(value = "안건관리 법률검토 등록", notes = "기타정보 등록")
+    @ApiOperation(value = "Agenda Legal review registration", notes = "Other information registration")
     @PostMapping(value = "/bill/review/billLegalReview")
     public ResponseEntity<CommonResponse> insertBillDetail(@RequestBody BillMngVo billMngVo) throws Exception {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Bill created successfully", billMngService.insertBillDetail(billMngVo)), HttpStatus.CREATED);
     }
     
-    @ApiOperation(value = "안건심사 등록", notes = "안건심사 등록")
+    @ApiOperation(value = "Agenda registration", notes = "Agenda registration")
     @PostMapping(value = "/bill/review/billMng/detail", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<CommonResponse> insertBillDetail2(BillMngVo billMngVo) throws Exception {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "review created successfully", billMngService.insertBillDetail(billMngVo)), HttpStatus.CREATED);
     }
     
-    @ApiOperation(value = "공포 등록", notes = "공포 등록")
+    @ApiOperation(value = "promulgation registration", notes = "promulgation registration")
     @PostMapping(value = "/bill/review/billMng/prmg", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<CommonResponse> insertBillPrmg(BillMngVo billMngVo) throws Exception {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "review created successfully", billMngService.insertBillPrmg(billMngVo)), HttpStatus.CREATED);
     }
     
-    @ApiOperation(value = "대통령 거부", notes = "대통령 거부")
+    @ApiOperation(value = "president refusal", notes = "president refusal")
     @PostMapping(value = "/bill/review/billMng/presidentReject", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<CommonResponse> presidentReject(BillMngVo billMngVo) throws Exception {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "review created successfully", billMngService.presidentReject(billMngVo)), HttpStatus.CREATED);
     }
 
-    @ApiOperation(value = "안건관리 법률검토 검토보고", notes = "법률검토 검토보고 등록")
+    @ApiOperation(value = "Agenda Legal review Review", notes = "Legal review Review registration")
     @PostMapping(value = "/bill/review/billLegalReview/report")
     public ResponseEntity<CommonResponse> insertBillLegalReviewReport(@RequestBody BillMngVo billMngVo) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Bill created successfully", billMngService.insertBillLegalReviewReport(billMngVo)), HttpStatus.CREATED);
     }
 
-    @ApiOperation(value = "안건위원회 소관위,관련위 심사보고서  조회", notes = " 소관위,관련위 심사보고서 리스트를 조회한다.")
+    @ApiOperation(value = "View agenda, competent committee, related committee, and review report.", notes = "View agenda, competent committee, related committee, and review report.")
     @GetMapping("/bill/review/selectListCmtReviewReport")
     public ResponseEntity<CommonResponse> selectListCmtReviewReport(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", billMngService.selectListCmtReviewReport(param)), HttpStatus.OK);
@@ -117,7 +117,7 @@ public class BillMngController {
     }
 
 
-    @ApiOperation(value = "안건관리 심사보고서 삭제", notes = "심사보고서 삭제")
+    @ApiOperation(value = "Agenda Review report delete", notes = "Review report delete")
     @PutMapping(value = "/bill/review/deleteCmtReview")
     public ResponseEntity<CommonResponse> deleteCmtReview(@RequestBody BillMngVo billMngVo) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Bill Cmt review delete successfully", billMngService.deleteCmtReview(billMngVo)), HttpStatus.CREATED);
@@ -125,7 +125,7 @@ public class BillMngController {
 
 
 
-    @ApiOperation(value = "안건 본회의장 부의할 목록", notes = "리스트를 조회한다.")
+    @ApiOperation(value = "List of agendas to be submitted to the plenary session.", notes = "List of agendas to be submitted to the plenary session.")
     @GetMapping("/bill/review/selectListMainMtSubmit")
     public ResponseEntity<CommonResponse> selectListMainMtSubmit(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", billMngService.selectListMainMtSubmit(param)), HttpStatus.OK);
@@ -146,7 +146,7 @@ public class BillMngController {
 
 
 
-    @ApiOperation(value = "안건 관리 - 안건 등록", notes = "서면 접수")
+    @ApiOperation(value = "Agenda management - Agenda registration", notes = "Written receipt")
     @PostMapping(value = "/bill/review/billMng")
     public ResponseEntity<CommonResponse> createBill(@RequestBody BillMngVo billMngVo) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Bill created successfully", billMngService.createBill(billMngVo)), HttpStatus.CREATED);
@@ -157,25 +157,25 @@ public class BillMngController {
 
     ///////
 
-    @ApiOperation(value = "공동발의자", notes = "안건에 동의한 의원들을 조회한다")
+    @ApiOperation(value = "Co -author", notes = "Agenda Agreed Council members Inquiry")
     @GetMapping("/bill/review/billMng/proposer")
     public ResponseEntity<CommonResponse> selectProposerByBillId(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", billMngService.selectProposerByBillId(param)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "위원회 회부", notes = "위원회를 회부한다.")
+    @ApiOperation(value = "committee Reverence", notes = "Committee Book.")
     @PostMapping("/bill/review/billMng/committ")
     public ResponseEntity<CommonResponse> insertBillCommitt(@RequestBody BillMngVo billMngVo) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "bill committ created successfully", billMngService.insertBillCommitt(billMngVo)), HttpStatus.CREATED);
     }
 
-    @ApiOperation(value = "파일첨부", notes = "안건심사에 관련된 파일을 첨부한다")
+    @ApiOperation(value = "File attachment", notes = "In the agenda review relevant File Attach")
     @PostMapping(value = "/bill/review/billMng/file", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<CommonResponse> insertBillMngFile(BillMngVo billMngVo) throws Exception{
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "apply create successfully", billMngService.insertBillDetailFile(billMngVo)), HttpStatus.CREATED);
 	}
 
-    @ApiOperation(value = "파일삭제", notes = "파일을 삭제한다")
+    @ApiOperation(value = "File deletion", notes = "File Delete")
     @PutMapping(value = "/bill/review/billMng/delete/file")
     public ResponseEntity<CommonResponse> deleteEbsFile(@RequestBody EbsFileVo ebsFileVo) {
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "ebs file updated successfully", billMngService.updateEbsFileDelYn(ebsFileVo)), HttpStatus.OK);

@@ -15,57 +15,57 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@Api(tags = "직원관리 API")
+@Api(tags = "Staff management API")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserController {
     private final UserService userService;
 
-    @ApiOperation(value = "직원 리스트 조회", notes = "직원 리스트를 조회한다.")
+    @ApiOperation(value = "employee List check", notes = "employee List Inquiry.")
     @GetMapping("admin/user")
     public ResponseEntity<CommonResponse> getUserList(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "ok", userService.getUserList(param)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "직원상세 조회", notes = "직원 상세를 조회한다.")
+    @ApiOperation(value = "Staff check", notes = "employee Details Inquiry.")
     @GetMapping("admin/user/{seq}")
     public ResponseEntity<CommonResponse> getUserDetail(@PathVariable Long seq) {
         return new ResponseEntity<>(new CommonResponse(200, "ok", userService.getUserDetail(seq)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "직원 생성", notes = "직원를 생성한다.")
+    @ApiOperation(value = "employee generation", notes = "Employees Create.")
     @PostMapping("admin/user")
     public ResponseEntity<CommonResponse> createUser(@RequestBody UserVo userVo) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "User created successfully.", userService.createUser(userVo)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "직원 수정", notes = "직원을 수정한다.")
+    @ApiOperation(value = "employee correction", notes = "Employees Modify.")
     @PutMapping("admin/user")
     public ResponseEntity<CommonResponse> updateUser(@RequestBody UserVo userVo) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "User updated successfully", userService.updateUser(userVo)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "직원 삭제", notes = "직원을 삭제한다.")
+    @ApiOperation(value = "employee delete", notes = "Employees Delete.")
     @DeleteMapping("admin/user")
     public ResponseEntity<CommonResponse> deleteUser(@RequestBody List<String> ids) {
         userService.deleteUser(ids);
         return new ResponseEntity<>(new CommonResponse(200, "ok", "User code deleted successfully."), HttpStatus.OK);
     }
 
-    //부서별 사용자 조회(겸직, 위원회, 정당 포함) -- 부서관리, 권한별사용자관리
-    @ApiOperation(value = "부서별 사용자 조회", notes = "부서별사용자를 조회한다.")
+    //Department user check(concurrent position, committee, political party include) -- Departmental management, User management by authority
+    @ApiOperation(value = "Department user check", notes = "Users by department Inquiry.")
     @GetMapping("user/dept")
     public ResponseEntity<CommonResponse> getUserByDept(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "ok", userService.getUserByDept(param)), HttpStatus.OK);
     }
 
 
-    @ApiOperation(value = "사용자 비밀번호 초기화", notes = "사용자 비밀번호 초기화")
+    @ApiOperation(value = "user password reset", notes = "user password reset")
     @PutMapping("user/reset/pswd")
     public ResponseEntity<CommonResponse> resetPswd(@RequestBody HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "ok", userService.resetPswd(param)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "사용자 비밀번호 수정", notes = "사용자 비밀번호를 수정한다.")
+    @ApiOperation(value = "user password correction", notes = "user Password Modify.")
     @PutMapping("login/update")
     public ResponseEntity<CommonResponse> updatePswd(@RequestBody HashMap<String, Object> param) {
         userService.updatePswd(param);
@@ -74,7 +74,7 @@ public class UserController {
 
 
 
-    @ApiOperation(value = "직급 수정", notes = "직급을 수정한다.")
+    @ApiOperation(value = "Position correction", notes = "Position Modify.")
     @PutMapping("admin/user/job")
     public ResponseEntity<CommonResponse> updateJob(@RequestBody HashMap<String, Object> param) {
         userService.updateJob(param);

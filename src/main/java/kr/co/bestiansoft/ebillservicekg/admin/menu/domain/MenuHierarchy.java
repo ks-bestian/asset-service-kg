@@ -31,7 +31,7 @@ public class MenuHierarchy {
     private List<MenuNode> rootMenus;
 
 
-    //--메뉴관리 tree--
+    //--Menu management tree--
     public void buildMenuHierarchy(List<MenuVo> menuList, String lang)  {
 
         List<MenuNode> comMenuList = new ArrayList<>();
@@ -43,17 +43,17 @@ public class MenuHierarchy {
                     .menuId(menu.getMenuId())
                     .menuNm(menuNm)
                     .uprMenuId(menu.getUprMenuId())
-                    .menuPath(menu.getMenuPath()) // 추가(20250203 조진호)
+                    .menuPath(menu.getMenuPath()) // addition(20250203 Jinho Cho)
                     .build());
         }
         Map<Long, MenuNode> categoryMap = new HashMap<>();
 
-        // 초기 카테고리 맵 채우기
+        // beginning Category Map Filling
         for (MenuNode menuNode : comMenuList) {
             categoryMap.put(menuNode.getMenuId(),menuNode);
         }
 
-        // 계층 구조 만들기
+        // hierarchy structure making
         List<MenuNode> rootMenu = new ArrayList<>();
         for (MenuNode menuNode : comMenuList) {
             if (menuNode.getUprMenuId() == 0) {
@@ -88,7 +88,7 @@ public class MenuHierarchy {
         ObjectNode jsonNode = mapper.createObjectNode();
         jsonNode.put("key", comMenu.getMenuId());
         jsonNode.put("label", comMenu.getMenuNm());
-        jsonNode.put("menuPath", comMenu.getMenuPath()); // 추가(20250203 조진호)
+        jsonNode.put("menuPath", comMenu.getMenuPath()); // addition(20250203 Jinho Cho)
 
         ArrayNode childrenNode = mapper.createArrayNode();
         for (MenuNode child : comMenu.getChildren()) {

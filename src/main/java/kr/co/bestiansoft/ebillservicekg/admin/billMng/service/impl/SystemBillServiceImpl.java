@@ -549,15 +549,15 @@ public class SystemBillServiceImpl implements SystemBillService {
 
 		SystemBillResponse result = new SystemBillResponse();
 
-		//안건 상세
+		//Agenda particular
 		SystemBillVo billDetail = systemBillMapper.selectApplyDetail(billId, lang);
 		result.setBillDetail(billDetail);
 
-		//파일 리스트
+		//file List
 		List<EbsFileVo> fileList = systemBillMapper.selectBillFile(billId);
 		result.setFileList(fileList);
 
-		//발의자 대상
+		//Voter Target
 		List<AgreeVo> proposerList = agreeMapper.selectAgreeProposerList(billId);
 		result.setProposerList(proposerList);
 

@@ -45,18 +45,18 @@ public class MtngFromServiceImpl implements MtngFromService {
 
     	param.put("mtngId", mtngId);
 
-    	/* 회의 정보*/
+    	/* meeting information*/
     	MtngFromVo dto = mtngFromMapper.selectMtngFrom(param);
 
-    	/* 안건  */
+    	/* Agenda  */
     	List<AgendaVo> agendaList = mtngFromMapper.selectListMtngAgenda(param);
     	dto.setAgendaList(agendaList);
 
-    	/* 참석자 - selectListMtngAttendant */
+    	/* participant - selectListMtngAttendant */
     	List<MemberVo> attendantList = mtngFromMapper.selectListMtngAttendant(param);
     	dto.setAttendantList(attendantList);
 
-    	/*회의 결과 문서*/
+    	/*meeting result document*/
     	List<MtngFileVo> reportList = mtngFromMapper.selectListMtngFile(param);
     	dto.setReportList(reportList);
 
@@ -67,15 +67,15 @@ public class MtngFromServiceImpl implements MtngFromService {
 	@Override
 	public MtngFromVo createMtngFrom(MtngFromVo mtngFromVo) {
 
-		/* 등록자 아이디 세팅 */
+		/* registrant id Set */
 		String regId = new SecurityInfoUtil().getAccountId();
 		mtngFromVo.setRegId(regId);
 
-		/*회의*/
+		/*meeting*/
 		mtngFromMapper.insertEbsMtng(mtngFromVo);
 		log.info("mtngId2 : {}", mtngFromVo.getMtngId());
 
-		/*안건*/
+		/*Agenda*/
 		List<AgendaVo> agendaList = mtngFromVo.getAgendaList();
 		int idx = 1;
 		for(AgendaVo aVo:agendaList) {
@@ -88,7 +88,7 @@ public class MtngFromServiceImpl implements MtngFromService {
 		}
 		idx = 1;
 
-		/*참석자*/
+		/*participant*/
 		List<MemberVo> attendantList = mtngFromVo.getAttendantList();
 		for(MemberVo memVo:attendantList) {
 			MemberVo memberVo = new MemberVo();
@@ -102,11 +102,11 @@ public class MtngFromServiceImpl implements MtngFromService {
 			mtngFromMapper.insertEbsMtngAttendant(memberVo);
 		}
 
-//		if("2".equals(mtngFromVo.getMtngTypeCd())) { //본회의
+//		if("2".equals(mtngFromVo.getMtngTypeCd())) { //Plenary
 //			for(AgendaVo aVo:agendaList) {
 //				ProcessVo pVo = new ProcessVo();
 //				pVo.setBillId(aVo.getBillId());
-//				pVo.setStepId("1700");//본회의심사요청
+//				pVo.setStepId("1700");//Request for review of the plenary session
 //				processService.handleProcess(pVo);
 //			}
 //		}
@@ -136,12 +136,12 @@ public class MtngFromServiceImpl implements MtngFromService {
         	HashMap<String, Object> param = new HashMap<>();
     		param.put("mtngId", mtngId);
     		MtngFromVo mtng = mtngFromMapper.selectMtngFrom(param);
-    		//프로세스 롤백
-    		if("2".equals(mtng.getMtngTypeCd())) { //본회의
+    		//process Rollback
+    		if("2".equals(mtng.getMtngTypeCd())) { //Plenary
     			List<AgendaVo> list = mtngFromMapper.selectListMtngAgenda(param);
     			if(list != null) {
     				for(AgendaVo agenda : list) {
-    					String undoStepId = "1700"; //본회의심사요청
+    					String undoStepId = "1700"; //Request for review of the plenary session
     					if(undoStepId.equals(agenda.getCurrentStepId())) {
     						processService.undoProcess(agenda.getBillId(), undoStepId);
     					}
@@ -188,7 +188,7 @@ public class MtngFromServiceImpl implements MtngFromService {
 		mtngFromVo.setModId(userId);
 		mtngFromMapper.updateFromMtngBill(mtngFromVo);
 
-		//참석자 수정
+		//participant correction
 		mtngFromMapper.deleteMtngFromBillAttendant(mtngFromVo);
 
 		List<MemberVo> attendantList = mtngFromVo.getAttendantList();
@@ -206,7 +206,7 @@ public class MtngFromServiceImpl implements MtngFromService {
 			}
 		}
 
-		//안건 수정
+		//Agenda correction
 //		mtngFromMapper.deleteMtngFromBillAgenda(mtngFromVo);
 //
 //		List<AgendaVo> agendaList = mtngFromVo.getAgendaList();
@@ -263,7 +263,7 @@ public class MtngFromServiceImpl implements MtngFromService {
 				if(!newset.contains(agenda.getBillId())) {
 					mtngFromMapper.deleteMtngAgenda(mtngFromVo.getMtngId(), agenda.getBillId());
 
-					String undoStepId = "1700"; //본회의심사요청
+					String undoStepId = "1700"; //Request for review of the plenary session
 					if(undoStepId.equals(agenda.getCurrentStepId())) {
 						processService.undoProcess(agenda.getBillId(), undoStepId);
 					}
@@ -287,14 +287,14 @@ public class MtngFromServiceImpl implements MtngFromService {
 	@Transactional
 	@Override
 	public MtngFromVo createHallMtng(MtngFromVo mtngFromVo) {
-		/* 등록자 아이디 세팅 */
+		/* registrant id Set */
 		String regId = new SecurityInfoUtil().getAccountId();
 		mtngFromVo.setRegId(regId);
 
-		/*회의*/
+		/*meeting*/
 		mtngFromMapper.insertEbsMtng(mtngFromVo);
 
-		/*안건*/
+		/*Agenda*/
 		List<AgendaVo> agendaList = mtngFromVo.getAgendaList();
 		int idx = 1;
 		for(AgendaVo aVo:agendaList) {
@@ -322,7 +322,7 @@ public class MtngFromServiceImpl implements MtngFromService {
     		}
     		ProcessVo pVo = new ProcessVo();
 			pVo.setBillId(agenda.getBillId());
-			pVo.setStepId("1700");//본회의심사요청
+			pVo.setStepId("1700");//Request for review of the plenary session
 			processService.handleProcess(pVo);
 			
 			MtngFromVo vo = new MtngFromVo();
@@ -402,7 +402,7 @@ public class MtngFromServiceImpl implements MtngFromService {
 		if(Boolean.TRUE.equals(agenda.getSubmitted())) {
 //			ProcessVo pVo = new ProcessVo();
 //			pVo.setBillId(mtngFromVo.getBillId());
-//			pVo.setStepId("1600");//위원회 회의심사보고
+//			pVo.setStepId("1600");//committee Meeting
 //			processService.handleProcess(pVo);
 
 			processService.undoProcess(mtngFromVo.getBillId(), "1700");
@@ -420,7 +420,7 @@ public class MtngFromServiceImpl implements MtngFromService {
 		mtngFromVo.setModId(userId);
 		mtngFromMapper.updateFromMtngBill(mtngFromVo);
 
-		/*안건*/
+		/*Agenda*/
 		int idx = 1;
 		List<AgendaVo> agendaList = mtngFromVo.getAgendaList();
 
@@ -440,7 +440,7 @@ public class MtngFromServiceImpl implements MtngFromService {
 	@Override
 	public void addHallMtngAgenda(MtngFromVo mtngFromVo) {
 		String userId = new SecurityInfoUtil().getAccountId();
-		/*안건*/
+		/*Agenda*/
 		List<AgendaVo> agendaList = mtngFromVo.getAgendaList();
 		for(AgendaVo aVo:agendaList) {
 			AgendaVo agendaVo = new AgendaVo();

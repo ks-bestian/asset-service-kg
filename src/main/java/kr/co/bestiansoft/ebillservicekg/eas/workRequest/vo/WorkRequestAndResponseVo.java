@@ -28,7 +28,7 @@ public class WorkRequestAndResponseVo {
     private int rcvId;
     //workResponse
     private List<WorkResponseVo> workResponseVos;
-    //receivedInfo 접수할때 주 이행자 추가할때 쓰임, 서명용 hashFileId 저장
+    //receivedInfo Used when registering to add the main executor; stores `hashFileId` for signature.
     private String workerId;
     private String hashFileId;
 
