@@ -234,7 +234,7 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
     @Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
     public void reception(WorkRequestAndResponseVo vo){
         if(vo.getDocTypeCd() == null){}
-        else if(vo.getDocTypeCd().equals(DocumentType.REPLY_PURPOSE.getCodeId())) {
+        else if(vo.getDocTypeCd().equals(DocumentType.REPLY_PURPOSE.getCodeId())){
             //답변용
 
             // 이행요청 추가
@@ -242,18 +242,13 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
             vo.setRegId(new SecurityInfoUtil().getAccountId());
             vo.setWorkStatus(WorkStatus.DISPATCHED.getCodeId());
 
-            WorkRequestVo requestVo = vo.toRequestVo();
 
-            if (requestVo.getWorkReqId() == 0) {
-                workRequestService.insertWorkRequest(requestVo);
-            } else {
-                workRequestService.updateWorkRequest(requestVo);
-            }
+
+            WorkRequestVo requestVo = vo.toRequestVo();
+            workRequestService.insertWorkRequest(requestVo);
 
             log.info("workReqId : " + requestVo.toString());
-
-            workResponseService.delete(requestVo.getWorkReqId());
-            //// 이행자 추가
+            // 이행자 추가
             vo.getWorkResponseVos().forEach(workResponseVo -> {
                 UserMemberVo loginUser = userService.getUserMemberDetail(workResponseVo.getUserId());
                 workResponseVo.setWorkReqId(requestVo.getWorkReqId());
@@ -261,9 +256,7 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                 workResponseVo.setJobCd(loginUser.getJobCd());
                 workResponseVo.setUserNm(loginUser.getUserNm());
                 workResponseVo.setRcvDtm(LocalDateTime.now());
-
                 workResponseService.insertWorkResponse(workResponseVo);
-
             });
             // receivedInfo 상태 변경, 주 이행자 추가
             UpdateReceivedInfoVo updateReceivedInfoVo = UpdateReceivedInfoVo.builder()
@@ -348,17 +341,17 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
     }
     @Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
     public void endDocument(String docId){
-       UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
-       HistoryVo historyVo = HistoryVo.builder()
-               .userId(loginUser.getUserId())
-               .docId(docId)
-               .actType(ActionType.COMPLETE_DOCUMENT.getCodeId())
-               .actDtm(LocalDateTime.now())
-               .actDetail(historyService.getActionDetail(ActionType.COMPLETE_DOCUMENT.getCodeId(), loginUser.getUserNm()))
-               .userNm(loginUser.getUserNm())
-               .build();
-       historyService.insertHistory(historyVo);
-       documentService.updateStatusOfficialDocument(docId, DocumentStatus.COMPLETED.getCodeId());
+        UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
+        HistoryVo historyVo = HistoryVo.builder()
+                .userId(loginUser.getUserId())
+                .docId(docId)
+                .actType(ActionType.COMPLETE_DOCUMENT.getCodeId())
+                .actDtm(LocalDateTime.now())
+                .actDetail(historyService.getActionDetail(ActionType.COMPLETE_DOCUMENT.getCodeId(), loginUser.getUserNm()))
+                .userNm(loginUser.getUserNm())
+                .build();
+        historyService.insertHistory(historyVo);
+        documentService.updateStatusOfficialDocument(docId, DocumentStatus.COMPLETED.getCodeId());
     }
     @Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
     @Override
@@ -406,7 +399,7 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                         .userNm(user.getUserNm())
                         .deptCd(user.getDeptCd())
                         .jobCd(user.getJobCd())
-                        .apvlType(ApprovalType.REQUEST_APPROVAL.getCodeId())
+                        .apvlType(ApprovalType.REQUEST_REPLY_APPROVAL .getCodeId())
                         .build();
                 if (addApprovalCount == 1) {
                     approvalVo.setRcvDtm(now);
@@ -615,7 +608,7 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
             // link document 답변된 것 찾아오기
             LinkDocumentVo linkDocumentVo = linkDocumentService.getLinkDocumentByDocIdAndType(vo.getDocId(), LinkType.LINK_REPLY.getCodeId());
             // ReceiveStatus.COMPLETED_RESPONSE 변경
-            ReceivedInfoVo replyReceivedInfo = receivedInfoService.getReceivedInfoByRcpDocId(linkDocumentVo.getToDocId());
+            ReceivedInfoVo replyReceivedInfo = receivedInfoService.getReceivedInfoByRcpDocId(linkDocumentVo.getFromDocId());
             UpdateReceivedInfoVo updateReceivedInfoVo = UpdateReceivedInfoVo.builder()
                     .rcvId(replyReceivedInfo.getRcvId())
                     .rcvStatus(ReceiveStatus.COMPLETED_RESPONSE.getCodeId())
@@ -766,14 +759,14 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                 .build();
         return receivedInfoService.updateReceivedInfo(vo);
     }
-    
+
     public void updateReadApproval(int apvlId){
         UpdateApprovalVo vo = UpdateApprovalVo.builder()
                 .apvlId(apvlId)
                 .checkDtm(LocalDateTime.now())
                 .apvlStatusCd(ApprovalStatus.VIEWED.getCodeId())
                 .build();
-         approvalService.updateApproval(vo);
+        approvalService.updateApproval(vo);
     }
     public String arrayToString(String[] arrayS){
         return String.join(",", arrayS);

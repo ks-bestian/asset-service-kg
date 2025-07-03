@@ -17,7 +17,6 @@ public interface OfficialDocumentService {
     Boolean isReject(String docId);
     List<DocumentListDto> getRejectDocumentList(SearchDocumentVo vo);
     int countRejectDocument();
-    List<DocumentListDto> getEndDocumentList(SearchDocumentVo vo);
     List<DocumentListDto> getMyDocumentList(SearchDocumentVo vo);
     List<DocumentListDto> getWorkList(SearchDocumentVo vo);
     List<DocumentListDto> getProcessedList(SearchDocumentVo vo);

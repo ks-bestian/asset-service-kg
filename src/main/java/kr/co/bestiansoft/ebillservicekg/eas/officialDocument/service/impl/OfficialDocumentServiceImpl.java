@@ -131,11 +131,6 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
     }
 
     @Override
-    public List<DocumentListDto> getEndDocumentList(SearchDocumentVo vo) {
-        return officialDocumentMapper.getEndDocumentList(vo);
-    }
-
-    @Override
     public List<DocumentListDto> getMyDocumentList(SearchDocumentVo vo) {
         vo.setUserId(new SecurityInfoUtil().getAccountId());
         return officialDocumentMapper.getMyDocumentList(vo);

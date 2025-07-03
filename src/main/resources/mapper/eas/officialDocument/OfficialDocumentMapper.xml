@@ -68,10 +68,6 @@
     <select id="isReject" resultType="boolean">
         select doc_status_cd ='DMS04' from eas_document where doc_id = #{docId} ;
     </select>
-    <select id ="getEndDocumentList" parameterType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.SearchDocumentVo" resultType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.DocumentListDto">
-
-    </select>
-    <!--  todo 검색 조건 추가하기  -->
     <select id="getRejectDocumentList" parameterType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.SearchDocumentVo" resultType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.DocumentListDto">
         select doc_id, doc_attrb_cd, doc_subtle, sender_id, sender_nm, doc_no, aars_doc_id
           from eas_document d

@@ -25,7 +25,7 @@ public class EasFileController {
     @ApiOperation(value="uploadEasFile", notes = "uploadEasFile")
     @PostMapping(value="/eas/file", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<CommonResponse> uploadEasFile (EasFileVo fileVo){
-        return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(),"Ok",easFileService.uploadEasFile(fileVo)), HttpStatus.CREATED);
+        return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(),"Ok",easFileService.uploadEasFileAndConversionPdf(fileVo)), HttpStatus.CREATED);
     }
     @ApiOperation(value="getWorkResponseFiles", notes = "getWorkResponseFiles")
     @GetMapping(value = "/eas/file/workResponse/{docId}")

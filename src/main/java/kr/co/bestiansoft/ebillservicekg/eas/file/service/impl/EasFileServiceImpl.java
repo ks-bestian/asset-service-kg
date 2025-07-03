@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 
 
@@ -45,7 +46,7 @@ public class EasFileServiceImpl implements EasFileService {
      *           and information necessary for saving file details.
      */
     @Override
-    public List<String> uploadEasFile(EasFileVo vo){
+    public List<String> uploadEasFileAndConversionPdf(EasFileVo vo){
         log.info(vo.toString());
         String userId = new SecurityInfoUtil().getAccountId();
         vo.setRegId(userId);
@@ -63,9 +64,12 @@ public class EasFileServiceImpl implements EasFileService {
             if (!isPdfFile(fileVo.getFileExt())) {
                 String fileId = fileVo.getFileId();
                 try {
-                    UpdatePdfFileDto pdfDto = savePdfFile(file);
-                    updatePdfInfo(fileId, pdfDto);
-                    log.info("PDF 변환 완료: 원본 파일 ID {}, PDF 파일 ID {}", fileId, pdfDto.getPdfFileId());
+                    CompletableFuture<UpdatePdfFileDto> futureResult = savePdfFile(file);
+                    futureResult.thenAccept(pdfDto -> {
+                        updatePdfInfo(fileId, pdfDto);
+                        log.debug("PDF 변환 완료: 원본 파일 ID {}, PDF 파일 ID {}", fileId, pdfDto.getPdfFileId());
+                    });
+
                 } catch (Exception e) {
                     log.error("PDF 변환 실패: 파일 ID {}, 오류: {}", fileId, e.getMessage(), e);
                 }
@@ -84,7 +88,7 @@ public class EasFileServiceImpl implements EasFileService {
      * 이 메서드는 저장 작업을 리포지토리의 insertEasFile 메서드에 위임합니다.
      *
      * @param vo the EasFileVo object containing the file's metadata and other associated details
-     * @return an integer representing the result of the database insert operation; typically, 
+     * @return an integer representing the result of the database insert operation; typically,
      *         the number of rows affected
      */
     public int saveEasFile(EasFileVo vo){
@@ -92,9 +96,9 @@ public class EasFileServiceImpl implements EasFileService {
     }
 
     /**
-     * Updates the PDF information for a specified file. This method retrieves 
-     * the file from the repository using the provided file ID, updates its 
-     * PDF file ID and name with the information from the DTO, and saves the 
+     * Updates the PDF information for a specified file. This method retrieves
+     * the file from the repository using the provided file ID, updates its
+     * PDF file ID and name with the information from the DTO, and saves the
      * changes back to the repository.
      *
      * 지정된 파일의 PDF 정보를 업데이트합니다. 이 메서드는 제공된 파일 ID를 사용하여
@@ -102,10 +106,9 @@ public class EasFileServiceImpl implements EasFileService {
      * 변경 사항을 저장소에 다시 저장합니다.
      *
      * @param fileId the ID of the file whose PDF information is to be updated
-     * @param dto an UpdatePdfFileDto containing the new PDF file ID and name 
+     * @param dto an UpdatePdfFileDto containing the new PDF file ID and name
      *            to be associated with the file
      */
-    @Transactional
     public void updatePdfInfo(String fileId, UpdatePdfFileDto dto){
         EasFileVo fileVo = easFileRepository.getFileById(fileId);
         if (fileVo != null) {
@@ -125,14 +128,13 @@ public class EasFileServiceImpl implements EasFileService {
      * 저장소에 쿼리하여 문서에 연결된 파일 메타데이터를 가져옵니다.
      *
      * @param docId the ID of the document for which to retrieve attached files
-     * @return a list of EasFileVo objects representing the attached files; 
+     * @return a list of EasFileVo objects representing the attached files;
      *         an empty list if no files are attached to the specified document
      */
     @Override
     public List<EasFileVo> getAttachFiles(String docId, String fileType) {
         return easFileRepository.getAttachFiles(docId , fileType);
     }
-
     @Override
     public EasFileVo getFileById(String fileId) {
         return easFileRepository.getFileById(fileId);
@@ -140,7 +142,7 @@ public class EasFileServiceImpl implements EasFileService {
 
     /**
      * Saves the provided file and generates metadata related to the saved file.
-     * The file is stored using a unique file ID, and its metadata includes 
+     * The file is stored using a unique file ID, and its metadata includes
      * the original filename, file size, and file extension.
      *
      * 제공된 파일을 저장하고 저장된 파일과 관련된 메타데이터를 생성합니다.
@@ -174,6 +176,21 @@ public class EasFileServiceImpl implements EasFileService {
         return result;
     }
 
+    /***
+     *
+     * @param file
+     * @return fileId
+     */
+    public String saveFile(File file){
+        String fileId = StringUtil.getUUUID();
+        try (InputStream edvIs = new FileInputStream(file)){
+            edv.save(fileId, edvIs);
+        } catch (Exception e){
+            throw new RuntimeException("EDV_NOT_WORK", e);
+        }
+        return fileId;
+    }
+
     /**
      * Saves a PDF file by converting the input file to a PDF format and storing it.
      * Handles temporary file creation and ensures proper cleanup post-processing.
@@ -185,33 +202,76 @@ public class EasFileServiceImpl implements EasFileService {
      * @return an UpdatePdfFileDto containing the PDF file's ID and name
      * @throws RuntimeException if the file conversion or saving process fails
      */
-    public UpdatePdfFileDto savePdfFile(MultipartFile file) {
-        UpdatePdfFileDto result = new UpdatePdfFileDto();
-        String fileId = StringUtil.getUUUID();
-        String fileName = file.getOriginalFilename();
-        File tmpFile = null;
-        File tmpPdfFile = null;
+    public CompletableFuture<UpdatePdfFileDto> savePdfFile(MultipartFile file) {
 
-        try{
-            // 임시 파일 생성
-            tmpFile =File.createTempFile("temp", null);
-            tmpPdfFile = File.createTempFile("pdfTemp", null);
-            file.transferTo(tmpFile);
-            boolean pdfResult = pdfService.convertToPdf(tmpFile.getAbsolutePath(), fileName, tmpPdfFile.getAbsolutePath());
-            if(pdfResult){
-                edv.save(fileId, new FileInputStream(tmpPdfFile));
+        return CompletableFuture.supplyAsync(() -> {
+
+            String fileId = StringUtil.getUUUID();
+            String fileName = file.getOriginalFilename();
+            UpdatePdfFileDto result = new UpdatePdfFileDto();
+
+            File tmpFile = null;
+            File tmpPdfFile = null;
+
+            try {
+                // 임시 파일 생성
+                tmpFile = File.createTempFile("temp", ".tmp");
+                tmpPdfFile = File.createTempFile("pdfTemp", ".pdf");
+
+                file.transferTo(tmpFile);
+
+                boolean pdfResult = pdfService.convertToPdf(tmpFile.getAbsolutePath(), fileName, tmpPdfFile.getAbsolutePath());
+
+                if (pdfResult) {
+                    edv.save(fileId, new FileInputStream(tmpPdfFile));
+                }else {
+                    throw new RuntimeException("PDF_CONVERSION_FAILED");
+                }
+                result.setPdfFileId(fileId);
+                result.setPdfFileNm(fileName);
+
+                return result;
+            } catch (Exception e) {
+                throw new RuntimeException("FILE_NOT_SAVE", e);
+            } finally {
+                tmpFile.delete();
+                tmpPdfFile.delete();
             }
-        }catch (Exception e){
-            throw new RuntimeException("FILE_NOT_SAVE", e);
-        }finally {
-            tmpFile.delete();
-            tmpPdfFile.delete();
-        }
 
-        result.setPdfFileId(fileId);
-        result.setPdfFileNm(fileName);
-        return result;
+
+        }, executorService);
     }
+    public CompletableFuture<UpdatePdfFileDto> savePdfFile(File file) {
+
+        return CompletableFuture.supplyAsync(() -> {
+            String fileId = StringUtil.getUUUID();
+            String fileName = file.getName();
+            UpdatePdfFileDto result = new UpdatePdfFileDto();
+
+
+            File tmpPdfFile = null;
+
+            try{
+                tmpPdfFile = File.createTempFile("pdfTemp", ".pdf");
+                boolean pdfResult = pdfService.convertToPdf(file.getAbsolutePath(), fileName, tmpPdfFile.getAbsolutePath());
+
+                if (pdfResult) {
+                    edv.save(fileId, new FileInputStream(tmpPdfFile));
+                }else {
+                    throw new RuntimeException("PDF_CONVERSION_FAILED");
+                }
+                result.setPdfFileId(fileId);
+                result.setPdfFileNm(fileName);
+
+                return result;
+            }catch (Exception e) {
+                throw new RuntimeException("FILE_NOT_SAVE", e);
+            }finally {
+                tmpPdfFile.delete();
+            }
+        }, executorService);
+    }
+
 
     @Override
     public void deleteDocument(String docId) {

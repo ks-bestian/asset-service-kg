@@ -8,4 +8,5 @@ public interface DraftDocumentRepository {
     int insertDraftDocument(DraftDocumentVo vo);
     void updateDraftStatus(int aarsDocId, String aarsStatusCd);
     DraftDocumentVo getDraftDocument(int aarsDocId);
+    void updateDraftPdfFileId(int aarsDocId, String pdfFileId);
 }
