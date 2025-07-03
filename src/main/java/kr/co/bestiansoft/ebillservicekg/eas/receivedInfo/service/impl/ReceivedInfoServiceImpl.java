@@ -59,7 +59,11 @@ public class ReceivedInfoServiceImpl implements ReceivedInfoService {
 
     @Override
     public UserMemberVo getMainWorkerInfo(int rcvId) {
-        return userService.getUserMemberDetail(receivedInfoRepository.getMainWorker(rcvId));
+        String mainWorker = receivedInfoRepository.getMainWorker(rcvId);
+        if(mainWorker == null) {
+            return null;
+        }
+        return userService.getUserMemberDetail(mainWorker);
     }
 
     @Override

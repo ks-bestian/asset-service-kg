@@ -112,12 +112,10 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
         try {
             InputStream is = edv.download(formList.getFileId());
             tmpFile = File.createTempFile("temp", null);
-            tmpFile = updateDocument(is, paramMap, tmpFile.getAbsolutePath());
-            edv.save(fileId, new FileInputStream(tmpFile));
-            vo.setFileId(fileId);
-
-            // PDF 변환
             tmpPdfFile = File.createTempFile("pdfTemp", null);
+
+            tmpFile = updateDocument(is, paramMap, tmpFile.getAbsolutePath());
+            // PDF 변환
             boolean pdfResult = pdfService.convertToPdf(tmpFile.getAbsolutePath(), fileName, tmpPdfFile.getAbsolutePath());
 
             if (pdfResult && tmpPdfFile.exists() && tmpPdfFile.length() > 0) {
@@ -126,6 +124,8 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
             } else {
                 throw new RuntimeException("PDF conversion failure");
             }
+            edv.save(fileId, new FileInputStream(tmpFile));
+            vo.setFileId(fileId);
 
             return vo;
 

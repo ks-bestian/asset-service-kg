@@ -13,7 +13,7 @@ public interface WorkResponseRepository {
     int updateWorkContents (UpdateWorkResponseVo vo);
     void delete(int workReqId);
     List<WorkResponseVo> getWorkResponse(@Param("rcvId") Integer rcvId, @Param("docId") String docId);
-    List<WorkResponseVo> getWorkResponseByUserId(Integer workReqId, String docId);
+    List<WorkResponseVo> getWorkResponseByUserId(Integer workReqId, String userId);
     void deleteDocument(String docId);
     List<WorkResponseVo> getWorkResponses( int workReqId);
 

@@ -45,6 +45,9 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
         if(vo.getBetweenRcvDtm() != null) {
             vo.setFromRcvDtm(parseFromDateRange(vo.getBetweenRcvDtm()));
             vo.setToRcvDtm(parseToDateRange(vo.getBetweenRcvDtm()));
+        }else if(vo.getBetweenResDtm() != null) {
+            vo.setFromResDtm(parseFromDateRange(vo.getBetweenResDtm()));
+            vo.setToResDtm(parseToDateRange(vo.getBetweenResDtm()));
         }
         vo.setUserId(new SecurityInfoUtil().getAccountId());
         return officialDocumentMapper.getDocumentList(vo);
@@ -128,11 +131,6 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
     }
 
     @Override
-    public List<DocumentListDto> getEndDocumentList(SearchDocumentVo vo) {
-        return officialDocumentMapper.getEndDocumentList(vo);
-    }
-
-    @Override
     public List<DocumentListDto> getMyDocumentList(SearchDocumentVo vo) {
         vo.setUserId(new SecurityInfoUtil().getAccountId());
         return officialDocumentMapper.getMyDocumentList(vo);
@@ -140,12 +138,26 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
 
     @Override
     public List<DocumentListDto> getWorkList(SearchDocumentVo vo) {
+        if(vo.getBetweenRcvDtm() != null) {
+            vo.setFromRcvDtm(parseFromDateRange(vo.getBetweenRcvDtm()));
+            vo.setToRcvDtm(parseToDateRange(vo.getBetweenRcvDtm()));
+        }else if(vo.getBetweenResDtm() != null) {
+            vo.setFromResDtm(parseFromDateRange(vo.getBetweenResDtm()));
+            vo.setToResDtm(parseToDateRange(vo.getBetweenResDtm()));
+        }
         vo.setUserId(new SecurityInfoUtil().getAccountId());
         return officialDocumentMapper.getWorkList(vo);
     }
 
     @Override
     public List<DocumentListDto> getProcessedList(SearchDocumentVo vo) {
+        if(vo.getBetweenRcvDtm() != null) {
+            vo.setFromRcvDtm(parseFromDateRange(vo.getBetweenRcvDtm()));
+            vo.setToRcvDtm(parseToDateRange(vo.getBetweenRcvDtm()));
+        }else if(vo.getBetweenResDtm() != null) {
+            vo.setFromResDtm(parseFromDateRange(vo.getBetweenResDtm()));
+            vo.setToResDtm(parseToDateRange(vo.getBetweenResDtm()));
+        }
         vo.setUserId(new SecurityInfoUtil().getAccountId());
         return officialDocumentMapper.getProcessedList(vo);
     }
@@ -211,6 +223,13 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
     }
     @Override
     public List<ApprovalLIstDto> getApprovalList(SearchDocumentVo vo) {
+        if(vo.getBetweenRcvDtm() != null) {
+            vo.setFromRcvDtm(parseFromDateRange(vo.getBetweenRcvDtm()));
+            vo.setToRcvDtm(parseToDateRange(vo.getBetweenRcvDtm()));
+        }else if(vo.getBetweenResDtm() != null) {
+            vo.setFromResDtm(parseFromDateRange(vo.getBetweenResDtm()));
+            vo.setToResDtm(parseToDateRange(vo.getBetweenResDtm()));
+        }
         vo.setUserId(new SecurityInfoUtil().getAccountId());
 
         return officialDocumentMapper.getApprovalList(vo);

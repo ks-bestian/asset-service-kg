@@ -12,7 +12,6 @@ public enum ReceiveStatus {
     COMPLETED_RESPONSE  ("RS05", "COMPLETED_RESPONSE"),
     APPROVING_RESPONSE  ("RS06", "APPROVING_RESPONSE");
 
-    // todo 답변 승인 중
     private final String codeId;
     private final String codeNm;
 

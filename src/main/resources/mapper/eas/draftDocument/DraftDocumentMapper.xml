@@ -17,4 +17,9 @@
           from eas_draft
          where aars_doc_id = #{aarsDocId}
     </select>
+    <update id="updateDraftPdfFileId">
+        update kgst.eas_draft
+        set aars_pdf_file_id = #{aarsPdfFileId}
+        where aars_doc_id=#{aarsDocId}
+    </update>
 </mapper>

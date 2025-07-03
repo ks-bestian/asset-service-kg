@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 
 @Service
 @Transactional
@@ -38,6 +38,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public UserMemberVo getUserMemberDetail(String userId) {
+        if(userId == null || userId.isEmpty()) { return null;}
         HashMap<String, Object> map = new HashMap<>();
         map.put("userId", userId);
         return userMapper.userDetail(map);

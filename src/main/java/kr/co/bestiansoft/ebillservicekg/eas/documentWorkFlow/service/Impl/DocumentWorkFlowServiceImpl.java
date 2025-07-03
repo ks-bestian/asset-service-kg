@@ -405,7 +405,7 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                         .userNm(user.getUserNm())
                         .deptCd(user.getDeptCd())
                         .jobCd(user.getJobCd())
-                        .apvlType(ApprovalType.REQUEST_APPROVAL.getCodeId())
+                        .apvlType(ApprovalType.REQUEST_REPLY_APPROVAL .getCodeId())
                         .build();
                 if (addApprovalCount == 1) {
                     approvalVo.setRcvDtm(now);
