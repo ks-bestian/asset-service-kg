@@ -64,5 +64,4 @@ public class ReceivedInfoController {
     public ResponseEntity<CommonResponse> getReceivedInfoByUserId(@PathVariable String docId){
         return  new ResponseEntity<>(new CommonResponse(200, "OK",infoService.getReceivedInfoByUserId(docId)), HttpStatus.OK);
     }
-
 }

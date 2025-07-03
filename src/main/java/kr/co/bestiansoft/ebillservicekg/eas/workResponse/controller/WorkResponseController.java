@@ -1,6 +1,7 @@
 package kr.co.bestiansoft.ebillservicekg.eas.workResponse.controller;
 
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
+import kr.co.bestiansoft.ebillservicekg.eas.workRequest.service.WorkRequestService;
 import kr.co.bestiansoft.ebillservicekg.eas.workResponse.service.WorkResponseService;
 import kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.UpdateWorkResponseVo;
 import kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.WorkResponseVo;
@@ -45,4 +46,11 @@ public class WorkResponseController {
         workResponseService.updateReadDtm(rspnsId);
         return new ResponseEntity<>(new CommonResponse(200, "OK" ), HttpStatus.OK);
     }
+    @ApiOperation(value = "Get users", notes = "Get user IDs who responded")
+    @GetMapping("/eas/workResponse/byWorkReqId/{workReqId}")
+    public ResponseEntity<CommonResponse> getRespondedUsers(@PathVariable int workReqId) {
+        return new ResponseEntity<>(new CommonResponse(200, "OK", workResponseService.getRespondedUsers(workReqId)), HttpStatus.OK);
+    }
+
+
 }

@@ -236,19 +236,23 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
         if(vo.getDocTypeCd() == null){}
         else if(vo.getDocTypeCd().equals(DocumentType.REPLY_PURPOSE.getCodeId())){
             //Answer
-
             // Request for implementation addition
             vo.setRegDt(LocalDateTime.now());
             vo.setRegId(new SecurityInfoUtil().getAccountId());
             vo.setWorkStatus(WorkStatus.DISPATCHED.getCodeId());
 
-
-
             WorkRequestVo requestVo = vo.toRequestVo();
-            workRequestService.insertWorkRequest(requestVo);
+
+            if (requestVo.getWorkReqId() == 0) {
+                workRequestService.insertWorkRequest(requestVo);
+            } else {
+                workRequestService.updateWorkRequest(requestVo);
+            }
 
             log.info("workReqId : " + requestVo.toString());
-            // performer addition
+
+            workResponseService.delete(requestVo.getWorkReqId());
+            //// 이행자 추가
             vo.getWorkResponseVos().forEach(workResponseVo -> {
                 UserMemberVo loginUser = userService.getUserMemberDetail(workResponseVo.getUserId());
                 workResponseVo.setWorkReqId(requestVo.getWorkReqId());
@@ -256,7 +260,9 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                 workResponseVo.setJobCd(loginUser.getJobCd());
                 workResponseVo.setUserNm(loginUser.getUserNm());
                 workResponseVo.setRcvDtm(LocalDateTime.now());
+
                 workResponseService.insertWorkResponse(workResponseVo);
+
             });
             // receivedInfo situation change, main performer addition
             UpdateReceivedInfoVo updateReceivedInfoVo = UpdateReceivedInfoVo.builder()
