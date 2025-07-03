@@ -15,7 +15,7 @@ public interface EasFileService {
     int saveEasFile(EasFileVo vo);
     List<EasFileVo> getAttachFiles(String docId, String fileType);
     EasFileVo getFileById(String fileId);
-    //    공통 save file(edv) , pdf file
+//    commonness save file(edv) , pdf file
     SaveFileDto saveFile(MultipartFile file);
     String saveFile(File file);
     CompletableFuture<UpdatePdfFileDto> savePdfFile(MultipartFile file);

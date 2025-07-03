@@ -19,7 +19,7 @@ import kr.co.bestiansoft.ebillservicekg.bill.billApply.revokeAgree.service.Revok
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
 import lombok.RequiredArgsConstructor;
 
-@Api(tags = "안건동의 API")
+@Api(tags = "Agendant API")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequiredArgsConstructor
 @RestController
@@ -28,20 +28,20 @@ public class RevokeAgreeController {
     private final RevokeAgreeService revokeAgreeService;
     private final ApplyService applyService;
     
-    @ApiOperation(value = "철회목록", notes = "철회목록을 조회한다")
+    @ApiOperation(value = "Withdrawal list", notes = "The withdrawal list Inquiry")
     @GetMapping("/bill/revokeAgree")
     public ResponseEntity<CommonResponse> getRevokeList(@RequestParam HashMap<String, Object> param) {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", revokeAgreeService.getRevokeAgreeList(param)), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "철회 상세", notes = "철회 상세를 조회한다")
+    @ApiOperation(value = "Withdrawal particular", notes = "Withdrawal Details Inquiry")
     @GetMapping("/bill/revokeAgree/{billId}")
     public ResponseEntity<CommonResponse> getRevokeDetail(@PathVariable String billId, @RequestParam HashMap<String, Object> param) {
 //    	return new ResponseEntity<>(new CommonResponse(200, "OK", revokeAgreeService.getRevokeDetail(billId, param)), HttpStatus.OK);
     	return new ResponseEntity<>(new CommonResponse(200, "OK", applyService.getApplyDetail(billId, param)), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "철회 동의", notes = "철회 요청에 대한 동의 및 동의취소를 한다")
+    @ApiOperation(value = "Withdrawal agreement", notes = "Consent to withdrawal request and cancellation of consent")
     @PutMapping("/bill/revokeAgree/{billId}")
     public ResponseEntity<CommonResponse> updateRevokeAgree(@PathVariable String billId, @RequestBody HashMap<String, Object> param) {
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "revoke agree successfully", revokeAgreeService.updateRevokeAgree(billId, param)), HttpStatus.OK);

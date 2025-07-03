@@ -33,7 +33,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins(allowedUrl)
                 .allowedOrigins(allowedUrl2)
-                .allowedMethods("GET", "POST", "PUT", "DELETE") // 허용할 HTTP 메서드 설정
+                .allowedMethods("GET", "POST", "PUT", "DELETE") // Http method setting to be allowed
                 .allowedHeaders("*");
 //                .allowCredentials(true);
     }

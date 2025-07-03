@@ -16,7 +16,7 @@ import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.service.MtngAllService
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
 import lombok.RequiredArgsConstructor;
 
-@Api(tags = "회의 전체 API")
+@Api(tags = "meeting entire API")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequiredArgsConstructor
 @RestController
@@ -24,25 +24,25 @@ public class MtngAllController {
 
     private final MtngAllService mtngAllService;
 
-    @ApiOperation(value = "회의 전체 리스트 조회", notes = "리스트를 조회한다.")
+    @ApiOperation(value = "meeting entire List check", notes = "List Inquiry.")
     @GetMapping("/bill/mtng/all")
     public ResponseEntity<CommonResponse> getMtngList(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", mtngAllService.getMtngList(param)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "회의 전체 상세 조회", notes = "상세를 조회한다.")
+    @ApiOperation(value = "meeting entire particular check", notes = "Details Inquiry.")
     @GetMapping("/bill/mtng/all/detail/{mtngId}")
     public ResponseEntity<CommonResponse> getMtngById(@PathVariable Long mtngId, @RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", mtngAllService.getMtngById(mtngId, param)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "회의 참가자 조회", notes = "참가자 조회한다.")
+    @ApiOperation(value = "meeting participant check", notes = "participant Inquiry.")
     @GetMapping("/bill/mtng/all/participants")
     public ResponseEntity<CommonResponse> getMtngParticipants(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", mtngAllService.getMtngParticipants(param)), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "안건별 회의 리스트 조회", notes = "안건별 회의 리스트를 조회한다.")
+    @ApiOperation(value = "Agenda meeting List check", notes = "Agenda meeting List Inquiry.")
     @GetMapping("/bill/mtng/all/bybill")
     public ResponseEntity<CommonResponse> selectMtngByBillId(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", mtngAllService.selectMtngByBillId(param)), HttpStatus.OK);

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 
-@Api(tags = "접속이력 API")
+@Api(tags = "Access history API")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequiredArgsConstructor
 @RestController
@@ -22,13 +22,13 @@ public class AcsHistController {
 
     private final AcsHistService acsHistService;
 
-    @ApiOperation(value = "접속이력 리스트 조회", notes = "접속이력 리스트를 조회한다.")
+    @ApiOperation(value = "Access history list inquiry", notes = "Search for a list of access history.")
     @GetMapping("/api/admin/acsHist")
     public ResponseEntity<CommonResponse> getAcsHistList(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "ok", acsHistService.getAcsHistList(param)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "안건접속이력 리스트 조회", notes = "안건접속이력 리스트를 조회한다.")
+    @ApiOperation(value = "Inquiry of the agenda access history", notes = "Inquire a list of agenda access.")
     @GetMapping("/api/admin/billHist")
     public ResponseEntity<CommonResponse> getBillHistList(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "ok", acsHistService.getBillHistList(param)), HttpStatus.OK);

@@ -19,7 +19,7 @@ import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.service.ApplyServic
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
 import lombok.RequiredArgsConstructor;
 
-@Api(tags = "안건동의 API")
+@Api(tags = "agenda approval API")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequiredArgsConstructor
 @RestController
@@ -28,22 +28,22 @@ public class AgreeController {
     private final AgreeService agreeService;
     private final ApplyService applyService;
 
-    @ApiOperation(value = "동의서명 목록", notes = "동의서명 목록을 조회")
+    @ApiOperation(value = "Signature inventory", notes = "Signature List check")
     @GetMapping("/bill/agree")
     public ResponseEntity<CommonResponse> getApplyList(@RequestParam HashMap<String, Object> param) {
 		// TODO :: 대수 검색조건 설정 필요(현재 14로 하드코딩)
         return new ResponseEntity<>(new CommonResponse(200, "OK", agreeService.getAgreeList(param)), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "동의서명 상세", notes = "동의서명 상세를 조회")
+    @ApiOperation(value = "Signature particular", notes = "Signature Details check")
     @GetMapping("/bill/agree/{billId}")
     public ResponseEntity<CommonResponse> getApplyDetail(@PathVariable String billId, @RequestParam HashMap<String, Object> param) {
-    	//todo :: 로그인 유저 아이디 가져오는걸로 변경 필요
+    	//todo :: log in posthumous work id To bring change necessary
 //    	return new ResponseEntity<>(new CommonResponse(200, "OK", agreeService.getAgreeDetail(billId, lang)), HttpStatus.OK);
     	return new ResponseEntity<>(new CommonResponse(200, "OK", applyService.getApplyDetail(billId, param)), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "동의 서명", notes = "안건에 대해 동의 및 동의 취소")
+    @ApiOperation(value = "agreement signature", notes = "Agenda about agreement and agreement cancellation")
     @PutMapping("/bill/agree/{billId}")
     public ResponseEntity<CommonResponse> setBillAgree(@PathVariable String billId, @RequestBody HashMap<String, Object> param) {
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill agree successfully", agreeService.setBillAgree(billId, param)), HttpStatus.OK);

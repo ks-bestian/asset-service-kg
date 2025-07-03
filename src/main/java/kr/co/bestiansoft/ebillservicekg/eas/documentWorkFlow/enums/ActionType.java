@@ -5,19 +5,19 @@ import lombok.Getter;
 
 @Getter
 public enum ActionType {
-    // Enum 상수 (영문 대문자), 코드 (ATxx), 한국어 설명
-    CREATE_DOCUMENT     ("AT01", "문서작성"),
-    APPROVE_SIGN        ("AT02", "결재서명"),
-    REGISTER_DOCUMENT   ("AT03", "문서 등록"),
-    REJECT_DOCUMENT     ("AT04", "문서 반려"),
-    ADD_EXECUTOR        ("AT05", "이행자 추가"),
-    ADD_EXECUTOR_DETAILS("AT06", "이행자 내용 추가"),
-    APPROVE_REPLY       ("AT07", "답변 승인"),
-    WRITE_REPLY         ("AT08", "답변 작성"),
-    LINK_DOCUMENT       ("AT09", "문서 연결"),
-    REJECT_APPROVAL     ("AT10", "결재 반려"),
-    SIGN_DOCUMENT       ("AT11", "문서 서명"),
-    COMPLETE_DOCUMENT   ("AT12", "문서 종료");
+    // Enum Constant (English uppercase), code (ATXx)
+    CREATE_DOCUMENT     ("AT01", "CREATE_DOCUMENT"),
+    APPROVE_SIGN        ("AT02", "APPROVE_SIGN"),
+    REGISTER_DOCUMENT   ("AT03", "REGISTER_DOCUMENT"),
+    REJECT_DOCUMENT     ("AT04", "REJECT_DOCUMENT"),
+    ADD_EXECUTOR        ("AT05", "ADD_EXECUTOR"),
+    ADD_EXECUTOR_DETAILS("AT06", "ADD_EXECUTOR_DETAILS"),
+    APPROVE_REPLY       ("AT07", "APPROVE_REPLY"),
+    WRITE_REPLY         ("AT08", "WRITE_REPLY"),
+    LINK_DOCUMENT       ("AT09", "LINK_DOCUMENT"),
+    REJECT_APPROVAL     ("AT10", "REJECT_APPROVAL"),
+    SIGN_DOCUMENT       ("AT11", "SIGN_DOCUMENT"),
+    COMPLETE_DOCUMENT   ("AT12", "COMPLETE_DOCUMENT");
 
 
     private final String codeId;

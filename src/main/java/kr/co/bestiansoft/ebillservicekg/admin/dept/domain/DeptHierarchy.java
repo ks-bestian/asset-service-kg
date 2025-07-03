@@ -27,10 +27,10 @@ public class DeptHierarchy {
             deptMap.put(deptVo.getDeptCd(), deptVo);
         }
 
-        //계층구조 만들기
+        //Hierarchy making
         List<DeptVo> rootDept = new ArrayList<>();
         for (DeptVo deptVo : deptVos) {
-            if (search) { //트리 부서명 검색
+            if (search) { //Tree Department name search
                 rootDept.add(deptVo);
             } else {
                 if (deptVo.getUprDeptCd().equals("0")) {

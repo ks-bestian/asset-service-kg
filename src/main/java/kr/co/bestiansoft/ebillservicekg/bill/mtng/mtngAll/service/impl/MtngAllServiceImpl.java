@@ -36,19 +36,19 @@ public class MtngAllServiceImpl implements MtngAllService {
     public MtngAllVo getMtngById(Long mtngId, HashMap<String, Object> param) {
     	param.put("mtngId", mtngId);
 
-    	/* 회의 정보*/
+    	/* meeting information*/
     	MtngAllVo dto = mtngAllMapper.selectMtngAll(param);
 
-    	/*회의 결과 문서*/
+    	/*meeting result document*/
 
     	List<MtngFileVo> reportList = mtngAllMapper.selectListMtngFile(param);
     	dto.setReportList(reportList);
 
-    	/* 안건  */
+    	/* Agenda  */
     	List<AgendaVo> agendaList = mtngAllMapper.selectListMtngAgenda(param);
     	dto.setAgendaList(agendaList);
 
-    	/* 참석자 - selectListMtngAttendant */
+    	/* participant - selectListMtngAttendant */
     	List<MemberVo> attendantList = mtngAllMapper.selectListMtngAttendant(param);
     	dto.setAttendantList(attendantList);
 

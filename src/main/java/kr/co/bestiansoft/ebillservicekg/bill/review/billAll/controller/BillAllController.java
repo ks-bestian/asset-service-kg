@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 
-@Api(tags = "안건 전체 API")
+@Api(tags = "Agenda entire API")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequiredArgsConstructor
 @RestController
@@ -22,25 +22,25 @@ public class BillAllController {
 
     private final BillAllService billAllService;
 
-    @ApiOperation(value = "안건 전체 리스트 조회", notes = "리스트를 조회한다.")
+    @ApiOperation(value = "Agenda entire List check", notes = "List Inquiry.")
     @GetMapping("/bill/review/all")
     public ResponseEntity<CommonResponse> getBillList(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", billAllService.getBillList(param)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "안건 전체 상세 조회", notes = "상세를 조회한다.")
+    @ApiOperation(value = "Agenda entire particular check", notes = "Details Inquiry.")
     @GetMapping("/bill/review/all/detail/{billId}")
     public ResponseEntity<CommonResponse> getBillById(@PathVariable String billId, @RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", billAllService.getBillById(billId, param)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "안건 모니터링 조회", notes = "리스트를 조회한다.")
+    @ApiOperation(value = "Agenda Monitoring check", notes = "List Inquiry.")
     @GetMapping("/bill/search/monitor")
     public ResponseEntity<CommonResponse> selectListBillMonitor(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", billAllService.selectListBillMonitor(param)), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "의안 통계 조회", notes = "의안 통계를 조회한다.")
+    @ApiOperation(value = "bill statistics check", notes = "bill Statistics Inquiry.")
     @GetMapping("/bill/search/statistics")
     public ResponseEntity<CommonResponse> selectListBillStatistics(@RequestParam HashMap<String, Object> param) {
     	Object statisticsKind = param.get("statisticsKind");

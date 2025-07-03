@@ -9,42 +9,42 @@ import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.ProposerVo;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 
 public interface BillMngService {
-	/* 안건 관리 리스트 화면 */
+	/* Agenda management List screen */
     List<BillMngVo> getBillList(HashMap<String, Object> param);
 
 
-    /* 안건 관리 상세화면 */
+    /* Agenda management Detailed screen */
     BillMngResponse selectOneBill(BillMngVo param);
 
-    /* 안건 관리 상세화면 - 안건 상세 정보, 위원회 정보, 발의자 정보 등*/
+    /* Agenda management Detailed screen - Agenda particular information, committee information, Voter information etc.*/
     BillMngResponse getBillById(HashMap<String, Object> param);
 
 
-    /* 안건관리 - 안건접수 */
+    /* Agenda - Agenda */
     BillMngVo billRegisterMng(BillMngVo billMngVo);
 
-    /* 안건관리 - 위원회회부 */
+    /* Agenda - Committee */
     BillMngVo billCmtRegMng(BillMngVo billMngVo);
 
 
 
-	/* 안건 관리 기타정보목록 */
+	/* Agenda management Other information list */
     BillMngResponse selectListBillEtcInfo(HashMap<String, Object> param);
 
-	/* 안건 관리 법률검토 리스트 화면 */
+	/* Agenda management Legal review List screen */
     //List<BillMngVo> selectListlegalReview(HashMap<String, Object> param);
 
-    /* 안건 관리 법률검토 상세 화면 */
+    /* Agenda management Legal review particular screen */
     //BillMngResponse selectOnelegalReview(HashMap<String, Object> param);
 
-    /* 안건관리 기타정보등록 */
+    /* Agenda Other information registration */
     BillMngVo insertBillDetail(BillMngVo billMngVo) throws Exception;
 
-    /* 안건관리 법률검토 보고 */
+    /* Agenda Legal review report */
     BillMngVo insertBillLegalReviewReport(BillMngVo billMngVo);
 
 
-	/* 안건위원회 소관위,관련위 심사보고서  조회 */
+	/* Retrieve review reports of agenda committee, competent committee, and related committee. */
     List<BillMngVo> selectListCmtReviewReport(HashMap<String, Object> param);
 
 
@@ -55,17 +55,17 @@ public interface BillMngService {
     BillMngVo deleteCmtReview(BillMngVo billMngVo);
 
 
-	/* 안건 본회의장 부의할 목록 */
+	/* List of agendas to be submitted to the plenary session. */
     List<BillMngVo> selectListMainMtSubmit(HashMap<String, Object> param);
 
 
     ////////////////////////////////////////////////////////////////////
 
 
-    /* 안건관리 - 서면 등록 화면 */
+    /* Agenda - Written registration screen */
     BillMngVo createBill(BillMngVo billMngVo);
 
-    /* 안건관리 발의자목록  */
+    /* Agenda management proposer list.  */
     List<ProposerVo> selectProposerByBillId(HashMap<String, Object> param);
 
 	BillMngVo insertBillCommitt(BillMngVo billMngVo);

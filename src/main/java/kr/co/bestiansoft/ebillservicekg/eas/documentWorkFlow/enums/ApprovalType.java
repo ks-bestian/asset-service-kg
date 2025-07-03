@@ -4,9 +4,9 @@ import lombok.Getter;
 
 @Getter
 public enum ApprovalType {
-    REQUEST_APPROVAL            ("AVT01", "결재요청"),
-    REQUEST_REPLY_APPROVAL      ("AVT02", "답변 승인 요청"),
-    REQUEST_REVIEW_AND_APPROVAL ("AVT03", "옵시아이딜 승인 요청");
+    REQUEST_APPROVAL            ("AVT01", "REQUEST_APPROVAL"),
+    REQUEST_REPLY_APPROVAL      ("AVT02", "REQUEST_REPLY_APPROVAL"),
+    REQUEST_REVIEW_AND_APPROVAL ("AVT03", "REQUEST_REVIEW_AND_APPROVAL");
 
     private final String codeId;
     private final String codeNm;

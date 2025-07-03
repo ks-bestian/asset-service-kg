@@ -4,13 +4,13 @@ import lombok.Getter;
 
 @Getter
 public enum ReceiveStatus {
-    BEFORE_SEND         ("RS00", "발송 이전"),
-    SENT                ("RS01", "발송"),
-    VIEWED              ("RS02", "열람"),
-    REGISTERED          ("RS03", "등록"),
-    REJECTED            ("RS04", "반려"),
-    COMPLETED_RESPONSE  ("RS05", "답변완료"),
-    APPROVING_RESPONSE  ("RS06", "답변 승인 중");
+    BEFORE_SEND         ("RS00", "BEFORE_SEND"),
+    SENT                ("RS01", "SENT"),
+    VIEWED              ("RS02", "VIEWED"),
+    REGISTERED          ("RS03", "REGISTERED"),
+    REJECTED            ("RS04", "REJECTED"),
+    COMPLETED_RESPONSE  ("RS05", "COMPLETED_RESPONSE"),
+    APPROVING_RESPONSE  ("RS06", "APPROVING_RESPONSE");
 
     private final String codeId;
     private final String codeNm;

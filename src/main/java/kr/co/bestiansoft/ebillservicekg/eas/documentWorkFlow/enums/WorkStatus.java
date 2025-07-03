@@ -4,9 +4,9 @@ import lombok.Getter;
 
 @Getter
 public enum WorkStatus {
-    DISPATCHED          ("WS01", "발송"),
-    PENDING_EXECUTION   ("WS02", "이행대기중"),
-    EXECUTION_COMPLETE  ("WS03", "이행완료");
+    DISPATCHED          ("WS01", "DISPATCHED"),
+    PENDING_EXECUTION   ("WS02", "PENDING_EXECUTION"),
+    EXECUTION_COMPLETE  ("WS03", "EXECUTION_COMPLETE");
 
     private final String codeId;
     private final String codeNm;

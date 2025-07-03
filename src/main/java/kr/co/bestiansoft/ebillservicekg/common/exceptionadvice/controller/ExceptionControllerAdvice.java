@@ -155,7 +155,7 @@ public class ExceptionControllerAdvice {
     public ResponseEntity<CommonResponse> psqlException(PSQLException ex, HttpServletRequest request) {
     	
     	int errCd = HttpStatus.INTERNAL_SERVER_ERROR.value();
-    	String sqlState = ex.getSQLState(); // SQL 상태 코드
+    	String sqlState = ex.getSQLState(); // SQL situation cord
     	String errMsg = "SqlState: "+sqlState+", ErrMsg: "+ex.getMessage();
     	
     	CommonResponse response = CommonResponse.builder().code(errCd).message(errMsg).build();

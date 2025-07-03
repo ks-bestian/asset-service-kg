@@ -25,14 +25,14 @@ public class ProcessController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProcessController.class);
 	private final ProcessService processService;
 
-    @ApiOperation(value = "Process task관리", notes = "Process task관리")
+    @ApiOperation(value = "Process taskmanagement", notes = "Process taskmanagement")
     @PostMapping(value = "/process/taskMng/taskUpdate")
     public ResponseEntity<CommonResponse> handleTask(@RequestBody ProcessVo processVo) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "OK", processService.handleTask(processVo)), HttpStatus.CREATED);
     }
 
 
-    @ApiOperation(value = "Process step 관리", notes = "Process step 관리")
+    @ApiOperation(value = "Process step management", notes = "Process step management")
     @PostMapping(value = "/process/processMng/handleProcessStep")
     public ResponseEntity<CommonResponse> handleProcessStep(@RequestBody ProcessVo processVo) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "OK", processService.handleProcess(processVo)), HttpStatus.CREATED);

@@ -24,7 +24,7 @@ import kr.co.bestiansoft.ebillservicekg.common.file.vo.ComFileVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
-@Api(tags = "파일 API")
+@Api(tags = "file API")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequiredArgsConstructor
 @RestController
@@ -33,7 +33,7 @@ public class ComFileController {
 	private final EDVHelper edv;
     private final ComFileService comFileService;
 
-    @ApiOperation(value = "파일다운로드", notes = "파일을 다운로드한다.")
+    @ApiOperation(value = "File download", notes = "File Download.")
 	@GetMapping("/com/file/down")
 	public ResponseEntity<?> fileDownload(@RequestParam String fileId,HttpServletResponse response, HttpServletRequest request) throws Exception {
 
@@ -80,7 +80,7 @@ public class ComFileController {
 				.body(resource);
 	}
 
-	@ApiOperation(value = "파일 업로드", notes = "파일을 업로드한다.")
+	@ApiOperation(value = "file Upload", notes = "File Upload.")
 	@PostMapping(value = "/com/file/upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<CommonResponse> uploadFile(@RequestPart("file") MultipartFile[] file) {
 		try {

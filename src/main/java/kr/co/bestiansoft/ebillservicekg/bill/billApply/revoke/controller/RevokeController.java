@@ -22,7 +22,7 @@ import kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.vo.RevokeVo;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
 import lombok.RequiredArgsConstructor;
 
-@Api(tags = "안건동의 API")
+@Api(tags = "Agendant API")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequiredArgsConstructor
 @RestController
@@ -31,44 +31,44 @@ public class RevokeController {
     private final RevokeService revokeService;
     private final ApplyService applyService;
 
-    @ApiOperation(value = "철회목록", notes = "철회목록을 조회한다")
+    @ApiOperation(value = "Withdrawal list", notes = "The withdrawal list Inquiry")
     @GetMapping("/bill/revoke")
     public ResponseEntity<CommonResponse> getRevokeList(@RequestParam HashMap<String, Object> param) {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", revokeService.getRevokeList(param)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "철회상세", notes = "철회상세를 조회한다")
+    @ApiOperation(value = "Withdrawal details", notes = "Withdrawal details Inquiry")
     @GetMapping("/bill/revoke/{billId}")
     public ResponseEntity<CommonResponse> getRevokeDetail(@PathVariable String billId, @RequestParam HashMap<String, Object> param) {
 //    	return new ResponseEntity<>(new CommonResponse(200, "OK", revokeService.getRevokeDetail(billId, lang)), HttpStatus.OK);
     	return new ResponseEntity<>(new CommonResponse(200, "OK", applyService.getApplyDetail(billId, param)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "철회요청", notes = "철회를 요청한다")
+    @ApiOperation(value = "Withdrawal request", notes = "Withdrawal Request")
     @PostMapping(value = "/bill/revoke/request/{billId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<CommonResponse> billRevokeRequest(@PathVariable String billId, RevokeVo vo) throws Exception {
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill revoke request successfully", revokeService.billRevokeRequest(billId,vo)), HttpStatus.OK);
     }
     
-//    @ApiOperation(value = "제안자 전원 철회동의 여부확인", notes = "제안자 전원이 철회에 동의했는지 확인한다")
+//    @ApiOperation(value = "proponent everyone Withdrawal Confirmation", notes = "proponent All Withdrawal I agreed Check")
 //    @PostMapping(value = "/bill/revoke/checkagree/{billId}")
 //    public ResponseEntity<CommonResponse> billRevokeCheckAgree(@PathVariable String billId, RevokeVo vo) {
 //    	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill revoke submit successfully", revokeService.hasEveryProposerAgreedToRevoke(billId)), HttpStatus.OK);
 //    }
     
-    @ApiOperation(value = "철회접수요청", notes = "철회접수를 요청한다")
+    @ApiOperation(value = "Request for withdrawal reception", notes = "Withdrawal Request")
     @PostMapping(value = "/bill/revoke/submit/{billId}")
     public ResponseEntity<CommonResponse> billRevokeSubmit(@PathVariable String billId, RevokeVo vo) {
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill revoke submit successfully", revokeService.billRevokeSubmit(billId,vo)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "철회취소", notes = "철회요청을 취소한다")
+    @ApiOperation(value = "Withdrawal", notes = "Request for withdrawal Cancel")
     @PutMapping("/bill/revoke/cancel/{billId}")
     public ResponseEntity<CommonResponse> billRevokeCancel(@PathVariable String billId, @RequestParam HashMap<String, Object> param) {
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill revoke cancel successfully", revokeService.billRevokeCancel(billId, param)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "철회수정", notes = "철회 정보를 수정한다")
+    @ApiOperation(value = "Withdrawal", notes = "Withdrawal Information Modify")
     @PutMapping("/bill/revoke/{billId}")
     public ResponseEntity<CommonResponse> updateBillRevoke(@PathVariable String billId, @RequestBody RevokeVo revokeVo) {
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill revoke update successfully", revokeService.updateRevoke(billId, revokeVo)), HttpStatus.OK);

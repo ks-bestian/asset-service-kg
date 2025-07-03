@@ -48,7 +48,7 @@ public class makeCalendar {
         LocalDate endDate = curDate.plusYears(50);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 
-        // 날짜 루프
+        // date roof
         while (!startDate.isAfter(endDate)) {
 
             String formattedDate = startDate.format(formatter);
@@ -65,10 +65,10 @@ public class makeCalendar {
             pstmt.setString(4, koreanDayOfWeek);
             int rowsInserted = pstmt.executeUpdate();
 
-            // 출력
+            // print
             System.out.println(formattedDate + " " + koreanDayOfWeek + " " + englishDayOfWeek);
 
-            // 하루 증가
+            // one day increase
             startDate = startDate.plusDays(1);
         }
 
@@ -76,7 +76,7 @@ public class makeCalendar {
 	}
 
 
-	 // 한글 요일 변환 메서드
+	 // korean Day Conversion method
     private static String getKoreanDayOfWeek(DayOfWeek dayOfWeek) {
         switch (dayOfWeek) {
             case MONDAY:

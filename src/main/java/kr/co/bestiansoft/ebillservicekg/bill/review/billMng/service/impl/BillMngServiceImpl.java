@@ -88,11 +88,11 @@ public class BillMngServiceImpl implements BillMngService {
 //    	List<EbsFileVo> fileList = billMngMapper.selectFileList(argVo);
 //    	billMngVo.setEbsfileList(fileList);
     	
-		//파일 리스트
+		//file List
 		List<EbsFileVo> fileList = applyMapper.selectBillFileList(param);
 		billMngVo.setEbsfileList(fileList);
 		
-		//발의문서 리스트
+		//List of proposed documents.
 		List<EbsFileVo> applyFileList = applyMapper.selectApplyFileList(param);
 		billMngVo.setApplyFileList(applyFileList);
 
@@ -116,9 +116,9 @@ public class BillMngServiceImpl implements BillMngService {
     		
     		String clsCd = listVo.getClsCd();
 
-    		if("110".equals(clsCd)) {//법률검토결과
+    		if("110".equals(clsCd)) {//Legal review results
     			billlegalReviewVo = listVo;
-    		} else if("120".equals(clsCd)) {//위원언어전문파트
+    		} else if("120".equals(clsCd)) {//Committee language part
     			billLangReviewVoList.add(listVo);
     		} else if( ("160".equals(clsCd) || "190".equals(clsCd)) && deptCd.equals(listVo.getDeptCd()) ) {// Bill detail info Committee Review
     			billCmtReviewList.add(listVo);
@@ -158,7 +158,7 @@ public class BillMngServiceImpl implements BillMngService {
 
     		String clsCd = listVo.getClsCd();
 
-    		if("110".equals(clsCd)) {//법률검토결과
+    		if("110".equals(clsCd)) {//Legal review results
     			billlegalReviewVo = listVo;
     		}
     	
@@ -201,7 +201,7 @@ public class BillMngServiceImpl implements BillMngService {
 	@Override
 	public BillMngVo billCmtRegMng(BillMngVo billMngVo) {
 
-        //위원회 생성
+        //committee generation
 		ProcessVo pVo = new ProcessVo();
 		pVo.setBillId(billMngVo.getBillId());
 		pVo.setStepId(billMngVo.getStepId());
@@ -224,10 +224,10 @@ public class BillMngServiceImpl implements BillMngService {
 		if(billDetailVo == null) {
 			billMngMapper.insertBillDetail(billMngVo);
 
-//			if("340".equals(clsCd)) {//본회의 부의
+//			if("340".equals(clsCd)) {//Submit to the plenary session
 //				ProcessVo pVo = new ProcessVo();
 //				pVo.setBillId(billMngVo.getBillId());
-//				pVo.setStepId("1800");//본회의 심사
+//				pVo.setStepId("1800");//Plenary audit
 //				processService.handleProcess(pVo);
 //			}
 			
@@ -254,7 +254,7 @@ public class BillMngServiceImpl implements BillMngService {
 	public BillMngVo presidentReject(BillMngVo billMngVo) throws Exception {
 //		ProcessVo pVo = new ProcessVo();
 //		pVo.setBillId(billMngVo.getBillId());
-//		pVo.setStepId("3400"); //대통령거부
+//		pVo.setStepId("3400"); //Presidential veto
 //		pVo.setTaskId(billMngVo.getTaskId());
 //		processService.handleProcess(pVo);
 		
@@ -267,19 +267,19 @@ public class BillMngServiceImpl implements BillMngService {
 
 		EbsFileVo ebsFileVo = new EbsFileVo();
 		ebsFileVo.setBillId(billMngVo.getBillId());
-		ebsFileVo.setFileKindCd(billMngVo.getFileKindCd()); //안건철회문서
+		ebsFileVo.setFileKindCd(billMngVo.getFileKindCd()); //Agenda
 		ebsFileVo.setModId(new SecurityInfoUtil().getAccountId());
 		billMngMapper.updateEbsFileDelYn(ebsFileVo);
 		
-		billMngVo.setClsCd(billMngVo.getClsCd()); //의안철회
+		billMngVo.setClsCd(billMngVo.getClsCd()); //Withdrawal
 		billMngMapper.deleteBillDetail(billMngVo);
 	}
 
 	@Override
 	public BillMngVo insertBillLegalReviewReport(BillMngVo billMngVo) {
 
-		//현재 스텝 완료처리
-		//다음스텝가져와서 인서트
+		//Current step completion processing
+		//Import the next step and insert
 		ProcessVo pVo = new ProcessVo();
 		pVo.setBillId(billMngVo.getBillId());
 		pVo.setStepId(billMngVo.getStepId());
@@ -378,9 +378,9 @@ public class BillMngServiceImpl implements BillMngService {
 //	@Transactional
 //	@Override
 //	public EbsFileVo insertBillMngFile(EbsFileVo ebsFileVo) {
-//		//파일등록
+//		//File registration
 //		comFileService.saveFileBillMng(ebsFileVo);
-//		//파일 정보를 가지고 있어서 null처리
+//		//file Information have So nulltreatment
 //		ebsFileVo.setFiles(null);
 //
 //		return ebsFileVo;
@@ -389,9 +389,9 @@ public class BillMngServiceImpl implements BillMngService {
 	@Transactional
 	@Override
 	public BillMngVo insertBillDetailFile(BillMngVo billMngVo) throws Exception {
-		//파일등록
+		//File registration
 		comFileService.saveFileBillDetailMng(billMngVo);
-		//파일 정보를 가지고 있어서 null처리
+		//file Information have So nulltreatment
 		billMngVo.setFiles(null);
 
 		return billMngVo;

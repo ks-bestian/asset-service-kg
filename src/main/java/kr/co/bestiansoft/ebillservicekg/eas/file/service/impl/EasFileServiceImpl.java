@@ -67,11 +67,11 @@ public class EasFileServiceImpl implements EasFileService {
                     CompletableFuture<UpdatePdfFileDto> futureResult = savePdfFile(file);
                     futureResult.thenAccept(pdfDto -> {
                         updatePdfInfo(fileId, pdfDto);
-                        log.debug("PDF 변환 완료: 원본 파일 ID {}, PDF 파일 ID {}", fileId, pdfDto.getPdfFileId());
+                        log.info("PDF Conversion completed: Original file ID {}, PDF file ID {}", fileId, pdfDto.getPdfFileId());
                     });
 
                 } catch (Exception e) {
-                    log.error("PDF 변환 실패: 파일 ID {}, 오류: {}", fileId, e.getMessage(), e);
+                    log.error("PDF conversion failure: File ID {}, Error: {}", fileId, e.getMessage(), e);
                 }
             }
 
@@ -88,7 +88,7 @@ public class EasFileServiceImpl implements EasFileService {
      * 이 메서드는 저장 작업을 리포지토리의 insertEasFile 메서드에 위임합니다.
      *
      * @param vo the EasFileVo object containing the file's metadata and other associated details
-     * @return an integer representing the result of the database insert operation; typically,
+     * @return an integer representing the result of the database insert operation; typically, 
      *         the number of rows affected
      */
     public int saveEasFile(EasFileVo vo){
@@ -96,9 +96,9 @@ public class EasFileServiceImpl implements EasFileService {
     }
 
     /**
-     * Updates the PDF information for a specified file. This method retrieves
-     * the file from the repository using the provided file ID, updates its
-     * PDF file ID and name with the information from the DTO, and saves the
+     * Updates the PDF information for a specified file. This method retrieves 
+     * the file from the repository using the provided file ID, updates its 
+     * PDF file ID and name with the information from the DTO, and saves the 
      * changes back to the repository.
      *
      * 지정된 파일의 PDF 정보를 업데이트합니다. 이 메서드는 제공된 파일 ID를 사용하여
@@ -106,13 +106,14 @@ public class EasFileServiceImpl implements EasFileService {
      * 변경 사항을 저장소에 다시 저장합니다.
      *
      * @param fileId the ID of the file whose PDF information is to be updated
-     * @param dto an UpdatePdfFileDto containing the new PDF file ID and name
+     * @param dto an UpdatePdfFileDto containing the new PDF file ID and name 
      *            to be associated with the file
      */
+    @Transactional
     public void updatePdfInfo(String fileId, UpdatePdfFileDto dto){
         EasFileVo fileVo = easFileRepository.getFileById(fileId);
         if (fileVo != null) {
-            // PDF 정보 업데이트
+            // PDF information update
             fileVo.setPdfFileId(dto.getPdfFileId());
             fileVo.setPdfFileNm(dto.getPdfFileNm());
 
@@ -128,13 +129,14 @@ public class EasFileServiceImpl implements EasFileService {
      * 저장소에 쿼리하여 문서에 연결된 파일 메타데이터를 가져옵니다.
      *
      * @param docId the ID of the document for which to retrieve attached files
-     * @return a list of EasFileVo objects representing the attached files;
+     * @return a list of EasFileVo objects representing the attached files; 
      *         an empty list if no files are attached to the specified document
      */
     @Override
     public List<EasFileVo> getAttachFiles(String docId, String fileType) {
         return easFileRepository.getAttachFiles(docId , fileType);
     }
+
     @Override
     public EasFileVo getFileById(String fileId) {
         return easFileRepository.getFileById(fileId);
@@ -142,7 +144,7 @@ public class EasFileServiceImpl implements EasFileService {
 
     /**
      * Saves the provided file and generates metadata related to the saved file.
-     * The file is stored using a unique file ID, and its metadata includes
+     * The file is stored using a unique file ID, and its metadata includes 
      * the original filename, file size, and file extension.
      *
      * 제공된 파일을 저장하고 저장된 파일과 관련된 메타데이터를 생성합니다.
@@ -214,7 +216,7 @@ public class EasFileServiceImpl implements EasFileService {
             File tmpPdfFile = null;
 
             try {
-                // 임시 파일 생성
+                //Create temporary file
                 tmpFile = File.createTempFile("temp", ".tmp");
                 tmpPdfFile = File.createTempFile("pdfTemp", ".pdf");
 
@@ -271,7 +273,6 @@ public class EasFileServiceImpl implements EasFileService {
             }
         }, executorService);
     }
-
 
     @Override
     public void deleteDocument(String docId) {

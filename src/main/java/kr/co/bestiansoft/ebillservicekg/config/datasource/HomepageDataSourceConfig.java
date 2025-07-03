@@ -24,7 +24,7 @@ public class HomepageDataSourceConfig {
             throws Exception {
         SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();
         sessionFactoryBean.setDataSource(dataSource);
-        // 중요!
+        // importance!
 //        sessionFactoryBean.setTypeAliasesPackage("com.example.demo.homepage.vo");
 //        sessionFactoryBean.setTypeHandlersPackage("com.example.test.util.typehandler");
         sessionFactoryBean.setConfigLocation(applicationContext.getResource("classpath:config/mybatis-config.xml"));

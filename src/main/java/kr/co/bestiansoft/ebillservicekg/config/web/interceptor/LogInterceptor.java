@@ -40,7 +40,7 @@ public class LogInterceptor implements HandlerInterceptor {
                 &&!reqServletPath.contains("/api/lngCode")
                 &&!reqServletPath.contains("/api/menus/menuBreadcrumbs")
                 &&!reqServletPath.contains("/ws")
-        ) {//로그조회는 제외
+        ) {//Excluding log inquiry
             if(!reqServletPath.contains("/login")) {
             	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             	if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {

@@ -18,7 +18,7 @@ public class TokenBlacklist implements InitializingBean{
         blacklist.add(token);
     }
 
-    // 필요에 따라 블랙리스트에서 토큰을 제거하는 메서드도 추가할 수 있습니다
+    // You can also add methods to remove tokens from the blacklist as needed. 
     public void removeFromBlacklist(String token) {
         blacklist.remove(token);
     }

@@ -103,23 +103,23 @@ public class LoginController {
 	        UsernamePasswordAuthenticationToken authenticationToken =
 	                new UsernamePasswordAuthenticationToken(loginRead.getUserId(), loginRead.getPswd());
 
-	        // authenticate 메소드가 실행이 될 때 CustomUserDetailsService class의 loadUserByUsername 메소드가 실행
+	        // authenticate When the method is executed, the LoaduserByusername method of the CustomUserdetailsService Class executes
 	        Authentication authentication = authenticationManager.authenticate(authenticationToken);
 
-	        // 해당 객체를 SecurityContextHolder에 저장하고
+	        //Save the object in SecurityContextHolder
 	        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-	        // authentication 객체를 createToken 메소드를 통해서 JWT Token을 생성
+	        // authenticationCreate a JWT TOKEN through the CreateToken method
 	        String token = tokenProvider.createToken(authentication);
 
 	        HttpHeaders httpHeaders = new HttpHeaders();
-	        // response header에 jwt token에 넣어줌
+	        // Add the JWT token to the response header.
 
 	        ResponseCookie jwtCookie = ResponseCookie.from("jwtToken", token)
 	                .httpOnly(true)
-	                .secure(true) // HTTPS를 사용하는 경우에만
+	                .secure(true) // Only when using https
 	                .path("/")
-	                .maxAge(24 * 60 * 60) // 쿠키의 유효 기간 설정 (1일)
+	                .maxAge(24 * 60 * 60) // Effective period of cookies (1 day)
 	                .build();
 
 	        httpHeaders.add(HttpHeaders.SET_COOKIE, jwtCookie.toString());

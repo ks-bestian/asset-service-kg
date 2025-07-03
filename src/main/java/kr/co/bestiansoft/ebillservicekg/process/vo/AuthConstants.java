@@ -3,15 +3,18 @@ package kr.co.bestiansoft.ebillservicekg.process.vo;
 public class AuthConstants {
 
 
-	public static final String AUTH_20 = "20";//국회의원
-	public static final String AUTH_GD = "GD";//일반부서(GD)
-	public static final String AUTH_LGRV = "LGRV";//법률검토부서 legal department  LGRV review
-	public static final String AUTH_CMOFFC = "CMOFFC";//의장실
-	public static final String AUTH_LGGSPLZ = "LGGSPLZ";//언어전문파트
-	public static final String AUTH_LGEXNTN = "LGEXNTN";//심사부서
+	public static final String AUTH_20 = "20";//국회의원 member of parliament
+	public static final String AUTH_GD = "GD";//일반부서 General Department (GD)
 
-	public static final String AUTH_LGACT = "LGACT";//법적행위부서 : 1, 2, 3 차 본회의 회의 후 안건에 대한 문법 및 법률용어 확인
-	//public static final String AUTH_TRSLLGRV = "TRSLLGRV";//번역언어심사부서
+	public static final String AUTH_LGRV = "LGRV";//법률검토부서 legal department  LGRV review
+	public static final String AUTH_CMOFFC = "CMOFFC";//의장실 speaker's office
+	public static final String AUTH_LGGSPLZ = "LGGSPLZ";//언어전문파트 Language part
+
+	public static final String AUTH_LGEXNTN = "LGEXNTN";//심사부서 Review department
+
+
+	public static final String AUTH_LGACT = "LGACT";//Legal Practice Department: Check the grammar and legal terms of the agenda after the meeting of the 1st, 2nd, and 3rd plenary sessions
+	//public static final String AUTH_TRSLLGRV = "TRSLLGRV";//Translation language review department
 
 
 

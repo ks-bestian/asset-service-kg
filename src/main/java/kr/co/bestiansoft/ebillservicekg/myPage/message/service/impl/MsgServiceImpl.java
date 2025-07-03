@@ -24,7 +24,7 @@ import java.util.List;
 @Transactional
 public class MsgServiceImpl implements MsgService {
 
-	private final SimpMessagingTemplate messagingTemplate; // WebSocket 메시지 전송
+	private final SimpMessagingTemplate messagingTemplate; // WebSocket Message transmission
 
     private final MsgMapper msgMapper;
     private final ComFileService comFileService;
@@ -64,8 +64,8 @@ public class MsgServiceImpl implements MsgService {
             msgRequest.setMsgDiv("R");
             msgMapper.insertMsg(msgRequest);
 
-            // WebSocket을 통해 실시간 알림 전송
-            messagingTemplate.convertAndSend("/topic/messages/" + rcvId, "새 쪽지가 도착했습니다!");
+            // Real -time notification transmission through WebSOCKET
+            messagingTemplate.convertAndSend("/topic/messages/" + rcvId, "A new message arrived!");
 
             msgRequest.setMsgDiv("S");
             msgMapper.insertMsg(msgRequest);

@@ -35,11 +35,11 @@ public class ProcessServiceImpl implements ProcessService {
 		String userId = new SecurityInfoUtil().getAccountId();
 		ProcessVo stepVo = new ProcessVo();
 
-		if("PC_START".equals(argVo.getStepId())) {// 시작점 bp instance 생성
+		if("PC_START".equals(argVo.getStepId())) {// Starting point bp Instance creation
 			ProcessVo pVo = new ProcessVo();
 			pVo.setBillId(argVo.getBillId());
-			pVo.setBpDfId("1");//일단은 하나로 설정 여러개라면 안건유형에 따라서
-			pVo.setStatus("P");//진행중
+			pVo.setBpDfId("1");//First of all, if there are several sets of set, according to the agenda type
+			pVo.setStatus("P");//in progress
 			pVo.setCurrentStepId("0");
 			pVo.setRegId(argVo.getRegId());
 			processMapper.insertBpInstance(pVo);
@@ -52,9 +52,9 @@ public class ProcessServiceImpl implements ProcessService {
 			stepVo.setBillId(argVo.getBillId());
 		}
 
-		if(argVo.getTaskId() != null && !"".equals(argVo.getTaskId())) {//taskId 가 존재시 타스크만 완료업뎃
+		if(argVo.getTaskId() != null && !"".equals(argVo.getTaskId())) {//When TaskID exists, only tasks are completed
 
-			//task 완료처리
+			//task Complete
 			ProcessVo cpltVo = new ProcessVo();
 			cpltVo.setTaskId(argVo.getTaskId());
 			cpltVo.setTaskStatus("C");

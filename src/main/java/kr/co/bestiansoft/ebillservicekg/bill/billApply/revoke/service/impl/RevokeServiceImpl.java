@@ -66,7 +66,7 @@ public class RevokeServiceImpl implements RevokeService {
 		List<RevokeVo> proposerList = revokeMapper.selectProposerList(param);
 		result.setProposerList(proposerList);
 
-		//파일목록
+		//File list
 		List<EbsFileVo> fileList = applyMapper.selectApplyFileList(param);
 		result.setFileList(fileList);
 
@@ -83,8 +83,8 @@ public class RevokeServiceImpl implements RevokeService {
 		billMngVo.setRmrkRu(vo.getWtCnRu());
 		billMngVo.setFiles(vo.getFiles());
 		billMngVo.setMyFileIds(vo.getMyFileIds());
-		billMngVo.setClsCd("400"); //의안철회
-		billMngVo.setFileKindCd("170"); //안건철회문서
+		billMngVo.setClsCd("400"); //Withdrawal
+		billMngVo.setFileKindCd("170"); //Agenda
 		try {
 			billMngService.insertBillDetail(billMngVo);
 		} catch (Exception e) {
@@ -96,12 +96,12 @@ public class RevokeServiceImpl implements RevokeService {
 //		if(vo.getFiles() != null) {
 //			String[] fileKindCd = new String[vo.getFiles().length];
 //			for(int i = 0; i < vo.getFiles().length; ++i) {
-//				fileKindCd[i] = "170"; //안건철회
+//				fileKindCd[i] = "170"; //Withdrawal
 //			}
 //			comFileService.saveFileEbs(vo.getFiles(), fileKindCd, billId);	
 //		}
 		
-		// 발의자 철회처리
+		// Voter Withdrawal
 		String userId = new SecurityInfoUtil().getAccountId();
 		HashMap<String, Object> param = new HashMap<>();
 		param.put("userId", userId);
@@ -111,7 +111,7 @@ public class RevokeServiceImpl implements RevokeService {
 		
 		ProcessVo pVo = new ProcessVo();
 		pVo.setBillId(billId);
-		pVo.setStepId("1100"); //안건철회관리
+		pVo.setStepId("1100"); //Agenda withdrawal management
 //		pVo.setTaskId(vo.getTaskId());
 		processService.handleProcess(pVo);
 		
@@ -126,7 +126,7 @@ public class RevokeServiceImpl implements RevokeService {
 
 		ProcessVo pVo = new ProcessVo();
 		pVo.setBillId(billId);
-		pVo.setStepId("1150"); //안건철회관리
+		pVo.setStepId("1150"); //Agenda withdrawal management
 		processService.handleProcess(pVo);
 
 		return pVo;
@@ -139,19 +139,19 @@ public class RevokeServiceImpl implements RevokeService {
 		
 		BillMngVo billMngVo = new BillMngVo();
 		billMngVo.setBillId(billId);
-		billMngVo.setFileKindCd("170"); //안건철회문서
-		billMngVo.setClsCd("400"); //의안철회
+		billMngVo.setFileKindCd("170"); //Agenda
+		billMngVo.setClsCd("400"); //Withdrawal
 		billMngService.deleteBillDetail(billMngVo);
 		
 //		EbsFileVo ebsFileVo = new EbsFileVo();
 //		ebsFileVo.setBillId(billId);
-//		ebsFileVo.setFileKindCd("170"); //안건철회
+//		ebsFileVo.setFileKindCd("170"); //Withdrawal
 //		ebsFileVo.setModId(new SecurityInfoUtil().getAccountId());
 //		billMngService.updateEbsFileDelYn(ebsFileVo);
 		
-		//철회동의 의원에게 알림
-		String msgSj = "철회취소";
-		String msgCn = "철회취소했습니다";
+		//Withdrawal To the lawmaker alarm
+		String msgSj = "Withdrawal";
+		String msgCn = "Canceled withdrawal";
 		List<String> rcvIds = new ArrayList<>();
 		
 		String userId = new SecurityInfoUtil().getAccountId();
