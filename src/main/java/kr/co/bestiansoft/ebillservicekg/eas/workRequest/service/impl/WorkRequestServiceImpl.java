@@ -41,7 +41,6 @@ public class WorkRequestServiceImpl implements WorkRequestService {
      */
     @Override
     public int deleteWorkRequest(int workReqId) {
-        workResponseService.delete(workReqId);
         return workRequestRepository.deleteWorkRequest(workReqId);
     }
 

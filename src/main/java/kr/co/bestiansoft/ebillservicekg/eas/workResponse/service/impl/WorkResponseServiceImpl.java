@@ -48,8 +48,8 @@ public class WorkResponseServiceImpl implements WorkResponseService {
      * @return the number of records deleted
      */
     @Override
-    public int deleteWorkRequestId(String workReqId) {
-        return workResponseRepository.deleteWorkRequestId(workReqId);
+    public void deleteWorkRequestId(int workReqId) {
+        workResponseRepository.deleteWorkRequestId(workReqId);
     }
 
 
@@ -86,10 +86,6 @@ public class WorkResponseServiceImpl implements WorkResponseService {
     @Override
     public List<String> getRespondedUsers(int workReqId) {
         return workResponseRepository.getRespondedUsers(workReqId);
-    }
-    @Override
-    public void delete(int workReqId) {
-        workResponseRepository.delete(workReqId);
     }
 
 }

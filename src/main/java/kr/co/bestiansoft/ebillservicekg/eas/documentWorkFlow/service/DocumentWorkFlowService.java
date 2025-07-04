@@ -17,4 +17,6 @@ public interface DocumentWorkFlowService {
     void saveReplyDocument(InsertDocumentVo vo);
     void rewriteDocument(InsertDocumentVo vo);
     void endRejectedDocument(String docId);
+    void updateWorkRequest(WorkRequestAndResponseVo vo);
+    void updateMainResponser(UpdateReceivedInfoVo vo);
 }

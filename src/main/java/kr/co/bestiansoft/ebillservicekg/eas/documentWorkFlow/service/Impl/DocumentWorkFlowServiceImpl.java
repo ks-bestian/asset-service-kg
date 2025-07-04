@@ -166,6 +166,7 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                         .rcvOrd(i+1)
                         .build();
                 if(addApprovalCount ==1){
+                    receivedInfoVo.setRcvDtm(now);
                     receivedInfoVo.setRcvStatus(ReceiveStatus.SENT.getCodeId());
                 }else{
                     receivedInfoVo.setRcvStatus(ReceiveStatus.BEFORE_SEND.getCodeId());
@@ -242,14 +243,9 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
             vo.setWorkStatus(WorkStatus.DISPATCHED.getCodeId());
 
             WorkRequestVo requestVo = vo.toRequestVo();
-
-
-
+            
             workRequestService.insertWorkRequest(requestVo);
 
-//            workRequestService.updateWorkRequest(requestVo);
-
-            workResponseService.delete(requestVo.getWorkReqId());
             //// 이행자 추가
             vo.getWorkResponseVos().forEach(workResponseVo -> {
                 UserMemberVo loginUser = userService.getUserMemberDetail(workResponseVo.getUserId());
@@ -477,6 +473,7 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                         .rcvOrd(i+1)
                         .build();
                 if(addApprovalCount ==1){
+                    receivedInfoVo.setRcvDtm(now);
                     receivedInfoVo.setRcvStatus(ReceiveStatus.SENT.getCodeId());
                 }else{
                     receivedInfoVo.setRcvStatus(ReceiveStatus.BEFORE_SEND.getCodeId());
@@ -529,6 +526,53 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                 .actType(ActionType.COMPLETE_DOCUMENT.getCodeId())
                 .actDtm(LocalDateTime.now())
                 .actDetail(historyService.getActionDetail(ActionType.COMPLETE_DOCUMENT.getCodeId(), loginUser.getUserNm()))
+                .userNm(loginUser.getUserNm())
+                .build();
+        historyService.insertHistory(historyVo);
+    }
+    @Override
+    public void updateWorkRequest(WorkRequestAndResponseVo vo) {
+        // update workRequest
+        WorkRequestVo requestVo = vo.toRequestVo();
+        workRequestService.updateWorkRequest(requestVo);
+        // update workResponse
+        workResponseService.deleteWorkRequestId(requestVo.getWorkReqId());
+        vo.getWorkResponseVos().forEach(workResponseVo -> {
+            UserMemberVo loginUser = userService.getUserMemberDetail(workResponseVo.getUserId());
+            if(loginUser == null) return;
+            workResponseVo.setWorkReqId(requestVo.getWorkReqId());
+            workResponseVo.setDeptCd(loginUser.getDeptCd());
+            workResponseVo.setJobCd(loginUser.getJobCd());
+            workResponseVo.setUserNm(loginUser.getUserNm());
+            workResponseVo.setRcvDtm(LocalDateTime.now());
+
+            workResponseService.insertWorkResponse(workResponseVo);
+        });
+        // write history
+        UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
+        HistoryVo historyVo = HistoryVo.builder()
+                .docId(vo.getDocId())
+                .userId(loginUser.getUserId())
+                .actType(ActionType.UPDATE_REQUEST.getCodeId())
+                .actDtm(LocalDateTime.now())
+                .actDetail(historyService.getActionDetail(ActionType.UPDATE_REQUEST.getCodeId(), loginUser.getUserNm()))
+                .userNm(loginUser.getUserNm())
+                .build();
+        historyService.insertHistory(historyVo);
+    }
+
+    @Override
+    public void updateMainResponser(UpdateReceivedInfoVo vo) {
+        // update main Responser
+        receivedInfoService.updateReceivedInfo(vo);
+        // history
+        UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
+        HistoryVo historyVo = HistoryVo.builder()
+                .docId(vo.getDocId())
+                .userId(loginUser.getUserId())
+                .actType(ActionType.UPDATE_REQUEST.getCodeId())
+                .actDtm(LocalDateTime.now())
+                .actDetail(historyService.getActionDetail(ActionType.UPDATE_REQUEST.getCodeId(), loginUser.getUserNm()))
                 .userNm(loginUser.getUserNm())
                 .build();
         historyService.insertHistory(historyVo);

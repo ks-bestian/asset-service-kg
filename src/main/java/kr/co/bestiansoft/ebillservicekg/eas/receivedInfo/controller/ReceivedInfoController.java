@@ -64,4 +64,10 @@ public class ReceivedInfoController {
     public ResponseEntity<CommonResponse> getReceivedInfoByUserId(@PathVariable String docId){
         return  new ResponseEntity<>(new CommonResponse(200, "OK",infoService.getReceivedInfoByUserId(docId)), HttpStatus.OK);
     }
+    @ApiOperation(value="update Main Worker", notes= "upadte Main Wokrer")
+    @PutMapping("/eas/receivedInfo/worker")
+    public ResponseEntity<CommonResponse> updateMainWorker(@RequestBody UpdateReceivedInfoVo vo){
+        documentWorkFlowService.updateMainResponser(vo);
+        return new ResponseEntity<>(new CommonResponse(200, "OK", vo.getRcvId()), HttpStatus.OK);
+    }
 }
