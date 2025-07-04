@@ -76,7 +76,8 @@ public class WorkRequestServiceImpl implements WorkRequestService {
 
     @Override
     public List<WorkRequestAndResponseVo> getWorkRequestList(String docId) {
-        return workRequestRepository.getWorkRequestList(null, docId).stream()
+        return workRequestRepository.getWorkRequestList(null, docId)
+                .stream()
                 .map(request -> {
                     List<WorkResponseVo> responses = workResponseService.getWorkResponses(request.getWorkReqId());
                     return new WorkRequestAndResponseVo().from(request, responses);

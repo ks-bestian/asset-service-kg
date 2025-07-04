@@ -243,18 +243,17 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
 
             WorkRequestVo requestVo = vo.toRequestVo();
 
-            if (requestVo.getWorkReqId() == 0) {
-                workRequestService.insertWorkRequest(requestVo);
-            } else {
-                workRequestService.updateWorkRequest(requestVo);
-            }
 
-            log.info("workReqId : " + requestVo.toString());
+
+            workRequestService.insertWorkRequest(requestVo);
+
+//            workRequestService.updateWorkRequest(requestVo);
 
             workResponseService.delete(requestVo.getWorkReqId());
             //// 이행자 추가
             vo.getWorkResponseVos().forEach(workResponseVo -> {
                 UserMemberVo loginUser = userService.getUserMemberDetail(workResponseVo.getUserId());
+                if(loginUser == null) return;
                 workResponseVo.setWorkReqId(requestVo.getWorkReqId());
                 workResponseVo.setDeptCd(loginUser.getDeptCd());
                 workResponseVo.setJobCd(loginUser.getJobCd());
@@ -450,7 +449,7 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
         //ReceivedStatus change
         UpdateReceivedInfoVo updateReceivedInfoVo = UpdateReceivedInfoVo.builder()
                 .rcvStatus(ReceiveStatus.APPROVING_RESPONSE.getCodeId())
-                .rcpDocId(vo.getFromDocId())
+                .rcpDocId(vo.getDocId())
                 .rcvId(vo.getRcvId())
                 .build();
         receivedInfoService.updateReceivedInfo(updateReceivedInfoVo);
@@ -777,6 +776,7 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
     public String arrayToString(String[] arrayS){
         return String.join(",", arrayS);
     }
+
     @Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
     public void deleteDocument(String docId){
         documentService.deleteDocument(docId);

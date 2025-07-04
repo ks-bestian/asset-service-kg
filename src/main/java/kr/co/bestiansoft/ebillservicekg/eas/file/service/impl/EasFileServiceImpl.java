@@ -60,9 +60,10 @@ public class EasFileServiceImpl implements EasFileService {
             fileVo = fileVo.fromSaveFileDto(savedFileDto, fileVo);
 
             saveEasFile(fileVo);
-
+            log.info("EasFileVo: {}", fileVo.toString());
             if (!isPdfFile(fileVo.getFileExt())) {
                 String fileId = fileVo.getFileId();
+                log.info("PDF Conversion not required: Original file ID {}", fileId);
                 try {
                     CompletableFuture<UpdatePdfFileDto> futureResult = savePdfFile(file);
                     futureResult.thenAccept(pdfDto -> {
@@ -109,9 +110,10 @@ public class EasFileServiceImpl implements EasFileService {
      * @param dto an UpdatePdfFileDto containing the new PDF file ID and name 
      *            to be associated with the file
      */
-    @Transactional
     public void updatePdfInfo(String fileId, UpdatePdfFileDto dto){
         EasFileVo fileVo = easFileRepository.getFileById(fileId);
+        log.info("updatePdfInfo: fileId: {}, dto: {}", fileId, dto);
+        log.info(fileVo.toString());
         if (fileVo != null) {
             // PDF information update
             fileVo.setPdfFileId(dto.getPdfFileId());
