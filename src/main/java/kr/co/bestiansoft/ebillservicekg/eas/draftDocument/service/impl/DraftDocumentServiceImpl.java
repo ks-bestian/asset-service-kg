@@ -335,7 +335,7 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
             return newParagraph != null ? newParagraph : referenceParagraph.getDocument().createParagraph();
 
         } catch (Exception e) {
-            log.error("insertParagraphAfter 중 오류 발생: {}", e.getMessage(), e);
+            log.error("Insertparagraphafters occur in error: {}", e.getMessage(), e);
             return referenceParagraph.getDocument().createParagraph();
         }
     }
@@ -1129,7 +1129,7 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
             case "pink": return "FFC0CB";
             case "brown": return "A52A2A";
             default:
-                log.warn("지원되지 않는 색상 값: {}", colorValue);
+                log.warn("Unsupported color value: {}", colorValue);
                 return null;
         }
     }

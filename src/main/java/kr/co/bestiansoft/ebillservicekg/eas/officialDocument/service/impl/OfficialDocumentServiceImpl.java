@@ -269,7 +269,7 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
     }
 
     /**
-     * String Date and Time LocalDateTimeby conversion
+     * Convert string date and time to LocalDatetime
      *
      * @param dateTimeStr "yyyy-MM-dd HH:mm:ss" Formal String
      * @return Converted LocalDateTime Object
@@ -283,7 +283,7 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             return LocalDateTime.parse(dateTimeStr.trim(), formatter);
         } catch (DateTimeParseException e) {
-            // erroneous Format case different form trial
+            //An attempt to format in the case of the wrong form
             try {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                 return LocalDate.parse(dateTimeStr.trim(), formatter).atStartOfDay();
