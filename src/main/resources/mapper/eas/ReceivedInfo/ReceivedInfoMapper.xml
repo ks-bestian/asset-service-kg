@@ -11,15 +11,15 @@
     <update id="updateReceivedInfo" parameterType="kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.vo.UpdateReceivedInfoVo">
         update kgst.eas_received_info
         <set>
-            <if test="rcvStatus"> rcv_status = #{rcvStatus} , </if>
-            <if test="rcvDtm"> rcv_dtm = #{rcvDtm} , </if>
-            <if test="checkDtm"> check_dtm = #{checkDtm} , </if>
-            <if test="rcpDtm"> rcp_dtm = #{rcpDtm} , </if>
-            <if test="rjctDtm"> rjct_dtm = #{rjctDtm} , </if>
-            <if test="rjctCn"> rjct_cn = #{rjctCn} , </if>
-            <if test="workerId"> worker_id = #{workerId} </if>
-            <if test="hashFileId"> hash_file_id = #{hashFileId} </if>
-            <if test="rcpDocId"> rcp_doc_id = #{rcpDocId} </if>
+            <if test="rcvStatus"> rcv_status = #{rcvStatus},  </if>
+            <if test="rcvDtm"> rcv_dtm = #{rcvDtm},  </if>
+            <if test="checkDtm"> check_dtm = #{checkDtm},  </if>
+            <if test="rcpDtm"> rcp_dtm = #{rcpDtm},  </if>
+            <if test="rjctDtm"> rjct_dtm = #{rjctDtm},  </if>
+            <if test="rjctCn"> rjct_cn = #{rjctCn}, </if>
+            <if test="workerId"> worker_id = #{workerId}, </if>
+            <if test="hashFileId"> hash_file_id = #{hashFileId}, </if>
+            <if test="rcpDocId"> rcp_doc_id = #{rcpDocId}, </if>
         </set>
         where rcv_id = #{rcvId}
     </update>

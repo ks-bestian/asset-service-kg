@@ -100,7 +100,6 @@
         <if test="docSubtle != null "> and doc_subtle like '%'||#{docSubtle}||'%' </if>
         <if test="docNo != null"> and doc_no like '%'||#{docNo}||'%' </if>
         <if test="fromResDtm != null and toResDtm != null"> and res_dtm between #{fromResDtm} and #{toResDtm} </if>
-        <if test="docTypeCd != null"> and doc_type_cd = #{docTypeCd} </if>
     </select>
     <select id="getWorkList" parameterType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.SearchDocumentVo" resultType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.DocumentListDto">
         select d.doc_id, doc_attrb_cd, d.tmlmt_yn, d.tmlmt_Dtm, doc_subtle, sender_id, sender_nm, doc_no, req.reg_dt as rcv_dtm, check_dtm, rspns_id , doc_type_cd ,rcv_id
