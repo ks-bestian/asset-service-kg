@@ -30,7 +30,7 @@ public class MemberVo extends ComDefaultVO {
     private String uprDeptCd;
 
 
-    /* 회의관련 */
+    /* Meeting */
     private Long mtngId;
     private String atdtUserId;
     private String atdtUserNm;

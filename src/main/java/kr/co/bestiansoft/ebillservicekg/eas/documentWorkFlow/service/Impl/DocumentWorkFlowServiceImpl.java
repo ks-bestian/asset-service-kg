@@ -99,7 +99,6 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                 .build();
 
 
-
         result += documentService.saveOfficialDocument(documentVo);
 
         draftDocumentService.updateDraftStatus(vo.getAarsDocId(), DraftStatus.DISPATCHED.getCodeId());

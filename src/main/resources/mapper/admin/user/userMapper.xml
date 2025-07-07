@@ -84,7 +84,8 @@
             , view.gen_cd
             , view.job_cd
             , view.msg_rcv_yn
-            , kgst.fngetlangnm(cc.code_nm1,cc.code_nm2,cc.code_nm1,#{lang}) as user_nm
+<!--            , kgst.fngetlangnm(cc.code_nm1,cc.code_nm2,cc.code_nm1,#{lang}) as user_nm-->
+            , kgst.fngetlangnm(view.user_nm_kg,view.user_nm_ru,view.user_nm_kg,#{lang}) as user_nm
             , view.pos_cd
             , view.age_cd
             , view.cmit_cd
