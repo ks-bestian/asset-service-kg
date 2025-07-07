@@ -13,14 +13,21 @@
          where from_doc_id =#{fromDocId}
            and to_doc_id =#{toDocId}
     </delete>
-    <select id="getLinkDocumentByDocId" resultType="kr.co.bestiansoft.ebillservicekg.eas.linkDocument.vo.LinkDocumentVo">
-        select link_id, from_doc_id, to_doc_id, link_type, reg_dtm, reg_id
-        from kgst.eas_link_document
-        where from_doc_id = #{docId}
-        union distinct
-        select link_id, from_doc_id, to_doc_id, link_type, reg_dtm, reg_id
-        from kgst.eas_link_document
-        where to_doc_id = #{docId}
+    <select id="getLinkDocumentByDocId" resultType="kr.co.bestiansoft.ebillservicekg.eas.linkDocument.vo.LinkDocumentListDto">
+        SELECT
+            t1.link_id,
+            t1.link_type,
+            t1.reg_dtm,
+            t1.reg_id,
+            CASE
+                WHEN t1.from_doc_id = #{docId} THEN t1.to_doc_id
+                ELSE t1.from_doc_id
+                END AS linked_doc_id,
+            (SELECT doc_subtle FROM kgst.eas_document WHERE doc_id = (CASE WHEN t1.from_doc_id = #{docId} THEN t1.to_doc_id ELSE t1.from_doc_id END)) AS doc_subtle
+        FROM
+            kgst.eas_link_document t1
+        WHERE
+            t1.from_doc_id = #{docId} OR t1.to_doc_id = #{docId};
     </select>
     <select id="getLinkDocumentByDocIdAndType" resultType="kr.co.bestiansoft.ebillservicekg.eas.linkDocument.vo.LinkDocumentVo">
         select link_id, from_doc_id, to_doc_id, link_type, reg_dtm, reg_id

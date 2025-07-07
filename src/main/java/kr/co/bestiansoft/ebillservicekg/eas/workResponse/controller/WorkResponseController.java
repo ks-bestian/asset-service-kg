@@ -1,6 +1,7 @@
 package kr.co.bestiansoft.ebillservicekg.eas.workResponse.controller;
 
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
+import kr.co.bestiansoft.ebillservicekg.eas.documentWorkFlow.service.DocumentWorkFlowService;
 import kr.co.bestiansoft.ebillservicekg.eas.workRequest.service.WorkRequestService;
 import kr.co.bestiansoft.ebillservicekg.eas.workResponse.service.WorkResponseService;
 import kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.UpdateWorkResponseVo;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Controller;
 public class WorkResponseController {
 
     private final WorkResponseService workResponseService;
+    private final DocumentWorkFlowService workFlowService;
 
     @ApiOperation(value="insertWorkResponse", notes = "insertWorkResponse")
     @PostMapping("/eas/workResponse")
@@ -35,10 +37,11 @@ public class WorkResponseController {
     public ResponseEntity<CommonResponse> toDocIdGetWorkResponse(@PathVariable String docId) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", workResponseService.getWorkResponse(docId)), HttpStatus.OK);
     }
-    @ApiOperation(value="update work response", notes= "update work response")
+    @ApiOperation(value="update work response(register workResponse)", notes= "update work response(register workResponse)")
     @PutMapping("/eas/workResponse")
     public ResponseEntity<CommonResponse> updateWorkResponse(@RequestBody UpdateWorkResponseVo vo) {
-        return new ResponseEntity<>(new CommonResponse(200, "OK", workResponseService.updateWorkResponse(vo)), HttpStatus.OK);
+        workFlowService.registerWorkResponse(vo);
+        return new ResponseEntity<>(new CommonResponse(200, "OK"), HttpStatus.OK);
     }
     @ApiOperation(value="update read datetime", notes= "update read datetime")
     @PutMapping("/eas/workResponse/{rspnsId}")

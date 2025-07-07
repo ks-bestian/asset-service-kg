@@ -5,8 +5,8 @@
 
     <insert id="insertWorkResponse" parameterType="kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.WorkResponseVo">
         INSERT INTO kgst.eas_work_response
-        (work_req_id, user_id, dept_cd, job_cd, check_dtm, rspns_dtm, rspns_cn, file_id, file_nm , rcv_dtm)
-        VALUES(#{workReqId}, #{userId}, #{deptCd}, #{jobCd}, #{checkDtm}, #{rspnsDtm}, #{rspnsCn}, #{fileId}, #{fileNm}, #{rcvDtm});
+        (work_req_id, user_id, dept_cd, job_cd, check_dtm, rspns_dtm, rspns_cn, file_id, file_nm , rcv_dtm, user_nm)
+        VALUES(#{workReqId}, #{userId}, #{deptCd}, #{jobCd}, #{checkDtm}, #{rspnsDtm}, #{rspnsCn}, #{fileId}, #{fileNm}, #{rcvDtm}, #{userNm});
     </insert>
     <update id="updateWorkContents" parameterType="kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.UpdateWorkResponseVo">
         update kgst.eas_work_response
@@ -23,7 +23,7 @@
         delete from kgst.eas_work_response
          where work_req_id =#{workReqId}
     </delete>
-    <select id="getWorkResponse" resultType="kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.WorkResponseVo">
+    <select id="getWorkResponseByRcvId" resultType="kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.WorkResponseVo">
         select res.rspns_id, res.work_req_id, user_id, dept_cd, job_cd, check_dtm, rspns_dtm, rspns_cn, file_id, user_nm, file_nm, rcv_dtm
         from eas_work_response res, eas_work_request req
         where res.work_req_id = req.work_req_id
@@ -66,9 +66,10 @@
         AND rspns_cn IS NOT NULL
     </select>
 
-    <delete id="delete" parameterType="int">
-        DELETE FROM kgst.eas_work_response
-        WHERE work_req_id = #{workReqId}
-    </delete>
+    <select id="getResponse" resultType="kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.WorkResponseVo">
+        select res.rspns_id, work_req_id, user_id, dept_cd, job_cd, check_dtm, rspns_dtm, rspns_cn, file_id, user_nm, file_nm, rcv_dtm
+          from eas_work_response res
+         where res.rspns_id = #{rspnsId}
+    </select>
 
 </mapper>

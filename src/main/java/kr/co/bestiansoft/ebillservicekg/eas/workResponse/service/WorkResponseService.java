@@ -9,7 +9,7 @@ import java.util.List;
 public interface WorkResponseService {
     int insertWorkResponse(WorkResponseVo vo);
     int updateWorkResponse(UpdateWorkResponseVo vo);
-    int deleteWorkRequestId(String workReqId);
+    void deleteWorkRequestId(int workReqId);
     List<WorkResponseVo> getWorkResponse(int rcvId);
     List<WorkResponseVo> getWorkResponse(String docId);
     List<WorkResponseVo> getWorkResponseByUserId(int workReqId);
@@ -17,9 +17,4 @@ public interface WorkResponseService {
     void deleteDocument(String docId);
     List<WorkResponseVo> getWorkResponses(int workReqId);
     List<String> getRespondedUsers(int workReqId);
-
-    //int countWorkResponse(@Param("workReqId") Long workReqId, @Param("userId") String userId);
-    //void updateWorkResponse(WorkResponseVo workResponseVo);
-    void delete(int workReqId);
-
 }

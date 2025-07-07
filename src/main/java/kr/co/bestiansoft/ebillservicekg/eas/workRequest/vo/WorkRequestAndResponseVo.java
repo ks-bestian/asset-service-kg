@@ -23,6 +23,7 @@ public class WorkRequestAndResponseVo {
     private char infoYn;
     private String workCycleCd;
     private String regId;
+    private String regUserNm;
     private LocalDateTime regDt;
     private String workStatus;
     private int rcvId;
@@ -81,6 +82,7 @@ public class WorkRequestAndResponseVo {
                 .tmlmtYn(this.getTmlmtYn())
                 .workCycleCd(this.getWorkCycleCd())
                 .workStatus(this.getWorkStatus())
+                .regUserNm(this.getRegUserNm())
                 .build();
     }
 }

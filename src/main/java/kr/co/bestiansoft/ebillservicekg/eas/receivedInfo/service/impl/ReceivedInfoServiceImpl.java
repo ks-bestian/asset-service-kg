@@ -80,4 +80,9 @@ public class ReceivedInfoServiceImpl implements ReceivedInfoService {
     public void deleteDocument(String docId) {
         receivedInfoRepository.deleteDocument(docId);
     }
+
+    @Override
+    public String getDocIdByRcvId(int rcvId) {
+        return receivedInfoRepository.getDocIdByRcvId(rcvId);
+    }
 }

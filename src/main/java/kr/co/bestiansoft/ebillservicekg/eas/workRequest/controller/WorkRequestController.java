@@ -1,7 +1,9 @@
 package kr.co.bestiansoft.ebillservicekg.eas.workRequest.controller;
 
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
+import kr.co.bestiansoft.ebillservicekg.eas.documentWorkFlow.service.DocumentWorkFlowService;
 import kr.co.bestiansoft.ebillservicekg.eas.workRequest.service.WorkRequestService;
+import kr.co.bestiansoft.ebillservicekg.eas.workRequest.vo.WorkRequestAndResponseVo;
 import kr.co.bestiansoft.ebillservicekg.eas.workRequest.vo.WorkRequestVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,7 @@ import io.swagger.annotations.ApiOperation;
 public class WorkRequestController {
 
     final WorkRequestService workRequestService;
+    final DocumentWorkFlowService workFlowService;
 
     @ApiOperation(value="insertWorkRequest", notes = "insertWorkRequest")
     @PostMapping("/eas/workRequest")
@@ -40,7 +43,7 @@ public class WorkRequestController {
     @ApiOperation(value="delete work request", notes= "delete work request")
     @DeleteMapping("/eas/workRequest/{reqId}")
     public ResponseEntity<CommonResponse> deleteWorkRequest(@PathVariable int reqId) {
-        workRequestService.deleteWorkRequest(reqId);
+        workFlowService.deleteWorkRequest(reqId);
         return new ResponseEntity<>(new CommonResponse(200, "OK" ), HttpStatus.OK);
     }
 
@@ -50,5 +53,17 @@ public class WorkRequestController {
         System.out.println("Updating workRequest: " + vo.toString());
         return new ResponseEntity<>(new CommonResponse(200, "OK", workRequestService.updateWorkRequest(vo)), HttpStatus.OK);
     }
+    @ApiOperation(value="updateWorkRequestAndResponse", notes="update Work Request and Response")
+    @PutMapping("/eas/workRequest/response")
+    public ResponseEntity<CommonResponse> updateWorkRequestAndResponse (@RequestBody WorkRequestAndResponseVo vo){
+        workFlowService.updateWorkRequest(vo);
+        return  new ResponseEntity<>(new CommonResponse(200, "OK"), HttpStatus.OK);
+    }
 
+    @ApiOperation(value="insertWorkRequest and response", notes="insert work Request and response")
+    @PostMapping("/eas/workRequest/response")
+    public ResponseEntity<CommonResponse> insertWorkRequestAndResponse(@RequestBody WorkRequestAndResponseVo vo){
+        workFlowService.insertWorkRequest(vo);
+        return  new ResponseEntity<>(new CommonResponse(200, "OK"), HttpStatus.OK);
+    }
 }

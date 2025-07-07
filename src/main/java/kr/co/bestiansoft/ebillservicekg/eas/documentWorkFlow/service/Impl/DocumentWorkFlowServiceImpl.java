@@ -25,7 +25,10 @@ import kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.vo.UpdateReceivedInfoVo
 import kr.co.bestiansoft.ebillservicekg.eas.workRequest.service.impl.WorkRequestServiceImpl;
 import kr.co.bestiansoft.ebillservicekg.eas.workRequest.vo.WorkRequestAndResponseVo;
 import kr.co.bestiansoft.ebillservicekg.eas.workRequest.vo.WorkRequestVo;
+import kr.co.bestiansoft.ebillservicekg.eas.workResponse.repository.WorkResponseRepository;
 import kr.co.bestiansoft.ebillservicekg.eas.workResponse.service.impl.WorkResponseServiceImpl;
+import kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.UpdateWorkResponseVo;
+import kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.WorkResponseVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -49,6 +52,7 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
     private final WorkResponseServiceImpl workResponseService;
     private final LinkDocumentService linkDocumentService;
     private final EasFileService easFileService;
+    private final WorkResponseRepository workResponseRepository;
 
 
     /**
@@ -99,7 +103,6 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                 .build();
 
 
-
         result += documentService.saveOfficialDocument(documentVo);
 
         draftDocumentService.updateDraftStatus(vo.getAarsDocId(), DraftStatus.DISPATCHED.getCodeId());
@@ -135,11 +138,15 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
         for(String attrbCd : vo.getDocAttrbCd() ){
             if(attrbCd.equals("DMA02")){
                 //todo userId, userNm, deptCd, jobCd ;
+                UserMemberVo user = userService.getUserMemberDetail("gduser1");
                 ApprovalVo approvalVo = ApprovalVo.builder()
                         .docId(vo.getDocId())
                         .apvlOrd(addApprovalCount)
                         .apvlType(ApprovalType.REQUEST_REVIEW_AND_APPROVAL.getCodeId())
-                        .userId("gduser1")
+                        .userId(user.getUserId())
+                        .userNm(user.getUserNm())
+                        .deptCd(user.getDeptCd())
+                        .jobCd(user.getJobCd())
                         .build();
 
                 if(addApprovalCount == 1){
@@ -166,6 +173,7 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                         .rcvOrd(i+1)
                         .build();
                 if(addApprovalCount ==1){
+                    receivedInfoVo.setRcvDtm(now);
                     receivedInfoVo.setRcvStatus(ReceiveStatus.SENT.getCodeId());
                 }else{
                     receivedInfoVo.setRcvStatus(ReceiveStatus.BEFORE_SEND.getCodeId());
@@ -233,32 +241,28 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
     }
     @Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
     public void reception(WorkRequestAndResponseVo vo){
+        UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
         if(vo.getDocTypeCd() == null){}
         else if(vo.getDocTypeCd().equals(DocumentType.REPLY_PURPOSE.getCodeId())){
             //Answer
             // Request for implementation addition
+
             vo.setRegDt(LocalDateTime.now());
-            vo.setRegId(new SecurityInfoUtil().getAccountId());
+            vo.setRegId(loginUser.getUserId());
             vo.setWorkStatus(WorkStatus.DISPATCHED.getCodeId());
-
+            vo.setRegUserNm(loginUser.getUserNm());
             WorkRequestVo requestVo = vo.toRequestVo();
+            
+            workRequestService.insertWorkRequest(requestVo);
 
-            if (requestVo.getWorkReqId() == 0) {
-                workRequestService.insertWorkRequest(requestVo);
-            } else {
-                workRequestService.updateWorkRequest(requestVo);
-            }
-
-            log.info("workReqId : " + requestVo.toString());
-
-            workResponseService.delete(requestVo.getWorkReqId());
-            //// 이행자 추가
+            // 이행자 추가
             vo.getWorkResponseVos().forEach(workResponseVo -> {
-                UserMemberVo loginUser = userService.getUserMemberDetail(workResponseVo.getUserId());
+                UserMemberVo user = userService.getUserMemberDetail(workResponseVo.getUserId());
+                if(user == null) return;
                 workResponseVo.setWorkReqId(requestVo.getWorkReqId());
-                workResponseVo.setDeptCd(loginUser.getDeptCd());
-                workResponseVo.setJobCd(loginUser.getJobCd());
-                workResponseVo.setUserNm(loginUser.getUserNm());
+                workResponseVo.setDeptCd(user.getDeptCd());
+                workResponseVo.setJobCd(user.getJobCd());
+                workResponseVo.setUserNm(user.getUserNm());
                 workResponseVo.setRcvDtm(LocalDateTime.now());
 
                 workResponseService.insertWorkResponse(workResponseVo);
@@ -275,7 +279,6 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
             // document status change
             documentService.updateStatusOfficialDocument(vo.getDocId() , DocumentStatus.REGISTERED.getCodeId());
             // history
-            UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
             HistoryVo historyVo = HistoryVo.builder()
                     .userId(loginUser.getUserId())
                     .docId(vo.getDocId())
@@ -307,7 +310,6 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                     .build();
             receivedInfoService.updateReceivedInfo(updateReceivedInfoVo);
 
-            UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
             HistoryVo historyVo = HistoryVo.builder()
                     .userId(loginUser.getUserId())
                     .docId(vo.getDocId())
@@ -419,11 +421,15 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
         for(String attrbCd : vo.getDocAttrbCd() ){
             if(attrbCd.equals("DMA02")){
                 //todo userId, userNm, deptCd, jobCd ;
+                UserMemberVo user = userService.getUserMemberDetail("gduser1");
                 ApprovalVo approvalVo = ApprovalVo.builder()
                         .docId(vo.getDocId())
                         .apvlOrd(addApprovalCount)
                         .apvlType(ApprovalType.REQUEST_REVIEW_AND_APPROVAL.getCodeId())
-                        .userId("gduser1")
+                        .userId(user.getUserId())
+                        .userNm(user.getUserNm())
+                        .deptCd(user.getDeptCd())
+                        .jobCd(user.getJobCd())
                         .build();
 
                 if(addApprovalCount == 1){
@@ -450,7 +456,7 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
         //ReceivedStatus change
         UpdateReceivedInfoVo updateReceivedInfoVo = UpdateReceivedInfoVo.builder()
                 .rcvStatus(ReceiveStatus.APPROVING_RESPONSE.getCodeId())
-                .rcpDocId(vo.getFromDocId())
+                .rcpDocId(vo.getDocId())
                 .rcvId(vo.getRcvId())
                 .build();
         receivedInfoService.updateReceivedInfo(updateReceivedInfoVo);
@@ -478,6 +484,7 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                         .rcvOrd(i+1)
                         .build();
                 if(addApprovalCount ==1){
+                    receivedInfoVo.setRcvDtm(now);
                     receivedInfoVo.setRcvStatus(ReceiveStatus.SENT.getCodeId());
                 }else{
                     receivedInfoVo.setRcvStatus(ReceiveStatus.BEFORE_SEND.getCodeId());
@@ -534,6 +541,145 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                 .build();
         historyService.insertHistory(historyVo);
     }
+    @Override
+    public void updateWorkRequest(WorkRequestAndResponseVo vo) {
+        // update workRequest
+        WorkRequestVo requestVo = vo.toRequestVo();
+        workRequestService.updateWorkRequest(requestVo);
+        // update workResponse
+        workResponseService.deleteWorkRequestId(requestVo.getWorkReqId());
+        vo.getWorkResponseVos().forEach(workResponseVo -> {
+            UserMemberVo loginUser = userService.getUserMemberDetail(workResponseVo.getUserId());
+            if(loginUser == null) return;
+            workResponseVo.setWorkReqId(requestVo.getWorkReqId());
+            workResponseVo.setDeptCd(loginUser.getDeptCd());
+            workResponseVo.setJobCd(loginUser.getJobCd());
+            workResponseVo.setUserNm(loginUser.getUserNm());
+            workResponseVo.setRcvDtm(LocalDateTime.now());
+
+            workResponseService.insertWorkResponse(workResponseVo);
+        });
+        // write history
+        UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
+        HistoryVo historyVo = HistoryVo.builder()
+                .docId(vo.getDocId())
+                .userId(loginUser.getUserId())
+                .actType(ActionType.UPDATE_REQUEST.getCodeId())
+                .actDtm(LocalDateTime.now())
+                .actDetail(historyService.getActionDetail(ActionType.UPDATE_REQUEST.getCodeId(), loginUser.getUserNm()))
+                .userNm(loginUser.getUserNm())
+                .build();
+        historyService.insertHistory(historyVo);
+    }
+
+    @Override
+    public void updateMainResponser(UpdateReceivedInfoVo vo) {
+        // update main Responser
+        receivedInfoService.updateReceivedInfo(vo);
+        // history
+        UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
+        HistoryVo historyVo = HistoryVo.builder()
+                .docId(vo.getDocId())
+                .userId(loginUser.getUserId())
+                .actType(ActionType.UPDATE_MAIN_RESPONSER.getCodeId())
+                .actDtm(LocalDateTime.now())
+                .actDetail(historyService.getActionDetail(ActionType.UPDATE_MAIN_RESPONSER.getCodeId(), loginUser.getUserNm()))
+                .userNm(loginUser.getUserNm())
+                .build();
+        historyService.insertHistory(historyVo);
+    }
+
+    @Override
+    public void insertWorkRequest(WorkRequestAndResponseVo vo) {
+        UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
+        // request add
+        vo.setRegDt(LocalDateTime.now());
+        vo.setRegId(loginUser.getUserId());
+        vo.setRegUserNm(loginUser.getUserNm());
+        vo.setWorkStatus(WorkStatus.DISPATCHED.getCodeId());
+
+        WorkRequestVo requestVo = vo.toRequestVo();
+
+        workRequestService.insertWorkRequest(requestVo);
+        //  response add
+        vo.getWorkResponseVos().forEach(workResponseVo -> {
+            UserMemberVo user = userService.getUserMemberDetail(workResponseVo.getUserId());
+            if(user == null) return;
+            workResponseVo.setWorkReqId(requestVo.getWorkReqId());
+            workResponseVo.setDeptCd(user.getDeptCd());
+            workResponseVo.setJobCd(user.getJobCd());
+            workResponseVo.setUserNm(user.getUserNm());
+            workResponseVo.setRcvDtm(LocalDateTime.now());
+
+            workResponseService.insertWorkResponse(workResponseVo);
+
+        });
+        //  history add
+        HistoryVo historyVo = HistoryVo.builder()
+                .userId(loginUser.getUserId())
+                .docId(vo.getDocId())
+                .actType(ActionType.INSERT_EXECUTOR.getCodeId())
+                .actDtm(LocalDateTime.now())
+                .actDetail(historyService.getActionDetail(ActionType.INSERT_EXECUTOR.getCodeId(),loginUser.getUserNm()))
+                .userNm(loginUser.getUserNm())
+                .build();
+        historyService.insertHistory(historyVo);
+    }
+
+    @Override
+    public void registerWorkResponse(UpdateWorkResponseVo vo) {
+        // update WorkResponse
+        workResponseService.updateWorkResponse(vo);
+
+        WorkResponseVo workResponseVo = workResponseRepository.getResponse(vo.getRspnsId());
+        //update WorkRequestStatus
+        if(isWorkEnd(vo.getWorkReqId())){
+            WorkRequestVo workRequestVo = WorkRequestVo.builder()
+                    .workReqId(workResponseVo.getWorkReqId())
+                    .workStatus(WorkStatus.EXECUTION_COMPLETE.getCodeId())
+                    .build();
+            workRequestService.updateWorkRequest(workRequestVo);
+        }else{
+            WorkRequestVo workRequestVo = WorkRequestVo.builder()
+                    .workReqId(workResponseVo.getWorkReqId())
+                    .workStatus(WorkStatus.PENDING_EXECUTION.getCodeId())
+                    .build();
+            workRequestService.updateWorkRequest(workRequestVo);
+        }
+        //history
+        UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
+        HistoryVo historyVo = HistoryVo.builder()
+                .userId(loginUser.getUserId())
+                .docId(receivedInfoService.getDocIdByRcvId(vo.getRcvId()))
+                .actType(ActionType.ADD_EXECUTOR_DETAILS.getCodeId())
+                .actDtm(LocalDateTime.now())
+                .actDetail(historyService.getActionDetail(ActionType.ADD_EXECUTOR_DETAILS.getCodeId(),loginUser.getUserNm()))
+                .userNm(loginUser.getUserNm())
+                .build();
+        historyService.insertHistory(historyVo);
+    }
+
+    @Override
+    public void deleteWorkRequest(int workReqId) {
+        String docId = workRequestService.getDocIdByWorkReqId(workReqId);
+        //delete workRequest
+        workRequestService.deleteWorkRequest(workReqId);
+        //delete workResponse
+        workResponseService.deleteWorkRequestId(workReqId);
+        //add history
+
+        UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
+        HistoryVo historyVo = HistoryVo.builder()
+                .userId(loginUser.getUserId())
+                .docId(docId)
+                .actType(ActionType.DELETE_EXECUTOR.getCodeId())
+                .actDtm(LocalDateTime.now())
+                .actDetail(historyService.getActionDetail(ActionType.DELETE_EXECUTOR.getCodeId(),loginUser.getUserNm()))
+                .userNm(loginUser.getUserNm())
+                .build();
+        historyService.insertHistory(historyVo);
+    }
+
 
     @Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
     public void RequestApprove(UpdateApprovalVo vo){
@@ -743,18 +889,27 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
     }
     public boolean isEnd(String docId){
         List<ReceivedInfoVo> receivedInfo = receivedInfoService.getReceivedInfo(docId);
-        // The recipient no case treatment (Business Logic according to decision)
+
         if (receivedInfo.isEmpty()) {
-            return false; // or true (Business To the requirements according to decision)
+            return true;
         }
-        // every The recipient answer complete State awareness check
-        for (ReceivedInfoVo rcvInfoVo : receivedInfo) {
-            if (!rcvInfoVo.getRcvStatus().equals(ReceiveStatus.COMPLETED_RESPONSE.getCodeId())) {
-                return false; // One answer Complete or not immediately false return
-            }
-        }
-        return true; // every The recipient answer complete State true return
+
+        return receivedInfo.stream()
+                .allMatch(rcvInfoVo -> rcvInfoVo.getRcvStatus().equals(ReceiveStatus.COMPLETED_RESPONSE.getCodeId()));
     }
+
+
+    public boolean isWorkEnd(int workReqId){
+        List<WorkResponseVo> responseVos = workResponseService.getWorkResponses(workReqId);
+
+        if(responseVos.isEmpty()) {
+            return true;
+        }
+
+        return responseVos.stream()
+                .allMatch(responseVo -> responseVo.getRspnsDtm() != null);
+    }
+
 
     @Override
     public int updateReadDateTime(int rcvId) {
@@ -777,6 +932,7 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
     public String arrayToString(String[] arrayS){
         return String.join(",", arrayS);
     }
+
     @Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
     public void deleteDocument(String docId){
         documentService.deleteDocument(docId);

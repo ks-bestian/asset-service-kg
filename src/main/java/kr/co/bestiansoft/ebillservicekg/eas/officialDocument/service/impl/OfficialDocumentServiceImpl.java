@@ -146,6 +146,7 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
             vo.setToResDtm(parseToDateRange(vo.getBetweenResDtm()));
         }
         vo.setUserId(new SecurityInfoUtil().getAccountId());
+        log.info(vo.toString());
         return officialDocumentMapper.getWorkList(vo);
     }
 

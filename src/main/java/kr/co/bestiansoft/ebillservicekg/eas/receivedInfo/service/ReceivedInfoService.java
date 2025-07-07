@@ -15,4 +15,5 @@ public interface ReceivedInfoService {
     ReceivedInfoVo getReceivedInfoByUserId(String docId);
     ReceivedInfoVo getReceivedInfoByRcpDocId(String rcpDocId);
     void deleteDocument(String docId);
+    String getDocIdByRcvId(int rcvId);
 }

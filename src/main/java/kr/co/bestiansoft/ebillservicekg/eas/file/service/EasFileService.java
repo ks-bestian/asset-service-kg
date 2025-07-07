@@ -18,7 +18,7 @@ public interface EasFileService {
 //    commonness save file(edv) , pdf file
     SaveFileDto saveFile(MultipartFile file);
     String saveFile(File file);
-    CompletableFuture<UpdatePdfFileDto> savePdfFile(MultipartFile file);
+    CompletableFuture<UpdatePdfFileDto> savePdfFile(byte[] fileBytes, String fileName);
     CompletableFuture<UpdatePdfFileDto> savePdfFile(File file);
     void deleteDocument(String docId);
 }

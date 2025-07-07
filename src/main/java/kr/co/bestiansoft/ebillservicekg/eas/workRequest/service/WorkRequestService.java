@@ -13,6 +13,7 @@ public interface WorkRequestService {
     List<WorkRequestAndResponseVo> getWorkRequestList(String docId);
     WorkRequestAndResponseVo getWorkRequestAndResponseList(String docId);
     void deleteDocument(String docId);
+    String getDocIdByWorkReqId(int workReqId);
 
     int updateWorkRequest(WorkRequestVo vo);
 }

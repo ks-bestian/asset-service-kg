@@ -2,6 +2,7 @@ package kr.co.bestiansoft.ebillservicekg.eas.linkDocument.service.impl;
 
 import kr.co.bestiansoft.ebillservicekg.eas.linkDocument.repository.LinkDocumentRepository;
 import kr.co.bestiansoft.ebillservicekg.eas.linkDocument.service.LinkDocumentService;
+import kr.co.bestiansoft.ebillservicekg.eas.linkDocument.vo.LinkDocumentListDto;
 import kr.co.bestiansoft.ebillservicekg.eas.linkDocument.vo.LinkDocumentVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +47,7 @@ public class LinkDocumentServiceImpl implements LinkDocumentService {
      * @return a list of LinkDocumentVo objects representing the linked documents
      */
     @Override
-    public List<LinkDocumentVo> getLinkDocumentByDocId(String docId) {
+    public List<LinkDocumentListDto> getLinkDocumentByDocId(String docId) {
         return linkDocumentRepository.getLinkDocumentByDocId(docId);
     }
 

@@ -60,15 +60,23 @@ public class EasFileServiceImpl implements EasFileService {
             fileVo = fileVo.fromSaveFileDto(savedFileDto, fileVo);
 
             saveEasFile(fileVo);
-
+            log.info("EasFileVo: {}", fileVo.toString());
             if (!isPdfFile(fileVo.getFileExt())) {
                 String fileId = fileVo.getFileId();
+                log.info("PDF Conversion not required: Original file ID {}", fileId);
                 try {
-                    CompletableFuture<UpdatePdfFileDto> futureResult = savePdfFile(file);
+                    byte[] fileBytes = file.getBytes();
+                    String originalFilename = file.getOriginalFilename();
+
+                    CompletableFuture<UpdatePdfFileDto> futureResult = savePdfFile(fileBytes, originalFilename);
                     futureResult.thenAccept(pdfDto -> {
                         updatePdfInfo(fileId, pdfDto);
                         log.info("PDF Conversion completed: Original file ID {}, PDF file ID {}", fileId, pdfDto.getPdfFileId());
+                    }).exceptionally(err ->{
+                        log.error("PDF conversion failure: File ID {}, Error: {}", fileId, err.getMessage(), err);
+                        return null;
                     });
+
 
                 } catch (Exception e) {
                     log.error("PDF conversion failure: File ID {}, Error: {}", fileId, e.getMessage(), e);
@@ -109,14 +117,15 @@ public class EasFileServiceImpl implements EasFileService {
      * @param dto an UpdatePdfFileDto containing the new PDF file ID and name 
      *            to be associated with the file
      */
-    @Transactional
     public void updatePdfInfo(String fileId, UpdatePdfFileDto dto){
         EasFileVo fileVo = easFileRepository.getFileById(fileId);
+        log.info("updatePdfInfo: fileId: {}, dto: {}", fileId, dto);
+
         if (fileVo != null) {
             // PDF information update
             fileVo.setPdfFileId(dto.getPdfFileId());
             fileVo.setPdfFileNm(dto.getPdfFileNm());
-
+            log.info(fileVo.toString());
             easFileRepository.updatePdfFileInfo(fileVo);
         }
 
@@ -204,12 +213,11 @@ public class EasFileServiceImpl implements EasFileService {
      * @return an UpdatePdfFileDto containing the PDF file's ID and name
      * @throws RuntimeException if the file conversion or saving process fails
      */
-    public CompletableFuture<UpdatePdfFileDto> savePdfFile(MultipartFile file) {
+    public CompletableFuture<UpdatePdfFileDto> savePdfFile(byte[] fileBytes, String fileName) {
 
         return CompletableFuture.supplyAsync(() -> {
 
             String fileId = StringUtil.getUUUID();
-            String fileName = file.getOriginalFilename();
             UpdatePdfFileDto result = new UpdatePdfFileDto();
 
             File tmpFile = null;
@@ -220,7 +228,7 @@ public class EasFileServiceImpl implements EasFileService {
                 tmpFile = File.createTempFile("temp", ".tmp");
                 tmpPdfFile = File.createTempFile("pdfTemp", ".pdf");
 
-                file.transferTo(tmpFile);
+                java.nio.file.Files.write(tmpFile.toPath(), fileBytes);
 
                 boolean pdfResult = pdfService.convertToPdf(tmpFile.getAbsolutePath(), fileName, tmpPdfFile.getAbsolutePath());
 

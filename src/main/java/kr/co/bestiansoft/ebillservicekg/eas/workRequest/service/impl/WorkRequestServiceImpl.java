@@ -1,6 +1,7 @@
 package kr.co.bestiansoft.ebillservicekg.eas.workRequest.service.impl;
 
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
+import kr.co.bestiansoft.ebillservicekg.eas.history.service.HistoryService;
 import kr.co.bestiansoft.ebillservicekg.eas.workRequest.repository.WorkRequestRepository;
 import kr.co.bestiansoft.ebillservicekg.eas.workRequest.service.WorkRequestService;
 import kr.co.bestiansoft.ebillservicekg.eas.workRequest.vo.WorkRequestAndResponseVo;
@@ -22,6 +23,7 @@ public class WorkRequestServiceImpl implements WorkRequestService {
     private final WorkRequestRepository workRequestRepository;
     private final WorkResponseService workResponseService;
 
+
     /**
      * Inserts a work request record into the repository.
      *
@@ -41,7 +43,6 @@ public class WorkRequestServiceImpl implements WorkRequestService {
      */
     @Override
     public int deleteWorkRequest(int workReqId) {
-        workResponseService.delete(workReqId);
         return workRequestRepository.deleteWorkRequest(workReqId);
     }
 
@@ -76,7 +77,8 @@ public class WorkRequestServiceImpl implements WorkRequestService {
 
     @Override
     public List<WorkRequestAndResponseVo> getWorkRequestList(String docId) {
-        return workRequestRepository.getWorkRequestList(null, docId).stream()
+        return workRequestRepository.getWorkRequestList(null, docId)
+                .stream()
                 .map(request -> {
                     List<WorkResponseVo> responses = workResponseService.getWorkResponses(request.getWorkReqId());
                     return new WorkRequestAndResponseVo().from(request, responses);
@@ -100,6 +102,11 @@ public class WorkRequestServiceImpl implements WorkRequestService {
     @Override
     public void deleteDocument(String docId) {
         workRequestRepository.deleteDocument(docId);
+    }
+
+    @Override
+    public String getDocIdByWorkReqId(int workReqId) {
+        return workRequestRepository.getDocIdByWorkReqId(workReqId);
     }
 
     @Override
