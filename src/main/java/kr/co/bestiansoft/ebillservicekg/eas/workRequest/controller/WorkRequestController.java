@@ -53,12 +53,17 @@ public class WorkRequestController {
         System.out.println("Updating workRequest: " + vo.toString());
         return new ResponseEntity<>(new CommonResponse(200, "OK", workRequestService.updateWorkRequest(vo)), HttpStatus.OK);
     }
-    @ApiOperation(value="upadteWorkRequestAndResponse", notes="update Work Request and Response")
+    @ApiOperation(value="updateWorkRequestAndResponse", notes="update Work Request and Response")
     @PutMapping("/eas/workRequest/response")
     public ResponseEntity<CommonResponse> updateWorkRequestAndResponse (@RequestBody WorkRequestAndResponseVo vo){
-        System.out.println("Updating workRequest: " + vo.toString());
         workFlowService.updateWorkRequest(vo);
         return  new ResponseEntity<>(new CommonResponse(200, "OK"), HttpStatus.OK);
     }
 
+    @ApiOperation(value="insertWorkRequest and response", notes="insert work Request and response")
+    @PostMapping("/eas/workRequest/response")
+    public ResponseEntity<CommonResponse> insertWorkRequestAndResponse(@RequestBody WorkRequestAndResponseVo vo){
+        workFlowService.insertWorkRequest(vo);
+        return  new ResponseEntity<>(new CommonResponse(200, "OK"), HttpStatus.OK);
+    }
 }

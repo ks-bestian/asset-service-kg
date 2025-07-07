@@ -246,7 +246,7 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
             
             workRequestService.insertWorkRequest(requestVo);
 
-            //// 이행자 추가
+            // 이행자 추가
             vo.getWorkResponseVos().forEach(workResponseVo -> {
                 UserMemberVo loginUser = userService.getUserMemberDetail(workResponseVo.getUserId());
                 if(loginUser == null) return;
@@ -570,9 +570,45 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
         HistoryVo historyVo = HistoryVo.builder()
                 .docId(vo.getDocId())
                 .userId(loginUser.getUserId())
-                .actType(ActionType.UPDATE_REQUEST.getCodeId())
+                .actType(ActionType.UPDATE_MAIN_RESPONSER.getCodeId())
                 .actDtm(LocalDateTime.now())
-                .actDetail(historyService.getActionDetail(ActionType.UPDATE_REQUEST.getCodeId(), loginUser.getUserNm()))
+                .actDetail(historyService.getActionDetail(ActionType.UPDATE_MAIN_RESPONSER.getCodeId(), loginUser.getUserNm()))
+                .userNm(loginUser.getUserNm())
+                .build();
+        historyService.insertHistory(historyVo);
+    }
+
+    @Override
+    public void insertWorkRequest(WorkRequestAndResponseVo vo) {
+        // todo request add
+        vo.setRegDt(LocalDateTime.now());
+        vo.setRegId(new SecurityInfoUtil().getAccountId());
+        vo.setWorkStatus(WorkStatus.DISPATCHED.getCodeId());
+
+        WorkRequestVo requestVo = vo.toRequestVo();
+
+        workRequestService.insertWorkRequest(requestVo);
+        // todo response add
+        vo.getWorkResponseVos().forEach(workResponseVo -> {
+            UserMemberVo loginUser = userService.getUserMemberDetail(workResponseVo.getUserId());
+            if(loginUser == null) return;
+            workResponseVo.setWorkReqId(requestVo.getWorkReqId());
+            workResponseVo.setDeptCd(loginUser.getDeptCd());
+            workResponseVo.setJobCd(loginUser.getJobCd());
+            workResponseVo.setUserNm(loginUser.getUserNm());
+            workResponseVo.setRcvDtm(LocalDateTime.now());
+
+            workResponseService.insertWorkResponse(workResponseVo);
+
+        });
+        // todo history add
+        UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
+        HistoryVo historyVo = HistoryVo.builder()
+                .userId(loginUser.getUserId())
+                .docId(vo.getDocId())
+                .actType(ActionType.INSERT_REQUEST.getCodeId())
+                .actDtm(LocalDateTime.now())
+                .actDetail(historyService.getActionDetail(ActionType.INSERT_REQUEST.getCodeId(),loginUser.getUserNm()))
                 .userNm(loginUser.getUserNm())
                 .build();
         historyService.insertHistory(historyVo);
