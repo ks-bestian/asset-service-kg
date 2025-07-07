@@ -12,16 +12,12 @@
     <update id="updateWorkRequest" parameterType="kr.co.bestiansoft.ebillservicekg.eas.workRequest.vo.WorkRequestVo">
         UPDATE kgst.eas_work_request
         <set>
-            <if test="rcvId != null">rcv_id = #{rcvId},</if>
             <if test="workCn != null">work_cn = #{workCn},</if>
-            <if test="tmlmtYn != null">tmlmt_yn = #{tmlmtYn},</if>
+            <if test="tmlmtYn != null and tmlmtYn != ''" >tmlmt_yn = #{tmlmtYn},</if>
             <if test="tmlmtDtm != null">tmlmt_dtm = #{tmlmtDtm},</if>
-            <if test="infoYn != null">info_yn = #{infoYn},</if>
+            <if test="infoYn != null and infoYn != ''">info_yn = #{infoYn},</if>
             <if test="workCycleCd != null">work_cycle_cd = #{workCycleCd},</if>
-            <if test="regId != null">reg_id = #{regId},</if>
-            <if test="regDt != null">reg_dt = #{regDt},</if>
             <if test="workStatus != null">work_status = #{workStatus},</if>
-            <if test="docId != null">doc_id = #{docId},</if>
         </set>
         WHERE work_req_id = #{workReqId}
     </update>

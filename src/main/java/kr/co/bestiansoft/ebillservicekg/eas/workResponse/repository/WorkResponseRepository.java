@@ -12,10 +12,11 @@ public interface WorkResponseRepository {
     int insertWorkResponse (WorkResponseVo vo);
     int updateWorkContents (UpdateWorkResponseVo vo);
 
-    List<WorkResponseVo> getWorkResponse(@Param("rcvId") Integer rcvId, @Param("docId") String docId);
+    List<WorkResponseVo> getWorkResponseByRcvId(@Param("rcvId") Integer rcvId, @Param("docId") String docId);
     List<WorkResponseVo> getWorkResponseByUserId(Integer workReqId, String userId);
     void deleteDocument(String docId);
     List<WorkResponseVo> getWorkResponses( int workReqId);
+    WorkResponseVo getResponse(int rspnsId);
 
     List<String> getRespondedUsers(int workReqId);
     int deleteWorkRequestId(int workReqId);

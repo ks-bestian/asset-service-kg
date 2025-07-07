@@ -106,7 +106,7 @@
         from eas_work_request req, eas_work_response res, eas_document d
         where req.work_req_id = res.work_req_id
           and d.doc_id = req.doc_id
-          and d.doc_status_cd = 'DMS03'
+          and d.doc_status_cd in('DMS03', 'DMS02')
           and res.user_id = #{userId}
         <if test="docSubtle != null "> and doc_subtle like '%'||#{docSubtle}||'%' </if>
         <if test="fromRcvDtm != null and toRcvDtm != null"> and rcv_dtm between #{fromRcvDtm} and #{toRcvDtm} </if>
@@ -119,7 +119,7 @@
         from eas_work_request req, eas_work_response res, eas_document d
         where req.work_req_id = res.work_req_id
           and d.doc_id = req.doc_id
-          and d.doc_status_cd = 'DMS03'
+          and d.doc_status_cd in( 'DMS03', 'DMS02')
           and res.user_id = #{userId}
           and res.check_dtm is null
     </select>

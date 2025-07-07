@@ -16,4 +16,5 @@ public interface ReceivedInfoRepository {
     ReceivedInfoVo getReceivedInfoByUserId(String docId, String userId);
     ReceivedInfoVo getReceivedInfoByRcpDocId(String rcpDocId);
     void deleteDocument(String docId);
+    String getDocIdByRcvId(int rcvId);
 }

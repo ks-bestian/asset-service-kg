@@ -22,5 +22,5 @@ public interface DocumentWorkFlowService {
     void updateMainResponser(UpdateReceivedInfoVo vo);
     void insertWorkRequest(WorkRequestAndResponseVo vo);
     void registerWorkResponse(UpdateWorkResponseVo vo);
-    void deleteWorkRequest(int docId);
+    void deleteWorkRequest(int workReqId);
 }

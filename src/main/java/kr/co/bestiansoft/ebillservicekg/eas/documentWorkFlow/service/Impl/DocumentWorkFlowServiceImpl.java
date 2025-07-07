@@ -25,6 +25,7 @@ import kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.vo.UpdateReceivedInfoVo
 import kr.co.bestiansoft.ebillservicekg.eas.workRequest.service.impl.WorkRequestServiceImpl;
 import kr.co.bestiansoft.ebillservicekg.eas.workRequest.vo.WorkRequestAndResponseVo;
 import kr.co.bestiansoft.ebillservicekg.eas.workRequest.vo.WorkRequestVo;
+import kr.co.bestiansoft.ebillservicekg.eas.workResponse.repository.WorkResponseRepository;
 import kr.co.bestiansoft.ebillservicekg.eas.workResponse.service.impl.WorkResponseServiceImpl;
 import kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.UpdateWorkResponseVo;
 import kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.WorkResponseVo;
@@ -51,6 +52,7 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
     private final WorkResponseServiceImpl workResponseService;
     private final LinkDocumentService linkDocumentService;
     private final EasFileService easFileService;
+    private final WorkResponseRepository workResponseRepository;
 
 
     /**
@@ -136,11 +138,15 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
         for(String attrbCd : vo.getDocAttrbCd() ){
             if(attrbCd.equals("DMA02")){
                 //todo userId, userNm, deptCd, jobCd ;
+                UserMemberVo user = userService.getUserMemberDetail("gduser1");
                 ApprovalVo approvalVo = ApprovalVo.builder()
                         .docId(vo.getDocId())
                         .apvlOrd(addApprovalCount)
                         .apvlType(ApprovalType.REQUEST_REVIEW_AND_APPROVAL.getCodeId())
-                        .userId("gduser1")
+                        .userId(user.getUserId())
+                        .userNm(user.getUserNm())
+                        .deptCd(user.getDeptCd())
+                        .jobCd(user.getJobCd())
                         .build();
 
                 if(addApprovalCount == 1){
@@ -415,11 +421,15 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
         for(String attrbCd : vo.getDocAttrbCd() ){
             if(attrbCd.equals("DMA02")){
                 //todo userId, userNm, deptCd, jobCd ;
+                UserMemberVo user = userService.getUserMemberDetail("gduser1");
                 ApprovalVo approvalVo = ApprovalVo.builder()
                         .docId(vo.getDocId())
                         .apvlOrd(addApprovalCount)
                         .apvlType(ApprovalType.REQUEST_REVIEW_AND_APPROVAL.getCodeId())
-                        .userId("gduser1")
+                        .userId(user.getUserId())
+                        .userNm(user.getUserNm())
+                        .deptCd(user.getDeptCd())
+                        .jobCd(user.getJobCd())
                         .build();
 
                 if(addApprovalCount == 1){
@@ -620,20 +630,27 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
     public void registerWorkResponse(UpdateWorkResponseVo vo) {
         // update WorkResponse
         workResponseService.updateWorkResponse(vo);
+
+        WorkResponseVo workResponseVo = workResponseRepository.getResponse(vo.getRspnsId());
         //update WorkRequestStatus
         if(isWorkEnd(vo.getWorkReqId())){
             WorkRequestVo workRequestVo = WorkRequestVo.builder()
-                    .workReqId(vo.getWorkReqId())
+                    .workReqId(workResponseVo.getWorkReqId())
+                    .workStatus(WorkStatus.EXECUTION_COMPLETE.getCodeId())
+                    .build();
+            workRequestService.updateWorkRequest(workRequestVo);
+        }else{
+            WorkRequestVo workRequestVo = WorkRequestVo.builder()
+                    .workReqId(workResponseVo.getWorkReqId())
                     .workStatus(WorkStatus.PENDING_EXECUTION.getCodeId())
                     .build();
             workRequestService.updateWorkRequest(workRequestVo);
         }
         //history
-        String docId = workRequestService.getDocIdByWorkReqId(vo.getWorkReqId());
         UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
         HistoryVo historyVo = HistoryVo.builder()
                 .userId(loginUser.getUserId())
-                .docId(docId)
+                .docId(receivedInfoService.getDocIdByRcvId(vo.getRcvId()))
                 .actType(ActionType.ADD_EXECUTOR_DETAILS.getCodeId())
                 .actDtm(LocalDateTime.now())
                 .actDetail(historyService.getActionDetail(ActionType.ADD_EXECUTOR_DETAILS.getCodeId(),loginUser.getUserNm()))
@@ -644,12 +661,13 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
 
     @Override
     public void deleteWorkRequest(int workReqId) {
+        String docId = workRequestService.getDocIdByWorkReqId(workReqId);
         //delete workRequest
         workRequestService.deleteWorkRequest(workReqId);
         //delete workResponse
         workResponseService.deleteWorkRequestId(workReqId);
         //add history
-        String docId = workRequestService.getDocIdByWorkReqId(workReqId);
+
         UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
         HistoryVo historyVo = HistoryVo.builder()
                 .userId(loginUser.getUserId())
@@ -871,33 +889,27 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
     }
     public boolean isEnd(String docId){
         List<ReceivedInfoVo> receivedInfo = receivedInfoService.getReceivedInfo(docId);
-        int result = 0;
+
         if (receivedInfo.isEmpty()) {
             return true;
         }
 
-        for (ReceivedInfoVo rcvInfoVo : receivedInfo) {
-            if (!rcvInfoVo.getRcvStatus().equals(ReceiveStatus.COMPLETED_RESPONSE.getCodeId())) {
-                result++;
-            }
-        }
-
-        return result == receivedInfo.size();
+        return receivedInfo.stream()
+                .allMatch(rcvInfoVo -> rcvInfoVo.getRcvStatus().equals(ReceiveStatus.COMPLETED_RESPONSE.getCodeId()));
     }
+
 
     public boolean isWorkEnd(int workReqId){
-        List<WorkResponseVo> responseVos = workResponseService.getWorkResponse(workReqId);
-        int result = 0;
-        if(responseVos.isEmpty()) return true;
+        List<WorkResponseVo> responseVos = workResponseService.getWorkResponses(workReqId);
 
-        for(WorkResponseVo responseVo : responseVos){
-            if(responseVo.getRspnsDtm() != null ){
-                result++;
-            }
+        if(responseVos.isEmpty()) {
+            return true;
         }
 
-        return result == responseVos.size();
+        return responseVos.stream()
+                .allMatch(responseVo -> responseVo.getRspnsDtm() != null);
     }
+
 
     @Override
     public int updateReadDateTime(int rcvId) {

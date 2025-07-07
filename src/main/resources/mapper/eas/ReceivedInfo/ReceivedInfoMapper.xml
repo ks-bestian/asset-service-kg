@@ -54,4 +54,9 @@
         delete from eas_received_info
          where doc_id =#{docId}
     </delete>
+    <select id="getDocIdByRcvId" resultType="String">
+        select er.doc_id
+          from eas_received_info er
+         where er.rcv_id = #{rcvId}
+    </select>
 </mapper>

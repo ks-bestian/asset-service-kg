@@ -55,10 +55,10 @@ public class WorkResponseServiceImpl implements WorkResponseService {
 
     @Override
     public List<WorkResponseVo> getWorkResponse(int rcvId) {
-        return workResponseRepository.getWorkResponse(rcvId, null);
+        return workResponseRepository.getWorkResponseByRcvId(rcvId, null);
     }
     public List<WorkResponseVo> getWorkResponse(String docId) {
-        return workResponseRepository.getWorkResponse(null, docId);
+        return workResponseRepository.getWorkResponseByRcvId(null, docId);
     }
     public List<WorkResponseVo> getWorkResponseByUserId(int workReqId) {
         return workResponseRepository.getWorkResponseByUserId(workReqId, new SecurityInfoUtil().getAccountId());
