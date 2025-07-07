@@ -20,10 +20,10 @@ public class WorkRequestVo {
     private String regId;
     private LocalDateTime regDt;
     private int rcvId;
-
+    private String regUserNm;
 
     @Builder
-    public WorkRequestVo(String docId, int workReqId, String workCn, char tmlmtYn, LocalDateTime tmlmtDtm, char infoYn, String workCycleCd, String workStatus, String regId, LocalDateTime regDt, int rcvId) {
+    public WorkRequestVo(String docId, int workReqId, String workCn, char tmlmtYn, LocalDateTime tmlmtDtm, char infoYn, String workCycleCd, String workStatus, String regId, LocalDateTime regDt, int rcvId, String regUserNm) {
         this.docId = docId;
         this.workReqId = workReqId;
         this.workCn = workCn;
@@ -35,5 +35,6 @@ public class WorkRequestVo {
         this.regId = regId;
         this.regDt = regDt;
         this.rcvId = rcvId;
+        this.regUserNm = regUserNm;
     }
 }

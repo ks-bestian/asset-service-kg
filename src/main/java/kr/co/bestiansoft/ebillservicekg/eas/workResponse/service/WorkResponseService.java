@@ -17,5 +17,4 @@ public interface WorkResponseService {
     void deleteDocument(String docId);
     List<WorkResponseVo> getWorkResponses(int workReqId);
     List<String> getRespondedUsers(int workReqId);
-
 }

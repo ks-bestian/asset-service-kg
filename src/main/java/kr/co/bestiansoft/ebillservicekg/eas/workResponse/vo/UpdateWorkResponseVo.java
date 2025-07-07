@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Data
 public class UpdateWorkResponseVo {
     private int rspnsId;
-    private String workReqId;
+    private int  workReqId;
     private LocalDateTime checkDtm;
     private LocalDateTime rspnsDtm;
     private String rspnsCn;
@@ -20,7 +20,7 @@ public class UpdateWorkResponseVo {
     private int rcvId;
 
     @Builder
-    public UpdateWorkResponseVo(int rspnsId, String workReqId, LocalDateTime checkDtm, LocalDateTime rspnsDtm, String rspnsCn, String fileId, String fileNm, String userId, int rcvId) {
+    public UpdateWorkResponseVo(int rspnsId, int workReqId, LocalDateTime checkDtm, LocalDateTime rspnsDtm, String rspnsCn, String fileId, String fileNm, String userId, int rcvId) {
         this.rspnsId = rspnsId;
         this.workReqId = workReqId;
         this.checkDtm = checkDtm;

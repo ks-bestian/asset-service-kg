@@ -10,7 +10,7 @@ public enum ActionType {
     APPROVE_SIGN            ("AT02", "APPROVE_SIGN"),
     REGISTER_DOCUMENT       ("AT03", "REGISTER_DOCUMENT"),
     REJECT_DOCUMENT         ("AT04", "REJECT_DOCUMENT"),
-    ADD_EXECUTOR            ("AT05", "ADD_EXECUTOR"),
+    DELETE_EXECUTOR         ("AT05", "DELETE_EXECUTOR"),
     ADD_EXECUTOR_DETAILS    ("AT06", "ADD_EXECUTOR_DETAILS"),
     APPROVE_REPLY           ("AT07", "APPROVE_REPLY"),
     WRITE_REPLY             ("AT08", "WRITE_REPLY"),
@@ -20,7 +20,7 @@ public enum ActionType {
     COMPLETE_DOCUMENT       ("AT12", "COMPLETE_DOCUMENT"),
     UPDATE_REQUEST          ("AT13", "UPDATE_REQUEST"),
     UPDATE_MAIN_RESPONSER   ("AT14", "UPDATE_MAIN_RESPONSER"),
-    INSERT_REQUEST          ("AT15", "INSERT_REQUEST");
+    INSERT_EXECUTOR         ("AT15", "INSERT_EXECUTOR");
 
 
     private final String codeId;

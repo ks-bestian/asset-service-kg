@@ -5,8 +5,8 @@
 
     <insert id="insertWorkResponse" parameterType="kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.WorkResponseVo">
         INSERT INTO kgst.eas_work_response
-        (work_req_id, user_id, dept_cd, job_cd, check_dtm, rspns_dtm, rspns_cn, file_id, file_nm , rcv_dtm)
-        VALUES(#{workReqId}, #{userId}, #{deptCd}, #{jobCd}, #{checkDtm}, #{rspnsDtm}, #{rspnsCn}, #{fileId}, #{fileNm}, #{rcvDtm});
+        (work_req_id, user_id, dept_cd, job_cd, check_dtm, rspns_dtm, rspns_cn, file_id, file_nm , rcv_dtm, user_nm)
+        VALUES(#{workReqId}, #{userId}, #{deptCd}, #{jobCd}, #{checkDtm}, #{rspnsDtm}, #{rspnsCn}, #{fileId}, #{fileNm}, #{rcvDtm} #{userNm});
     </insert>
     <update id="updateWorkContents" parameterType="kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.UpdateWorkResponseVo">
         update kgst.eas_work_response
