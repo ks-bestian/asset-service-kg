@@ -19,7 +19,8 @@ public enum ActionType {
     SIGN_DOCUMENT           ("AT11", "SIGN_DOCUMENT"),
     COMPLETE_DOCUMENT       ("AT12", "COMPLETE_DOCUMENT"),
     UPDATE_REQUEST          ("AT13", "UPDATE_REQUEST"),
-    UPDATE_MAIN_RESPONSER   ("AT14", "UPDATE_MAIN_RESPONSER");
+    UPDATE_MAIN_RESPONSER   ("AT14", "UPDATE_MAIN_RESPONSER"),
+    INSERT_REQUEST          ("AT15", "INSERT_REQUEST");
 
 
     private final String codeId;
