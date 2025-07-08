@@ -21,11 +21,25 @@ import java.util.List;
 public class AuthMenuServiceImpl implements AuthMenuService {
 
     private final AuthMenuMapper authMenuMapper;
+
+    /**
+     * Retrieves a list of authorized menu items associated with a specific authorization ID.
+     *
+     * @param authId the authorization ID for which to fetch the menu list
+     * @return a list of AuthMenuVo objects representing the authorized menu items
+     */
     @Override
     public List<AuthMenuVo> getAuthMenuList(Long authId) {
         return authMenuMapper.selectListAuthMenu(authId);
     }
 
+    /**
+     * Saves the authorization menu configuration by removing any existing menus
+     * associated with the given authorization and inserting the new provided menu items.
+     *
+     * @param authMenuCreate the object containing authorization ID and a list of menu items to be saved
+     * @return the updated AuthMenuCreate object after saving the menu items
+     */
     @Override
     public AuthMenuCreate saveAuthMenu(AuthMenuCreate authMenuCreate) {
         List<AuthMenuVo> authMenuVos = authMenuCreate.getAuthMenuVos();

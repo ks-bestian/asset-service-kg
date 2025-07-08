@@ -48,15 +48,33 @@ public class HistoryServiceImpl implements HistoryService {
                 .orElse("");
     }
 
+    /**
+     * Retrieves the history records associated with the given document ID.
+     *
+     * @param docId the ID of the document whose history records are to be retrieved
+     * @return a list of HistoryVo objects containing the history details for the specified document ID
+     */
     @Override
     public List<HistoryVo> getHistory(String docId) {
         return historyRepository.getHistory(docId);
     }
 
+    /**
+     * Retrieves the history records associated with a specific document ID and filtered by the current user's ID.
+     *
+     * @param docId the document ID for which the history records are to be retrieved
+     * @return a list of HistoryVo objects containing the history details specific to the provided document ID
+     *         and the logged-in user's account
+     */
     public List<HistoryVo> getHistoryByUserId(String docId){
         return historyRepository.getHistoryByUserId(docId, new SecurityInfoUtil().getAccountId());
     }
 
+    /**
+     * Deletes a document from the system based on the provided document ID.
+     *
+     * @param docId the ID of the document to be deleted
+     */
     @Override
     public void deleteDocument(String docId) {
         historyRepository.deleteDocument(docId);

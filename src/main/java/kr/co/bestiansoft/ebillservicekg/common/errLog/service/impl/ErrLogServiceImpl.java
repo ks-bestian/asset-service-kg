@@ -22,11 +22,24 @@ import lombok.extern.slf4j.Slf4j;
 public class ErrLogServiceImpl implements ErrLogService {
     private final ErrLogMapper errLogMapper;
 
+	/**
+	 * Inserts an error log into the repository.
+	 *
+	 * @param errLogVo the error log data to be inserted
+	 */
 	@Override
 	public void insertErrLog(ErrLogVo errLogVo) {
 		errLogMapper.insertErrLog(errLogVo);
 	}
-	
+
+	/**
+	 * Saves an error log by collecting request and user information and delegating
+	 * the data to be stored in the repository.
+	 *
+	 * @param request the HTTP request containing details such as IP, URL, and method
+	 * @param errCd the error code representing the specific error encountered
+	 * @param errMsg the error message providing details about the encountered issue
+	 */
 	@Override
     public void saveErrLog(HttpServletRequest request, int errCd, String errMsg) {
     	String accessIp = request.getRemoteAddr();

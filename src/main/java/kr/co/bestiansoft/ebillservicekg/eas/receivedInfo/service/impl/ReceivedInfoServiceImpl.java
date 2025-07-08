@@ -57,6 +57,12 @@ public class ReceivedInfoServiceImpl implements ReceivedInfoService {
         return receivedInfoRepository.isReceipt(docId);
     }
 
+    /**
+     * Retrieves the main worker information associated with the given received ID.
+     *
+     * @param rcvId the identifier of the received information for which to retrieve the main worker details
+     * @return a {@link UserMemberVo} object containing the main worker's details, or null if no main worker is found
+     */
     @Override
     public UserMemberVo getMainWorkerInfo(int rcvId) {
         String mainWorker = receivedInfoRepository.getMainWorker(rcvId);
@@ -66,21 +72,44 @@ public class ReceivedInfoServiceImpl implements ReceivedInfoService {
         return userService.getUserMemberDetail(mainWorker);
     }
 
+    /**
+     * Retrieves the received information associated with the specified document ID and user ID.
+     *
+     * @param docId the identifier of the document for which the received information is to be retrieved
+     * @return the {@link ReceivedInfoVo} object containing the received information, or null if no record is found
+     */
     @Override
     public ReceivedInfoVo getReceivedInfoByUserId(String docId) {
         return receivedInfoRepository.getReceivedInfoByUserId(docId, new SecurityInfoUtil().getAccountId());
     }
 
+    /**
+     * Retrieves the received information associated with the specified recipient document ID.
+     *
+     * @param rcpDocId the recipient document ID for which the received information is to be retrieved
+     * @return the {@link ReceivedInfoVo} object containing the received information, or null if no record is found
+     */
     @Override
     public ReceivedInfoVo getReceivedInfoByRcpDocId(String rcpDocId) {
         return receivedInfoRepository.getReceivedInfoByRcpDocId(rcpDocId);
     }
 
+    /**
+     * Deletes the document associated with the specified document ID from the repository.
+     *
+     * @param docId the identifier of the document to be deleted
+     */
     @Override
     public void deleteDocument(String docId) {
         receivedInfoRepository.deleteDocument(docId);
     }
 
+    /**
+     * Retrieves the document ID associated with the specified received ID.
+     *
+     * @param rcvId the identifier of the received information for which the document ID is to be retrieved
+     * @return the document ID as a string, or null if no document ID is found
+     */
     @Override
     public String getDocIdByRcvId(int rcvId) {
         return receivedInfoRepository.getDocIdByRcvId(rcvId);

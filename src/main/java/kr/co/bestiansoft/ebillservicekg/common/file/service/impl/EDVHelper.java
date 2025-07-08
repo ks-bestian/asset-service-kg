@@ -60,6 +60,7 @@ public class EDVHelper {
     @Value("${edv.datastore-path}")
     private String datastorePath;
 
+
 	public Repository init() {
         if (null == repository) {
             try {
@@ -72,6 +73,20 @@ public class EDVHelper {
         return repository;
     }
 
+	/**
+	 * Updates the root folder path for EDV (Electronic Document Vault) in a properties file.
+	 * If the properties file already exists and contains the specified property name,
+	 * the method will update its value with the new root folder path. If the property does not exist
+	 * or the file does not exist, no update will be performed.
+	 *
+	 * The method works as follows:
+	 * 1. Creates a `File` reference to the properties file path defined by `edvPath`.
+	 * 2. Verifies if the properties file exists.
+	 * 3. Reads the properties file, checks for the presence of the specified property name,
+	 *    and updates its value with the new root folder path if the current value is different.
+	 * 4. Writes the updated properties back to the file.
+	 *
+	 */
 	public void setEdvRootFolder() {
 
 		String edvRootFolder 	= edvRoot;
@@ -106,6 +121,15 @@ public class EDVHelper {
         }
 	}
 
+	/**
+	 * Retrieves a session by initializing a repository and logging in with provided credentials.
+	 * The method attempts to initialize the repository using the `init` method,
+	 * then logs in using default credentials ("admin", "admin") to obtain a session.
+	 * If login or repository initialization fails, it logs the error and throws an exception.
+	 *
+	 * @return A valid Session object if login is successful.
+	 * @throws Exception If there is a login or repository initialization error.
+	 */
 	public Session getSession() throws Exception {
 		Session session = null;
         try {
@@ -121,6 +145,16 @@ public class EDVHelper {
         return session;
     }
 
+	/**
+	 * Saves a file to the repository with the given file ID and input stream.
+	 * The method stores the input stream as a binary resource under the specified file ID
+	 * and sets its metadata, such as MIME type, encoding, and last modified timestamp.
+	 *
+	 * @param fileId The unique identifier for the file to be saved in the repository.
+	 * @param is The input stream containing the file data.
+	 * @return The file ID of the saved file.
+	 * @throws Exception If there is an error during the repository session handling or file saving process.
+	 */
 	public String save(String fileId, InputStream is) throws Exception {
 
         Session session = getSession();
@@ -149,6 +183,15 @@ public class EDVHelper {
         return fileId;
     }
 
+	/**
+	 * Downloads a file from the repository based on the provided file ID.
+	 * The method retrieves the binary data of the specified file and returns it as an InputStream.
+	 * If an error occurs during the retrieval, an exception is logged and thrown to the caller.
+	 *
+	 * @param fileId The unique identifier for the file to be downloaded from the repository.
+	 * @return An InputStream containing the binary data of the requested file, or null if an error occurs.
+	 * @throws Exception If there is an error during the repository session handling or file retrieval process.
+	 */
 	public InputStream download(String fileId) throws Exception {
 
         InputStream is = null;
@@ -169,6 +212,16 @@ public class EDVHelper {
         return is;
     }
 
+	/**
+	 * Deletes a file or node from the repository based on the provided file ID.
+	 * The method retrieves the root node of the repository, searches for nodes
+	 * matching the given file ID, and removes them. After successful deletion,
+	 * the session is saved and logged out. If any repository issues occur during
+	 * this process, they are logged.
+	 *
+	 * @param fileId The unique identifier of the file or node to be deleted from the repository.
+	 * @throws Exception If there is an error during the repository session handling or node deletion process.
+	 */
 	public void delete(String fileId) throws Exception {
         Session session = getSession();
         try {

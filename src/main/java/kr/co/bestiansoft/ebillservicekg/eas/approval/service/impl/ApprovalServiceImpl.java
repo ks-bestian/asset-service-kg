@@ -69,6 +69,11 @@ public class ApprovalServiceImpl implements ApprovalService {
         return approvalRepository.getApprovalsByUserId(new SecurityInfoUtil().getAccountId(), docId);
     }
 
+    /**
+     * Deletes the document associated with the specified document ID from the repository.
+     *
+     * @param docId the unique identifier of the document to be deleted
+     */
     @Override
     public void deleteDocument(String docId) {
         approvalRepository.deleteDocument(docId);

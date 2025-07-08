@@ -112,30 +112,59 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
         return officialDocumentMapper.getDocumentUser(docId);
     }
 
-
-
+    /**
+     * Checks if the document specified by the given ID is marked as rejected.
+     *
+     * @param docId The unique identifier of the document to be checked.
+     * @return A Boolean value: true if the document is rejected, false otherwise.
+     */
     @Override
     public Boolean isReject(String docId) {
         return officialDocumentMapper.isReject(docId);
     }
 
+    /**
+     * Retrieves a list of rejected documents based on the provided search criteria.
+     *
+     * @param vo an instance of SearchDocumentVo containing search criteria, including user identification
+     * @return a list of DocumentListDto representing the rejected documents matching the criteria
+     */
     @Override
     public List<DocumentListDto> getRejectDocumentList(SearchDocumentVo vo) {
         vo.setUserId(new SecurityInfoUtil().getAccountId());
         return officialDocumentMapper.getRejectDocumentList(vo);
     }
 
+    /**
+     * Counts the number of rejected documents associated with the current user's account.
+     * The method utilizes account information retrieved from the SecurityInfoUtil class.
+     *
+     * @return the total number of rejected documents for the account.
+     */
     @Override
     public int countRejectDocument() {
         return officialDocumentMapper.countRejectDocument(new SecurityInfoUtil().getAccountId());
     }
 
+    /**
+     * Retrieves a list of documents specific to the currently authenticated user.
+     *
+     * @param vo a SearchDocumentVo object containing the search criteria and
+     *           additional data necessary to fetch the document list
+     * @return a list of DocumentListDto objects representing the user's documents
+     */
     @Override
     public List<DocumentListDto> getMyDocumentList(SearchDocumentVo vo) {
         vo.setUserId(new SecurityInfoUtil().getAccountId());
         return officialDocumentMapper.getMyDocumentList(vo);
     }
 
+    /**
+     * Retrieves the work list based on the provided search criteria.
+     *
+     * @param vo an instance of SearchDocumentVo containing search parameters such as date range and user ID
+     * @return a list of DocumentListDto objects matching the search criteria
+     */
     @Override
     public List<DocumentListDto> getWorkList(SearchDocumentVo vo) {
         if(vo.getBetweenRcvDtm() != null) {
@@ -150,6 +179,13 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
         return officialDocumentMapper.getWorkList(vo);
     }
 
+    /**
+     * Retrieves a processed list of documents based on the given search criteria encapsulated in the SearchDocumentVo object.
+     *
+     * @param vo the search criteria containing filtering information like date ranges and other conditions. It is updated internally
+     *           to set the from and to dates or user ID as necessary.
+     * @return a list of DocumentListDto objects that match the search criteria.
+     */
     @Override
     public List<DocumentListDto> getProcessedList(SearchDocumentVo vo) {
         if(vo.getBetweenRcvDtm() != null) {
@@ -163,16 +199,38 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
         return officialDocumentMapper.getProcessedList(vo);
     }
 
+    /**
+     * Deletes a document with the specified document ID.
+     *
+     * @param docId the unique identifier of the document to be deleted
+     */
     @Override
     public void deleteDocument(String docId) {
         officialDocumentMapper.deleteDocument(docId);
     }
 
+    /**
+     * Counts the total number of work list items associated with the current user's account.
+     *
+     * @return the total number of work list items associated with the account ID retrieved
+     *         from the SecurityInfoUtil for the current user.
+     */
     @Override
     public int countWorkList() {
         return officialDocumentMapper.countWorkList(new SecurityInfoUtil().getAccountId());
     }
 
+    /**
+     * Parses a date range string and extracts the starting date of the range.
+     * The starting date is converted to a {@link LocalDateTime} with the time set to 00:00:00.
+     * The expected date format in the input is "yyyy-MM-dd".
+     *
+     * @param dateRangeStr the date range string, formatted as "yyyy-MM-dd~yyyy-MM-dd".
+     *                     The method extracts the starting date from this range. If null or empty, null is returned.
+     *                     If the date format is invalid, null is returned.
+     * @return the starting date as a {@link LocalDateTime} with the time set to 00:00:00,
+     *         or null if the input is invalid or parsing fails.
+     */
     public LocalDateTime parseFromDateRange(String dateRangeStr) {
         if (dateRangeStr == null || dateRangeStr.trim().isEmpty()) {
             return null;
@@ -193,6 +251,17 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
         return null;
     }
 
+    /**
+     * Parses a date range string and returns the end date as a LocalDateTime object.
+     * The method expects the input string to represent a date range in the format "startDate~endDate".
+     * If the end date is not provided, the start date is used as the end date and a time of 23:59:59 is set.
+     * If the input is invalid or cannot be parsed, the method returns null.
+     *
+     * @param dateRangeStr the input string representing a date range, where dates are in the format "yyyy-MM-dd".
+     *                     It may include a single date or two dates separated by a tilde (~).
+     * @return a LocalDateTime object representing the end date with time set to 23:59:59,
+     *         or null if the input is invalid or cannot be parsed.
+     */
     public static LocalDateTime parseToDateRange(String dateRangeStr) {
         if (dateRangeStr == null || dateRangeStr.trim().isEmpty()) {
             return null;
@@ -222,6 +291,17 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
 
         return null;
     }
+
+    /**
+     * Retrieves a list of approvals based on the given search criteria.
+     * The method processes the date range filters and user identification
+     * before fetching the data from the data mapper.
+     *
+     * @param vo the search criteria encapsulated in a SearchDocumentVo object.
+     *           This includes filters such as date ranges and user-specific data.
+     * @return a list of ApprovalListDto containing the approvals matching
+     *         the provided search criteria.
+     */
     @Override
     public List<ApprovalLIstDto> getApprovalList(SearchDocumentVo vo) {
         if(vo.getBetweenRcvDtm() != null) {
@@ -236,66 +316,13 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
         return officialDocumentMapper.getApprovalList(vo);
     }
 
+    /**
+     * Counts the number of approval items in the list associated with the current account.
+     *
+     * @return the count of approval items for the current account.
+     */
     public int countApprovalList(){
         return officialDocumentMapper.countApprovalList(new SecurityInfoUtil().getAccountId());
     }
-    /**
-     * String Date LocalDateTimeby conversion
-     *
-     * @param dateStr "yyyy-MM-dd" Formal String
-     * @param startOfDay truenoodle 00:00:00, falsenoodle 23:59:59as hour setting
-     * @return Converted LocalDateTime Object
-     */
-    public static LocalDateTime parseDate(String dateStr, boolean startOfDay) {
-        if (dateStr == null || dateStr.trim().isEmpty()) {
-            return null;
-        }
-
-        try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate date = LocalDate.parse(dateStr.trim(), formatter);
-
-            if (startOfDay) {
-                return date.atStartOfDay();
-            } else {
-                return date.atTime(23, 59, 59);
-            }
-        } catch (DateTimeParseException e) {
-            // Logging or different exception treatment
-            System.err.println("The date format is not correct: " + dateStr);
-        }
-
-        return null;
-    }
-
-    /**
-     * Convert string date and time to LocalDatetime
-     *
-     * @param dateTimeStr "yyyy-MM-dd HH:mm:ss" Formal String
-     * @return Converted LocalDateTime Object
-     */
-    public static LocalDateTime parseDateTime(String dateTimeStr) {
-        if (dateTimeStr == null || dateTimeStr.trim().isEmpty()) {
-            return null;
-        }
-
-        try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            return LocalDateTime.parse(dateTimeStr.trim(), formatter);
-        } catch (DateTimeParseException e) {
-            //An attempt to format in the case of the wrong form
-            try {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                return LocalDate.parse(dateTimeStr.trim(), formatter).atStartOfDay();
-            } catch (DateTimeParseException e2) {
-                // Logging or different exception treatment
-                System.err.println("The date format is not correct: " + dateTimeStr);
-            }
-        }
-
-        return null;
-    }
-
-
 
 }

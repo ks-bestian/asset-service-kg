@@ -75,6 +75,12 @@ public class WorkRequestServiceImpl implements WorkRequestService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Retrieves a list of work requests and their corresponding responses based on the specified document ID.
+     *
+     * @param docId the unique identifier of the document whose work requests and responses are to be retrieved
+     * @return a list of WorkRequestAndResponseVo objects representing the work requests and their related responses
+     */
     @Override
     public List<WorkRequestAndResponseVo> getWorkRequestList(String docId) {
         return workRequestRepository.getWorkRequestList(null, docId)
@@ -86,6 +92,13 @@ public class WorkRequestServiceImpl implements WorkRequestService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Retrieves a combined work request and response object based on the specified document ID.
+     *
+     * @param docId the unique identifier of the document whose associated work request and response are to be retrieved
+     * @return a WorkRequestAndResponseVo object containing the combined work request and response data;
+     *         returns null if no matching work request is found
+     */
     @Override
     public WorkRequestAndResponseVo getWorkRequestAndResponseList(String docId) {
         WorkRequestAndResponseVo workRequestAndResponseVo = new WorkRequestAndResponseVo();
@@ -99,16 +112,33 @@ public class WorkRequestServiceImpl implements WorkRequestService {
         }
     }
 
+    /**
+     * Deletes a document identified by the provided document ID.
+     *
+     * @param docId the unique identifier of the document to be deleted
+     */
     @Override
     public void deleteDocument(String docId) {
         workRequestRepository.deleteDocument(docId);
     }
 
+    /**
+     * Retrieves the document ID associated with the specified work request ID.
+     *
+     * @param workReqId the unique identifier of the work request
+     * @return the document ID linked to the provided work request ID, or null if no match is found
+     */
     @Override
     public String getDocIdByWorkReqId(int workReqId) {
         return workRequestRepository.getDocIdByWorkReqId(workReqId);
     }
 
+    /**
+     * Updates the details of an existing work request in the repository.
+     *
+     * @param vo the WorkRequestVo object containing the updated details of the work request
+     * @return the number of records updated, typically 1 if successful
+     */
     @Override
     public int updateWorkRequest(WorkRequestVo vo) {return workRequestRepository.updateWorkRequest(vo);}
 }

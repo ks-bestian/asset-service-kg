@@ -31,13 +31,31 @@ public class MyInfoServiceImpl implements MyInfoService {
     private final ComFileService comFileService;
     private final EDVHelper edv;
 
+    /**
+     * Retrieves detailed information about the currently authenticated user.
+     * The user ID is fetched from the security context and added to the parameter map
+     * before querying the underlying user data source.
+     *
+     * @param param A map containing parameters required for querying user information.
+     *              The "userId" of the currently authenticated user is added to this map.
+     * @return A UserMemberVo object containing detailed information about the user,
+     *         such as user ID, name, department, profile image path, and other related attributes.
+     */
     @Override
     public UserMemberVo getMyInfo(HashMap<String, Object> param) {
         param.put("userId", new SecurityInfoUtil().getAccountId());
         return userMapper.userDetail(param);
     }
 
-
+    /**
+     * Retrieves the content of a file based on the given path.
+     * The method uses the currently authenticated user's ID to fetch user details
+     * and attempts to retrieve the file content if a valid profile image path is provided.
+     *
+     * @param param A map containing parameters for file retrieval. The map is updated
+     *              with the current user's ID before querying for the file.
+     * @return An InputStream of the file content if available; otherwise, null.
+     */
     @Override
     public InputStream getFileContentByPath(HashMap<String, Object> param) {
         try {
@@ -61,6 +79,16 @@ public class MyInfoServiceImpl implements MyInfoService {
     }
 
 
+    /**
+     * Updates the personal information of the currently authenticated user.
+     * Includes functionalities to save profile image files, encrypt passwords,
+     * and update information based on the user type (member or user).
+     *
+     * @param userMemberVo An object containing the user's all personal information
+     *                     such as user details, profile image files, password,
+     *                     and user type (member/user).
+     * @return A UserMemberVo object reflecting the updated user information.
+     */
     @Override
     public UserMemberVo updateMyInfo(UserMemberVo userMemberVo) {
         if(userMemberVo.getFiles() != null) {

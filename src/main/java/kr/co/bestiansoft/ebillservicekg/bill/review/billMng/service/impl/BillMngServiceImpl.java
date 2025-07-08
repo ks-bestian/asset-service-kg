@@ -46,6 +46,12 @@ public class BillMngServiceImpl implements BillMngService {
 	private final ProcessMapper processMapper;
 	private final ApplyMapper applyMapper;
 
+	/**
+	 * Retrieves a list of BillMngVo objects based on the provided parameters.
+	 *
+	 * @param param a HashMap containing the parameters required for fetching the bill list
+	 * @return a List of BillMngVo objects that match the criteria specified in the parameters
+	 */
     @Override
     public List<BillMngVo> getBillList(HashMap<String, Object> param) {
 
@@ -53,6 +59,12 @@ public class BillMngServiceImpl implements BillMngService {
         return result;
     }
 
+	/**
+	 * Retrieves a single bill's details including its associated file list based on the provided parameters.
+	 *
+	 * @param param The BillMngVo object containing the search criteria for retrieving the bill.
+	 * @return A BillMngResponse object containing the retrieved bill details and its associated files.
+	 */
 	@Override
 	public BillMngResponse selectOneBill(BillMngVo param) {
 

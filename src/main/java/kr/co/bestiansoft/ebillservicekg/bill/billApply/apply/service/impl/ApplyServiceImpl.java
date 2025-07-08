@@ -47,6 +47,14 @@ public class ApplyServiceImpl implements ApplyService {
 	private final HomePageMapper homePageMapper;
 	private final BillMngService billMngService;
 
+	/**
+	 * Creates an application process, assigns a unique Bill ID, associates the request data,
+	 * handles file management, manages the proposer list, and starts the process workflow.
+	 *
+	 * @param applyVo the ApplyVo object containing the application data to be processed
+	 * @return the processed ApplyVo object with updated and persisted information
+	 * @throws Exception if there is any error during the application creation process
+	 */
 	@Transactional
 	@Override
 	public ApplyVo createApply(ApplyVo applyVo) throws Exception {
@@ -111,7 +119,17 @@ public class ApplyServiceImpl implements ApplyService {
 
 		return applyVo;
 	}
-	
+
+	/**
+	 * Creates and registers an application with the provided data, involving various processes such
+	 * as generating a bill ID, saving file information, and processing proposer lists.
+	 *
+	 * @param applyVo the data object containing information necessary for creating and registering
+	 *                the application, including details about the proposer list, files, and other attributes
+	 * @return the updated ApplyVo object representing the registered application, including generated IDs
+	 *         and other processed data
+	 * @throws Exception if any error occurs during the process of registration or related operations
+	 */
 	@Transactional
 	@Override
 	public ApplyVo createApplyRegister(ApplyVo applyVo) throws Exception {
@@ -198,6 +216,15 @@ public class ApplyServiceImpl implements ApplyService {
 		return applyVo;
 	}
 
+	/**
+	 * Retrieves a list of ApplyVo objects based on the provided parameters.
+	 * The method depends on the current logged-in user's account ID to filter the results.
+	 *
+	 * @param param a HashMap containing the query parameters used for fetching the ApplyVo list.
+	 *              The map should include all relevant search criteria except the login ID,
+	 *              which is automatically added within the method.
+	 * @return a list of ApplyVo objects that match the given parameters.
+	 */
 	@Override
 	public List<ApplyVo> getApplyList(HashMap<String, Object> param) {
 		String loginId = new SecurityInfoUtil().getAccountId();
@@ -207,6 +234,16 @@ public class ApplyServiceImpl implements ApplyService {
 		return applyMapper.selectListBillApply(param);
 	}
 
+	/**
+	 * Updates the "apply" information associated with a specific bill.
+	 * This method is transactional and ensures that all operations succeed together or fail together.
+	 * It manages the proposers of the bill, updates file information, and modifies the bill details.
+	 *
+	 * @param applyVo an ApplyVo object that contains the updated data for the bill, including information about proposers and files
+	 * @param billId the unique identifier of the bill to be updated
+	 * @return the number of rows affected in the database
+	 * @throws Exception if any error occurs during the update process
+	 */
 	@Transactional
 	@Override
 	public int updateApply(ApplyVo applyVo, String billId) throws Exception {
@@ -274,6 +311,17 @@ public class ApplyServiceImpl implements ApplyService {
 		return applyMapper.updateApplyByBillId(applyVo);
 	}
 
+	/**
+	 * Deletes the application and associated data based on the provided bill ID.
+	 * This method performs the following operations:
+	 * - Deletes proposer data associated with the given bill ID.
+	 * - Deletes any file data linked to the bill ID and the current user.
+	 * - Removes tasks and process instances tied to the bill ID.
+	 * - Deletes the application record associated with the bill ID.
+	 *
+	 * @param billId the unique identifier of the bill to be deleted
+	 * @return the number of rows affected in the database
+	 */
 	@Transactional
 	@Override
 	public int deleteApply(String billId) {
@@ -293,6 +341,14 @@ public class ApplyServiceImpl implements ApplyService {
 		return applyMapper.deleteApplyByBillId(billId);
 	}
 
+	/**
+	 * Retrieves detailed information regarding a specific bill application.
+	 *
+	 * @param billId The unique identifier of the bill to retrieve details for.
+	 * @param param  A HashMap containing additional parameters required for the query, such as stepId and trgtUserId.
+	 * @return An ApplyResponse object containing the detailed information of the bill, including application details,
+	 *         associated files, proposer list, comments hierarchy, and process information.
+	 */
 	@Override
 	public ApplyResponse getApplyDetail(String billId, HashMap<String, Object> param) {
 
@@ -343,6 +399,12 @@ public class ApplyServiceImpl implements ApplyService {
 		return result;
 	}
 
+	/**
+	 * Applies a bill by performing insertion into a bill process and updating its status.
+	 *
+	 * @param billId the identifier for the bill to be processed and updated
+	 * @return the number of rows affected during the update operation
+	 */
 	@Transactional
 	@Override
 	public int applyBill(String billId) {
@@ -356,6 +418,13 @@ public class ApplyServiceImpl implements ApplyService {
 		return applyMapper.updateApplyBill(billId, statCd);
 	}
 
+	/**
+	 * Revokes a bill by updating its status and performing necessary database operations.
+	 *
+	 * @param billId the unique identifier of the bill to be revoked
+	 * @param applyVo the object containing the details required for the revocation process
+	 * @return the number of affected rows in the database after updating the bill's status
+	 */
 	@Transactional
 	@Override
 	public int revokeBill(String billId, ApplyVo applyVo) {
@@ -368,6 +437,13 @@ public class ApplyServiceImpl implements ApplyService {
 		return applyMapper.updateRevokeBill(applyVo);
 	}
 
+	/**
+	 * Updates the status of a bill with the provided bill ID and application details.
+	 *
+	 * @param billId the ID of the bill to update
+	 * @param applyVo the application details containing the new status and related information
+	 * @return the number of records updated in the database
+	 */
 	@Transactional
 	@Override
 	public int updateBillStatus(String billId, ApplyVo applyVo) {
@@ -375,6 +451,14 @@ public class ApplyServiceImpl implements ApplyService {
 		return applyMapper.updateBillStatus(applyVo);
 	}
 
+	/**
+	 * Saves the bill acceptance process by updating the reception details for the bill
+	 * and handling the associated process workflow steps.
+	 *
+	 * @param billId the unique identifier of the bill to be accepted
+	 * @param applyVo an instance of ApplyVo containing information related to the bill acceptance
+	 * @return the updated ApplyVo instance after processing
+	 */
 	@Transactional
 	@Override
 	public ApplyVo saveBillAccept(String billId, ApplyVo applyVo) {
@@ -393,23 +477,49 @@ public class ApplyServiceImpl implements ApplyService {
 		return applyVo;
 	}
 
+	/**
+	 * Deletes a bill file by updating its status in the database.
+	 *
+	 * @param ebsFileVo the object containing file information to be deleted
+	 * @return an integer indicating the number of records updated in the database
+	 */
 	@Override
 	public int deleteBillFile(EbsFileVo ebsFileVo) {
 		String userId = new SecurityInfoUtil().getAccountId();
 		return applyMapper.updateFileDelete(ebsFileVo, userId);
 	}
-	
+
+	/**
+	 * Updates the operational status of a file based on the provided information.
+	 *
+	 * @param ebsFileVo an instance of EbsFileVo containing the file details to be updated
+	 * @return an integer representing the result of the update operation
+	 */
 	@Override
 	public int updateFileOpbYn(EbsFileVo ebsFileVo) {
 		String userId = new SecurityInfoUtil().getAccountId();
 		return applyMapper.updateFileOpbYn(ebsFileVo, userId);
 	}
 
+	/**
+	 * Retrieves a list of ApplyVo objects based on the provided parameters.
+	 *
+	 * @param param a HashMap containing key-value pairs used as filtering criteria for selecting the bills
+	 * @return a list of ApplyVo objects that match the specified criteria
+	 */
 	@Override
 	public List<ApplyVo> selectBillAll(HashMap<String, Object> param) {
 		return applyMapper.selectBillAll(param);
 	}
 
+	/**
+	 * Creates a bill for home applications by inserting the initial data,
+	 * updating necessary fields, and saving it to the database.
+	 *
+	 * @param applyVo the ApplyVo object that contains the details of the bill to be created.
+	 *                This includes relevant information such as status and ID fields.
+	 * @return the updated ApplyVo object with the generated ID and any additional changes applied.
+	 */
 	@Transactional
 	@Override
 	public ApplyVo createBillHome(ApplyVo applyVo) {
@@ -425,7 +535,13 @@ public class ApplyServiceImpl implements ApplyService {
 
 		return applyVo;
 	}
-	
+
+	/**
+	 * Stops the billing home process for the provided application details.
+	 *
+	 * @param applyVo the object containing application details, including the unique
+	 *                identifier and other necessary information to stop the billing process
+	 */
 	@Override
 	public void stopBillHome(ApplyVo applyVo) {
 		
@@ -442,6 +558,11 @@ public class ApplyServiceImpl implements ApplyService {
 		applyMapper.updateBillHome(applyVo);
 	}
 
+	/**
+	 * Creates and inserts a new comment into the data source.
+	 *
+	 * @param commentsVo an instance of CommentsVo containing the details of the comment to be created
+	 */
 	@Override
 	public void createComments(CommentsVo commentsVo) {
 		homePageMapper.insertComments(commentsVo);

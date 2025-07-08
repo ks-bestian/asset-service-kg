@@ -30,24 +30,54 @@ public class PdfServiceImpl implements PdfService {
 	@Autowired
 	private ExecutorService executorService;
 
+	/**
+	 * Converts a Word document to a PDF file.
+	 *
+	 * @param docfilepath the file path of the input Word document
+	 * @param pdffilepath the file path of the output PDF file
+	 * @throws Exception if an error occurs during the conversion process
+	 */
 	@Override
 	public void convertDocToPdf(String docfilepath, String pdffilepath) throws Exception {
 		Document doc = new Document(docfilepath);
 		doc.save(pdffilepath, SaveFormat.PDF);
 	}
 
+	/**
+	 * Converts a PowerPoint presentation to a PDF file.
+	 *
+	 * @param pptfilepath the file path of the input PowerPoint presentation
+	 * @param pdffilepath the file path of the output PDF file
+	 * @throws Exception if an error occurs during the conversion process
+	 */
 	@Override
 	public void convertPptToPdf(String pptfilepath, String pdffilepath) throws Exception {
 		Presentation pres = new Presentation(pptfilepath);
 		pres.save(pdffilepath, com.aspose.slides.SaveFormat.Pdf);
 	}
 
+	/**
+	 * Converts an Excel spreadsheet to a PDF file.
+	 *
+	 * @param xlsfilepath the file path of the input Excel spreadsheet
+	 * @param pdffilepath the file path of the output PDF file
+	 * @throws Exception if an error occurs during the conversion process
+	 */
 	@Override
 	public void convertXlsToPdf(String xlsfilepath, String pdffilepath) throws Exception {
 		Workbook book = new Workbook(xlsfilepath);
 		book.save(pdffilepath, com.aspose.cells.SaveFormat.PDF);
 	}
 
+	/**
+	 * Converts a document file to a PDF file based on its file type.
+	 *
+	 * @param filepath the file path of the input document
+	 * @param filename the name of the input file
+	 * @param pdffilepath the file path of the output PDF file
+	 * @return true if the conversion is successful, false if the file type is unsupported
+	 * @throws Exception if an error occurs during the conversion process
+	 */
 	@Override
 	public boolean convertToPdf(String filepath, String filename, String pdffilepath) throws Exception {
 		if (filename.endsWith(".doc") || filename.endsWith(".docx")) {
@@ -64,18 +94,19 @@ public class PdfServiceImpl implements PdfService {
 		}
 		return false;
 	}
-	
+
 	/**
-	 * 
-	 * @param pdfPath PDF file channel
-	 * @param imagePath To insert image file channel
-	 * @param outputPath result PDF file channel
-	 * @param pageNumber Image To insert page number (0from start)
-	 * @param x Image To be inserted X coordinate (page Left side Bottom standard, point unit)
-	 * @param y Image To be inserted Y coordinate (page Left side Bottom standard, point unit)
-	 * @param width To be inserted Image width (point unit)
-	 * @param height To be inserted Image height (point unit)
-	 * @throws IOException 
+	 * Adds an image to a specified page of a PDF at the given coordinates and dimensions.
+	 *
+	 * @param pdfPath the file path of the input PDF
+	 * @param imagePath the file path of the image to be added
+	 * @param outputPath the file path where the updated PDF should be saved
+	 * @param pageNumber the page number (zero-based index) where the image should be inserted
+	 * @param x the x-coordinate on the page where the image should be placed
+	 * @param y the y-coordinate on the page where the image should be placed
+	 * @param width the width of the image to be added
+	 * @param height the height of the image to be added
+	 * @throws IOException if an error occurs while processing the PDF or the image
 	 */
 	@Override
 	public void addImageToPdf(String pdfPath, String imagePath, String outputPath, int pageNumber, float x, float y, float width, float height) throws IOException {

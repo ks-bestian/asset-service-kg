@@ -25,14 +25,22 @@ public class FormServiceImpl implements FormService {
     private final FormFieldService formFieldService;
     private final ComFileService comFileService;
 
-    @Autowired
-    private final EDVHelper edv;
-
+    /**
+     * Retrieves the list of forms from the database.
+     *
+     * @return a list of FormVo objects representing the forms available.
+     */
     @Override
     public List<FormVo> getFormList() {
         return formMapper.selectFormList();
     }
 
+    /**
+     * Creates a form along with its associated fields and saves them to the database.
+     *
+     * @param formWithFieldsVo the form object containing the form information and associated fields
+     * @return the form object with updated information, including the newly assigned form ID and field sequence numbers
+     */
     @Override
     public FormWithFieldsVo createFormWithFields(FormWithFieldsVo formWithFieldsVo) {
 
@@ -53,6 +61,12 @@ public class FormServiceImpl implements FormService {
         return formWithFieldsVo;
     }
 
+    /**
+     * Retrieves form details, including associated fields, by form ID.
+     *
+     * @param formId the unique identifier of the form to retrieve
+     * @return a FormWithFieldsVo object containing form details and a list of associated fields
+     */
     @Override
     public FormWithFieldsVo getFormWithFieldsById(Integer formId) {
         FormWithFieldsVo formWithFieldsVo = formMapper.selectFormDetail(formId);
@@ -63,6 +77,17 @@ public class FormServiceImpl implements FormService {
         return formWithFieldsVo;
     }
 
+    /**
+     * Deletes a form along with all its associated fields and the corresponding file if it exists.
+     *
+     * This method performs the following steps:
+     * 1. Deletes all fields associated with the form identified by its ID.
+     * 2. Retrieves the form details to check for any associated file.
+     * 3. Deletes the associated file if it is present.
+     * 4. Deletes the form entry from the database.
+     *
+     * @param formId the unique identifier of the form to be deleted
+     */
     @Override
     public void deleteFormWithFields(Integer formId) {
         formFieldService.deleteFormFields(formId);
