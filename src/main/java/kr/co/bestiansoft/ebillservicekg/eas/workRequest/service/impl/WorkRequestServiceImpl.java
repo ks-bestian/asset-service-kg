@@ -110,7 +110,7 @@ public class WorkRequestServiceImpl implements WorkRequestService {
             return workRequestAndResponseVo.from(workRequestVo,responses);
         }else{
             log.info("workRequestVo is null");
-            return workRequestAndResponseVo;
+            return null;
         }
     }
 
