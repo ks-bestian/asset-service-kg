@@ -1,7 +1,7 @@
 package kr.co.bestiansoft.ebillservicekg.bill.review.billAll.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import kr.co.bestiansoft.ebillservicekg.admin.bbs.service.BoardService;
 import kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billAll.service.BillAllService;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 
-@Api(tags = "Agenda entire API")
+@Tag(name = "Agenda entire API")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequiredArgsConstructor
 @RestController
@@ -22,25 +22,25 @@ public class BillAllController {
 
     private final BillAllService billAllService;
 
-    @ApiOperation(value = "Agenda entire List check", notes = "List Inquiry.")
+    @Operation(summary = "Agenda entire List check", description = "List Inquiry.")
     @GetMapping("/bill/review/all")
     public ResponseEntity<CommonResponse> getBillList(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", billAllService.getBillList(param)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Agenda entire particular check", notes = "Details Inquiry.")
+    @Operation(summary = "Agenda entire particular check", description = "Details Inquiry.")
     @GetMapping("/bill/review/all/detail/{billId}")
     public ResponseEntity<CommonResponse> getBillById(@PathVariable String billId, @RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", billAllService.getBillById(billId, param)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Agenda Monitoring check", notes = "List Inquiry.")
+    @Operation(summary = "Agenda Monitoring check", description = "List Inquiry.")
     @GetMapping("/bill/search/monitor")
     public ResponseEntity<CommonResponse> selectListBillMonitor(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", billAllService.selectListBillMonitor(param)), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "bill statistics check", notes = "bill Statistics Inquiry.")
+    @Operation(summary = "bill statistics check", description = "bill Statistics Inquiry.")
     @GetMapping("/bill/search/statistics")
     public ResponseEntity<CommonResponse> selectListBillStatistics(@RequestParam HashMap<String, Object> param) {
     	Object statisticsKind = param.get("statisticsKind");

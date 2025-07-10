@@ -14,7 +14,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.Properties;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.jcr.Binary;
 import javax.jcr.LoginException;
 import javax.jcr.Node;

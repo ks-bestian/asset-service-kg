@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
 import org.springframework.core.io.InputStreamResource;
@@ -16,15 +16,15 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.impl.EDVHelper;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.ComFileVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
-@Api(tags = "file API")
+@Tag(name = "file API")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequiredArgsConstructor
 @RestController
@@ -33,7 +33,7 @@ public class ComFileController {
 	private final EDVHelper edv;
     private final ComFileService comFileService;
 
-    @ApiOperation(value = "File download", notes = "File Download.")
+    @Operation(summary = "File download", description = "File Download.")
 	@GetMapping("/com/file/down")
 	public ResponseEntity<?> fileDownload(@RequestParam String fileId,HttpServletResponse response, HttpServletRequest request) throws Exception {
 
@@ -51,7 +51,7 @@ public class ComFileController {
 				.body(resource);
 	}
 
-	@ApiOperation(value = "file list", notes = "search file list by fileGroupId")
+	@Operation(summary = "file list", description = "search file list by fileGroupId")
 	@GetMapping("/com/file/{fileGroupId}")
 	public ResponseEntity<List<ComFileVo>> getFileList(@PathVariable String fileGroupId) {
 		List<ComFileVo> list = comFileService.getFileList(fileGroupId);
@@ -80,7 +80,7 @@ public class ComFileController {
 				.body(resource);
 	}
 
-	@ApiOperation(value = "file Upload", notes = "File Upload.")
+	@Operation(summary = "file Upload", description = "File Upload.")
 	@PostMapping(value = "/com/file/upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<CommonResponse> uploadFile(@RequestPart("file") MultipartFile[] file) {
 		try {

@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.service.ApplyService;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.revokeAgree.service.RevokeAgreeService;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
 import lombok.RequiredArgsConstructor;
 
-@Api(tags = "Agendant API")
+@Tag(name = "Agendant API")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequiredArgsConstructor
 @RestController
@@ -28,20 +28,20 @@ public class RevokeAgreeController {
     private final RevokeAgreeService revokeAgreeService;
     private final ApplyService applyService;
     
-    @ApiOperation(value = "Withdrawal list", notes = "The withdrawal list Inquiry")
+    @Operation(summary = "Withdrawal list", description = "The withdrawal list Inquiry")
     @GetMapping("/bill/revokeAgree")
     public ResponseEntity<CommonResponse> getRevokeList(@RequestParam HashMap<String, Object> param) {
     	return new ResponseEntity<>(new CommonResponse(200, "OK", revokeAgreeService.getRevokeAgreeList(param)), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "Withdrawal particular", notes = "Withdrawal Details Inquiry")
+    @Operation(summary = "Withdrawal particular", description = "Withdrawal Details Inquiry")
     @GetMapping("/bill/revokeAgree/{billId}")
     public ResponseEntity<CommonResponse> getRevokeDetail(@PathVariable String billId, @RequestParam HashMap<String, Object> param) {
 //    	return new ResponseEntity<>(new CommonResponse(200, "OK", revokeAgreeService.getRevokeDetail(billId, param)), HttpStatus.OK);
     	return new ResponseEntity<>(new CommonResponse(200, "OK", applyService.getApplyDetail(billId, param)), HttpStatus.OK);
     }
     
-    @ApiOperation(value = "Withdrawal agreement", notes = "Consent to withdrawal request and cancellation of consent")
+    @Operation(summary = "Withdrawal agreement", description = "Consent to withdrawal request and cancellation of consent")
     @PutMapping("/bill/revokeAgree/{billId}")
     public ResponseEntity<CommonResponse> updateRevokeAgree(@PathVariable String billId, @RequestBody HashMap<String, Object> param) {
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "revoke agree successfully", revokeAgreeService.updateRevokeAgree(billId, param)), HttpStatus.OK);

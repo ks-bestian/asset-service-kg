@@ -4,19 +4,20 @@ import java.security.MessageDigest;
 
 //import javax.xml.bind.DatatypeConverter;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+//import io.swagger.annotations.ApiModel;
+//import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
-@ApiModel(description = "log in check")
+@Schema(description = "log in check")
 @Data
 public class LoginRequest {
 
-	@ApiModelProperty(value = "user id")
+	@Schema(description = "user id")
     private String userId;
 
-	@ApiModelProperty(value = "user Password")
+	@Schema(description = "user Password")
     private String pswd;
 
 	private String lang;

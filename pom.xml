@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.18</version>
+        <version>3.2.5</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>ko.co.bestiansoft</groupId>
@@ -28,8 +28,8 @@
         <url/>
     </scm>
     <properties>
-        <java.version>1.8</java.version>
-        <mybastis.version>2.3.2</mybastis.version>
+        <java.version>21</java.version>
+        <mybastis.version>3.0.4</mybastis.version>
     </properties>
     
     <repositories>
@@ -90,6 +90,7 @@
             <version>1.5.8</version>
         </dependency>
         <!-- swagger -->
+        <!--
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
@@ -105,6 +106,12 @@
             <artifactId>springfox-boot-starter</artifactId>
             <version>3.0.0</version>
         </dependency>
+        -->
+        <dependency>
+		    <groupId>org.springdoc</groupId>
+		    <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+		    <version>2.5.0</version>
+		</dependency>
         <!-- swagger -->
         <dependency>
             <groupId>org.reflections</groupId>
@@ -250,25 +257,43 @@
 		    <version>9.4.1.jre8</version>
 		</dependency>
 
-<dependency>
-    <groupId>com.google.code.gson</groupId>
-    <artifactId>gson</artifactId>
-    <version>2.10.1</version>
-</dependency>
-
-
-<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3-->
-<dependency>
-    <groupId>org.apache.commons</groupId>
-    <artifactId>commons-lang3</artifactId>
-    <version>3.9</version>
-</dependency>
+		<dependency>
+		    <groupId>com.google.code.gson</groupId>
+		    <artifactId>gson</artifactId>
+		    <version>2.10.1</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-lang3</artifactId>
+		    <version>3.9</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
 			<optional>true</optional>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk18on</artifactId>
+			<version>1.78.1</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>com.github.gavlyukovskiy</groupId>
+		    <artifactId>p6spy-spring-boot-starter</artifactId>
+		    <version>1.9.1</version>
+		</dependency>
+		
+		<!--
+		<dependency>
+			<groupId>org.springframework.kafka</groupId>
+			<artifactId>spring-kafka</artifactId>
+		</dependency>
+		-->
+		
     </dependencies>
 
     <build>

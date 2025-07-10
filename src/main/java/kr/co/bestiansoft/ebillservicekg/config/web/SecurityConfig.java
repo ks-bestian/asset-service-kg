@@ -1,6 +1,6 @@
 package kr.co.bestiansoft.ebillservicekg.config.web;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,13 +44,14 @@ public class SecurityConfig {
         	.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeHttpRequests((authorize) -> authorize
-                .antMatchers(
+                .requestMatchers(
                         "/v3/api-docs",
                         "/swagger*/**").permitAll()
-                .antMatchers("/login").permitAll()
-                .antMatchers("/com/file/pdf").permitAll()
-                .antMatchers("/com/file/down").permitAll()
-                .antMatchers("/ws").permitAll()
+                .requestMatchers("/login").permitAll()
+                .requestMatchers("/com/file/pdf").permitAll()
+                .requestMatchers("/com/file/down").permitAll()
+                .requestMatchers("/ws").permitAll()
+                .requestMatchers("/sign-test").permitAll()
                 .anyRequest().authenticated()
         );
 

@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -20,36 +20,36 @@ public class WorkResponseController {
     private final WorkResponseService workResponseService;
     private final DocumentWorkFlowService workFlowService;
 
-    @ApiOperation(value="insertWorkResponse", notes = "insertWorkResponse")
+    @Operation(summary = "insertWorkResponse", description = "insertWorkResponse")
     @PostMapping("/eas/workResponse")
     public ResponseEntity<CommonResponse> insertWorkResponse(@RequestBody WorkResponseVo vo) {
         System.out.println(vo.toString());
         return new ResponseEntity<>(new CommonResponse(200, "OK", workResponseService.insertWorkResponse(vo)), HttpStatus.OK);
     }
-    @ApiOperation(value="to rcvId get WorkResponse ", notes = "to rcvId get WorkResponse")
+    @Operation(summary = "to rcvId get WorkResponse ", description = "to rcvId get WorkResponse")
     @GetMapping("/eas/workResponse/{rcvId}")
     public ResponseEntity<CommonResponse> toRcvIdGetWorkResponse(@PathVariable int rcvId) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", workResponseService.getWorkResponse(rcvId)), HttpStatus.OK);
     }
 
-    @ApiOperation(value=" to docId get WorkResponse", notes = "to docId get WorkResponse")
+    @Operation(summary = " to docId get WorkResponse", description = "to docId get WorkResponse")
     @GetMapping("/eas/workResponse/document/{docId}")
     public ResponseEntity<CommonResponse> toDocIdGetWorkResponse(@PathVariable String docId) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", workResponseService.getWorkResponse(docId)), HttpStatus.OK);
     }
-    @ApiOperation(value="update work response(register workResponse)", notes= "update work response(register workResponse)")
+    @Operation(summary = "update work response(register workResponse)", description= "update work response(register workResponse)")
     @PutMapping("/eas/workResponse")
     public ResponseEntity<CommonResponse> updateWorkResponse(@RequestBody UpdateWorkResponseVo vo) {
         workFlowService.registerWorkResponse(vo);
         return new ResponseEntity<>(new CommonResponse(200, "OK"), HttpStatus.OK);
     }
-    @ApiOperation(value="update read datetime", notes= "update read datetime")
+    @Operation(summary = "update read datetime", description= "update read datetime")
     @PutMapping("/eas/workResponse/{rspnsId}")
     public ResponseEntity<CommonResponse> updateReadDtm(@PathVariable int rspnsId) {
         workResponseService.updateReadDtm(rspnsId);
         return new ResponseEntity<>(new CommonResponse(200, "OK" ), HttpStatus.OK);
     }
-    @ApiOperation(value = "Get users", notes = "Get user IDs who responded")
+    @Operation(summary = "Get users", description = "Get user IDs who responded")
     @GetMapping("/eas/workResponse/byWorkReqId/{workReqId}")
     public ResponseEntity<CommonResponse> getRespondedUsers(@PathVariable int workReqId) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", workResponseService.getRespondedUsers(workReqId)), HttpStatus.OK);

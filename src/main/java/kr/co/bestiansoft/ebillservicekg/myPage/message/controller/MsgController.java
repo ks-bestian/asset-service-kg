@@ -1,8 +1,8 @@
 package kr.co.bestiansoft.ebillservicekg.myPage.message.controller;
 
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
 import kr.co.bestiansoft.ebillservicekg.myPage.message.service.MsgService;
 import kr.co.bestiansoft.ebillservicekg.myPage.message.vo.MsgRequest;
@@ -18,48 +18,48 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@Api(tags = "Message management API")
+@Tag(name = "Message management API")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class MsgController {
 
     private final MsgService msgService;
-    @ApiOperation(value = "message reception List check", notes = "message reception List Inquiry.")
+    @Operation(summary = "message reception List check", description = "message reception List Inquiry.")
     @GetMapping("myPage/msg/rcv")
     public ResponseEntity<CommonResponse> getMsgRcvList(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "ok", msgService.getRcvList(param)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "message Sender List check", notes = "message Sender List Inquiry.")
+    @Operation(summary = "message Sender List check", description = "message Sender List Inquiry.")
     @GetMapping("/myPage/msg/send")
     public ResponseEntity<CommonResponse> getMsgSendList(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "ok", msgService.getSendList(param)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "message particular check", notes = "message Details Inquiry.")
+    @Operation(summary = "message particular check", description = "message Details Inquiry.")
     @GetMapping("/myPage/msg/{msgId}")
     public ResponseEntity<CommonResponse> getMsgDetail(@PathVariable Long msgId, @RequestParam String lang) {
         return new ResponseEntity<>(new CommonResponse(200, "ok", msgService.getMsgDetail(msgId, lang)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "message forwarding", notes = "Message Transfer.")
+    @Operation(summary = "message forwarding", description = "Message Transfer.")
     @PostMapping(value = "/myPage/msg", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<CommonResponse> sendMsg(MsgRequest msgRequest) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Msg sent successfully.", msgService.sendMsg(msgRequest)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "message Confirmation date and time save", notes = "message Confirmation date and time Store.")
+    @Operation(summary = "message Confirmation date and time save", description = "message Confirmation date and time Store.")
     @PutMapping(value = "/myPage/msg/rcvDt")
     public ResponseEntity<CommonResponse> msgRcvDt(@RequestBody HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Msg sent successfully.", msgService.msgRcvDt(param)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "user entire check", notes = "entire User Inquiry.")
+    @Operation(summary = "user entire check", description = "entire User Inquiry.")
     @GetMapping(value = "/myPage/msg/user")
     public ResponseEntity<CommonResponse> getUserMember(@RequestParam  HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "ok", msgService.getUserMember(param)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "message delete", notes = "Message Delete.")
+    @Operation(summary = "message delete", description = "Message Delete.")
     @DeleteMapping("/myPage/msg")
     public ResponseEntity<CommonResponse> deleteMsg(@RequestBody List<Long> msgIds) {
         msgService.deleteMsg(msgIds);

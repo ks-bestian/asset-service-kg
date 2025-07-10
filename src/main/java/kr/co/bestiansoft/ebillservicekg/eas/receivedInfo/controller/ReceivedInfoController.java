@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 
 @Controller
 @RequiredArgsConstructor
@@ -20,51 +20,51 @@ public class ReceivedInfoController {
     private final ReceivedInfoService infoService;
     private final DocumentWorkFlowService documentWorkFlowService;
 
-    @ApiOperation(value="insertReceivedInfo", notes = "insertReceivedInfo")
+    @Operation(summary = "insertReceivedInfo", description = "insertReceivedInfo")
     @PostMapping("/eas/receivedInfo")
     public ResponseEntity<CommonResponse> insertReceivedInfo(@RequestBody ReceivedInfoVo vo) {
         System.out.println(vo.toString());
         return new ResponseEntity<>(new CommonResponse(200, "OK", infoService.insertReceivedInfo(vo)), HttpStatus.OK);
     }
-    @ApiOperation(value="updateReceivedInfo", notes = "updateReceivedInfo")
+    @Operation(summary = "updateReceivedInfo", description = "updateReceivedInfo")
     @PutMapping("/eas/receivedInfo")
     public ResponseEntity<CommonResponse> insertReceivedInfo(@RequestBody UpdateReceivedInfoVo vo) {
         System.out.println(vo.toString());
         return new ResponseEntity<>(new CommonResponse(200, "OK", infoService.updateReceivedInfo(vo)), HttpStatus.OK);
     }
-    @ApiOperation(value="getReceivedInfo", notes = "getReceivedInfo")
+    @Operation(summary = "getReceivedInfo", description = "getReceivedInfo")
     @GetMapping("/eas/receivedInfo/{docId}")
     public ResponseEntity<CommonResponse> getReceivedInfo(@PathVariable String docId){
         return new ResponseEntity<>(new CommonResponse(200, "OK", infoService.getReceivedInfo(docId)), HttpStatus.OK);
     }
-    @ApiOperation(value="get is receipt", notes = "get is receipt")
+    @Operation(summary = "get is receipt", description = "get is receipt")
     @GetMapping("/eas/isReceipt/{rcvId}")
     public ResponseEntity<CommonResponse> getIsReceipt(@PathVariable int rcvId){
         return new ResponseEntity<>(new CommonResponse(200, "OK", infoService.isReceipt(rcvId)), HttpStatus.OK);
     }
-    @ApiOperation(value = "reception" , notes = "reception")
+    @Operation(summary = "reception" , description = "reception")
     @PutMapping("/eas/reception")
     public ResponseEntity<CommonResponse> reception(@RequestBody WorkRequestAndResponseVo vo) {
         documentWorkFlowService.reception(vo);
         return new ResponseEntity<>(new CommonResponse(200, "OK", vo.getDocId() ),HttpStatus.OK);
     }
-    @ApiOperation(value = "get Main worker", notes = "get Main Worker")
+    @Operation(summary = "get Main worker", description = "get Main Worker")
     @GetMapping("/eas/receivedInfo/worker/{rcvId}")
     public ResponseEntity<CommonResponse> getMainWorker(@PathVariable int rcvId) {
         return new ResponseEntity<>(new CommonResponse(200, "OK",infoService.getMainWorkerInfo(rcvId)  ),HttpStatus.OK);
     }
-    @ApiOperation(value="reject", notes = "reject")
+    @Operation(summary = "reject", description = "reject")
     @PutMapping("/eas/reject")
     public ResponseEntity<CommonResponse> reject (@RequestBody UpdateReceivedInfoVo vo) {
         documentWorkFlowService.rejectReception(vo);
         return new ResponseEntity<>(new CommonResponse(200, "OK", vo.getRcvId()), HttpStatus.OK);
     }
-    @ApiOperation(value="get ReceivedInfo by userId", notes = "get ReceivedInfo by userId")
+    @Operation(summary = "get ReceivedInfo by userId", description = "get ReceivedInfo by userId")
     @GetMapping("/eas/receivedInfo/user/{docId}")
     public ResponseEntity<CommonResponse> getReceivedInfoByUserId(@PathVariable String docId){
         return  new ResponseEntity<>(new CommonResponse(200, "OK",infoService.getReceivedInfoByUserId(docId)), HttpStatus.OK);
     }
-    @ApiOperation(value="update Main Worker", notes= "update Main Worker")
+    @Operation(summary = "update Main Worker", description= "update Main Worker")
     @PutMapping("/eas/receivedInfo/worker")
     public ResponseEntity<CommonResponse> updateMainWorker(@RequestBody UpdateReceivedInfoVo vo){
         documentWorkFlowService.updateMainResponser(vo);

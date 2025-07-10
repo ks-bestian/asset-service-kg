@@ -1,7 +1,7 @@
 package kr.co.bestiansoft.ebillservicekg.eas.draftData.controller;
 
 
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
 import kr.co.bestiansoft.ebillservicekg.eas.draftData.service.DraftDataService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class DraftDataController {
     private final DraftDataService draftDataService;
 
-    @ApiOperation(value="getDataByAarsDocId", notes ="getDataByAarsDocId")
+    @Operation(summary = "getDataByAarsDocId", description ="getDataByAarsDocId")
     @GetMapping("/eas/draftData/{aarsDocId}")
     public ResponseEntity<CommonResponse> getDataByAarsDocId(@PathVariable int aarsDocId) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", draftDataService.getDraftData(aarsDocId)), HttpStatus.OK);

@@ -1,6 +1,6 @@
 package kr.co.bestiansoft.ebillservicekg.eas.approval.controller;
 
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
 import kr.co.bestiansoft.ebillservicekg.eas.approval.service.ApprovalService;
 import kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalVo;
@@ -23,7 +23,7 @@ public class ApprovalController {
     final DocumentWorkFlowService documentWorkFlowService;
     final ApprovalService approvalService ;
 
-    @ApiOperation(value="insertApproval", notes = "insertApproval")
+    @Operation(summary = "insertApproval", description = "insertApproval")
     @PostMapping("/eas/approval")
     public ResponseEntity<CommonResponse> insertApproval(@RequestBody ApprovalVo vo) {
         System.out.println(vo.toString());
@@ -34,25 +34,25 @@ public class ApprovalController {
     public ResponseEntity<CommonResponse> getApproval(@PathVariable String docId){
         return new ResponseEntity<>(new CommonResponse(200, "OK", approvalService.getApprovals(docId)), HttpStatus.OK);
     }
-    @ApiOperation(value = "Read Approval", notes = "Read Approval")
+    @Operation(summary = "Read Approval", description = "Read Approval")
     @PutMapping("/eas/approval/read/{apvlId}")
     public ResponseEntity<CommonResponse> readApproval( @PathVariable int apvlId) {
         documentWorkFlowService.updateReadApproval(apvlId);
         return new ResponseEntity<>(new CommonResponse(200, "OK", apvlId ),HttpStatus.OK);
     }
-    @ApiOperation(value = "Approve", notes = "Approve")
+    @Operation(summary = "Approve", description = "Approve")
     @PutMapping("/eas/approval/approve")
     public ResponseEntity<CommonResponse> approval(@RequestBody UpdateApprovalVo vo) {
         documentWorkFlowService.approve(vo);
         return new ResponseEntity<>(new CommonResponse(200, "OK", vo.getApvlId() ),HttpStatus.OK);
     }
-    @ApiOperation(value="Reject", notes = "reject")
+    @Operation(summary = "Reject", description = "reject")
     @PutMapping("/eas/approval/reject")
     public ResponseEntity<CommonResponse> approveReject(@RequestBody UpdateApprovalVo vo) {
         documentWorkFlowService.approveReject(vo);
         return new ResponseEntity<>(new CommonResponse(200, "OK", vo.getApvlId() ),HttpStatus.OK);
     }
-    @ApiOperation(value = "get approvals by docId", notes = "get approvals by docId")
+    @Operation(summary = "get approvals by docId", description = "get approvals by docId")
     @GetMapping("/eas/approval/user/{docId}")
     public ResponseEntity<CommonResponse> getApprovalsByUserId(@PathVariable String docId) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", approvalService.getApprovalsByUserId(docId)),HttpStatus.OK);

@@ -1,7 +1,7 @@
 package kr.co.bestiansoft.ebillservicekg.admin.user.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import kr.co.bestiansoft.ebillservicekg.admin.user.service.UserService;
 import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserVo;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
@@ -15,36 +15,36 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@Api(tags = "Staff management API")
+@Tag(name = "Staff management API")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserController {
     private final UserService userService;
 
-    @ApiOperation(value = "employee List check", notes = "employee List Inquiry.")
+    @Operation(summary = "employee List check", description = "employee List Inquiry.")
     @GetMapping("admin/user")
     public ResponseEntity<CommonResponse> getUserList(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "ok", userService.getUserList(param)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Staff check", notes = "employee Details Inquiry.")
+    @Operation(summary = "Staff check", description = "employee Details Inquiry.")
     @GetMapping("admin/user/{seq}")
     public ResponseEntity<CommonResponse> getUserDetail(@PathVariable Long seq) {
         return new ResponseEntity<>(new CommonResponse(200, "ok", userService.getUserDetail(seq)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "employee generation", notes = "Employees Create.")
+    @Operation(summary = "employee generation", description = "Employees Create.")
     @PostMapping("admin/user")
     public ResponseEntity<CommonResponse> createUser(@RequestBody UserVo userVo) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "User created successfully.", userService.createUser(userVo)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "employee correction", notes = "Employees Modify.")
+    @Operation(summary = "employee correction", description = "Employees Modify.")
     @PutMapping("admin/user")
     public ResponseEntity<CommonResponse> updateUser(@RequestBody UserVo userVo) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "User updated successfully", userService.updateUser(userVo)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "employee delete", notes = "Employees Delete.")
+    @Operation(summary = "employee delete", description = "Employees Delete.")
     @DeleteMapping("admin/user")
     public ResponseEntity<CommonResponse> deleteUser(@RequestBody List<String> ids) {
         userService.deleteUser(ids);
@@ -52,20 +52,20 @@ public class UserController {
     }
 
     //Department user check(concurrent position, committee, political party include) -- Departmental management, User management by authority
-    @ApiOperation(value = "Department user check", notes = "Users by department Inquiry.")
+    @Operation(summary = "Department user check", description = "Users by department Inquiry.")
     @GetMapping("user/dept")
     public ResponseEntity<CommonResponse> getUserByDept(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "ok", userService.getUserByDept(param)), HttpStatus.OK);
     }
 
 
-    @ApiOperation(value = "user password reset", notes = "user password reset")
+    @Operation(summary = "user password reset", description = "user password reset")
     @PutMapping("user/reset/pswd")
     public ResponseEntity<CommonResponse> resetPswd(@RequestBody HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "ok", userService.resetPswd(param)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "user password correction", notes = "user Password Modify.")
+    @Operation(summary = "user password correction", description = "user Password Modify.")
     @PutMapping("login/update")
     public ResponseEntity<CommonResponse> updatePswd(@RequestBody HashMap<String, Object> param) {
         userService.updatePswd(param);
@@ -74,7 +74,7 @@ public class UserController {
 
 
 
-    @ApiOperation(value = "Position correction", notes = "Position Modify.")
+    @Operation(summary = "Position correction", description = "Position Modify.")
     @PutMapping("admin/user/job")
     public ResponseEntity<CommonResponse> updateJob(@RequestBody HashMap<String, Object> param) {
         userService.updateJob(param);

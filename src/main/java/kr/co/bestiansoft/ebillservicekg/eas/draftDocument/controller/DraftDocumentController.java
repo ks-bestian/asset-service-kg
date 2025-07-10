@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 
 import java.util.Map;
 
@@ -22,13 +22,13 @@ public class DraftDocumentController {
 
     final DraftDocumentService documentService;
 
-    @ApiOperation(value="insertDraftDocument", notes = "insertDraftDocument")
+    @Operation(summary = "insertDraftDocument", description = "insertDraftDocument")
     @PostMapping("/eas/draftDocument/{formId}")
     public ResponseEntity<CommonResponse> insertDraftDocument(@PathVariable int formId, @RequestBody Map<String, String> map) {
         System.out.println(map.toString());
         return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.insertDraftDocument(formId,map)), HttpStatus.OK);
     }
-    @ApiOperation(value="getDraftDocument", notes = "getDraftDocument")
+    @Operation(summary = "getDraftDocument", description = "getDraftDocument")
     @GetMapping("/eas/draftDocument/{aarsDocId}")
     public ResponseEntity<CommonResponse> getDraftDocument(@PathVariable int aarsDocId) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", documentService.getDraftDocument(aarsDocId)), HttpStatus.OK);

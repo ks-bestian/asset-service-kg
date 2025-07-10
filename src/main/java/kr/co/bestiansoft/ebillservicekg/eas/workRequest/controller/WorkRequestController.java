@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,49 +18,49 @@ public class WorkRequestController {
     final WorkRequestService workRequestService;
     final DocumentWorkFlowService workFlowService;
 
-    @ApiOperation(value="insertWorkRequest", notes = "insertWorkRequest")
+    @Operation(summary = "insertWorkRequest", description = "insertWorkRequest")
     @PostMapping("/eas/workRequest")
     public ResponseEntity<CommonResponse> insertWorkRequest(@RequestBody WorkRequestVo vo) {
         System.out.println(vo.toString());
         return new ResponseEntity<>(new CommonResponse(200, "OK", workRequestService.insertWorkRequest(vo)), HttpStatus.OK);
     }
-    @ApiOperation(value = "to RcvId getWortRequest", notes = "to RcvId getWortRequest")
+    @Operation(summary = "to RcvId getWortRequest", description = "to RcvId getWortRequest")
     @GetMapping("/eas/workRequest/{rcvId}")
     public ResponseEntity<CommonResponse> toRcvIdGetWorkRequestList(@PathVariable Integer rcvId){
         return new ResponseEntity<>(new CommonResponse(200, "OK", workRequestService.getWorkRequestList(rcvId)), HttpStatus.OK);
     }
-    @ApiOperation(value = "to docId getWortRequest", notes = "to docId getWortRequest")
+    @Operation(summary = "to docId getWortRequest", description = "to docId getWortRequest")
     @GetMapping("/eas/workRequest/document/{docId}")
     public ResponseEntity<CommonResponse> toDocIdGetWorkRequestList(@PathVariable String docId){
         return new ResponseEntity<>(new CommonResponse(200, "OK", workRequestService.getWorkRequestList(docId)), HttpStatus.OK);
     }
-    @ApiOperation(value = "to docId getWortRequest", notes = "to docId getWortRequest")
+    @Operation(summary = "to docId getWortRequest", description = "to docId getWortRequest")
     @GetMapping("/eas/workRequest/user/{docId}")
     public ResponseEntity<CommonResponse> workListAndResponse(@PathVariable String docId){
         return new ResponseEntity<>(new CommonResponse(200, "OK", workRequestService.getWorkRequestAndResponseList(docId)), HttpStatus.OK);
     }
 
-    @ApiOperation(value="delete work request", notes= "delete work request")
+    @Operation(summary = "delete work request", description= "delete work request")
     @DeleteMapping("/eas/workRequest/{reqId}")
     public ResponseEntity<CommonResponse> deleteWorkRequest(@PathVariable int reqId) {
         workFlowService.deleteWorkRequest(reqId);
         return new ResponseEntity<>(new CommonResponse(200, "OK" ), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "updateWorkRequest", notes = "Update WorkRequest")
+    @Operation(summary = "updateWorkRequest", description = "Update WorkRequest")
     @PutMapping("/eas/workRequest")
     public ResponseEntity<CommonResponse> updateWorkRequest(@RequestBody WorkRequestVo vo) {
         System.out.println("Updating workRequest: " + vo.toString());
         return new ResponseEntity<>(new CommonResponse(200, "OK", workRequestService.updateWorkRequest(vo)), HttpStatus.OK);
     }
-    @ApiOperation(value="updateWorkRequestAndResponse", notes="update Work Request and Response")
+    @Operation(summary = "updateWorkRequestAndResponse", description="update Work Request and Response")
     @PutMapping("/eas/workRequest/response")
     public ResponseEntity<CommonResponse> updateWorkRequestAndResponse (@RequestBody WorkRequestAndResponseVo vo){
         workFlowService.updateWorkRequest(vo);
         return  new ResponseEntity<>(new CommonResponse(200, "OK"), HttpStatus.OK);
     }
 
-    @ApiOperation(value="insertWorkRequest and response", notes="insert work Request and response")
+    @Operation(summary = "insertWorkRequest and response", description="insert work Request and response")
     @PostMapping("/eas/workRequest/response")
     public ResponseEntity<CommonResponse> insertWorkRequestAndResponse(@RequestBody WorkRequestAndResponseVo vo){
         workFlowService.insertWorkRequest(vo);

@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
 @RequiredArgsConstructor
@@ -15,13 +15,13 @@ public class LinkDocumentController {
 
     final LinkDocumentService linkDocumentService;
 
-    @ApiOperation(value="insertLinkDocument", notes = "insertLinkDocument")
+    @Operation(summary = "insertLinkDocument", description = "insertLinkDocument")
     @PostMapping("/eas/linkDocument")
     public ResponseEntity<CommonResponse> insertLinkDocument(@RequestBody LinkDocumentVo vo) {
         System.out.println(vo.toString());
         return new ResponseEntity<>(new CommonResponse(200, "OK", linkDocumentService.insertLinkDocument(vo)), HttpStatus.OK);
     }
-    @ApiOperation(value="getLInkDocument", notes ="getLinkDocument")
+    @Operation(summary = "getLInkDocument", description ="getLinkDocument")
     @GetMapping("/eas/linkDocument/{docId}")
     public ResponseEntity<CommonResponse> getLinkDocument(@PathVariable String docId) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", linkDocumentService.getLinkDocumentByDocId(docId)), HttpStatus.OK);

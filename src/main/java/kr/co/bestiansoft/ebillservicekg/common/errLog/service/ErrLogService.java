@@ -1,6 +1,6 @@
 package kr.co.bestiansoft.ebillservicekg.common.errLog.service;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import kr.co.bestiansoft.ebillservicekg.common.errLog.vo.ErrLogVo;
 

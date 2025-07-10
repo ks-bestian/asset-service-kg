@@ -1,8 +1,8 @@
 package kr.co.bestiansoft.ebillservicekg.admin.baseCode.controller;
 
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import kr.co.bestiansoft.ebillservicekg.admin.baseCode.service.BaseCodeService;
 import kr.co.bestiansoft.ebillservicekg.admin.baseCode.vo.BaseCodeVo;
 import kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo;
@@ -17,20 +17,20 @@ import java.util.HashMap;
 import java.util.List;
 
 @RestController
-@Api(tags = "Age code management API")
+@Tag(name = "Age code management API")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class BaseCodeController {
 
     private final BaseCodeService basecodeService;
 
-    @ApiOperation(value = "Code list check", notes = "Age Codes List Inquiry.")
+    @Operation(summary = "Code list check", description = "Age Codes List Inquiry.")
     @GetMapping("/admin/baseCode")
     public ResponseEntity<CommonResponse> getBaseCodeList(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", basecodeService.getBaseCodeList(param)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Age code generation", notes = "Age code Create.")
+    @Operation(summary = "Age code generation", description = "Age code Create.")
     @PostMapping(value = "/admin/baseCode")
     public ResponseEntity<CommonResponse> createBaseCode(@RequestBody BaseCodeVo baseCodeVo) {
 
@@ -39,20 +39,20 @@ public class BaseCodeController {
 
     }
 
-    @ApiOperation(value = "Age Code correction", notes = "Age Code modify.")
+    @Operation(summary = "Age Code correction", description = "Age Code modify.")
     @PutMapping(value = "/admin/baseCode")
     public ResponseEntity<CommonResponse> updateBaseCode(@RequestBody BaseCodeVo baseCodeVo) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "BaseCode updated successfully", basecodeService.updateBaseCode(baseCodeVo)), HttpStatus.CREATED);
     }
 
-    @ApiOperation(value = "Age Code delete", notes = "Age Code Delete.")
+    @Operation(summary = "Age Code delete", description = "Age Code Delete.")
     @DeleteMapping("/admin/baseCode")
     public ResponseEntity<CommonResponse> deleteBaseCode(@RequestBody List<String> ids) {
         basecodeService.deleteBaseCode(ids);
         return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "OK", "BaseCode deleted successfully"), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Code particular check", notes = "Code Details Inquiry.")
+    @Operation(summary = "Code particular check", description = "Code Details Inquiry.")
     @GetMapping("/admin/baseCode/{baseCode}")
     public ResponseEntity<CommonResponse> getBaseCodeByCd(@PathVariable Long baseCode) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", basecodeService.getBaseCodeById(baseCode)), HttpStatus.OK);

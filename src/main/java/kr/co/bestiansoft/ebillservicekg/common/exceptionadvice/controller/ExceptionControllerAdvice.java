@@ -2,7 +2,7 @@ package kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller;
 
 import java.util.Objects;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;

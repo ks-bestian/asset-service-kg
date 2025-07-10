@@ -83,3 +83,15 @@ edv:
   datastore-path: /home/EDV/edv-bestian/repository/datastore/${edv.root-folder}
   max-use-cpct: 1073741824
   pdf-temp-path: /home/EDV/pdfTmp
+  
+app:
+  sed:
+    url: https://testgateway-docs.meria.kg
+    access-key: KbrRBpqildJ05XqFEQERV1cHZf
+    secret-key: 13a5247a31f4a52b529f8038dc9fb488
+  cds:
+    url: https://cdsapi-test.srs.kg
+    key: d_s9f3htBGUZfaW6gDhgqFX5QCerdnLUIU-5rd4z2EU
+    user-agent-org-name: jk
+    
+scheduler.gateway.new.documents.interval.milliseconds: 300000
