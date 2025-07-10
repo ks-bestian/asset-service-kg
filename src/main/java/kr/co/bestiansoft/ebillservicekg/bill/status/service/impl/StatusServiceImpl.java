@@ -21,11 +21,25 @@ public class StatusServiceImpl implements StatusService {
 	
 	private final StatusMapper statusMapper;
 
+	/**
+	 * Retrieves a list of meetings based on the provided parameters.
+	 *
+	 * @param param a HashMap containing the parameters to filter the meeting list.
+	 *              The specific keys and values required depend on the implementation.
+	 * @return a List of StatusVo objects representing the meeting details.
+	 */
 	@Override
 	public List<StatusVo> getMtngList(HashMap<String, Object> param) {
 		return statusMapper.getMtngList(param);
 	}
 
+	/**
+	 * Retrieves a list of monitoring data based on the provided parameters.
+	 *
+	 * @param param a HashMap containing the parameters to filter the monitoring data.
+	 *              The specific keys and values required depend on the implementation.
+	 * @return a List of StatusVo objects representing the monitoring data details.
+	 */
 	@Override
 	public List<StatusVo> getMonitorList(HashMap<String, Object> param) {
 		return statusMapper.getMonitorList(param);

@@ -26,12 +26,26 @@ public class MtngAllServiceImpl implements MtngAllService {
     private final MtngAllMapper mtngAllMapper;
     private final MtngFromMapper mtngFromMapper;
 
+	/**
+	 * Retrieves a list of meeting information based on the provided parameters.
+	 *
+	 * @param param a HashMap containing various filtering criteria for retrieving the meeting list
+	 * @return a list of MtngAllVo objects representing the meeting information
+	 */
     @Override
     public List<MtngAllVo> getMtngList(HashMap<String, Object> param) {
         List<MtngAllVo> result = mtngAllMapper.selectListMtngAll(param);
         return result;
     }
 
+	/**
+	 * Retrieves detailed information about a specific meeting based on the provided meeting ID.
+	 * The method fetches the meeting details, associated reports, agendas, and participants.
+	 *
+	 * @param mtngId the unique identifier of the meeting to retrieve
+	 * @param param a HashMap containing additional parameters and context needed for fetching the meeting details
+	 * @return an MtngAllVo object containing the meeting details, including its report list, agenda list, and participant list
+	 */
     @Override
     public MtngAllVo getMtngById(Long mtngId, HashMap<String, Object> param) {
     	param.put("mtngId", mtngId);
@@ -55,12 +69,24 @@ public class MtngAllServiceImpl implements MtngAllService {
         return dto;
     }
 
+	/**
+	 * Retrieves a list of meeting participants based on the provided parameters.
+	 *
+	 * @param param a HashMap containing criteria to filter the participants of the meeting
+	 * @return a list of MemberVo objects representing the participants of the meeting
+	 */
 	@Override
 	public List<MemberVo> getMtngParticipants(HashMap<String, Object> param) {
     	List<MemberVo> attendantList = mtngFromMapper.selectListMtngAttendant(param);
 		return attendantList;
 	}
-	
+
+	/**
+	 * Retrieves a list of meetings associated with the given bill ID.
+	 *
+	 * @param param a HashMap containing the criteria for filtering meetings, including the bill ID
+	 * @return a list of MtngAllVo objects representing the meetings associated with the specified bill ID
+	 */
 	@Override
 	public List<MtngAllVo> selectMtngByBillId(HashMap<String, Object> param) {
 		List<MtngAllVo> result = mtngAllMapper.selectMtngByBillId(param);

@@ -34,12 +34,25 @@ public class MtngFromServiceImpl implements MtngFromService {
     private final ProcessService processService;
     private final ProcessMapper processMapper;
 
+	/**
+	 * Retrieves a list of MtngFromVo objects based on the given parameters.
+	 *
+	 * @param param a HashMap containing key-value pairs to filter and retrieve the list of MtngFromVo objects
+	 * @return a List of MtngFromVo objects retrieved from the data source
+	 */
     @Override
     public List<MtngFromVo> getMtngFromList(HashMap<String, Object> param) {
         List<MtngFromVo> result = mtngFromMapper.selectListMtngFrom(param);
         return result;
     }
 
+	/**
+	 * Retrieves meeting information including agendas, participants, and result documents by meeting ID.
+	 *
+	 * @param mtngId the unique identifier of the meeting
+	 * @param param  a map containing additional parameters for the meeting query
+	 * @return MtngFromVo an object containing meeting information, agendas, participants, and documents
+	 */
     @Override
     public MtngFromVo getMtngFromById(Long mtngId, HashMap<String, Object> param) {
 
@@ -63,6 +76,14 @@ public class MtngFromServiceImpl implements MtngFromService {
         return dto;
     }
 
+	/**
+	 * Creates a meeting from the given MtngFromVo object and stores it in the database.
+	 * This includes registering the meeting details, agenda items, and participants.
+	 *
+	 * @param mtngFromVo an object that contains the details of the meeting, including
+	 *                   meeting metadata, a list of agenda items, and a list of participants
+	 * @return the updated MtngFromVo object with populated meeting IDs and other relevant data
+	 */
     @Transactional
 	@Override
 	public MtngFromVo createMtngFrom(MtngFromVo mtngFromVo) {
@@ -115,17 +136,35 @@ public class MtngFromServiceImpl implements MtngFromService {
 	}
 
 
-
+	/**
+	 * Retrieves a list of members based on the given parameters.
+	 *
+	 * @param param a HashMap containing key-value pairs used as filter criteria for fetching the member list
+	 * @return a list of MemberVo objects representing the members that match the filter criteria
+	 */
 	@Override
 	public List<MemberVo> getMemberList(HashMap<String, Object> param) {
 		return mtngFromMapper.selectListMember(param);
 	}
 
+	/**
+	 * Retrieves a list of department members based on the provided parameters.
+	 *
+	 * @param param a HashMap containing the parameters required for querying the department list
+	 * @return a list of MemberVo objects representing the members of the department
+	 */
 	@Override
 	public List<MemberVo> getDeptList(HashMap<String, Object> param) {
 		return mtngFromMapper.selectListDept(param);
 	}
 
+	/**
+	 * Deletes meetings based on the provided list of meeting IDs. This method removes
+	 * all associated data including agendas, attendants, and the meeting itself.
+	 * Additionally, it performs process rollback in certain conditions.
+	 *
+	 * @param mtngIds the list of meeting IDs to be deleted
+	 */
 	@Transactional
 	@Override
 	public void deleteMtng(List<Long> mtngIds) {
@@ -156,6 +195,15 @@ public class MtngFromServiceImpl implements MtngFromService {
 
 	}
 
+	/**
+	 * Retrieves a list of meeting bills based on the provided parameters, and for each bill,
+	 * fetches and sets the associated meeting details.
+	 *
+	 * @param param a HashMap containing key-value pairs used as filters or conditions
+	 *              to query the meeting bills.
+	 * @return a list of BillMngVo objects, each containing meeting bill details and
+	 *         a list of associated meetings.
+	 */
 	@Override
 	public List<BillMngVo> selectListMtngBill(HashMap<String, Object> param) {
 
@@ -168,6 +216,12 @@ public class MtngFromServiceImpl implements MtngFromService {
 		return list;
 	}
 
+	/**
+	 * Retrieves a list of BillMngVo objects, including a list of associated MtngFromVo objects for each bill.
+	 *
+	 * @param param a HashMap containing the parameters for filtering and retrieving the list of BillMngVo objects.
+	 * @return a List of BillMngVo objects with their associated meeting information.
+	 */
 	@Override
 	public List<BillMngVo> selectListMainMtngBill(HashMap<String, Object> param) {
 
@@ -180,6 +234,13 @@ public class MtngFromServiceImpl implements MtngFromService {
 		return list;
 	}
 
+	/**
+	 * Updates the meeting bill along with its participants and agenda details.
+	 * Ensures the relevant mappings are updated or corrected in the database.
+	 *
+	 * @param mtngFromVo an object containing the meeting details, participant list, and agenda information
+	 * @return the updated MtngFromVo object with modifications
+	 */
 	@Transactional
 	@Override
 	public MtngFromVo updateMtngBill(MtngFromVo mtngFromVo) {
@@ -274,16 +335,24 @@ public class MtngFromServiceImpl implements MtngFromService {
 		return mtngFromVo;
 	}
 
+	/**
+	 * Retrieves a list of meetings associated with a specific bill ID.
+	 *
+	 * @param billId the unique identifier of the bill used to find associated meetings
+	 * @return a list of MtngFromVo objects representing the meetings associated with the given bill ID
+	 */
 	@Transactional
 	@Override
 	public List<MtngFromVo> selectListMtngByBillId(String billId) {
 		return mtngFromMapper.selectListMtngByBillId(billId);
 	}
 
-
-
-	/*Hall meeting*/
-
+	/**
+	 * Creates a hall meeting by inserting meeting and agenda details into the database.
+	 *
+	 * @param mtngFromVo an object containing the meeting details and agenda list to be created
+	 * @return the updated MtngFromVo object after creation, including generated identifiers
+	 */
 	@Transactional
 	@Override
 	public MtngFromVo createHallMtng(MtngFromVo mtngFromVo) {
@@ -310,7 +379,13 @@ public class MtngFromServiceImpl implements MtngFromService {
 		return mtngFromVo;
 	}
 
-
+	/**
+	 * Submits the agenda for a specified meeting by processing each agenda item in the meeting.
+	 * The method checks whether the agenda is already submitted or if its current step matches a specific condition.
+	 * For agenda items that meet the criteria, it processes them by updating their step and submission status.
+	 *
+	 * @param mtngId the unique identifier of the meeting whose agenda is to be submitted
+	 */
     @Override
     public void submitMtngAgenda(Long mtngId) {
     	HashMap<String, Object> param = new HashMap<>();
@@ -334,6 +409,15 @@ public class MtngFromServiceImpl implements MtngFromService {
     	}
     }
 
+	/**
+	 * Retrieves a list of meetings scheduled in a hall based on the provided parameters.
+	 * Each meeting includes its associated list of agendas.
+	 *
+	 * @param param a HashMap containing the parameters to filter the meetings.
+	 *              The keys and values in this map are used to construct the query.
+	 * @return a list of MtngFromVo objects representing the meetings,
+	 *         each including its associated list of AgendaVo items.
+	 */
 	@Override
 	public List<MtngFromVo> getHallMtngList(HashMap<String, Object> param) {
 
@@ -352,12 +436,25 @@ public class MtngFromServiceImpl implements MtngFromService {
         return mtngList;
 	}
 
+	/**
+	 * Retrieves a list of hall meeting agendas based on the provided parameters.
+	 *
+	 * @param param a HashMap containing key-value pairs of parameters used to filter or locate hall meeting agendas
+	 * @return a list of AgendaVo objects representing the hall meeting agendas
+	 */
 	@Override
 	public List<AgendaVo> getHallMtngBillList(HashMap<String, Object> param) {
 		List<AgendaVo> agendaList = mtngFromMapper.selectListHallMtngAgenda(param);
 		return agendaList;
 	}
 
+	/**
+	 * Updates the meeting result for a hall by modifying the provided MtngFromVo object.
+	 * The method updates the entity with the current modifier's login ID and persists changes.
+	 *
+	 * @param mtngFromVo the MtngFromVo object containing the meeting result data to be updated
+	 * @return the updated MtngFromVo object after the modification
+	 */
 	@Transactional
 	@Override
 	public MtngFromVo updateHallMtngResult(MtngFromVo mtngFromVo) {
@@ -368,6 +465,11 @@ public class MtngFromServiceImpl implements MtngFromService {
 		return mtngFromVo;
 	}
 
+	/**
+	 * Updates the hall meeting order based on the provided meeting information.
+	 *
+	 * @param mtngFromVo a value object containing meeting details and a list of agendas
+	 */
 	@Override
 	public void updateHallMtngOrd(MtngFromVo mtngFromVo) {
 		List<AgendaVo> agendaList = mtngFromVo.getAgendaList();
@@ -385,6 +487,15 @@ public class MtngFromServiceImpl implements MtngFromService {
 		idx=1;
 	}
 
+	/**
+	 * Deletes the hall meeting bill associated with the provided meeting information.
+	 * This method validates the existence of related agendas and processes before deletion.
+	 * If the associated agenda is marked as submitted, the process is undone before proceeding.
+	 *
+	 * @param mtngFromVo The meeting information object containing details of the meeting and bill to be deleted.
+	 * @return The updated meeting information object after successfully deleting the hall meeting bill.
+	 * @throws IllegalArgumentException If no agenda is found for the specified meeting ID.
+	 */
 	@Transactional
 	@Override
 	public MtngFromVo deleteHallMtngBill(MtngFromVo mtngFromVo) {
@@ -413,6 +524,15 @@ public class MtngFromServiceImpl implements MtngFromService {
 		return mtngFromVo;
 	}
 
+	/**
+	 * Updates a hall meeting record with the provided meeting details, sets the modifier ID,
+	 * updates the meeting bill, and processes the agenda list by inserting agendas with
+	 * specific details into the database.
+	 *
+	 * @param mtngFromVo the meeting information object containing details to update the hall meeting
+	 *                   and associated agendas
+	 * @return the updated meeting information object after processing
+	 */
 	@Override
 	public MtngFromVo updateHallMtng(MtngFromVo mtngFromVo) {
 
@@ -436,7 +556,14 @@ public class MtngFromServiceImpl implements MtngFromService {
 		
 		return null;
 	}
-	
+
+	/**
+	 * Adds the agenda items for the specified meeting.
+	 *
+	 * @param mtngFromVo an instance of {@code MtngFromVo} containing the meeting ID
+	 *                   and a list of agenda items to be added. Each agenda item
+	 *                   includes details such as the bill ID, agenda order, and more.
+	 */
 	@Override
 	public void addHallMtngAgenda(MtngFromVo mtngFromVo) {
 		String userId = new SecurityInfoUtil().getAccountId();

@@ -41,6 +41,13 @@ public class RevokeServiceImpl implements RevokeService {
 	private final RevokeAgreeMapper revokeAgreeMapper;
 	private final MsgService msgService;
 
+	/**
+	 * Retrieves a list of revocation requests based on the provided parameters.
+	 *
+	 * @param param a HashMap containing parameters to filter the list of revocation requests.
+	 *              It includes details such as the user ID (modified here to include "ppsrId").
+	 * @return a list of ApplyVo objects representing the filtered revocation requests.
+	 */
 	@Override
 	public List<ApplyVo> getRevokeList(HashMap<String, Object> param) {
 		String userId = new SecurityInfoUtil().getAccountId();
@@ -50,6 +57,13 @@ public class RevokeServiceImpl implements RevokeService {
 		return applyMapper.selectListBillRevoke(param);
 	}
 
+	/**
+	 * Retrieves the details of a revoke operation for a specified billId and language.
+	 *
+	 * @param billId the unique identifier of the bill for which revoke details are to be fetched
+	 * @param lang the language preference for fetching the revoke details
+	 * @return a {@link RevokeResponse} object containing the revoke details, proposer list, and associated file list
+	 */
 	@Override
 	public RevokeResponse getRevokeDetail(String billId, String lang) {
 		RevokeResponse result = new RevokeResponse();
@@ -72,7 +86,15 @@ public class RevokeServiceImpl implements RevokeService {
 
 		return result;
 	}
-	
+
+	/**
+	 * Processes the revocation of a bill request, updates the required bill details,
+	 * manages related files, and coordinates the necessary workflow steps in the revocation process.
+	 *
+	 * @param billId the unique identifier of the bill to be revoked
+	 * @param vo an instance of RevokeVo containing revocation details such as files and remarks
+	 * @return an instance of ProcessVo containing process information after handling the revocation
+	 */
 	@Transactional
 	@Override
 	public ProcessVo billRevokeRequest(String billId,RevokeVo vo) {
@@ -119,7 +141,14 @@ public class RevokeServiceImpl implements RevokeService {
 
 		return pVo;
 	}
-	
+
+	/**
+	 * Submits a request to revoke a bill process based on the provided bill ID and revoke information.
+	 *
+	 * @param billId The unique identifier of the bill to be revoked.
+	 * @param vo     The object containing details necessary for the revoke operation.
+	 * @return A ProcessVo object containing details about the process after the revoke submission.
+	 */
 	@Transactional
 	@Override
 	public ProcessVo billRevokeSubmit(String billId,RevokeVo vo) {
@@ -132,6 +161,15 @@ public class RevokeServiceImpl implements RevokeService {
 		return pVo;
 	}
 
+	/**
+	 * Cancels the revocation of a bill and performs necessary operations
+	 * such as undoing the process, deleting bill details,
+	 * and sending notifications to relevant parties.
+	 *
+	 * @param billId the unique identifier of the bill to revoke cancel
+	 * @param param a map containing additional parameters required for the operation
+	 * @return an integer indicating the status or result of the operation
+	 */
 	@Transactional
 	@Override
 	public int billRevokeCancel(String billId, HashMap<String, Object> param) {
@@ -190,6 +228,13 @@ public class RevokeServiceImpl implements RevokeService {
 //		return true;
 //	}
 
+	/**
+	 * Updates the revoke status of a bill identified by the given bill ID.
+	 *
+	 * @param billId The unique identifier of the bill to be updated.
+	 * @param revokeVo The revoke value object containing the updated information.
+	 * @return The number of rows affected by the update operation.
+	 */
 	@Override
 	public int updateRevoke(String billId, RevokeVo revokeVo) {
 		revokeVo.setBillId(billId);

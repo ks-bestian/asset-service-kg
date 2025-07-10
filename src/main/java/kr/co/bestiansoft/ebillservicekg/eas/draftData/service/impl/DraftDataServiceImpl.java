@@ -18,11 +18,22 @@ public class DraftDataServiceImpl implements DraftDataService {
 
     private final DraftDataRepository draftDataRepository;
 
+    /**
+     * Inserts draft data into the database.
+     *
+     * @param vo an instance of {@link DraftDataVo} containing the draft data to be inserted
+     */
     @Override
     public void insertDraftData(DraftDataVo vo) {
         draftDataRepository.insertDraftData(vo);
     }
 
+    /**
+     * Retrieves a list of draft data and associated form field information for the specified document ID.
+     *
+     * @param aarsDocId the ID of the document for which draft data is to be retrieved
+     * @return a list of {@link DraftDataAndComFormFieldDto} containing draft data and related form field details
+     */
     @Override
     public List<DraftDataAndComFormFieldDto> getDraftData(int aarsDocId) {
         return draftDataRepository.getDraftDataAndComFormField(aarsDocId);

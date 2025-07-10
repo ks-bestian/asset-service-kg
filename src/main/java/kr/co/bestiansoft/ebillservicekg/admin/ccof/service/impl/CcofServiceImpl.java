@@ -17,6 +17,14 @@ import java.util.List;
 public class CcofServiceImpl implements CcofService {
 
     private final CcofMapper ccofMapper;
+
+    /**
+     * Retrieves a list of CCOF (Corporate Compliance Office Function) information based on the provided parameters.
+     *
+     * @param param a HashMap containing parameters to filter the CCOF list. The keys and values in the map
+     *              should correspond to the desired query criteria.
+     * @return a list of CcofVo objects matching the given parameters.
+     */
     @Override
     public List<CcofVo> getCcofList(HashMap<String, Object> param) {
         return ccofMapper.selectListCcof(param);

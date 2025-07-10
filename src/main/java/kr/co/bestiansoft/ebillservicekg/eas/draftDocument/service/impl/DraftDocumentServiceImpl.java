@@ -48,6 +48,15 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
     private final PdfService pdfService;
     private final DraftDataService draftDataService;
 
+    /**
+     * Inserts a draft document into the system, generated based on the provided form ID
+     * and field data mapped in the given map. The method also converts the document
+     * to PDF, stores it, and persists associated draft data.
+     *
+     * @param formId the unique identifier of the form used to create the draft document
+     * @param map a map containing field values where the key is the field name and the value is the field data
+     * @return a DraftDocumentVo object that represents the inserted draft document, including its metadata and unique identifiers
+     */
     @Override
     public DraftDocumentVo insertDraftDocument(int formId, Map<String, String> map) {
         String loginId = new SecurityInfoUtil().getAccountId();
@@ -95,11 +104,27 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
         draftDocumentRepository.updateDraftStatus(aarsDocId, aarsStatusCd);
     }
 
+    /**
+     * Retrieves a draft document based on the provided document ID.
+     *
+     * @param aarsDocId the ID of the document to retrieve
+     * @return a DraftDocumentVo object representing the draft document, or null if no document is found
+     */
     public DraftDocumentVo getDraftDocument(int aarsDocId){
         return draftDocumentRepository.getDraftDocument(aarsDocId);
     }
 
 
+    /**
+     * Converts a Word document to a PDF file and saves both the original Word document
+     * and the converted PDF file. The file IDs of the saved documents are returned in
+     * a {@link SetFileIdVo} object.
+     *
+     * @param paramMap a map of placeholders and their replacement values to update the Word document
+     * @param formId the ID of the form to retrieve the Word document template
+     * @return a {@link SetFileIdVo} object containing the file IDs for both the Word and PDF files
+     * @throws Exception if an error occurs during file processing or conversion
+     */
     public SetFileIdVo applyWordToPdf(Map<String, String> paramMap, int formId) throws Exception {
         FormWithFieldsVo formList = formService.getFormWithFieldsById(formId);
         SetFileIdVo vo = new SetFileIdVo();

@@ -20,11 +20,27 @@ public class AuthDeptServiceImpl implements AuthDeptService {
 
     private final AuthDeptMapper authDeptMapper;
 
+    /**
+     * Retrieves a list of authorized departments based on the given department code.
+     *
+     * @param deptCd the code of the department for which the authorized departments need to be retrieved
+     * @return a list of AuthDeptVo objects representing the authorized departments
+     */
     @Override
     public List<AuthDeptVo> getAuthDeptList(String deptCd) {
         return authDeptMapper.selectListAuthDept(deptCd);
     }
 
+    /**
+     * Creates or updates the authorization information for a department.
+     * Deletes all existing authorization information for the specified department
+     * and inserts the provided authorization details.
+     *
+     * @param authDeptCreate the object containing the department code and a list of
+     *                       authorization details to be created or updated
+     * @return the same AuthDeptCreate object passed as input, representing the updated
+     *         authorization details
+     */
     @Override
     public AuthDeptCreate createAuthDept(AuthDeptCreate authDeptCreate) {
         List<AuthDeptVo> authDeptVos = authDeptCreate.getAuthDeptVos();

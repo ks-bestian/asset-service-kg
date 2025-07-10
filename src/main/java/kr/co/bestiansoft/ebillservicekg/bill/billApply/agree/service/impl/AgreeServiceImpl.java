@@ -33,6 +33,16 @@ public class AgreeServiceImpl implements AgreeService {
 	private final ApplyMapper applyMapper;
 	private final HomePageMapper homePageMapper;
 
+	/**
+	 * Retrieves a list of ApplyVo objects for agreements based on the provided parameters.
+	 * The method automatically includes the login ID of the current user in the parameters
+	 * before querying the data.
+	 *
+	 * @param param a HashMap containing the search parameters. The method will add the
+	 *              current user's login ID to this map under the key "loginId".
+	 * @return a List of ApplyVo objects representing the agreement information that matches
+	 *         the search criteria specified in the parameters.
+	 */
 	@Override
 	public List<ApplyVo> getAgreeList(HashMap<String, Object> param) {
 		param.put("loginId", new SecurityInfoUtil().getAccountId());
@@ -40,6 +50,19 @@ public class AgreeServiceImpl implements AgreeService {
 //		return agreeMapper.selectAgreeList(param);
 	}
 
+	/**
+	 * Retrieves the agreement details for a given bill ID and language.
+	 * This method fetches the following:
+	 * - Agreement particulars for the given bill ID and user.
+	 * - The list of proposers for the agreement.
+	 * - A list of associated files.
+	 * - A hierarchical structure of comments related to the agreement.
+	 *
+	 * @param billId the unique identifier of the bill whose agreement details are to be retrieved
+	 * @param lang   the language preference for retrieving agreement details
+	 * @return an AgreeResponse object containing the detailed agreement information, including
+	 *         proposers, associated files, and comments
+	 */
 	@Override
 	public AgreeResponse getAgreeDetail(String billId, String lang) {
 
@@ -71,6 +94,17 @@ public class AgreeServiceImpl implements AgreeService {
 		return result;
 	}
 
+	/**
+	 * Updates the agreement status of a bill based on the provided parameters.
+	 * The method automatically appends the user's ID and the bill's ID to the input parameters
+	 * before invoking the data update operation.
+	 *
+	 * @param billId the unique identifier of the bill to update agreement status for
+	 * @param param  a HashMap containing additional parameters for updating the bill agreement.
+	 *               The method will inject the user's ID using the current session and the bill ID
+	 *               into this map before proceeding with the update.
+	 * @return an integer representing the number of rows affected by the update in the database
+	 */
 	@Transactional
 	@Override
 	public int setBillAgree(String billId, HashMap<String, Object> param) {

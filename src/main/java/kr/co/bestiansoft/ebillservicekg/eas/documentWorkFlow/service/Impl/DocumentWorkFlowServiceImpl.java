@@ -205,6 +205,15 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
         return result;
 
     }
+
+    /**
+     * Processes the approval request based on the specified type of approval.
+     * Ensures the appropriate approval logic is executed based on the approval type defined in the input parameter.
+     * This method is transactional and will roll back in case of a {@code SQLIntegrityConstraintViolationException}.
+     *
+     * @param vo the update approval value object containing the details of the approval request,
+     *           including the type of approval to be processed.
+     */
     @Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
     @Override
     public void approve(UpdateApprovalVo vo) {
@@ -216,7 +225,14 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
             RequestReviewAndApprove(vo);
         }
     }
-    // DMS04
+
+    /**
+     * Processes the rejection of an approval request, which includes updating the
+     * approval status, changing the document status, and recording the action in the history.
+     *
+     * @param vo the data transfer object containing the details of the approval to be rejected,
+     *           such as the document ID and current approval status information
+     */
     @Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
     public void approveReject(UpdateApprovalVo vo){
         UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
@@ -239,12 +255,20 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                 .build();
         historyService.insertHistory(historyVo);
     }
+
+    /**
+     * Processes the reception of a work request based on its document type.
+     * Handles various operations such as document registration, confirmation, and signature,
+     * updating relevant entities and maintaining necessary historical records.
+     *
+     * @param vo an instance of WorkRequestAndResponseVo containing work request details,
+     *           including document type, request ID, worker ID, and other necessary information.
+     */
     @Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
     public void reception(WorkRequestAndResponseVo vo){
         UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
         if(vo.getDocTypeCd() == null){}
         else if(vo.getDocTypeCd().equals(DocumentType.REPLY_PURPOSE.getCodeId())){
-            //Answer
             // Request for implementation addition
 
             vo.setRegDt(LocalDateTime.now());
@@ -327,6 +351,15 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
             }
         }
     }
+
+    /**
+     * Rejects the reception process by updating the received information, updating the document status,
+     * and inserting a rejection record in the history.
+     *
+     * @param vo an object of type {@code UpdateReceivedInfoVo} containing the information
+     *           that needs to be updated for rejecting the reception. It includes details such as
+     *           document ID and reception status.
+     */
     @Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
     public void rejectReception(UpdateReceivedInfoVo vo){
         //receivedInfo update
@@ -347,6 +380,12 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                 .build();
         historyService.insertHistory(historyVo);
     }
+
+    /**
+     * Marks the specified document as completed and logs the action in the history.
+     *
+     * @param docId the unique identifier of the document to be marked as completed
+     */
     @Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
     public void endDocument(String docId){
        UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
@@ -361,6 +400,16 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
        historyService.insertHistory(historyVo);
        documentService.updateStatusOfficialDocument(docId, DocumentStatus.COMPLETED.getCodeId());
     }
+
+    /**
+     * Saves a reply document along with its associated metadata, approvals, and connections.
+     * Handles the creation, update, and linking of various entities related to the reply document
+     * in a transactional manner. This method ensures that the operations are rolled back in case
+     * of an SQLIntegrityConstraintViolationException.
+     *
+     * @param vo the {@link InsertDocumentVo} object containing all the necessary data
+     *           for creating and managing the reply document.
+     */
     @Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
     @Override
     public void saveReplyDocument(InsertDocumentVo vo) {
@@ -510,6 +559,17 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
             documentService.updateStatusOfficialDocument(documentVo.getDocId(), DocumentStatus.TRANSMITTED.getCodeId());
         }
     }
+
+    /**
+     * Rewrites an existing document by saving a new document and handling associated files.
+     * Any files already uploaded are reassigned with new IDs and linked to the new document.
+     * The old document is subsequently deleted.
+     *
+     * @param vo the data transfer object containing details of the document to be rewritten,
+     *           including information about already uploaded files, document ID, and the
+     *           source document ID to be replaced.
+     * @throws SQLIntegrityConstraintViolationException if any database integrity constraint is violated during the transaction.
+     */
     @Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
     @Override
     public void rewriteDocument(InsertDocumentVo vo) {
@@ -527,6 +587,12 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
         deleteDocument(vo.getFromDocId());
     }
 
+    /**
+     * Ends the processing of a rejected document by updating its status to completed
+     * and recording the action in the document's history.
+     *
+     * @param docId the identifier of the document to be updated and logged
+     */
     @Override
     public void endRejectedDocument(String docId) {
         UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
@@ -541,6 +607,13 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                 .build();
         historyService.insertHistory(historyVo);
     }
+
+    /**
+     * Updates the work request and its associated responses, while maintaining history records.
+     *
+     * @param vo An instance of WorkRequestAndResponseVo that contains the work request data to be updated,
+     *           along with the associated work responses.
+     */
     @Override
     public void updateWorkRequest(WorkRequestAndResponseVo vo) {
         // update workRequest
@@ -572,6 +645,13 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
         historyService.insertHistory(historyVo);
     }
 
+    /**
+     * Updates the main responser for the provided document information.
+     * This method updates the received information and logs the action in the history.
+     *
+     * @param vo the object containing the information required to update the main responser,
+     *           including document details and other necessary attributes
+     */
     @Override
     public void updateMainResponser(UpdateReceivedInfoVo vo) {
         // update main Responser
@@ -589,6 +669,12 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
         historyService.insertHistory(historyVo);
     }
 
+    /**
+     * Inserts a new work request along with associated work responses and logs the action in the history.
+     *
+     * @param vo the {@code WorkRequestAndResponseVo} object containing the data needed to create the work request,
+     *           associated work responses, and history record.
+     */
     @Override
     public void insertWorkRequest(WorkRequestAndResponseVo vo) {
         UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
@@ -626,6 +712,13 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
         historyService.insertHistory(historyVo);
     }
 
+    /**
+     * Registers a work response by updating the work response data, updating the work request status,
+     * and recording the history of changes made based on the provided information in the UpdateWorkResponseVo object.
+     *
+     * @param vo the UpdateWorkResponseVo containing the information required to update the work response,
+     *           determine the work request status, and log the changes in the history.
+     */
     @Override
     public void registerWorkResponse(UpdateWorkResponseVo vo) {
         // update WorkResponse
@@ -659,6 +752,12 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
         historyService.insertHistory(historyVo);
     }
 
+    /**
+     * Deletes a work request, including its associated work response,
+     * and logs the deletion in the history.
+     *
+     * @param workReqId the unique identifier of the work request to delete
+     */
     @Override
     public void deleteWorkRequest(int workReqId) {
         String docId = workRequestService.getDocIdByWorkReqId(workReqId);
@@ -680,7 +779,15 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
         historyService.insertHistory(historyVo);
     }
 
-
+    /**
+     * Processes the approval request for a document.
+     * Updates the approval status and handles actions
+     * required when the approval order is final or intermediate.
+     * Logs the action in the history.
+     *
+     * @param vo The UpdateApprovalVo object containing approval information such as
+     *           document ID, approval ID, approval status, and resolution information.
+     */
     @Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
     public void RequestApprove(UpdateApprovalVo vo){
         UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
@@ -738,6 +845,15 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                 .build();
         historyService.insertHistory(historyVo);
     }
+
+    /**
+     * Processes the approval of a reply document by updating its approval status and related information.
+     * This method handles updating approval details, recipient statuses, document statuses, and maintaining history logs.
+     * It also checks the approval order and handles the transition of approval responsibilities.
+     *
+     * @param vo an instance of {@link UpdateApprovalVo} containing details of the approval to be updated.
+     *           This includes the document ID, approval ID, and relevant approval status.
+     */
     @Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
     public void ReplyApprove(UpdateApprovalVo vo) {
         UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
@@ -820,6 +936,14 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                 .build();
         historyService.insertHistory(historyVo);
     }
+
+    /**
+     * Processes a review and approval request for a specific document. This method handles updating
+     * approval statuses, managing recipient information, and tracking the approval history.
+     *
+     * @param vo An {@link UpdateApprovalVo} object containing details of the approval and document to
+     *           be processed, such as document ID, approval ID, and the current approval status to be updated.
+     */
     @Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
     public void RequestReviewAndApprove(UpdateApprovalVo vo){
         UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
@@ -887,6 +1011,14 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
         historyService.insertHistory(historyVo);
 
     }
+
+    /**
+     * Checks if the document identified by the given docId has reached its end state.
+     *
+     * @param docId the identifier of the document to be checked
+     * @return {@code true} if the document has either no received information or if all
+     *         received information statuses are marked as completed response, otherwise {@code false}
+     */
     public boolean isEnd(String docId){
         List<ReceivedInfoVo> receivedInfo = receivedInfoService.getReceivedInfo(docId);
 
@@ -898,7 +1030,13 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                 .allMatch(rcvInfoVo -> rcvInfoVo.getRcvStatus().equals(ReceiveStatus.COMPLETED_RESPONSE.getCodeId()));
     }
 
-
+    /**
+     * Checks if all work responses related to a specific work request are completed.
+     *
+     * @param workReqId the ID of the work request to check
+     * @return true if there are no work responses or if all the work responses have non-null response dates,
+     *         false otherwise
+     */
     public boolean isWorkEnd(int workReqId){
         List<WorkResponseVo> responseVos = workResponseService.getWorkResponses(workReqId);
 
@@ -911,6 +1049,12 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
     }
 
 
+    /**
+     * Updates the read date and time of a received message and sets its status to "viewed".
+     *
+     * @param rcvId the ID of the received message to be updated
+     * @return the number of rows affected by the update operation
+     */
     @Override
     public int updateReadDateTime(int rcvId) {
         UpdateReceivedInfoVo vo = UpdateReceivedInfoVo.builder()
@@ -920,7 +1064,12 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                 .build();
         return receivedInfoService.updateReceivedInfo(vo);
     }
-    
+
+    /**
+     * Updates the read approval status of an approval entry.
+     *
+     * @param apvlId the unique identifier of the approval to be updated
+     */
     public void updateReadApproval(int apvlId){
         UpdateApprovalVo vo = UpdateApprovalVo.builder()
                 .apvlId(apvlId)
@@ -929,10 +1078,22 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
                 .build();
          approvalService.updateApproval(vo);
     }
+
+    /**
+     * Converts an array of strings into a single string with elements separated by commas.
+     *
+     * @param arrayS the array of strings to be converted into a single string
+     * @return a string representation of the array with elements joined by commas
+     */
     public String arrayToString(String[] arrayS){
         return String.join(",", arrayS);
     }
 
+    /**
+     * Deletes a document identified by the provided document ID from multiple related services.
+     *
+     * @param docId the unique identifier of the document to be deleted
+     */
     @Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
     public void deleteDocument(String docId){
         documentService.deleteDocument(docId);

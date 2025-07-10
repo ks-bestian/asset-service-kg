@@ -28,6 +28,15 @@ public class ProcessServiceImpl implements ProcessService {
 	private final ProcessMapper processMapper;
 
 
+	/**
+	 * Handles the processing of a given process step based on its current state, task, and configuration.
+	 * It either initializes a process instance, updates the status of an existing task,
+	 * or processes a step of the workflow accordingly.
+	 *
+	 * @param argVo the {@code ProcessVo} object containing the current process information and state,
+	 *              such as step ID, task ID, bill ID, and registration ID
+	 * @return the updated {@code ProcessVo} object that contains modified process data after execution
+	 */
 	@Transactional
 	@Override
 	public ProcessVo handleProcess(ProcessVo argVo) {
@@ -71,6 +80,13 @@ public class ProcessServiceImpl implements ProcessService {
 
 	}
 
+	/**
+	 * Executes service tasks based on the provided process step ID. It determines the
+	 * appropriate service to invoke depending on the stepId contained within the provided
+	 * ProcessVo object.
+	 *
+	 * @param argVo the ProcessVo object containing the step ID and other necessary process information
+	 */
 	public void executeServiceTasks(ProcessVo argVo)  {
 
 		String stepId = argVo.getStepId();
@@ -601,11 +617,23 @@ public class ProcessServiceImpl implements ProcessService {
 		}
 
 
+	/**
+	 * Selects a specific business process task based on the provided ProcessVo object.
+	 *
+	 * @param argVo the ProcessVo object containing the criteria and details for retrieving the business process task
+	 * @return a ProcessVo object with the details of the selected business process task, or null if no task is found
+	 */
 		@Override
 		public ProcessVo selectBpTask(ProcessVo argVo) {
 			return processMapper.selectBpTask(argVo);
 		}
 
+	/**
+	 * Handles the given task by updating its modifier information and performing necessary updates.
+	 *
+	 * @param argVo the ProcessVo object containing task information to be handled
+	 * @return the updated ProcessVo object after processing
+	 */
 		@Override
 		public ProcessVo handleTask(ProcessVo argVo) {
 			String userId = new SecurityInfoUtil().getAccountId();
@@ -613,8 +641,19 @@ public class ProcessServiceImpl implements ProcessService {
 			processMapper.updateBpTask(argVo);
 			return argVo;
 		}
-		
-		@Transactional
+
+	/**
+	 * Reverts the process to a previous state based on the provided bill ID and step ID.
+	 * This method checks the current process step and modifies tasks and process states
+	 * based on the step ID. If the step ID is invalid or if tasks associated with the
+	 * provided bill ID are missing, an {@link IllegalArgumentException} is thrown.
+	 *
+	 * @param billId the unique identifier of the bill whose process needs to be undone
+	 * @param stepId the step ID to which the process needs to be reverted
+	 * @throws IllegalArgumentException if the step ID does not match the current step ID
+	 *         or if there are no tasks associated with the bill ID
+	 */
+	@Transactional
 		@Override
 		public void undoProcess(String billId, String stepId) {
 			

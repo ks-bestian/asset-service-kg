@@ -32,6 +32,13 @@ public class SystemBillServiceImpl implements SystemBillService {
     private final AgreeMapper agreeMapper;
     private final EDVHelper edv;
 
+	/**
+	 * Fetches the detailed information of a bill along with its associated files.
+	 *
+	 * @param billId The unique identifier of the bill to fetch details for.
+	 * @param param A HashMap used to include additional parameters for querying the bill details.
+	 * @return A SystemBillResponse object containing the bill details and associated file list.
+	 */
 	@Override
 	public SystemBillResponse selectBillDetail(String billId, HashMap<String, Object> param) {
 		SystemBillResponse response = new SystemBillResponse();
@@ -46,6 +53,14 @@ public class SystemBillServiceImpl implements SystemBillService {
 		return response;
 	}
 
+	/**
+	 * Creates or updates the details of a system bill.
+	 * If a bill with the specified details does not exist, it creates a new bill record.
+	 * Otherwise, it updates the existing bill record with the provided details.
+	 *
+	 * @param systemBillVo the SystemBillVo object containing bill details such as bill ID and classification code
+	 * @return the updated SystemBillVo object after the operation is performed
+	 */
 	@Transactional
 	@Override
 	public SystemBillVo createBillDetail(SystemBillVo systemBillVo) {
@@ -68,11 +83,26 @@ public class SystemBillServiceImpl implements SystemBillService {
 		return systemBillVo;
 	}
 
+	/**
+	 * Retrieves a list of opinion files associated with a specific bill ID.
+	 *
+	 * @param billId the unique identifier of the bill for which the opinion files are to be retrieved
+	 * @return a list of EbsFileVo objects representing the opinion files associated with the given bill ID
+	 */
 	@Override
 	public List<EbsFileVo> selectOpinionFile(String billId) {
 		return systemBillMapper.selectBillFile(billId);
 	}
 
+	/**
+	 * Creates and saves bill files associated with the provided system bill information.
+	 *
+	 * @param systemBillVo The SystemBillVo object containing the details of the bill, including files to be saved.
+	 *                     It should also include information such as file types and classification codes.
+	 * @return The updated SystemBillVo object, with any modifications or updates applied during the file creation process.
+	 *         The files property of the returned object will be set to null after processing.
+	 * @throws RuntimeException If there is an issue processing or saving the files.
+	 */
 	@Transactional
 	@Override
 	public SystemBillVo createBillFile(SystemBillVo systemBillVo) {
@@ -115,6 +145,16 @@ public class SystemBillServiceImpl implements SystemBillService {
 		return systemBillVo;
 	}
 
+	/**
+	 * Updates the details of a system bill. If no existing bill details are found, creates a new bill record.
+	 * Additionally, processes and stores the associated files for the system bill.
+	 *
+	 * @param systemBillVo The SystemBillVo object containing information about the system bill
+	 *                     to be updated or created, including its ID, classification codes,
+	 *                     and associated files to be saved.
+	 * @return The updated SystemBillVo object with necessary modifications such as additional
+	 *         file details and user identifiers.
+	 */
 	@Override
 	public SystemBillVo updateBillLegal(SystemBillVo systemBillVo) {
 		String userId = new SecurityInfoUtil().getAccountId();
@@ -172,6 +212,13 @@ public class SystemBillServiceImpl implements SystemBillService {
 		return systemBillVo;
 	}
 
+	/**
+	 * Retrieves bill meeting details and associated files based on the provided bill ID and parameters.
+	 *
+	 * @param billId the ID of the bill for which the meeting details are to be retrieved
+	 * @param param a map containing additional parameters required for the query
+	 * @return a SystemBillResponse object containing the meeting details, associated files, and comments-related files
+	 */
 	@Override
 	public SystemBillResponse selectBillMtng(String billId, HashMap<String, Object> param) {
 		SystemBillResponse response = new SystemBillResponse();
@@ -188,6 +235,14 @@ public class SystemBillServiceImpl implements SystemBillService {
 		return response;
 	}
 
+	/**
+	 * Creates and processes meeting-related files based on the provided SystemBillVo object.
+	 * This method includes operations such as saving file details, uploading files, and updating database records.
+	 *
+	 * @param systemBillVo The SystemBillVo object containing information about the bill and associated files.
+	 *                     It includes details like bill ID, classification codes, file kinds, and the list of files to process.
+	 * @return A SystemBillVo object with updated data after the files are processed and stored.
+	 */
 	@Override
 	public SystemBillVo createMtngFile(SystemBillVo systemBillVo) {
 		String regId = new SecurityInfoUtil().getAccountId();
@@ -239,6 +294,14 @@ public class SystemBillServiceImpl implements SystemBillService {
 		return systemBillVo;
 	}
 
+	/**
+	 * Creates and validates a department-related system bill by processing the provided data,
+	 * including associated files, and saving the information to the database.
+	 *
+	 * @param systemBillVo the SystemBillVo object containing the attributes for the system bill
+	 *                     such as bill ID, remarks, file information, etc.
+	 * @return the updated SystemBillVo object after processing and saving the data.
+	 */
 	@Override
 	public SystemBillVo createValidationDept(SystemBillVo systemBillVo) {
 		String regId = new SecurityInfoUtil().getAccountId();
@@ -298,6 +361,13 @@ public class SystemBillServiceImpl implements SystemBillService {
 		return systemBillVo;
 	}
 
+	/**
+	 * Updates the remark (rmk) of files associated with a given bill in the system.
+	 * Iterates through the provided remarks to update each corresponding file's information.
+	 *
+	 * @param systemBillVo the SystemBillVo object containing the bill and file details, including the remarks to be updated
+	 * @return the updated SystemBillVo object with the modifications applied
+	 */
 	@Transactional
 	@Override
 	public SystemBillVo updateFileRmk(SystemBillVo systemBillVo) {
@@ -320,6 +390,12 @@ public class SystemBillServiceImpl implements SystemBillService {
 		return systemBillVo;
 	}
 
+	/**
+	 * Creates a master comment for the provided system bill.
+	 *
+	 * @param systemBillVo the SystemBillVo object containing the necessary details to create the master comment
+	 * @return the updated SystemBillVo object after the master comment has been created
+	 */
 	@Override
 	public SystemBillVo createMasterCmt(SystemBillVo systemBillVo) {
 		String userId = new SecurityInfoUtil().getAccountId();
@@ -330,6 +406,13 @@ public class SystemBillServiceImpl implements SystemBillService {
 		return systemBillVo;
 	}
 
+	/**
+	 * Retrieves a list of bills and associated files based on the given bill ID and parameters.
+	 *
+	 * @param billId The unique identifier of the bill to retrieve.
+	 * @param param A HashMap containing additional parameters required for the query.
+	 * @return A SystemBillResponse object containing the list of bills and associated files.
+	 */
 	@Override
 	public SystemBillResponse selectBillMtnList(String billId, HashMap<String, Object> param) {
 		SystemBillResponse response = new SystemBillResponse();
@@ -344,6 +427,18 @@ public class SystemBillServiceImpl implements SystemBillService {
 		return response;
 	}
 
+	/**
+	 * Creates or updates a maintenance master record and its associated details,
+	 * including bill-related files, in the system.
+	 *
+	 * @param systemBillVo An instance of SystemBillVo containing the data
+	 *                     for the maintenance master and associated files.
+	 *                     Includes details like bill ID, classification codes,
+	 *                     and file information.
+	 * @return The updated SystemBillVo instance containing the processed data
+	 *         after creation or update operations are completed.
+	 * @throws RuntimeException If an error occurs while saving a file in the external EDV system.
+	 */
 	@Override
 	public SystemBillVo createMtnMaster(SystemBillVo systemBillVo) {
 		String userId = new SecurityInfoUtil().getAccountId();
@@ -400,6 +495,14 @@ public class SystemBillServiceImpl implements SystemBillService {
 		return systemBillVo;
 	}
 
+	/**
+	 * Retrieves the bill-related meeting list and associated file list based on the provided bill ID
+	 * and additional parameters.
+	 *
+	 * @param billId The unique identifier of the bill.
+	 * @param param A map containing additional parameters for the query.
+	 * @return A SystemBillResponse object containing the meeting list and associated file list.
+	 */
 	@Override
 	public SystemBillResponse selectBillRelationMtngList(String billId, HashMap<String, Object> param) {
 		SystemBillResponse response = new SystemBillResponse();
@@ -414,6 +517,14 @@ public class SystemBillServiceImpl implements SystemBillService {
 		return response;
 	}
 
+	/**
+	 * Creates or updates a related meeting based on the provided {@code SystemBillVo} object.
+	 * Updates details and file-related information and saves it to the database.
+	 *
+	 * @param systemBillVo the object containing information about the system bill,
+	 *                     including details and associated files
+	 * @return the updated {@code SystemBillVo} object with relevant information
+	 */
 	@Override
 	public SystemBillVo cretaeRelateMtng(SystemBillVo systemBillVo) {
 		String userId = new SecurityInfoUtil().getAccountId();
@@ -474,6 +585,14 @@ public class SystemBillServiceImpl implements SystemBillService {
 		return systemBillVo;
 	}
 
+	/**
+	 * Retrieves government bill details and associated files based on the provided bill ID
+	 * and additional parameters.
+	 *
+	 * @param billId the unique identifier of the bill to retrieve
+	 * @param param a map containing additional parameters for the query
+	 * @return a {@code SystemBillResponse} object containing the bill details and associated files
+	 */
 	@Override
 	public SystemBillResponse selectBillGoverment(String billId, HashMap<String, Object> param) {
 		SystemBillResponse response = new SystemBillResponse();
@@ -488,6 +607,15 @@ public class SystemBillServiceImpl implements SystemBillService {
 		return response;
 	}
 
+	/**
+	 * This method is responsible for creating or updating a government system bill based on the provided
+	 * {@code systemBillVo} data. It manages the bill details, assigns necessary user IDs, handles file uploads,
+	 * and interacts with the database to save the bill and associated files.
+	 *
+	 * @param systemBillVo The SystemBillVo object containing the details of the bill to be created or updated.
+	 *                     It includes information such as bill ID, classification codes, file metadata, and uploaded files.
+	 * @return A SystemBillVo object with updated or created bill details, confirming changes and any modifications.
+	 */
 	@Override
 	public SystemBillVo cretaeGoverment(SystemBillVo systemBillVo) {
 		String userId = new SecurityInfoUtil().getAccountId();
@@ -544,6 +672,14 @@ public class SystemBillServiceImpl implements SystemBillService {
 		return systemBillVo;
 	}
 
+	/**
+	 * Retrieves the detailed information of a specific bill application.
+	 *
+	 * @param billId the unique identifier of the bill.
+	 * @param lang the language in which the bill details are requested.
+	 * @return a {@link SystemBillResponse} object containing the detailed bill information,
+	 *         including bill details, file list, and proposer list.
+	 */
 	@Override
 	public SystemBillResponse getApplyDetail(String billId, String lang) {
 

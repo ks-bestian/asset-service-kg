@@ -51,11 +51,25 @@ public class LinkDocumentServiceImpl implements LinkDocumentService {
         return linkDocumentRepository.getLinkDocumentByDocId(docId);
     }
 
+    /**
+     * Retrieves a linked document record based on the specified document ID and link type.
+     *
+     * @param docId the ID of the document for which the linked document is to be retrieved
+     * @param linkType the type of link associated with the document
+     * @return a LinkDocumentVo object representing the linked document;
+     *         null if no linked document matches the given criteria
+     */
     @Override
     public LinkDocumentVo getLinkDocumentByDocIdAndType(String docId, String linkType) {
         return linkDocumentRepository.getLinkDocumentByDocIdAndType(docId, linkType);
     }
 
+    /**
+     * Retrieves a list of linked document records based on the provided link ID.
+     *
+     * @param linkId the ID of the link for which linked documents are to be retrieved
+     * @return a list of LinkDocumentVo objects representing the linked documents
+     */
     @Override
     public List<LinkDocumentVo> getLinkDocument(int linkId) {
         return linkDocumentRepository.getLinkDocument(linkId);

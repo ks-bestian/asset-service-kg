@@ -32,6 +32,11 @@ public class BillAllServiceImpl implements BillAllService {
     private final AgreeMapper agreeMapper;
 	private final ApplyMapper applyMapper;
 
+	/**
+	 * Retrieves a list of bills based on the provided parameters.
+	 *
+	 * @param param a map containing the parameters for the query
+	 * @return a list*/
     @Override
     public List<BillAllVo> getBillList(HashMap<String, Object> param) {
 
@@ -39,6 +44,15 @@ public class BillAllServiceImpl implements BillAllService {
         return result;
     }
 
+	/**
+	 * Retrieves the bill information based on the provided bill ID and additional parameters.
+	 *
+	 * @param billId The unique identifier of the bill to fetch details for.
+	 * @param param A map containing any additional parameters needed for the query.
+	 * @return A {@code BillAllResponse} object containing the complete details of the bill,
+	 *         including basic information, proposer list, file lists, committee information,
+	 *         meeting details, and other related data.
+	 */
     @Override
     public BillAllResponse getBillById(String billId, HashMap<String, Object> param) {
 
@@ -145,6 +159,12 @@ public class BillAllServiceImpl implements BillAllService {
         return billRespanse;
     }
 
+	/**
+	 * Retrieves a list of monitored bills based on the provided parameters.
+	 *
+	 * @param param a map containing the parameters for the query
+	 * @return a list of {@code BillAllVo} objects representing the monitored bills
+	 */
 	@Override
 	public List<BillAllVo> selectListBillMonitor(HashMap<String, Object> param) {
 
@@ -152,20 +172,40 @@ public class BillAllServiceImpl implements BillAllService {
         return result;
 	}
 
+	/**
+	 * Retrieves a list of bills categorized by a specific type based on the provided parameters.
+	 *
+	 * @param param a map containing the parameters for categorizing and querying the bills
+	 * @return a list of {@code BillAllVo} objects representing the categorized bills
+	 */
 	@Override
 	public List<BillAllVo> countBillByPpslKnd(HashMap<String, Object> param) {
 
         List<BillAllVo> result = billAllMapper.countBillByPpslKnd(param);
         return result;
 	}
-	
+
+	/**
+	 * Retrieves a list of bills categorized by political affiliation based on the provided parameters.
+	 *
+	 * @param param a map containing the parameters for categorizing and querying the bills
+	 * @return a list of {@code BillAllVo} objects representing the categorized bills
+	 */
 	@Override
 	public List<BillAllVo> countBillByPoly(HashMap<String, Object> param) {
 
         List<BillAllVo> result = billAllMapper.countBillByPoly(param);
         return result;
 	}
-	
+
+	/**
+	 * Counts and retrieves a list of bills based on the given parameters.
+	 * The parameters are typically used to filter the bill data by community or other criteria.
+	 *
+	 * @param param a HashMap containing the filter criteria for the bill count operation.
+	 *              The keys and values in the map should match the expected query parameters.
+	 * @return a List of BillAllVo objects representing the bills matching the provided criteria.
+	 */
 	@Override
 	public List<BillAllVo> countBillByCmt(HashMap<String, Object> param) {
 

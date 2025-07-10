@@ -187,10 +187,12 @@ public class EasFileServiceImpl implements EasFileService {
         return result;
     }
 
-    /***
+    /**
+     * Saves the given file and returns a unique identifier for the saved file.
      *
-     * @param file
-     * @return fileId
+     * @param file the file to be saved
+     * @return a unique identifier for the saved file
+     * @throws RuntimeException if an error occurs during the file saving process
      */
     public String saveFile(File file){
         String fileId = StringUtil.getUUUID();
@@ -203,15 +205,12 @@ public class EasFileServiceImpl implements EasFileService {
     }
 
     /**
-     * Saves a PDF file by converting the input file to a PDF format and storing it.
-     * Handles temporary file creation and ensures proper cleanup post-processing.
+     * Saves the provided PDF file after converting it if needed. This method creates temporary files
+     * for processing and uploads the finalized PDF content to a storage service.
      *
-     * 입력 파일을 PDF 형식으로 변환하여 저장하고 저장합니다.
-     * 임시 파일 생성을 처리하고 처리 후 적절한 정리를 보장합니다.
-     *
-     * @param file the multipart file to be converted to a PDF and saved
-     * @return an UpdatePdfFileDto containing the PDF file's ID and name
-     * @throws RuntimeException if the file conversion or saving process fails
+     * @param fileBytes the byte array representing the content of the file to be saved
+     * @param fileName the name of the file to be associated with the stored PDF
+     * @return a CompletableFuture containing an UpdatePdfFileDto object with details about the saved PDF file
      */
     public CompletableFuture<UpdatePdfFileDto> savePdfFile(byte[] fileBytes, String fileName) {
 
@@ -251,6 +250,14 @@ public class EasFileServiceImpl implements EasFileService {
 
         }, executorService);
     }
+
+    /**
+     * Saves a PDF file by converting the input file to a PDF format and storing it.
+     *
+     * @param file The file to be converted to PDF and saved.
+     * @return A CompletableFuture containing an UpdatePdfFileDto with details of the saved PDF file.
+     * @throws RuntimeException If the PDF conversion fails or the file cannot be saved.
+     */
     public CompletableFuture<UpdatePdfFileDto> savePdfFile(File file) {
 
         return CompletableFuture.supplyAsync(() -> {
@@ -282,6 +289,11 @@ public class EasFileServiceImpl implements EasFileService {
         }, executorService);
     }
 
+    /**
+     * Deletes a document based on the provided document identifier.
+     *
+     * @param docId the unique identifier of the document to be deleted
+     */
     @Override
     public void deleteDocument(String docId) {
         easFileRepository.deleteDocument(docId);
