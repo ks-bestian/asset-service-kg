@@ -21,7 +21,6 @@ public class WorkRequestController {
     @Operation(summary = "insertWorkRequest", description = "insertWorkRequest")
     @PostMapping("/eas/workRequest")
     public ResponseEntity<CommonResponse> insertWorkRequest(@RequestBody WorkRequestVo vo) {
-        System.out.println(vo.toString());
         return new ResponseEntity<>(new CommonResponse(200, "OK", workRequestService.insertWorkRequest(vo)), HttpStatus.OK);
     }
     @Operation(summary = "to RcvId getWortRequest", description = "to RcvId getWortRequest")
@@ -50,7 +49,6 @@ public class WorkRequestController {
     @Operation(summary = "updateWorkRequest", description = "Update WorkRequest")
     @PutMapping("/eas/workRequest")
     public ResponseEntity<CommonResponse> updateWorkRequest(@RequestBody WorkRequestVo vo) {
-        System.out.println("Updating workRequest: " + vo.toString());
         return new ResponseEntity<>(new CommonResponse(200, "OK", workRequestService.updateWorkRequest(vo)), HttpStatus.OK);
     }
     @Operation(summary = "updateWorkRequestAndResponse", description="update Work Request and Response")
