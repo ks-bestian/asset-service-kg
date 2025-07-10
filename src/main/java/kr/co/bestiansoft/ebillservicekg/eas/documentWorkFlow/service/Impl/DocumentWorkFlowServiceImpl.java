@@ -9,6 +9,7 @@ import kr.co.bestiansoft.ebillservicekg.eas.approval.vo.UpdateApprovalVo;
 import kr.co.bestiansoft.ebillservicekg.eas.documentWorkFlow.service.DocumentWorkFlowService;
 import kr.co.bestiansoft.ebillservicekg.eas.documentWorkFlow.enums.*;
 import kr.co.bestiansoft.ebillservicekg.eas.draftDocument.service.DraftDocumentService;
+import kr.co.bestiansoft.ebillservicekg.eas.draftDocument.vo.DraftDocumentVo;
 import kr.co.bestiansoft.ebillservicekg.eas.file.service.EasFileService;
 import kr.co.bestiansoft.ebillservicekg.eas.file.vo.EasFileVo;
 import kr.co.bestiansoft.ebillservicekg.eas.history.service.HistoryService;
@@ -106,6 +107,22 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
         result += documentService.saveOfficialDocument(documentVo);
 
         draftDocumentService.updateDraftStatus(vo.getAarsDocId(), DraftStatus.DISPATCHED.getCodeId());
+        // file add
+        DraftDocumentVo draftVo = draftDocumentService.getDraftDocument(vo.getAarsDocId());
+        String fileNm = "OfficialDocument.pdf";
+        EasFileVo fileVo = EasFileVo.builder()
+                .fileId(draftVo.getAarsFileId())
+                .orgFileId(draftVo.getAarsFileId())
+                .fileType(EasFileType.DRAFT_DOCUMENT_FILE.getCodeId())
+                .orgFileNm(fileNm)
+                .pdfFileNm(fileNm)
+                .deleteYn('N')
+                .pdfFileId(draftVo.getAarsPdfFileId())
+                .docId(vo.getDocId())
+                .regId(loginId)
+                .regDt(LocalDateTime.now())
+                .build();
+        easFileService.saveEasFile(fileVo);
 
         int addApprovalCount = 1;
 
@@ -439,7 +456,22 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
         documentService.saveOfficialDocument(documentVo);
         // draft status change
         draftDocumentService.updateDraftStatus(vo.getAarsDocId(), DraftStatus.DISPATCHED.getCodeId());
-
+        // file add
+        DraftDocumentVo draftVo = draftDocumentService.getDraftDocument(vo.getAarsDocId());
+        String fileNm = "OfficialDocument.pdf";
+        EasFileVo fileVo = EasFileVo.builder()
+                .fileId(draftVo.getAarsFileId())
+                .orgFileId(draftVo.getAarsFileId())
+                .fileType(EasFileType.DRAFT_DOCUMENT_FILE.getCodeId())
+                .orgFileNm(fileNm)
+                .pdfFileNm(fileNm)
+                .deleteYn('N')
+                .pdfFileId(draftVo.getAarsPdfFileId())
+                .docId(vo.getDocId())
+                .regId(loginId)
+                .regDt(LocalDateTime.now())
+                .build();
+        easFileService.saveEasFile(fileVo);
 
         int addApprovalCount = 1;
 
@@ -1104,4 +1136,5 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
         workResponseService.deleteDocument(docId);
         easFileService.deleteDocument(docId);
     }
+
 }

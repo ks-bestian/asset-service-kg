@@ -31,5 +31,13 @@
            set delete_yn = 'Y'
          where doc_id =#{docId}
     </update>
+    <select id="getRecentFileByDocIdAndFileType" resultType="kr.co.bestiansoft.ebillservicekg.eas.file.vo.EasFileVo">
+        select f.file_id, doc_id, file_type, org_file_id, org_file_nm, pdf_file_id, pdf_file_nm, file_size, file_ext, delete_yn, delete_dtm, delete_user_id, reg_id, reg_dt
+          from eas_file f
+         where f.doc_id =#{docId}
+           and f.file_type = #{fileType}
+         order by reg_dt desc
+         limit 1;
+    </select>
 
 </mapper>
