@@ -34,7 +34,22 @@ public class DocumentSignController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
-    
+
+
+    @GetMapping("/approval/sign")
+    public ResponseEntity<SignResponseDto> approval(
+            @Valid SignRequestDto dto
+            ) {
+        log.info("dto: {}", dto);
+        SignResponseDto response = documentSignService.approvalDocument(dto);
+
+        if (response.getSuccess()) {
+            return ResponseEntity.ok(response);
+        } else {
+            log.warn("Document signing failed for file ID {}: {}", dto.apvlId(), response.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
 //    @PostMapping("/sign")
 //    public ResponseEntity<SignResponseDto> sign(
 //            @Valid @RequestBody SignRequestDto dto

@@ -151,6 +151,11 @@ public class EasFileServiceImpl implements EasFileService {
         return easFileRepository.getFileById(fileId);
     }
 
+    @Override
+    public EasFileVo getFileByDocIdAndFileType(String docId, String fileType) {
+        return easFileRepository.getRecentFileByDocIdAndFileType(docId, fileType);
+    }
+
     /**
      * Saves the provided file and generates metadata related to the saved file.
      * The file is stored using a unique file ID, and its metadata includes 

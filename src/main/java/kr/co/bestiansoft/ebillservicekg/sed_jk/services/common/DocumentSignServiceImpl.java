@@ -1,5 +1,12 @@
 package kr.co.bestiansoft.ebillservicekg.sed_jk.services.common;
 
+import kr.co.bestiansoft.ebillservicekg.common.file.service.impl.EDVHelper;
+import kr.co.bestiansoft.ebillservicekg.eas.approval.service.ApprovalService;
+import kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalVo;
+import kr.co.bestiansoft.ebillservicekg.eas.approval.vo.UpdateApprovalVo;
+import kr.co.bestiansoft.ebillservicekg.eas.documentWorkFlow.enums.EasFileType;
+import kr.co.bestiansoft.ebillservicekg.eas.file.service.EasFileService;
+import kr.co.bestiansoft.ebillservicekg.eas.file.vo.EasFileVo;
 import kr.co.bestiansoft.ebillservicekg.sed_jk.client.cds.CdsClient;
 import kr.co.bestiansoft.ebillservicekg.sed_jk.client.cds.dto.request.AuthRequest;
 import kr.co.bestiansoft.ebillservicekg.sed_jk.client.cds.dto.request.CheckSignRequest;
@@ -30,6 +37,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -39,6 +47,10 @@ public class DocumentSignServiceImpl implements DocumentSignService{
 //    private final EmployeeProfileService employeeService;
 //    private final DocumentAgreementRepository documentAgreementRepository;
 //    private final DocumentRepository documentRepository;
+    private final EasFileService easFileService;
+    private final ApprovalService approvalService;
+    private final HashingService hashingService;
+    private final EDVHelper edv;
 
     @Transactional
     public SignResponseDto signDocument(SignRequestDto signRequestDto) {
@@ -51,7 +63,7 @@ public class DocumentSignServiceImpl implements DocumentSignService{
 //                .orElseThrow(() -> new ResourceNotFoundException("Подписывающий о документе не найден для ID: " + signRequestDto.agreementId()));
 
 //        String fileHash = agreement.getSignedFile().getHash();
-    	
+
     	String fileHash = "55c4075ea0bc208781aa99749100c7ed00bd4ef9fcfa65a251ee207d5ac40a6e";
 //        String userToken = authenticateWithCds(employeeProfile, currentEmployeePositionHistory, signRequestDto.pinCode());
     	String userToken = authenticateWithCds(signRequestDto.pinCode());
@@ -67,7 +79,33 @@ public class DocumentSignServiceImpl implements DocumentSignService{
         return new SignResponseDto("Документ успешно подписан.", true);
     }
 
-//    private String authenticateWithCds(EmployeeProfile employeeProfile, EmployeePositionHistory employeePositionHistory, String pinCode) {
+    @Override
+    public SignResponseDto approvalDocument(SignRequestDto signRequestDto) {
+        ApprovalVo approvalVo = approvalService.getApproval(signRequestDto.apvlId());
+        EasFileVo  fileVo = easFileService.getFileByDocIdAndFileType(approvalVo.getDocId(), EasFileType.DRAFT_DOCUMENT_FILE.getCodeId());
+
+        String fileHash = "";
+        try{
+            fileHash= hashingService.calculateHash(edv.download(fileVo.getFileId()));
+        }catch(Exception e){
+            return new SignResponseDto("error hashing", false);
+        }
+
+        String userToken = authenticateWithCds(signRequestDto.pinCode());
+        String signature = signHashWithCds(fileHash, userToken);
+
+
+        UpdateApprovalVo updateApprovalVo = UpdateApprovalVo.builder()
+                .apvlId(signRequestDto.apvlId())
+                .apvlHash(signature)
+                .build();
+
+        approvalService.updateApproval(updateApprovalVo);
+
+        return new SignResponseDto("Документ успешно подписан.", true);
+    }
+
+    //    private String authenticateWithCds(EmployeeProfile employeeProfile, EmployeePositionHistory employeePositionHistory, String pinCode) {
     private String authenticateWithCds(String pinCode) {
 //        String personIdnp = employeeProfile.getPin();
 //        String organizationInn = employeePositionHistory.getPosition().getDepartment().getState().getInn();

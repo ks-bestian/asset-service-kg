@@ -4,8 +4,8 @@
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.eas.approval.repository.ApprovalRepository">
     <insert id="insertApproval" parameterType="kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalVo">
         INSERT INTO kgst.eas_approval
-        (doc_id, user_id, user_nm, dept_cd, job_cd, apvl_ord, res_dtm, rcv_dtm, check_dtm, apvl_file_id, res_opinion, apvl_status_cd, apvl_type)
-        VALUES(#{docId}, #{userId}, #{userNm}, #{deptCd}, #{jobCd}, #{apvlOrd}, #{resDtm}, #{rcvDtm}, #{checkDtm}, #{apvlFileId}, #{resOpinion}, #{apvlStatusCd}, #{apvlType});
+        (doc_id, user_id, user_nm, dept_cd, job_cd, apvl_ord, res_dtm, rcv_dtm, check_dtm, apvl_hash, res_opinion, apvl_status_cd, apvl_type)
+        VALUES(#{docId}, #{userId}, #{userNm}, #{deptCd}, #{jobCd}, #{apvlOrd}, #{resDtm}, #{rcvDtm}, #{checkDtm}, #{apvlHash}, #{resOpinion}, #{apvlStatusCd}, #{apvlType});
     </insert>
     <update id="updateStatus">
         update kgst.eas_approval
@@ -19,24 +19,24 @@
             <if test="rcvDtm != null"> rcv_dtm = #{rcvDtm},  </if>
             <if test="checkDtm != null">  check_dtm = #{checkDtm},  </if>
             <if test="resOpinion != null"> res_opinion = #{resOpinion},  </if>
-            <if test="apvlFileId != null"> apvl_file_id = #{apvlFileId}, </if>
+            <if test="apvlHash != null"> apvl_hash = #{apvlHash}, </if>
             <if test="apvlStatusCd != null"> apvl_status_cd = #{apvlStatusCd}, </if>
         </set>
         where apvl_id = #{apvlId}
     </update>
     <select id="getApprovals" resultType="kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalVo">
-        select apvl_id, doc_id, user_id, user_nm, dept_cd, job_cd, apvl_ord, res_dtm, rcv_dtm, check_dtm, apvl_file_id, res_opinion, apvl_status_cd, apvl_type
+        select apvl_id, doc_id, user_id, user_nm, dept_cd, job_cd, apvl_ord, res_dtm, rcv_dtm, check_dtm, apvl_hash, res_opinion, apvl_status_cd, apvl_type
           from kgst.eas_approval
          where doc_id =#{docId}
          order by apvl_ord
     </select>
     <select id="getApproval" resultType="kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalVo">
-        select apvl_id, doc_id, user_id, user_nm, dept_cd, job_cd, apvl_ord, res_dtm, rcv_dtm, check_dtm, apvl_file_id, res_opinion, apvl_status_cd, apvl_type
+        select apvl_id, doc_id, user_id, user_nm, dept_cd, job_cd, apvl_ord, res_dtm, rcv_dtm, check_dtm, apvl_hash, res_opinion, apvl_status_cd, apvl_type
           from eas_approval
          where apvl_id =#{apvlId}
     </select>
     <select id="getApprovalsByUserId" resultType="kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalVo">
-        select apvl_id, doc_id, user_id, user_nm, dept_cd, job_cd, apvl_ord, res_dtm, rcv_dtm, check_dtm, apvl_file_id, res_opinion, apvl_status_cd, apvl_type
+        select apvl_id, doc_id, user_id, user_nm, dept_cd, job_cd, apvl_ord, res_dtm, rcv_dtm, check_dtm, apvl_hash, res_opinion, apvl_status_cd, apvl_type
           from kgst.eas_approval
          where doc_id =#{docId}
            and user_id = #{userId}

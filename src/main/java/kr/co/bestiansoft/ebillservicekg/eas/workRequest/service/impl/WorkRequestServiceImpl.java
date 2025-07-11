@@ -104,10 +104,12 @@ public class WorkRequestServiceImpl implements WorkRequestService {
         WorkRequestAndResponseVo workRequestAndResponseVo = new WorkRequestAndResponseVo();
 
         WorkRequestVo workRequestVo = workRequestRepository.getWorkRequestListByUserId(docId, new SecurityInfoUtil().getAccountId());
+
         if(workRequestVo != null){
-            workRequestAndResponseVo.from(workRequestVo,workResponseService.getWorkResponseByUserId(workRequestVo.getWorkReqId()));
-            return workRequestAndResponseVo;
+            List<WorkResponseVo> responses = workResponseService.getWorkResponses(workRequestVo.getWorkReqId());
+            return workRequestAndResponseVo.from(workRequestVo,responses);
         }else{
+            log.info("workRequestVo is null");
             return null;
         }
     }

@@ -33,23 +33,24 @@ public class WorkRequestAndResponseVo {
     private String workerId;
     private String hashFileId;
 
-
     @Builder
-    public WorkRequestAndResponseVo(String docTypeCd, int workReqId, String docId, String workCn, char tmlmtYn, LocalDateTime tmlmtDtm, char infoYn, String workCycleCd, String regId, LocalDateTime regDt, String workStatus, int rcvId, List<WorkResponseVo> workResponseVos, String workId) {
+    public WorkRequestAndResponseVo(String docId, String docTypeCd, int workReqId, String workCn, char tmlmtYn, LocalDateTime tmlmtDtm, char infoYn, String workCycleCd, String regId, String regUserNm, LocalDateTime regDt, String workStatus, int rcvId, List<WorkResponseVo> workResponseVos, String workerId, String hashFileId) {
+        this.docId = docId;
         this.docTypeCd = docTypeCd;
         this.workReqId = workReqId;
-        this.docId = docId;
         this.workCn = workCn;
         this.tmlmtYn = tmlmtYn;
         this.tmlmtDtm = tmlmtDtm;
         this.infoYn = infoYn;
         this.workCycleCd = workCycleCd;
         this.regId = regId;
+        this.regUserNm = regUserNm;
         this.regDt = regDt;
         this.workStatus = workStatus;
         this.rcvId = rcvId;
         this.workResponseVos = workResponseVos;
-        this.workerId = workId;
+        this.workerId = workerId;
+        this.hashFileId = hashFileId;
     }
 
     public WorkRequestAndResponseVo from (WorkRequestVo vo, List<WorkResponseVo> workResponseVo){
@@ -66,6 +67,7 @@ public class WorkRequestAndResponseVo {
                 .workResponseVos(workResponseVo)
                 .rcvId(vo.getRcvId())
                 .docId(vo.getDocId())
+                .regUserNm(vo.getRegUserNm())
                 .build();
     }
 

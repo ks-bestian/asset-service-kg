@@ -9,6 +9,7 @@ import java.util.List;
 public interface EasFileRepository {
     int insertEasFile (EasFileVo vo);
     List<EasFileVo> getAttachFiles(String docId , String fileType);
+    EasFileVo getRecentFileByDocIdAndFileType(String docId, String fileType);
     void updatePdfFileInfo(EasFileVo vo);
     EasFileVo getFileById(String fileId);
     void deleteDocument(String docId);
