@@ -51,7 +51,6 @@ public class SecurityConfig {
                 .requestMatchers("/com/file/pdf").permitAll()
                 .requestMatchers("/com/file/down").permitAll()
                 .requestMatchers("/ws").permitAll()
-                .requestMatchers("/sign-test").permitAll()
                 .anyRequest().authenticated()
         );
 
