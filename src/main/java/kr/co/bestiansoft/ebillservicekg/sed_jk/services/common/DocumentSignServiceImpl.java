@@ -67,9 +67,11 @@ public class DocumentSignServiceImpl implements DocumentSignService{
     	String fileHash = "55c4075ea0bc208781aa99749100c7ed00bd4ef9fcfa65a251ee207d5ac40a6e";
 //        String userToken = authenticateWithCds(employeeProfile, currentEmployeePositionHistory, signRequestDto.pinCode());
     	String userToken = authenticateWithCds(signRequestDto.pinCode());
+        log.info("userToken:");
 
         String signature = signHashWithCds(fileHash, userToken);
-        
+
+
         System.out.println("=============================================");
         System.out.println(userToken);
         System.out.println(signature);
@@ -83,6 +85,7 @@ public class DocumentSignServiceImpl implements DocumentSignService{
     public SignResponseDto approvalDocument(SignRequestDto signRequestDto) {
         ApprovalVo approvalVo = approvalService.getApproval(signRequestDto.apvlId());
         EasFileVo  fileVo = easFileService.getFileByDocIdAndFileType(approvalVo.getDocId(), EasFileType.DRAFT_DOCUMENT_FILE.getCodeId());
+
 
         String fileHash = "";
         try{
@@ -122,7 +125,7 @@ public class DocumentSignServiceImpl implements DocumentSignService{
                 .organizationInn(organizationInn)
                 .byPin(pinCode)
                 .build();
-
+        log.info("authRequest:{}", authRequest);
         AuthResponse authResponse;
         try {
             authResponse = cdsClient.authenticate(authRequest);
