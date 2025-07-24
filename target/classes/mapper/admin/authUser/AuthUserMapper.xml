@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.bestiansoft.ebillservicekg.admin.authUser.repository.AuthUserMapper">
+    <select id="selectListAuthUser" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.authUser.vo.AuthUserVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.authUser.repository.AuthUserMapper.selectListAuthUser */
+        select
+              ca.auth_id --권한아이디
+            , ca.user_id --사용자아이디
+            , ca.reg_id
+            , ca.reg_dt
+            , ca.mod_id
+            , ca.mod_dt
+            , kgst.fngetlangnm(vu.user_nm_kg,vu.user_nm_ru,vu.user_nm_kg,#{lang}) as user_nm
+            , kgst.fngetlangnm(vu.dept_nm_kg, vu.dept_nm_ru,vu.dept_nm_kg,#{lang}) as dept_nm
+            , vu.poly_nm
+        from kgst.com_auth_user ca
+        left join view_user_member vu on vu.user_id = ca.user_id
+        where ca.auth_id = #{authId}
+    </select>
+
+
+    <insert id="createAuthUser" parameterType="kr.co.bestiansoft.ebillservicekg.admin.authUser.vo.AuthUserVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.authUser.repository.AuthUserMapper.createAuthUser */
+        insert into com_auth_user (
+              auth_id
+            , user_id
+            , reg_id
+            , reg_dt
+            , mod_id
+            , mod_dt
+        )
+        values (
+              #{authId}
+            , #{userId}
+            , #{regId}
+            , now()
+            , null
+            , null
+        )
+    </insert>
+
+    <delete id="deleteAuthUser" parameterType="java.lang.Long">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.authUser.repository.AuthUserMapper.deleteAuthUser */
+        delete from com_auth_user
+        where auth_id = #{authId}
+    </delete>
+</mapper>

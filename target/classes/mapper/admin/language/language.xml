@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.bestiansoft.ebillservicekg.admin.language.repository.LanguageMapper">
+
+<!--
+    <select id="selectLanguages" resultType="kr.co.bestiansoft.ebillservicekg.admin.language.domain.LanguageResponse">
+        select
+              lng_id
+             ,lng_ty1
+             ,lng_ty2
+             ,lng_ty3
+             ,rmk
+        from
+            com_lng_code clc
+    </select>
+
+    <select id="selectLanguageCount" resultType="java.lang.Long">
+        select
+            count(*)
+        from
+            com_lng_code clc
+    </select>
+-->
+
+
+</mapper>

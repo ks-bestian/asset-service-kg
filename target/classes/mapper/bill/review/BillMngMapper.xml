@@ -1,0 +1,913 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper">
+
+
+
+    <select id="selectListBillMng" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.selectListBillMng */
+        select * from (
+			select
+			    pl.bill_id
+			  , kgst.fngetlangnm(pl.bill_name_kg,pl.bill_name_ru,pl.bill_name_kg,#{lang}) as bill_name -- 안건 이름
+			  , kgst.fngetlangnm(vum.member_nm_kg,vum.member_nm_ru,vum.member_nm_kg,#{lang}) as ppsr_nm -- 제안자 이름
+			  , kgst.fngetlangnm(pl.etc_kg,pl.etc_ru,pl.etc_kg,#{lang}) as etc -- etc
+			  , pl.bill_name_kg
+			  , pl.bill_name_ru
+			  , pl.bill_no
+			  , pl.scl_dsc_rcp_nmb
+			  , pl.bill_kind
+			  , pl.na_term_cd
+			  , pl.ppsr_id
+			  , pl.rcp_dt
+			  , vum.member_nm_kg
+			  , vum.member_nm_ru
+			  , pl.ppsl_dt
+			  , pl.current_step_id
+			  , pl.task_id
+			  , pl.task_status
+			  , pl.step_id
+			  , pl.stat_cd
+			  , kgst.fngetcodenm('1010',pl.stat_cd,#{lang}) as stat_nm
+			  , kgst.fngetcodenm('1034',pl.task_status,#{lang}) as task_stat_nm
+			  , pl.assigned_to
+			  , pl.trgt_user_id
+			  , pl.reg_dt
+			  , pl.task_reg_dt
+			  , TO_CHAR(pl.completed_dt, 'DD/MM/YYYY') as completed_dt
+			from kgst.view_bill_process_list pl
+			left outer join kgst.view_user_member vum on (pl.ppsr_id = vum.user_id)
+			where 1=1
+
+			  <if test="assignedTo != null and assignedTo != ''">
+			  	and pl.assigned_to = #{assignedTo}
+			  </if>
+
+			  <if test="trgtUserId != null and trgtUserId != ''">
+			    and pl.trgtUserId = #{trgtUserId}
+			  </if>
+
+			  <if test="stepId != null and stepId != ''">
+			    and pl.step_id = #{stepId}
+			  </if>
+
+			  <if test="taskStatus != null and taskStatus != ''">
+			    and pl.task_status = #{taskStatus}
+			  </if>
+
+			  <if test="naTermCd != null and naTermCd != ''">
+			    and pl.na_term_cd = #{naTermCd}
+			  </if>
+		) x
+		where 1=1
+		<if test="billName != null and billName != ''">
+		    and x.bill_name like concat('%', #{billName}, '%')
+		</if>
+
+		<if test="billNo != null and billNo != ''">
+		    and  x.bill_no  like concat('%', #{billNo}, '%')
+		</if>
+
+		<if test="ppslDtFrom != null and ppslDtFrom != ''">
+		    and  x.ppsl_dt <![CDATA[ >= ]]> #{ppslDtFrom}
+		</if>
+
+		<if test="ppslDtTo != null and ppslDtTo != ''">
+		    and  x.ppsl_dt <![CDATA[ <= ]]> #{ppslDtTo}
+		</if>
+
+
+		<if test="statCd != null and statCd != ''">
+		    and  x.stat_cd = #{statCd}
+		</if>
+         order by x.task_status desc, x.rcp_dt desc
+    </select>
+    
+    <sql id="_selectBill">
+    	select
+		    A.bill_id
+		  , A.bill_no
+		  , A.bill_name -- 안건 이름
+		  , A.ppsr_id
+		  , A.ppsr_nm -- 제안자 이름
+		  , A.member_nm
+		  , A.bill_name_kg
+		  , A.bill_name_ru
+		  , A.bill_kind
+		  , A.scl_dsc_rcp_nmb
+		  , A.na_term_cd
+		  , A.ppsl_dt
+		  , A.gvrn_trsf_dt
+		  , A.prmg_dt
+		  , A.prmg_no
+		  , A.ppsl_knd_cd
+		  , A.ppsl_knd_nm
+		  , A.rcp_dt
+		  , A.reg_dt
+		  , A.current_step_id
+		  , A.stat_nm
+		  , A.stat_cd
+		  , A.etc
+		from (
+			select
+			    em.bill_id
+			  , em.bill_name_kg
+			  , em.bill_name_ru
+			  , fngetlangnm(em.bill_name_kg, em.bill_name_ru, em.bill_name_kg, #{lang}) as bill_name
+			  , em.bill_no
+			  , em.bill_kind
+			  , em.scl_dsc_rcp_nmb
+			  , em.na_term_cd
+			  , em.ppsr_id
+			  , em.ppsl_knd_cd
+			  , fngetcodenm('1005', em.ppsl_knd_cd, #{lang}) as ppsl_knd_nm
+			  , fngetlangnm(vum.member_nm_kg, vum.member_nm_ru, vum.member_nm_kg, #{lang}) as ppsr_nm
+			  , fngetlangnm(vum.member_nm_kg, vum.member_nm_ru, vum.member_nm_kg, #{lang}) as member_nm
+			  , em.etc_kg
+			  , em.etc_ru
+			  , fngetlangnm(em.etc_kg, em.etc_ru, em.etc_kg, #{lang}) as etc
+			  , em.ppsl_dt
+			  , em.gvrn_trsf_dt
+			  , em.prmg_dt
+		      , em.prmg_no
+			  , em.rcp_dt
+			  , em.reg_dt
+			  , ebi.current_step_id
+			  , ebs.stat_cd
+			  , fngetcodenm('1010', ebs.stat_cd, #{lang}) as stat_nm
+			from ebs_master em
+			left join view_user_member vum on (em.ppsr_id = vum.user_id)
+			left join ebs_bp_instance ebi on em.bill_id = ebi.bill_id
+		    left join ebs_bp_step ebs on ebi.bp_df_id = ebs.bp_df_id and ebi.current_step_id = ebs.step_id 
+		 ) A
+    </sql>
+    
+    <select id="selectBill" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.selectBill */
+        select 
+        	  AA.* 
+        from (
+	        <include refid="_selectBill" />
+        ) AA
+        where 1=1
+        and AA.bill_id = #{billId}
+    </select>
+
+     <select id="selectOneBill" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
+        /* 안건 관리 상세 화면 */
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.selectOneBill */
+		SELECT
+		      em.bill_id                -- 안건 ID
+		    , em.bill_no                -- 안건 번호
+		    , em.bill_kind              -- 의안 종류 (법률안/예산안 등)
+		    , em.na_term_cd             -- 대수 코드
+		    , em.bill_name_kg           -- 의안명 - kg
+		    , em.bill_name_ru           -- 의안명 - ru
+		    , kgst.fngetlangnm(em.bill_name_kg,em.bill_name_ru,em.bill_name_kg,#{lang}) as bill_name -- 안건 이름
+		    , kgst.fngetlangnm(vum.member_nm_kg,vum.member_nm_ru,vum.member_nm_kg,#{lang}) as ppsr_nm -- 제안자 이름
+		    , em.ppsl_knd_cd            -- 제안자 종류 (정부/의원)
+		    , kgst.fngetcodenm('1005',em.ppsl_knd_cd,#{lang}) as ppsl_knd_nm
+		    , em.ppsr_id                -- 발의자 아이디
+		    , em.ppsl_dt                -- 제안일
+		    , em.gvrn_trsf_dt           -- 정부 이송일
+		    , em.prmg_dt                -- 공포일자
+		    , em.prmg_no                -- 공포 번호
+		    , em.reg_id                 -- 등록자 아이디
+		    , em.reg_dt                 -- 등록 일자
+		    , em.rcp_dt                 -- 안건접수일자
+		    , kgst.fngetlangnm(em.etc_kg,em.etc_ru,em.etc_kg,#{lang}) as etc -- 비고
+		    , em.scl_dsc_rcp_nmb
+		    , ebi.current_step_id
+		    , ebs.stat_cd
+		FROM ebs_master em
+		left outer join view_user_member vum on (em.ppsr_id = vum.user_id)
+		left outer join ebs_bp_instance ebi on (em.bill_id = ebi.bill_id)
+		left outer join ebs_bp_step ebs on (ebi.bp_df_id = ebs.bp_df_id and ebi.current_step_id = ebs.step_id)
+		where em.bill_id = #{billId}
+	</select>
+
+    <select id="selectOneBillByGd" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
+        /* 안건 관리 상세 화면 */
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.selectOneBillByGd */
+		select
+		    pl.bill_id
+		  , kgst.fngetlangnm(pl.bill_name_kg,pl.bill_name_ru,pl.bill_name_kg,#{lang}) as bill_name -- 안건 이름
+		  , kgst.fngetlangnm(vum.member_nm_kg,vum.member_nm_ru,vum.member_nm_kg,#{lang}) as ppsr_nm -- 제안자 이름
+		  , kgst.fngetlangnm(pl.etc_kg,pl.etc_ru,pl.etc_kg,#{lang}) as etc -- etc
+		  , pl.bill_name_kg
+		  , pl.bill_name_ru
+		  , pl.bill_no
+		  , pl.bill_kind
+		  , pl.na_term_cd
+		  , pl.ppsr_id
+		  , vum.member_nm_kg
+		  , vum.member_nm_ru
+		  , pl.ppsl_dt
+		  , pl.current_step_id
+		  , pl.step_id
+		  , pl.task_id
+		  , pl.task_status
+		  , kgst.fngetcodenm('1010',pl.stat_cd,#{lang}) as stat_nm
+		  , pl.assigned_to
+		  , pl.trgt_user_id
+		  , pl.rcp_dt
+		from kgst.view_bill_process_list pl
+		left outer join kgst.view_user_member vum on (pl.ppsr_id = vum.user_id)
+		where 1=1
+		  and pl.bill_id = #{billId}
+		  and pl.assigned_to = #{assignedTo}
+		  and pl.task_id = #{taskId}
+
+    </select>
+
+
+
+
+    <select id="selectListlegalReview" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.selectListlegalReview */
+		select
+		    pl.bill_id
+		  , kgst.fngetlangnm(pl.bill_name_kg,pl.bill_name_ru,pl.bill_name_kg,#{lang}) as bill_name -- 안건 이름
+		  , kgst.fngetlangnm(vum.member_nm_kg,vum.member_nm_ru,vum.member_nm_kg,#{lang}) as ppsr_nm -- 제안자 이름
+		  , kgst.fngetlangnm(pl.etc_kg,pl.etc_ru,pl.etc_kg,#{lang}) as etc -- etc
+		  , pl.bill_name_kg
+		  , pl.bill_name_ru
+		  , pl.bill_no
+		  , pl.scl_dsc_rcp_nmb
+		  , pl.bill_kind
+		  , pl.na_term_cd
+		  , pl.ppsr_id
+		  , vum.member_nm_kg
+		  , vum.member_nm_ru
+		  , pl.ppsl_dt
+		  , pl.current_step_id
+		  , pl.task_id
+		  , pl.task_status
+		  , pl.step_id
+		  , pl.stat_cd
+		  , kgst.fngetcodenm('1010',pl.stat_cd,#{lang}) as stat_nm
+		  , pl.assigned_to
+		  , pl.trgt_user_id
+		from kgst.view_bill_process_list pl
+		left outer join kgst.view_user_member vum on (pl.ppsr_id = vum.user_id)
+		where 1=1
+		  and pl.assigned_to = #{deptCd}
+
+		<if test="stepId != null and stepId != ''">
+			and pl.step_id = #{stepId}
+		</if>
+
+		<if test="naTermCd != null and naTermCd != ''">
+			and pl.na_term_cd = #{naTermCd}
+		</if>
+
+    </select>
+    
+    <select id="selectListBillEtcInfo" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.selectListBillEtcInfo */
+        select
+			  emd.seq
+			, emd.bill_id
+			, emd.cls_cd
+			, emd.rmrk_kg
+			, emd.rmrk_ru
+			, kgst.fngetlangnm(emd.rmrk_kg,emd.rmrk_ru,emd.rmrk_kg,#{lang}) as rmrk
+			, emd.mtn_dt
+			, emd.prsd_rjct_dt
+			, emd.prsd_rjct_no
+			, emd.lgl_rvw_rslt_code
+			, kgst.fngetcodenm('1019',emd.lgl_rvw_rslt_code,#{lang}) as lgl_rvw_rslt_nm
+			, emd.lgl_act_rslt_code
+			, kgst.fngetcodenm('1020',emd.lgl_act_rslt_code,#{lang}) as lgl_act_rslt_nm
+			, emd.rslt_dt
+			, emd.rslt_code
+			, emd.reg_id
+			, emd.reg_dt
+			, kgst.fngetlangnm(vum.member_nm_kg,vum.member_nm_ru,vum.member_nm_kg,#{lang}) as reg_nm -- 등록자 이름
+			, emd.dept_cd
+			, emd.mtng_id
+		    , emt.mtng_type_cd
+		    , emt.age_cd
+		    , emt.session_no
+		    , emt.session_ord
+		from kgst.ebs_master_detail emd
+		left outer join kgst.view_user_member vum on (emd.reg_id = vum.user_id)
+		left outer join kgst.ebs_mtng emt on (emd.mtng_id = emt.mtng_id)
+		where emd.bill_id = #{billId}
+		<if test="clsCd != null and clsCd != ''">
+			and emd.cls_cd = #{clsCd}
+		</if>
+
+		order by emd.seq
+    </select>
+
+    <select id="selectOnelegalReview" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.selectOnelegalReview */
+        select
+			  emd.seq
+			, emd.bill_id
+			, emd.cls_cd
+			, emd.rmrk_kg
+			, emd.rmrk_ru
+			, emd.mtn_dt
+			, emd.prsd_rjct_dt
+			, emd.lgl_rvw_rslt_code
+			, emd.lgl_act_rslt_code
+			, emd.rslt_dt
+			, emd.rslt_code
+			, emd.dept_cd
+			, emd.reg_id
+			, emd.reg_dt
+		from kgst.ebs_master_detail emd
+		where emd.seq = #{seq}
+    </select>
+
+    <insert id="insertBillDetail" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo"
+     useGeneratedKeys="true" keyProperty="seq">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.insertBillDetail */
+		insert into kgst.ebs_master_detail (
+		      bill_id
+		    , cls_cd
+		    <if test="rmrkKg != null">, rmrk_kg</if>
+		    <if test="rmrkRu != null">, rmrk_ru</if>
+		    <if test="mtnDt != null">, mtn_dt</if>
+		    <if test="prsdRjctDt != null">, prsd_rjct_dt</if>
+		    <if test="lglRvwRsltCode != null">, lgl_rvw_rslt_code</if>
+		    <if test="lglActRsltCode != null">, lgl_act_rslt_code</if>
+		    <if test="rsltDt != null">, rslt_dt</if>
+		    <if test="rsltCode != null">, rslt_code</if>
+		    , mtng_id
+		    , dept_cd
+		    , reg_id
+		    , prsd_rjct_no
+		    , reg_dt
+		) values (
+		      #{billId}
+		    , #{clsCd}
+		    <if test="rmrkKg != null">, #{rmrkKg}</if>
+		    <if test="rmrkRu != null">, #{rmrkRu}</if>
+		    <if test="mtnDt != null">, #{mtnDt}</if>
+		    <if test="prsdRjctDt != null">, #{prsdRjctDt}</if>
+		    <if test="lglRvwRsltCode != null">, #{lglRvwRsltCode}</if>
+		    <if test="lglActRsltCode != null">, #{lglActRsltCode}</if>
+		    <if test="rsltDt != null">, #{rsltDt}</if>
+		    <if test="rsltCode != null">, #{rsltCode}</if>
+		    , #{mtngId}
+		    , #{deptCd}
+		    , #{regId}
+		    , #{prsdRjctNo}
+		    , now()
+		)
+    </insert>
+
+    <delete id="deleteBillDetail" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
+    	delete from ebs_master_detail
+		where 1=1
+		and bill_id = #{billId}
+		and cls_cd = #{clsCd}
+		<if test="seq != null">
+		and seq = #{seq}
+		</if>
+    </delete>
+
+    <update id="updateBillDetail" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.updateBillDetail */
+		UPDATE kgst.ebs_master_detail
+		SET
+			  mod_id = #{modId}
+			, mod_dt = now()
+			<if test="clsCd != null">, cls_cd = #{clsCd}</if>
+		    <if test="rmrkKg != null">, rmrk_kg = #{rmrkKg}</if>
+		    <if test="rmrkRu != null">, rmrk_ru = #{rmrkRu}</if>
+		    <if test="mtnDt != null">, mtn_dt = #{mtnDt}</if>
+		    <if test="prsdRjctDt != null">, prsd_rjct_dt = #{prsdRjctDt}</if>
+		    <if test="lglRvwRsltCode != null">, lgl_rvw_rslt_code = #{lglRvwRsltCode}</if>
+		    <if test="lglActRsltCode != null">, lgl_act_rslt_code = #{lglActRsltCode}</if>
+		    <if test="rsltDt != null">, rslt_dt = #{rsltDt}</if>
+		    <if test="rsltCode != null">, rslt_code = #{rsltCode}</if>
+		    <if test="deptCd != null">, dept_cd = #{deptCd}</if>
+		    <if test="prsdRjctNo != null">, prsd_rjct_no = #{prsdRjctNo}</if>
+		WHERE 1=1
+			<if test="seq != null">
+			and seq = #{seq}
+			</if>
+			<if test="billId != null">
+			and bill_id = #{billId}
+			</if>
+			<if test="clsCd != null">
+			and cls_cd = #{clsCd}
+			</if>
+    </update>
+
+    <!-- committee review report main sub -->
+    <select id="selectListCmtReviewReport" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.selectListCmtReviewReport */
+
+		select
+		    A.bill_id
+		  , max(A.bill_no) as bill_no
+		  , max(A.bill_name) as bill_name
+		  , max(A.ppsr_nm) as ppsr_nm
+		  , max(A.ppsr_id) as ppsr_id
+		  , max(A.ppsl_dt) as ppsl_dt
+		  , max(A.na_term_cd) as na_term_cd
+		  , max(A.cmt_cd) as cmt_cd
+		  , max(A.cmt_se_cd) as cmt_se_cd
+		  , max(A.cmt_se_nm) as cmt_se_nm
+		  , max(A.mtng_id) as mtng_id
+		  , max(A.rslt_cd) as rslt_cd
+		  , max(A.mtng_type_cd) as mtng_type_cd
+		  , max(A.age_cd) as age_cd
+		  , max(A.stat_nm) as stat_nm
+		  , max(A.stat_cd) as stat_cd
+		from
+		(
+			select
+			    em.bill_id
+			  , em.bill_no
+			  , kgst.fngetlangnm(em.bill_name_kg,em.bill_name_ru,em.bill_name_kg,#{lang}) as bill_name -- 안건 이름
+			  , kgst.fngetlangnm(vum.member_nm_kg,vum.member_nm_ru,vum.member_nm_kg,#{lang}) as ppsr_nm -- 제안자 이름
+			  , em.bill_name_kg
+			  , em.bill_name_ru
+			  , em.ppsr_id
+			  , em.ppsl_dt
+			  , em.na_term_cd
+			  , emc.cmt_cd
+			  , emc.cmt_se_cd
+			  , kgst.fngetcodenm('1018',emc.cmt_se_cd,#{lang}) as cmt_se_nm
+			  , ema.mtng_id
+			  , ema.rslt_cd
+			  , emt.mtng_type_cd
+			  , emt.age_cd
+			  , step.stat_cd
+			  , kgst.fngetcodenm('1010',step.stat_cd,#{lang}) as stat_nm
+			from kgst.ebs_master em
+			join kgst.ebs_master_cmt emc on (em.bill_id = emc.bill_id)
+			join kgst.ebs_mtng_agenda ema on (em.bill_id = ema.bill_id)
+			join kgst.ebs_mtng emt on (ema.mtng_id = emt.mtng_id)
+			left outer join kgst.view_user_member vum on (em.ppsr_id = vum.user_id)
+			join kgst.ebs_bp_instance ebi on (em.bill_id = ebi.bill_id)
+			join kgst.ebs_bp_step step on (ebi.bp_df_id = step.bp_df_id and ebi.current_step_id = step.step_id)
+			where 1=1
+			  and  em.na_term_cd =  #{naTermCd}
+			  and emc.cmt_cd =  #{cmtCd}
+
+
+		  <if test="cmtSeCd != null and cmtSeCd != ''">
+		  	and emc.cmt_se_cd = #{cmtSeCd}
+		  </if>
+
+		  <if test="statCd != null and statCd != ''">
+		  	and step.stat_cd = #{statCd}
+		  </if>
+
+		  <if test="billNo != null and billNo != ''">
+		  	and em.bill_no like concat('%', #{billNo}, '%')
+		  </if>
+
+		  <if test="billName != null and billName != ''">
+		  	and kgst.fngetlangnm(em.bill_name_kg,em.bill_name_ru,em.bill_name_kg,#{lang}) like concat('%', #{billName}, '%')
+		  </if>
+
+		  <if test="ppslDtFrom != null and ppslDtFrom != ''">
+		    and  em.ppsl_dt <![CDATA[ >= ]]> #{ppslDtFrom}
+		  </if>
+
+		  <if test="ppslDtTo != null and ppslDtTo != ''">
+		    and  em.ppsl_dt <![CDATA[ <= ]]> #{ppslDtTo}
+		  </if>
+
+
+		) A
+		where 1=1
+
+		group by A.bill_id
+		order by ppsl_dt
+    </select>
+
+
+    <select id="selectListCmtMeetingList" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.vo.MtngAllVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.selectListCmtMeetingList */
+		select
+		    em.mtng_id
+		  , em.mtng_type_cd
+		  , em.dept_cd
+		  , em.dept_nm
+		  , em.open_dtm
+		  , em.close_dtm
+		  , em.due_dtm
+		  , em.mtng_plc
+		  , em.stat_cd
+		  , kgst.fngetcodenm('1007',em.stat_cd,#{lang}) as stat_nm
+		  , ema.bill_id
+		  , ema.rslt_cd
+		from ebs_mtng em
+		join ebs_mtng_agenda ema on (em.mtng_id = ema.mtng_id)
+		where ema.bill_id = #{billId}
+		  and em.dept_cd = #{deptCd}
+		order by em.open_dtm
+    </select>
+
+
+	<update id="updateBillno" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
+	    /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.updateBillno */
+		UPDATE kgst.ebs_master
+		SET
+			  bill_no = kgst.fngetbillno(#{billId})
+			<if test="rcpDt != null">
+			, rcp_dt = #{rcpDt}
+			</if>
+			<if test="rcpDt == null">
+			, rcp_dt = to_char(now(),'YYYYMMDD')
+			</if>
+			, rcp_usr_id = #{modId}
+			, mod_id = #{modId}
+			, mod_dt = now()
+		WHERE	bill_id = #{billId}
+
+	</update>
+
+	<update id="updateBillMaster" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
+	    /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.updateBillMaster */
+		UPDATE kgst.ebs_master
+		SET
+			  mod_id = #{modId}
+			, mod_dt = now()
+			<if test="billNo != null">, bill_no = #{billNo}</if>
+			<if test="billKind != null">, bill_kind = #{billKind}</if>
+			<if test="naTermCd != null">, na_term_cd = #{naTermCd}</if>
+			<if test="billNameKg != null">, bill_name_kg = #{billNameKg}</if>
+			<if test="billNameRu != null">, bill_name_ru = #{billNameRu}</if>
+			<if test="ppslKndCd != null">, ppsl_knd_cd = #{ppslKndCd}</if>
+			<if test="ppsrId != null">, ppsr_id = #{ppsrId}</if>
+			<if test="ppslDt != null">, ppsl_dt = #{ppslDt}</if>
+			<if test="gvrnTrsfDt != null">, gvrn_trsf_dt = #{gvrnTrsfDt}</if>
+			<if test="prmgDt != null">, prmg_dt = #{prmgDt}</if>
+			<if test="prmgNo != null">, prmg_no = #{prmgNo}</if>
+			<if test="etcKg != null">, etc_kg = #{etcKg}</if>
+			<if test="etcRu != null">, etc_ru = #{etcRu}</if>
+			<if test="sclDscRcpNmb != null">, scl_dsc_rcp_nmb = #{sclDscRcpNmb}</if>
+			<if test="gvrnSbmsElctDcmnNmbr != null">, gvrn_sbms_elct_dcmn_nmbr = #{gvrnSbmsElctDcmnNmbr}</if>
+			<if test="wtCnKg != null">, wt_cn_kg = #{wtCnKg}</if>
+			<if test="wtCnRu != null">, wt_cn_ru = #{wtCnRu}</if>
+			<if test="intExtCls != null">, int_ext_cls = #{intExtCls}</if>
+			<if test="rcpDt != null">, rcp_dt = #{rcpDt}</if>
+			<if test="rcpUsrId != null">, rcp_usr_id = #{rcpUsrId}</if>
+			<if test="rvwDt != null">, rvw_dt = #{rvwDt}</if>
+		WHERE	bill_id = #{billId}
+	</update>
+
+
+    <insert id="insertCmtMeetingRvReport" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo"
+    	useGeneratedKeys="true" keyProperty="seq">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.insertCmtMeetingRvReport */
+		insert into kgst.ebs_master_detail (
+		      bill_id
+		    , cls_cd
+		    <if test="rmrkKg != null">, rmrk_kg</if>
+		    <if test="rmrkRu != null">, rmrk_ru</if>
+		    <if test="mtnDt != null">, mtn_dt</if>
+		    <if test="prsdRjctDt != null">, prsd_rjct_dt</if>
+		    <if test="lglRvwRsltCode != null">, lgl_rvw_rslt_code</if>
+		    <if test="lglActRsltCode != null">, lgl_act_rslt_code</if>
+		    <if test="rsltDt != null">, rslt_dt</if>
+		    <if test="rsltCode != null">, rslt_code</if>
+		    <if test="deptCd != null">, dept_cd</if>
+		    , reg_id
+		    , reg_dt
+		)
+		values (
+		      #{billId}
+		    , #{clsCd}
+		    <if test="rmrkKg != null">, #{rmrkKg}</if>
+		    <if test="rmrkRu != null">, #{rmrkRu}</if>
+		    <if test="mtnDt != null">, #{mtnDt}</if>
+		    <if test="prsdRjctDt != null">, #{prsdRjctDt}</if>
+		    <if test="lglRvwRsltCode != null">, #{lglRvwRsltCode}</if>
+		    <if test="lglActRsltCode != null">, #{lglActRsltCode}</if>
+		    <if test="rsltDt != null">, #{rsltDt}</if>
+		    <if test="rsltCode != null">, #{rsltCode}</if>
+		    <if test="deptCd != null">, #{deptCd}</if>
+		    , #{regId}
+		    , now()
+		)
+    </insert>
+
+	<delete id="deleteCmtReview" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
+    	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.deleteCmtReview */
+		delete from kgst.ebs_master_detail
+	    where seq = #{seq}
+	</delete>
+
+	<update id="deleteCmtReviewEbsFile" parameterType="kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo">
+    	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.deleteCmtReviewEbsFile */
+		update kgst.ebs_file
+		set   delete_yn = 'Y'
+			, mod_id = #{modId}
+			, mod_dt = now()
+	    where bill_id = #{billId}
+	      and detail_seq = #{detailSeq}
+
+	</update>
+
+     <select id="selectListMainMtSubmit" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
+        /* 본회의장 부의할 안건목록 */
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.selectListMainMtSubmit */
+		select
+		      em.bill_id                -- 안건 ID
+		    , em.bill_no                -- 안건 번호
+		    , em.bill_kind              -- 의안 종류 (법률안/예산안 등)
+		    , em.na_term_cd             -- 대수 코드
+		    , kgst.fngetlangnm(em.bill_name_kg,em.bill_name_ru,em.bill_name_kg,#{lang}) as bill_name -- 안건 이름
+		    , kgst.fngetlangnm(vum.member_nm_kg,vum.member_nm_ru,vum.member_nm_kg,#{lang}) as ppsr_nm -- 제안자 이름
+		    , em.ppsl_knd_cd            -- 제안자 종류 (정부/의원)
+		    , kgst.fngetcodenm('1005',em.ppsl_knd_cd,#{lang}) as ppsl_knd_nm
+		    , em.ppsr_id                -- 발의자 아이디
+		    , em.ppsl_dt                -- 제안일
+		    , em.gvrn_trsf_dt           -- 정부 이송일
+		    , em.prmg_dt                -- 공포일자
+		    , em.prmg_no                -- 공포 번호
+		    , em.reg_id                 -- 등록자 아이디
+		    , em.reg_dt                 -- 등록 일자
+		    , em.rcp_dt                 -- 안건접수일자
+		    , kgst.fngetlangnm(em.etc_kg,em.etc_ru,em.etc_kg,#{lang}) as etc -- 비고
+		    , em.scl_dsc_rcp_nmb
+		    , step.stat_cd
+		    , kgst.fngetcodenm('1010',step.stat_cd,#{lang}) as stat_nm
+		from ebs_bp_instance ebi
+		join ebs_master em on (ebi.bill_id = em.bill_id)
+		left outer join view_user_member vum on (em.ppsr_id = vum.user_id)
+		join ebs_bp_step step on (ebi.current_step_id = step.step_id)
+		where ebi.current_step_id in ('1400','1500','1600')
+		  AND em.na_term_cd = #{naTermCd}
+
+		<if test="billName != null and billName != ''">
+		    and kgst.fngetlangnm(em.bill_name_kg,em.bill_name_ru,em.bill_name_kg,#{lang}) like concat('%', #{billName}, '%')
+		</if>
+
+		<if test="billNo != null and billNo != ''">
+		    and  em.bill_no  like concat('%', #{billNo}, '%')
+		</if>
+
+	</select>
+
+
+
+    <!-- jjjjjjjjjjjjjjjjjjj -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <select id="selectProposerMemberList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.ProposerVo">
+    	/* 발의자 명단 조회 */
+		SELECT
+			  row_number() over(order by ep.ord asc) as num
+			, cm.member_nm as memberNm
+			, ep.proposer_id as proposerId
+			, cm.profile_img_path as profileImgPath
+		FROM ebs_proposer ep
+			left outer join com_member cm on cm.member_id = ep.proposer_id
+		WHERE 1=1
+			AND ep.bill_id = #{billId}
+			AND (ep.sign_dt IS NOT NULL AND ep.sign_cnc_dt IS NULL)
+
+	</select>
+	<insert id="insertBill" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
+		/* 의안 서면 등록 */
+		/* 접수일, 심사일 뭐지? */
+		INSERT INTO kgst.ebs_master(
+			bill_id
+			, bill_no
+			, bill_kind
+			, na_term_cd
+			, bill_name_kg
+			, bill_name_ru
+			, ppsl_knd_cd
+			, ppsr_nm
+			, ppsr_id
+			, ppsl_dt
+			, stat_cd
+			, reg_id
+			, reg_dt
+			, etc_kg
+			, etc_ru
+		)
+		VALUES (
+			#{billId}
+			, #{billNo}
+			, #{billKind}
+			, #{naTermCd}
+			, #{billNameKg}
+			, #{billNameRu}
+			, #{ppslKndCd}
+			, #{ppsrNm}
+			, #{ppsrId}
+			, TO_CHAR(now(), 'YYYYMMDD')
+			, #{statCd}
+			, #{regId}
+			, now()
+			, #{etcKg}
+			, #{etcRu}
+		)
+    </insert>
+    <insert id="insertProposers" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.ProposerVo">
+		INSERT INTO kgst.ebs_proposer (
+			bill_id,
+			proposer_id,
+			ord,
+			poly_cd,
+			poly_nm,
+			sign_dt,
+			reg_id,
+			reg_dt
+		) VALUES (
+            #{billId},
+            #{proposerId},
+            #{ord},
+            #{polyCd},
+            #{polyNm},
+            CASE
+                WHEN #{agreeYn} = 'Y' THEN now()
+                ELSE NULL
+            END,
+            #{regId},
+            now()
+		)
+	</insert>
+
+
+    <select id="selectMemberList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.ProposerVo">
+    	/* 발의자 선택 팝업용 의원 명단 조회 */
+		SELECT
+			row_number() over(order by cm.poly_nm, cm.member_nm) as num
+			, cm.cmit_cd
+			, CASE
+			  	WHEN #{lang} = 'lng_type_1' then cd.dept_nm1
+			  	WHEN #{lang} = 'lng_type_2' then cd.dept_nm2
+		      	ELSE cd.dept_nm3
+		      	END AS cmitNm
+			, cm.profile_img_path
+			, cm.member_id AS proposerId
+			, cm.member_nm AS proposerNm
+			, cm.poly_cd
+			, cm.poly_nm
+		FROM
+			kgst.com_member cm
+			LEFT OUTER JOIN kgst.com_dept cd ON (cm.cmit_cd = cd.dept_cd and cd.upr_dept_cd = 'CMT')
+		WHERE 1=1
+		<if test="naTermCd != null and naTermCd != ''">
+   			AND em.na_term_cd = #{naTermCd}
+   		</if>
+	</select>
+
+    <select id="selectCmtList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
+    	/* 안건관리 상세 화면에서 소관위 / 관련위 보여줄때 사용.*/
+
+		SELECT
+			row_number() over(order by ep.ord asc) as num
+			, ep.proc_kind_cd
+			, ep.proc_dept_id
+			, CASE
+			  WHEN #{lang} = 'lng_type_1' then cd.dept_nm1
+			  WHEN #{lang} = 'lng_type_2' then cd.dept_nm2
+			  ELSE cd.dept_nm3
+			  END AS procDeptNm
+		FROM
+		ebs_process ep
+		LEFT JOIN com_dept cd ON (ep.proc_dept_id = cd.dept_cd)
+		WHERE 1=1
+		AND (ep.proc_kind_cd = 'PC500' OR ep.proc_kind_cd = 'PC600')
+		AND ep.use_yn='Y'
+		AND ep.bill_id = #{billId}
+	</select>
+
+    <select id="selectFileList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.selectFileList */
+
+		SELECT
+		      ef.seq
+		    , ef.bill_id
+		    , ef.file_kind_cd
+		    , ef.cls_cd
+		    , ef.org_file_id
+		    , ef.org_file_nm
+		    , ef.pdf_file_id
+		    , ef.pdf_file_nm
+		    , ef.rmk
+		    , ef.opb_yn
+		    , ef.delete_yn
+		    , ef.file_size
+		    , ef.reg_id
+		    , ef.reg_dt
+		    , ef.mod_id
+		    , ef.mod_dt
+			, ef.detail_seq
+			, kgst.fngetlangnm(vum.member_nm_kg, vum.member_nm_ru, vum.member_nm_kg, #{lang}) as ppsr_nm -- 제안자 이름
+			, ef.lng_type
+		FROM kgst.ebs_file ef
+		left join view_user_member vum on vum.user_id = ef.reg_id
+		WHERE ef.delete_yn = 'N'
+			and ef.bill_id = #{billId}
+		order by ef.file_kind_cd, ef.reg_dt
+	</select>
+
+
+    <select id="selectProposerByBillId" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.ProposerVo">
+    	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.selectProposerByBillId */
+		select
+			row_number() over(order by ep.ord asc) as num
+			, kgst.fngetlangnm(vum.member_nm_kg, vum.member_nm_ru, vum.member_nm_kg, #{lang}) as proposerNm -- 제안자 이름
+			, kgst.fngetlangnm(vum.cmit_nm_kg, vum.cmit_nm_ru, vum.cmit_nm_ko, #{lang}) as cmitNm -- 위원회 이름
+			, vum.poly_nm -- 정당 이름
+		from
+			kgst.ebs_proposer ep
+			join kgst.view_user_member vum on vum.member_id = ep.proposer_id
+		where 1=1
+			and ep.bill_id = #{billId}
+			and (ep.sign_dt is not null and sign_cnc_dt is null)
+
+	</select>
+
+    <insert id="insertBillCmt" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
+		INSERT INTO kgst.ebs_master_cmt (
+			bill_id
+			, cmt_cd
+			, cmt_se_cd
+			, rgtr_id
+			, reg_dt
+		) VALUES (
+            #{billId}
+            , #{cmtCd}
+            , #{cmtSeCd}
+            , #{regId}
+            , now()
+		)
+	</insert>
+
+	<select id="selectEbsMasterCmtList" parameterType="java.util.HashMap"
+		resultType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
+    	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.selectEbsMasterCmtList */
+		select
+			kgst.fngetlangnm(cd.dept_nm1 , cd.dept_nm2, cd.dept_nm3, #{lang}) as cmtNm -- 위원회이름
+			, emc.cmt_cd
+			, emc.cmt_se_cd
+		from
+			kgst.ebs_master_cmt emc
+			join kgst.com_dept cd on cd.dept_cd = emc.cmt_cd
+		where 1=1
+			and emc.bill_id = #{billId}
+	</select>
+
+	<delete id="deleteBillCmtByBillId" parameterType="kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo">
+    	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.deleteBillCmtByBillId */
+		delete from kgst.ebs_master_cmt
+	    where bill_id = #{billId}
+	</delete>
+
+	<update id="updateEbsFileDelYn" parameterType="kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo">
+    	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper.updateEbsFileDelYn */
+		update kgst.ebs_file
+		set   delete_yn = 'Y'
+			, mod_id = #{modId}
+			, mod_dt = now()
+	    where bill_id = #{billId}
+	    <if test="fileKindCd != null and fileKindCd != ''">
+	      and file_kind_cd = #{fileKindCd}
+	    </if>
+	    <if test="orgFileId != null and orgFileId != ''">
+	      and org_file_id = #{orgFileId}
+	    </if>
+	</update>
+
+</mapper>

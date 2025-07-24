@@ -21,5 +21,11 @@ public class DataSourceConfig {
     public DataSource homepageDataSource() {
         return DataSourceBuilder.create().build();
     }
+    
+    @Bean
+    @ConfigurationProperties(prefix = "spring.datasource.asset")
+    public DataSource assetDataSource() {
+        return DataSourceBuilder.create().build();
+    }
 
 }

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.repository.RevokeMapper">
+
+
+	<select id="selectRevokeList" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.vo.RevokeVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.repository.RevokeMapper.selectRevokeList */
+
+		select
+		    AA.bill_id
+		  , AA.bill_no  
+		  , kgst.fngetlangnm(AA.bill_name_kg,AA.bill_name_ru,AA.bill_name_kg,#{lang}) as bill_name -- 안건 이름
+		  , kgst.fngetlangnm(vum.member_nm_kg,vum.member_nm_ru,vum.member_nm_kg,#{lang}) as ppsr_nm -- 제안자 이름
+	      , AA.scl_dsc_rcp_nmb
+	      , AA.ppsl_dt
+	      , AA.stat_nm
+	      , AA.stat_cd
+	      , AA.na_term_cd
+	      , AA.step_id
+	      , AA.task_id
+	      , AA.task_status
+	      , case
+					when (ep.wt_dt is not null and ep.wt_cnc_dt is null) then
+						ep.wt_dt
+					else null
+				 end as wt_dt 		-- 철회동의날짜
+	      , emd.reg_dt as revokeRegDt
+		from (
+			select
+			   pl.bill_id
+			 , max(pl.bill_no) as bill_no
+			 , max(pl.bill_name_kg) as bill_name_kg
+			 , max(pl.bill_name_ru) as bill_name_ru
+			 , max(pl.current_step_id) as current_step_id
+			 , max(pl.ppsr_id) as ppsr_id
+			 , max(pl.ppsl_dt) as ppsl_dt
+			 , max(pl.scl_dsc_rcp_nmb) as scl_dsc_rcp_nmb
+			 , max(pl.reg_dt) as reg_dt
+			 , max(pl.na_term_cd) as na_term_cd
+			 , max(pl.step_id) as step_id
+			 , max(pl.task_id) as task_id
+			 , max(pl.task_status) as task_status
+			 , max(ebs.stat_cd) as stat_cd
+			 , kgst.fngetcodenm('1010',max(ebs.stat_cd),#{lang}) as stat_nm
+			from kgst.view_bill_process_list pl
+			join kgst.ebs_bp_step ebs on (pl.bp_df_id = ebs.bp_df_id and pl.current_step_id = ebs.step_id)
+			where pl.current_step_id = '1100'
+			  and pl.trgt_user_id = #{userId}
+			group by bill_id
+		) AA
+		join kgst.view_user_member vum on (AA.ppsr_id = vum.user_id)
+		join kgst.ebs_proposer ep on (ep.bill_id = AA.bill_id and ep.proposer_id = #{userId})
+		left outer join kgst.ebs_master_detail emd on (AA.bill_id = emd.bill_id and emd.cls_cd = '400')
+        where 1=1
+        	AND AA.ppsr_id = #{userId}
+        <if test="billNo != null and billNo != ''">
+			and AA.bill_no LIKE CONCAT('%', #{billNo}, '%')
+		</if>	
+		<if test="naTermCd != null and naTermCd != ''">
+			and AA.na_term_cd = #{naTermCd}
+		</if>
+		<if test="billName != null and billName != ''">
+		    <if test="lang == 'lng_type_1' or lang == 'lng_type_3'">
+		    	and AA.bill_name_kg like concat('%', #{billName}, '%')
+		    </if>
+		    <if test="lang == 'lng_type_2'">
+		    	and AA.bill_name_ru like concat('%', #{billName}, '%')
+		    </if>
+		</if>
+		<if test="statCd != null and statCd != ''">
+			and AA.stat_cd = #{statCd}
+		</if>
+
+		order by AA.reg_dt desc
+
+    </select>
+
+
+    <select id="selectRevokeDetail" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.vo.RevokeVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.repository.RevokeMapper.selectRevokeDetail */
+		select
+			  em.bill_kind 			--안건종류
+			, em.scl_dsc_rcp_nmb 	-- 사회토론번호
+			, em.reg_dt	-- 등록날짜
+			, kgst.fngetlangnm(em.bill_name_kg,em.bill_name_ru,em.bill_name_kg,#{lang}) as bill_name -- 안건 이름
+			, kgst.fngetlangnm(vum.member_nm_kg,vum.member_nm_ru,vum.member_nm_kg,#{lang}) as ppsr_nm -- 제안자 이름
+			, em.ppsr_id
+			, kgst.fngetlangnm(em.etc_kg,em.etc_ru,em.etc_kg,#{lang}) as etc -- 비고
+			, kgst.fngetlangnm(emd.rmrk_kg,emd.rmrk_ru,emd.rmrk_kg,#{lang}) as wt_cn -- 철회사유
+		from kgst.ebs_master em
+		left join kgst.view_user_member vum on (em.ppsr_id = vum.member_id )
+		left outer join kgst.ebs_master_detail emd on (em.bill_id = emd.bill_id and emd.cls_cd = '400')
+		where em.bill_id = #{billId}
+    </select>
+
+    <select id="selectProposerList" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.vo.RevokeVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.repository.RevokeMapper.selectProposerList */
+		select
+			  ep.proposer_id					-- 제안자 대상
+			, case
+				when (ep.sign_dt is not null and ep.sign_cnc_dt is null) then 'Y'
+				else 'N'
+			  end as agreeYn 				-- 동의여부
+			, case
+				when (ep.wt_dt is not null and ep.wt_cnc_dt is null) then 'Y'
+				else 'N'
+			  end as revokeYn 				-- 철회동의여부  
+			, view.member_nm_kg				-- 의원이름kg
+			, view.member_nm_ru				-- 의원이름ru
+			, view.poly_nm  				-- 정당이름
+			, view.poly_cd 					-- 정당코드
+		from ebs_proposer ep
+	    left join kgst.view_user_member view on view.member_id = ep.proposer_id
+		where ep.bill_id = #{billId}
+			and (sign_dt is not null and sign_cnc_dt is null)
+    </select>
+
+	<update id="updateRevokeRequset" parameterType="java.util.HashMap">
+    	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.repository.RevokeMapper.updateRevokeRequset */
+		update kgst.ebs_master
+		set
+			mod_id = #{loginId} 		-- 수정자 아이디
+			, mod_dt = now()			-- 수정날짜
+			, stat_cd = #{statCd}
+		where
+			bill_id = #{billId}
+    </update>
+
+	<update id="updateRevokeCancle" parameterType="java.util.HashMap">
+    	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.repository.RevokeMapper.updateRevokeCancle */
+		update kgst.ebs_master
+		set
+			mod_id = #{loginId} 		-- 수정자 아이디
+			, mod_dt = now()			-- 수정날짜
+			, stat_cd = #{statCd}
+		where
+			bill_id = #{billId}
+    </update>
+
+    <update id="updateRevoke" parameterType="kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.vo.RevokeVo">
+    	/* QueryID : kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.repository.RevokeMapper.updateRevoke */
+		update kgst.ebs_master
+		set
+			mod_id = #{modId} 			-- 수정자 아이디
+			, mod_dt = now()			-- 수정날짜
+			, wt_cn_kg = #{wtCnKg}		-- 철회사유kg
+			, wt_cn_ru = #{wtCnRu}		-- 철회사유ru
+		where
+			bill_id = #{billId}
+    </update>
+</mapper>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.bestiansoft.ebillservicekg.bill.status.repository.StatusMapper">
+
+    <select id="getMtngList" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.status.vo.StatusVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.status.repository.StatusMapper.getMtngList */
+		select 
+			em.mtng_type_cd 	-- 회의 종류
+			, em.mtng_sj 		-- 회의 이름
+			, em.open_dtm 		-- 회의 예정일
+			, em.mtng_plc 		-- 회의 장소
+		from 
+			ebs_mtng em 
+		where 1=1
+			and em.open_dtm like concat(#{year}, #{month}, '%')
+		order by em.open_dtm asc	
+    </select>
+    
+	<select id="getMonitorList" parameterType="java.util.HashMap"
+            resultType="kr.co.bestiansoft.ebillservicekg.bill.status.vo.StatusVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.bill.status.repository.StatusMapper.getMonitorList */
+		select 
+			em.mtng_type_cd 	-- 회의 종류
+			, em.mtng_sj 		-- 회의 이름
+			, em.open_dtm 		-- 회의 예정일
+			, em.mtng_plc 		-- 회의 장소
+		from 
+			ebs_mtng em 
+		where 1=1
+			and em.open_dtm like concat(#{year}, #{month}, '%')
+		order by em.open_dtm asc	
+    </select>
+    
+</mapper>

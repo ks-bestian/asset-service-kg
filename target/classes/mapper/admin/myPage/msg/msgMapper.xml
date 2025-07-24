@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.bestiansoft.ebillservicekg.myPage.message.repository.MsgMapper">
+    <select id="selectListRcv" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.myPage.message.vo.MsgVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.myPage.message.repository.MsgMapper.selectListRcv */
+        select
+              em.msg_id --메세지아이디
+            , em.cnc_dt --취소일시
+            , em.msg_cn --메세지내용
+            , em.msg_sj --메세지제목
+            , em.rcv_dt --수신일시
+            , em.rcv_id --수신자아이디
+            , em.send_id --발신자아이디
+            , em.file_group_id --파일그룹아이디
+            , em.msg_div --발송구분 발송(S) 수신(R)
+            , em.msg_group_id --메세지그룹아이디
+            , em.reg_id
+            , em.reg_dt
+            , em.mod_id
+            , em.mod_dt
+            , em.send_dt
+            , kgst.fngetlangnm(vum.user_nm_kg, vum.user_nm_ru, vum.user_nm_kg, #{lang}) as send_nm
+        from ebs_msg em
+        inner join view_user_member vum on vum.user_id = em.send_id
+        where em.msg_div = 'R'
+            and em.rcv_id = #{rcvId}
+<!--            and (-->
+<!--            (#{status} = 'confirm' and em.rcv_dt is not null) or (#{status} = 'unconfirm' and em.send_dt is not null and em.rcv_dt is null) or (#{status} not in (confirm, unconfirm))-->
+<!--            )-->
+        <if test="msgSj != null and msgSj != ''">
+            and em.msg_sj like concat('%', #{msgSj}, '%')
+        </if>
+        <if test="sendNm != null and sendNm != ''">
+            and kgst.fngetlangnm(vum.user_nm_kg, vum.user_nm_ru, vum.user_nm_kg, #{lang}) like concat ('%', #{sendNm}, '%')
+        </if>
+        order by em.send_dt desc
+    </select>
+
+    <select id="selectListSend" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.myPage.message.vo.MsgVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.myPage.message.repository.MsgMapper.selectListSend */
+        select
+              em.msg_id --메세지아이디
+            , em.cnc_dt --취소일시
+            , em.msg_cn --메세지내용
+            , em.msg_sj --메세지제목
+            , em.rcv_dt --수신일시
+            , em.rcv_id --수신자아이디
+            , em.send_id --발신자아이디
+            , em.file_group_id --파일그룹아이디
+            , em.msg_div --발송구분 발송(S) 수신(R)
+            , em.msg_group_id --메세지그룹아이디
+            , em.reg_id
+            , em.reg_dt
+            , em.mod_id
+            , em.mod_dt
+            , em.send_dt
+            , kgst.fngetlangnm(vum.user_nm_kg, vum.user_nm_ru, vum.user_nm_kg, #{lang}) as rcv_nm
+        from ebs_msg em
+        left join view_user_member vum on vum.user_id = em.rcv_id
+        where msg_div = 'S'
+            and send_id = #{sendId}
+        <if test="msgSj != null and msgSj != ''">
+            and msg_sj like concat('%', #{msgSj}, '%')
+        </if>
+        <if test="rcvNm != null and rcvNm != ''">
+            and kgst.fngetlangnm(vum.user_nm_kg, vum.user_nm_ru, vum.user_nm_kg, #{lang}) like concat ('%', #{rcvNm}, '%')
+        </if>
+        order by send_dt desc
+    </select>
+
+
+    <select id="selectMsg" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.myPage.message.vo.MsgVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.myPage.message.repository.MsgMapper.selectMsg */
+        select
+              em.msg_id --메세지아이디
+            , em.cnc_dt --취소일시
+            , em.msg_cn --메세지내용
+            , em.msg_sj --메세지제목
+            , em.rcv_dt --수신일시
+            , em.rcv_id --수신자아이디
+            , em.send_dt --발신일시
+            , em.send_id --발신자아이디
+            , em.file_group_id --파일그룹아이디
+            , em.msg_div --발송구분 발송(S) 수신(R)
+            , em.msg_group_id --메세지그룹아이디
+            , em.reg_id
+            , em.reg_dt
+            , em.mod_id
+            , em.mod_dt
+            , kgst.fngetlangnm(mRcv.user_nm_kg, mRcv.user_nm_ru ,mRcv.user_nm_kg, #{lang}) as rcv_nm
+            , kgst.fngetlangnm(mSend.user_nm_kg, mSend.user_nm_ru, mSend.user_nm_kg, #{lang}) as send_nm
+        from ebs_msg em
+        inner join view_user_member mRcv on mRcv.user_id = em.rcv_id
+        inner join view_user_member mSend on mSend.user_id = em.send_id
+        where msg_id = #{msgId}
+    </select>
+
+    <insert id="insertMsg" parameterType="kr.co.bestiansoft.ebillservicekg.myPage.message.vo.MsgRequest">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.myPage.message.repository.MsgMapper.insertMsg */
+        insert into ebs_msg (
+              msg_cn
+            , msg_sj
+            , rcv_dt
+            , rcv_id
+            , send_dt
+            , send_id
+            , file_group_id
+            , msg_div
+            , msg_group_id
+        )
+        values (
+              #{msgCn}
+            , #{msgSj}
+            , null
+            , #{rcvId}
+            , now()
+            , #{sendId}
+            , #{fileGroupId}
+            , #{msgDiv}
+            , #{msgGroupId}
+        )
+    </insert>
+
+
+    <update id="updateRcvDt" parameterType="java.util.HashMap">
+        update ebs_msg
+        set
+            rcv_dt = now()
+        where rcv_id = #{rcvId} and msg_group_id = #{msgGroupId}
+    </update>
+
+    <select id="selectUserMember" parameterType="kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo">
+        SELECT
+              vw.user_id
+            , kgst.fngetlangnm(vw.user_nm_kg, vw.user_nm_ru, vw.user_nm_kg, #{lang}) as user_nm
+            , kgst.fngetlangnm(vw.dept_nm_kg, vw.dept_nm_ru, vw.dept_nm_ko, #{lang}) as dept_nm
+            , vw.poly_nm
+            , vw.is_member
+            , vw.dept_cd
+            , string_agg(coalesce(kgst.fngetlangnm(cd.dept_nm1, cd.dept_nm2, cd.dept_nm3, #{lang}), ''), ' / ') as cmit_nm
+        FROM view_user_member vw
+        left join com_ccof cc on cc.user_id = vw.user_id
+        left join com_dept cd on cd.dept_cd = cc.dept_cd
+        where vw.msg_rcv_yn is distinct from 'N'
+        <if test="searchNm != null and searchNm != ''">
+            AND kgst.fngetlangnm(vw.user_nm_kg, vw.user_nm_ru, vw.user_nm_kg, #{lang}) LIKE CONCAT('%', #{searchNm}, '%')
+        </if>
+        <if test="selectTab != null and selectTab != ''">
+            <choose>
+                <when test="selectTab == 'cmit'">
+                    AND cc.dept_cd LIKE 'CMT%' and (
+                        vw.is_member = 'N'
+                        AND vw.dept_cd LIKE 'CMT%'
+                        AND vw.dept_cd not in ('CMT')
+                        and vw.dept_cd LIKE CONCAT('%', #{cmitCd}, '%')
+                        OR cc.dept_cd like concat ('%', #{cmitCd}, '%')
+                    )
+                </when>
+                <when test="selectTab == 'member' and polyCd != null and polyCd != ''">
+                    and vw.poly_cd = #{polyCd}
+                </when>
+                <when test="selectTab == 'user' and deptCd != null and deptCd != ''">
+                    and vw.dept_cd = #{deptCd}
+                </when>
+            </choose>
+        </if>
+        group by vw.user_id, user_nm, dept_nm, vw.poly_nm, vw.is_member, vw.dept_cd;
+    </select>
+
+    <delete id="deleteMsg" parameterType="java.lang.Long">
+        delete from ebs_msg
+        where msg_id = #{msgId}
+    </delete>
+</mapper>

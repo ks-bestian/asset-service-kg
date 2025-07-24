@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.bestiansoft.ebillservicekg.admin.menu.repository.MenuMapper">
+
+<!--
+    <select id="selectMenuByUserId" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.admin.menu.repository.entity.MenuEntity">
+        select
+            cm.*
+        from
+            com_menu cm
+                left join com_auth_menu cam on cm.menu_id = cam.menu_id
+                left join com_auth_user cau on cam.auth_id = cau.auth_id
+        where
+            cau.user_id = #{userId}
+        order by cm.ord
+    </select>
+-->
+
+    <select id="selectListMenu" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.menu.vo.MenuVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.menu.repository.MenuMapper.selectListMenu */
+        select
+              menu_id --메뉴아이디
+            , kgst.fngetlangnm(menu_nm1,menu_nm2,menu_nm3,#{lang}) as menu_nm
+            , menu_nm1 --메뉴명(키르기스어)
+            , menu_nm2 --메뉴명(러시아어)
+            , menu_nm3 --메뉴명(한국어)
+            , ord --순서
+            , upr_menu_id --상위메뉴아이디
+            , menu_path --메뉴경로
+            , use_yn --사용여부
+            , rmk --비고
+            , reg_dt
+            , reg_id
+            , mod_dt
+            , mod_id
+        from com_menu
+        where 1=1
+        <if test="menuList != null and menuList != ''">
+            and use_yn = 'Y'
+        </if>
+        <if test="deptCd != null and deptCd != ''">
+        	-- 추가(20250210 조진호)
+            and menu_id in (
+            	select menu_cd 
+            	from kgst.com_dept_menu
+				where dept_cd = #{deptCd}
+            )
+        </if>
+        order by upr_menu_id, ord
+    </select>
+    
+    <select id="selectMenu" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.menu.vo.MenuVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.menu.repository.MenuMapper.selectMenu */
+        select
+              menu_id
+            , menu_nm1
+            , menu_nm2
+            , menu_nm3
+            , kgst.fngetlangnm(menu_nm1, menu_nm2, menu_nm3, #{lang}) as menu_nm
+            , ord
+            , upr_menu_id
+            , menu_path
+            , use_yn
+            , rmk
+            , reg_dt
+            , reg_id
+            , mod_dt
+            , mod_id
+        from com_menu
+        where menu_id = #{menuId}
+    </select>
+
+    <insert id="insertMenu" parameterType="kr.co.bestiansoft.ebillservicekg.admin.menu.vo.MenuVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.menu.repository.MenuMapper.insertMenu */
+        insert into com_menu (
+              menu_nm1
+            , menu_nm2
+            , menu_nm3
+            , ord
+            , upr_menu_id
+            , menu_path
+            , use_yn
+            , rmk
+            , reg_dt
+            , reg_id
+            , mod_dt
+            , mod_id
+        )
+        values (
+              #{menuNm1}
+            , #{menuNm2}
+            , #{menuNm3}
+            , #{ord}
+            , #{uprMenuId}
+            , #{menuPath}
+            , #{useYn}
+            , #{rmk}
+            , now()
+            , 'admin'
+            , null
+            , null
+        )
+    </insert>
+
+    <update id="updateMenu" parameterType="kr.co.bestiansoft.ebillservicekg.admin.menu.vo.MenuVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.menu.repository.MenuMapper.updateMenu */
+        update com_menu
+        set
+            menu_nm1 = #{menuNm1}
+            , menu_nm2 = #{menuNm2}
+            , menu_nm3 = #{menuNm3}
+            , ord = #{ord}
+            , upr_menu_id = #{uprMenuId}
+            , menu_path = #{menuPath}
+            , use_yn = #{useYn}
+            , rmk = #{rmk}
+            , mod_id = #{modId}
+            , mod_dt = #{modDt}
+        where menu_id = #{menuId}
+    </update>
+
+    <delete id="deleteMenu" parameterType="java.lang.Long">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.menu.repository.MenuMapper.deleteMenu */
+        delete from com_menu
+        where menu_id = #{menuId}
+    </delete>
+
+    <select id="selectListQuickMenu" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.menu.vo.QuickMenuVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.menu.repository.MenuMapper.selectListQuickMenu */
+        select
+              cq.seq
+            , cq.user_id
+            , cq.menu_id
+            , cq.reg_id
+            , cq.reg_dt
+            , cq.mod_id
+            , cq.mod_dt
+            , kgst.fngetlangnm(cm.menu_nm1, cm.menu_nm2, cm.menu_nm3, #{lang}) as menu_nm
+            , cm.menu_path
+        from com_quick_menu cq
+        inner join com_menu cm on cm.menu_id = cq.menu_id
+        where cq.user_id = #{userId}
+        order by cm.ord
+    </select>
+
+    <insert id="insertQuickMenu" parameterType="kr.co.bestiansoft.ebillservicekg.admin.menu.vo.QuickMenuVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.menu.repository.MenuMapper.insertQuickMenu */
+        insert into com_quick_menu (
+              user_id
+            , menu_id
+            , reg_id
+            , reg_dt
+            , mod_id
+            , mod_dt
+        )
+        values (
+              #{userId}
+            , #{menuId}
+            , #{regId}
+            , now()
+            , null
+            , null
+        )
+    </insert>
+
+    <delete id="deleteQuickMenu" parameterType="java.util.HashMap">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.menu.repository.MenuMapper.deleteQuickMenu */
+        delete from com_quick_menu
+        where menu_id = #{menuId} and user_id = #{userId}
+    </delete>
+</mapper>

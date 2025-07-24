@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.bestiansoft.ebillservicekg.formField.repository.FormFieldMapper">
+    <insert id="insertFormField"  parameterType="kr.co.bestiansoft.ebillservicekg.formField.vo.FormFieldVo">
+        insert into kgst.com_form_field (
+          field_seq
+        , form_id
+        , field_value
+        , field_nm
+        , field_type
+        , required_yn
+        ) values (
+          #{fieldSeq}
+        , #{formId}
+        , #{fieldValue}
+        , #{fieldNm}
+        , #{fieldType}
+        , #{requiredYn}
+        )
+    </insert>
+
+    <!-- select form_field list by form_id-->
+    <select id="selectFormFieldListByFormId" resultType="kr.co.bestiansoft.ebillservicekg.formField.vo.FormFieldVo">
+        select
+              t1.field_seq
+            , t1.form_id
+            , t1.field_value
+            , t1.field_nm
+            , t1.field_type
+            , t1.required_yn
+        from kgst.com_form_field t1
+        inner join kgst.com_form t2
+        on t1.form_id = t2.form_id
+        where t2.form_id = #{form_id} order by field_seq desc
+    </select>
+
+    <!--delete form_field by form_id-->
+    <delete id="deleteFormFields" parameterType="java.lang.Integer">
+        delete from kgst.com_form_field
+        where form_id = #{formId}
+    </delete>
+
+
+</mapper>

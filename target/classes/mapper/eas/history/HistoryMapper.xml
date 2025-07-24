@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.bestiansoft.ebillservicekg.eas.history.repository.HistoryRepository">
+
+    <insert id="insertHistory" parameterType="kr.co.bestiansoft.ebillservicekg.eas.history.vo.HistoryVo">
+        INSERT INTO kgst.eas_history
+            (doc_id, user_id, user_nm, act_type, act_detail, act_dtm)
+        VALUES(#{docId}, #{userId}, #{userNm}, #{actType}, #{actDetail}, #{actDtm});
+    </insert>
+    <select id="getHistory" resultType="kr.co.bestiansoft.ebillservicekg.eas.history.vo.HistoryVo">
+        select history_id, doc_id, user_id, user_nm, act_type, act_detail , act_dtm
+          from eas_history
+         where doc_id = #{docId}
+    </select>
+    <select id="getHistoryByUserId" resultType="kr.co.bestiansoft.ebillservicekg.eas.history.vo.HistoryVo">
+        select history_id, doc_id, user_id, user_nm, act_type, act_detail , act_dtm
+        from eas_history
+        where doc_id = #{docId}
+          and user_id = #{userId}
+    </select>
+    <delete id="deleteDocument">
+        delete from eas_history
+        where doc_id= #{docId}
+    </delete>
+</mapper>

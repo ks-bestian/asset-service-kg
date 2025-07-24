@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.repository.OfficialDocumentMapper">
+    <insert id="saveOfficialDocument" parameterType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.OfficialDocumentVo">
+        INSERT INTO kgst.eas_document
+        (doc_id, aars_doc_id, user_id, doc_type_cd, doc_attrb_cd, bill_id, tmlmt_yn, tmlmt_dtm, doc_lng, doc_subtle, doc_status_cd, digital_yn, sender_id, sender_nm, sender_dept_cd, doc_no, reg_dtm)
+        VALUES(#{docId}, #{aarsDocId}, #{userId}, #{docTypeCd}, #{docAttrbCd}, #{billId}, #{tmlmtYn}, #{tmlmtDtm}, #{docLng}, #{docSubtle}, #{docStatusCd}, #{digitalYn}, #{senderId}, #{senderNm}, #{senderDeptCd}, #{docNo}, #{regDtm});
+    </insert>
+    <update id="updateStatus">
+        update kgst.eas_document
+           set doc_status_cd = #{docStatusCd}
+         where doc_id = #{docId}
+    </update>
+    <select id="getDocumentList" parameterType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.SearchDocumentVo" resultType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.DocumentListDto">
+        select d.doc_id, doc_attrb_cd, d.tmlmt_yn, d.tmlmt_Dtm, doc_subtle, sender_id, sender_nm, doc_no, rcv_dtm, check_dtm, rcv_id, doc_type_cd
+          from eas_document d, eas_received_info r
+         where d.doc_id = r.doc_id
+           and r.user_id = #{userId}
+           and doc_status_cd in ('DMS02', 'DMS03')
+           and rcv_status in ('RS01', 'RS02', 'RS03', 'RS06')
+          <if test="docSubtle != null "> and doc_subtle like '%'||#{docSubtle}||'%' </if>
+          <if test="tmlmtDtm != null"> and tmlmt_dtm = #{tmlmtDtm} </if>
+          <if test="fromRcvDtm != null and toRcvDtm != null"> and rcv_dtm between #{fromRcvDtm} and #{toRcvDtm} </if>
+          <if test="docNo != null"> and doc_no like '%'||#{docNo}||'%' </if>
+          <if test="docTypeCd != null"> and doc_type_cd = #{docTypeCd} </if>
+          <if test="senderNm != null"> and sender_nm like '%'||#{senderNm}||'%' </if>
+        order by rcv_dtm desc
+    </select>
+    <select id="countDocumentList" resultType="int">
+        select count(1)
+        from eas_received_info r
+        where r.user_id = #{userId}
+          and r.rcv_status = 'RS01'
+          and r.check_dtm is null
+          and exists (
+            select 1
+              from eas_document d
+             where d.doc_id = r.doc_id
+               and d.doc_status_cd = 'DMS02'
+        );
+
+    </select>
+    <select id="getDocumentUser" resultType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.DocumentUserDto">
+        select sender_id as user_id , sender_nm as user_nm , sender_dept_cd as dept_cd
+          from eas_document ed
+         where doc_id = #{docId}
+         union distinct
+        select user_id, user_nm , dept_cd
+          from eas_approval
+         where doc_id = #{docId}
+         union distinct
+        select user_id, user_nm, dept_cd
+          from eas_received_info
+         where doc_id = #{docId}
+         union distinct
+        select ew.user_id, ew.user_nm, ew.dept_cd
+          from eas_work_request ewr, eas_work_response ew
+         where ewr.work_req_id = ew.work_req_id
+           and doc_id = #{docId};
+    </select>
+    <select id="getDocumentDetail" resultType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.DocumentDetailDto">
+        select d.doc_id, aars_file_id,  d.doc_type_cd, d.doc_attrb_cd, bill_id, (select bill_no from ebs_master where bill_id= d.bill_id ) bill_no, tmlmt_yn, tmlmt_dtm, doc_lng, doc_subtle, digital_yn, sender_id, d.sender_nm, d.sender_dept_cd, doc_no, d.reg_dtm, ed.aars_pdf_file_id, d.external_yn
+          from eas_document d, eas_draft ed
+         where d.aars_doc_id = ed.aars_doc_id
+           and d.doc_id = #{docId}
+    </select>
+    <select id="isReject" resultType="boolean">
+        select doc_status_cd ='DMS04' from eas_document where doc_id = #{docId} ;
+    </select>
+    <select id="getRejectDocumentList" parameterType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.SearchDocumentVo" resultType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.DocumentListDto">
+        select doc_id, doc_attrb_cd, doc_subtle, sender_id, sender_nm, doc_no, aars_doc_id
+          from eas_document d
+         where d.user_id= #{userId}
+           and d.doc_status_cd ='DMS04'
+        <if test="docSubtle != null "> and doc_subtle like '%'||#{docSubtle}||'%' </if>
+        <if test="docNo != null"> and doc_no like '%'||#{docNo}||'%' </if>
+        <if test="docTypeCd != null"> and doc_type_cd = #{docTypeCd} </if>
+         order by reg_dtm desc;
+    </select>
+    <select id="countRejectDocument" resultType="int">
+        select count(1)
+          from eas_document d
+         where d.user_id= #{userId}
+           and d.doc_status_cd = 'DMS04'
+    </select>
+    <select id="getMyDocumentList" parameterType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.SearchDocumentVo" resultType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.DocumentListDto">
+        select doc_id, doc_attrb_cd, doc_subtle, sender_id, sender_nm, doc_no
+          from eas_document d
+         where d.user_id= #{userId}
+        <if test="docSubtle != null "> and doc_subtle like '%'||#{docSubtle}||'%' </if>
+        <if test="docNo != null"> and doc_no like '%'||#{docNo}||'%' </if>
+        <if test="docTypeCd != null"> and doc_type_cd = #{docTypeCd} </if>
+         order by reg_dtm desc;
+    </select>
+    <select id="getProcessedList" parameterType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.SearchDocumentVo" resultType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.DocumentListDto">
+        select s.doc_id, doc_attrb_cd, doc_status_cd, doc_subtle, sender_id, sender_nm, doc_no, res_dtm, res_user_id
+        from kgst.vw_eas_file_search s
+        where s.res_user_id = #{userId}
+        <if test="docSubtle != null "> and doc_subtle like '%'||#{docSubtle}||'%' </if>
+        <if test="docNo != null"> and doc_no like '%'||#{docNo}||'%' </if>
+        <if test="fromResDtm != null and toResDtm != null"> and res_dtm between #{fromResDtm} and #{toResDtm} </if>
+    </select>
+    <select id="getWorkList" parameterType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.SearchDocumentVo" resultType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.DocumentListDto">
+        select d.doc_id, doc_attrb_cd, req.tmlmt_yn, req.tmlmt_Dtm, req.work_cn as doc_subtle, req.reg_id as sender_id,  req.reg_user_nm as sender_nm, doc_no, req.reg_dt as rcv_dtm, check_dtm, rspns_id , doc_type_cd ,rcv_id
+        from eas_work_request req, eas_work_response res, eas_document d
+        where req.work_req_id = res.work_req_id
+          and d.doc_id = req.doc_id
+          and d.doc_status_cd in('DMS03', 'DMS02')
+          and res.user_id = #{userId}
+        <if test="docSubtle != null "> and doc_subtle like '%'||#{docSubtle}||'%' </if>
+        <if test="fromRcvDtm != null and toRcvDtm != null"> and rcv_dtm between #{fromRcvDtm} and #{toRcvDtm} </if>
+        <if test="docNo != null"> and doc_no like '%'||#{docNo}||'%' </if>
+        <if test="docTypeCd != null"> and doc_type_cd = #{docTypeCd} </if>
+        order by reg_dt desc;
+    </select>
+    <select id="countWorkList" resultType="int">
+        select count(1)
+        from eas_work_request req, eas_work_response res, eas_document d
+        where req.work_req_id = res.work_req_id
+          and d.doc_id = req.doc_id
+          and d.doc_status_cd in( 'DMS03', 'DMS02')
+          and res.user_id = #{userId}
+          and res.check_dtm is null
+    </select>
+    <select id="getApprovalList" resultType="kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalLIstDto" parameterType="kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.SearchDocumentVo">
+        select d.doc_id, doc_attrb_cd, doc_subtle, sender_id, sender_nm, doc_no, a.rcv_dtm, check_dtm, apvl_id, apvl_type
+        from eas_document d, eas_approval a
+        where d.doc_id = a.doc_id
+        and d.doc_status_cd ='DMS01'
+        and a.apvl_status_cd in('AS02', 'AS03')
+        and a.user_id = #{userId}
+        <if test="docSubtle != null "> and doc_subtle like '%'||#{docSubtle}||'%' </if>
+        <if test="fromRcvDtm != null and toRcvDtm != null"> and rcv_dtm between #{fromRcvDtm} and #{toRcvDtm} </if>
+        <if test="docNo != null"> and doc_no like '%'||#{docNo}||'%' </if>
+        <if test="docTypeCd != null"> and doc_type_cd = #{docTypeCd} </if>
+        order by rcv_dtm desc
+    </select>
+    <select id="countApprovalList" resultType="int">
+        select count(1)
+        from eas_approval a
+        where a.user_id = #{userId}
+          and a.check_dtm is null
+          and a.apvl_status_cd = 'AS02'
+          and exists (
+            select 1
+            from eas_document d
+            where d.doc_id = a.doc_id
+              and d.doc_status_cd ='DMS01'
+        );
+    </select>
+    <delete id="deleteDocument">
+        delete from eas_document
+         where doc_id = #{docId}
+    </delete>
+
+</mapper>

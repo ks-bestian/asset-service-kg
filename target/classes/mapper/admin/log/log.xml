@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.bestiansoft.ebillservicekg.admin.log.repository.LogMapper">
+
+<!--
+    <select id="selectLogs" parameterType="kr.co.bestiansoft.ebillservicekg.admin.log.domain.LogRead" resultType="kr.co.bestiansoft.ebillservicekg.admin.log.domain.Logs">
+        select
+            ah.hist_id as histId,
+            ah.user_id as userId,
+            coalesce(
+                (
+                    select
+                        m.member_nm
+                    from
+                        com_member m
+                    where
+                        m.member_id = ah.user_id
+                ),
+                (
+                    select
+                        u.user_nm
+                    from
+                        com_user u
+                    where
+                        u.user_id = ah.user_id
+                )
+            ) as userNm,
+            ah.acs_ip as accessIp,
+            ah.req_url as reqUrl,
+            ah.req_method as reqMethod,
+            ah.reg_dt as reqDt
+        from
+            com_acs_hist ah
+        <include refid="logWhere"/>
+        order by
+            ah.reg_dt desc
+        limit #{size}
+        offset #{page} * #{size}
+    </select>
+
+    <select id="selectLogCount" parameterType="kr.co.bestiansoft.ebillservicekg.admin.log.domain.LogRead" resultType="java.lang.Long">
+        select
+         count(*)
+        from
+        com_acs_hist ah
+        <include refid="logWhere"/>
+    </select>
+
+    <sql id="logWhere">
+        <where>
+            <if test = "userId != '' and userId != null">
+                ah.user_id like CONCAT('%',#{userId},'%')
+            </if>
+            <if test = "reqUrl != '' and reqUrl != null">
+                and ah.req_url like CONCAT('%',#{reqUrl},'%')
+            </if>
+            <if test = "startDate != null">
+            <![CDATA[
+                and ah.reg_dt >= #{startDate}
+            ]]>
+            </if>
+            <if test = "endDate != null">
+            <![CDATA[
+                and ah.reg_dt <= #{endDate}
+            ]]>
+            </if>
+        </where>
+    </sql>
+-->
+
+</mapper>

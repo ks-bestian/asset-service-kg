@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.bestiansoft.ebillservicekg.admin.dept.repository.DeptMapper">
+    <select id="selectListDept" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.dept.vo.DeptVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.dept.repository.DeptMapper.selectListDept */
+        select
+              dept_cd --부서코드
+            , dept_nm1 --부서명(키르키즈어)
+            , dept_nm2 --부서명(러시아어)
+            , dept_nm3 --부서명(한국어)
+            , kgst.fngetlangnm(dept_nm1, dept_nm2, dept_nm3,#{lang}) as dept_nm
+            , shrt_nm1 --부서 약칭(키르키즈어)
+            , shrt_nm2 --부서 약칭(러시아어)
+            , shrt_nm3 --부서 약칭(한국어)
+            , kgst.fngetlangnm(shrt_nm1, shrt_nm2, shrt_nm3,#{lang}) as shrt_nm
+            , ord --순서
+            , upr_dept_cd --상위부서코드
+            , use_yn --사용여부
+            , reg_dt --등록일자
+            , reg_id --등록자
+            , mod_id --수정자
+            , mod_dt --수정일자
+        from com_dept
+        where 1=1
+        <if test="deptNm != null and deptNm != ''">
+            and kgst.fngetlangnm(dept_nm1, dept_nm2, dept_nm3, #{lang}) like concat ('%', #{deptNm}, '%')
+        </if>
+        <if test="useYn != null and useYn != ''">
+            and use_yn = #{useYn}
+        </if>
+        order by ord
+    </select>
+
+    <select id="getCmitList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.admin.dept.vo.DeptVo">
+        select
+              dept_cd
+            , kgst.fngetlangnm(dept_nm1, dept_nm2, dept_nm3, #{lang}) as dept_nm
+            , kgst.fngetlangnm(shrt_nm1, shrt_nm2, shrt_nm3, #{lang}) as shrt_nm
+            , dept_nm1
+            , dept_nm2
+            , dept_nm3
+            , shrt_nm1
+            , shrt_nm2
+            , shrt_nm3
+            , ord
+            , upr_dept_cd
+            , use_yn
+        from com_dept
+        where upr_dept_cd = 'CMT'
+        <if test="deptNm != null and deptNm != ''">
+            and kgst.fngetlangnm(dept_nm1, dept_nm2, dept_nm3, #{lang}) like concat ('%', #{deptNm}, '%')
+        </if>
+        order by ord
+    </select>
+
+    <select id="selectDept" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.admin.dept.vo.DeptVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.dept.repository.DeptMapper.selectDept */
+        select
+              dept_cd --부서코드
+            , dept_nm1 --부서명1
+            , dept_nm2 --부서명2
+            , dept_nm3 --부서명3
+            , shrt_nm1 --부서 약칭1
+            , shrt_nm2 --부서 약칭2
+            , shrt_nm3 --부서 약칭3
+            , ord --순서
+            , upr_dept_cd --상위부서코드
+            , use_yn --사용여부
+            , reg_dt --등록일자
+            , reg_id --등록자
+            , mod_id --수정자
+            , mod_dt --수정일자
+            , kgst.fngetlangnm(dept_nm1, dept_nm2, dept_nm3, #{lang}) as dept_nm
+        from com_dept
+        where dept_cd = #{deptCd}
+    </select>
+
+    <insert id="insertDept" parameterType="kr.co.bestiansoft.ebillservicekg.admin.dept.vo.DeptVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.dept.repository.DeptMapper.insertDept */
+        insert into com_dept (
+              dept_cd
+            , dept_nm1
+            , dept_nm2
+            , dept_nm3
+            , shrt_nm1
+            , shrt_nm2
+            , shrt_nm3
+            , ord
+            , upr_dept_cd
+            , use_yn
+            , reg_dt
+            , reg_id
+            , mod_id
+            , mod_dt
+        )
+        values (
+              #{deptCd}
+            , #{deptNm1}
+            , #{deptNm2}
+            , #{deptNm3}
+            , #{shrtNm1}
+            , #{shrtNm2}
+            , #{shrtNm3}
+            , #{ord}
+            , #{uprDeptCd}
+            , #{useYn}
+            , now()
+            , #{regId}
+            , null
+            , null
+        )
+    </insert>
+
+    <update id="updateDept" parameterType="kr.co.bestiansoft.ebillservicekg.admin.dept.vo.DeptVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.dept.repository.DeptMapper.updateDept */
+        update com_dept
+        set
+              dept_nm1 = #{deptNm1}
+            , dept_nm2 = #{deptNm2}
+            , dept_nm3 = #{deptNm3}
+            , shrt_nm1 = #{shrtNm1}
+            , shrt_nm2 = #{shrtNm2}
+            , shrt_nm3 = #{shrtNm3}
+            , ord = #{ord}
+            , upr_dept_cd = #{uprDeptCd}
+            , use_yn = #{useYn}
+            , mod_id = #{modId}
+            , mod_dt = now()
+        where dept_cd = #{deptCd}
+    </update>
+
+    <delete id="deleteDept" parameterType="java.lang.String">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.admin.dept.repository.DeptMapper.deleteDept */
+        delete from com_dept
+        where dept_cd = #{deptCd}
+    </delete>
+</mapper>
