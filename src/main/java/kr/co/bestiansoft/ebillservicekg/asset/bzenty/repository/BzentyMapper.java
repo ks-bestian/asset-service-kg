@@ -12,7 +12,7 @@ public interface BzentyMapper {
 
     List<BzentyVo> selectListBzenty(HashMap<String, Object> param);
     BzentyVo bzentyDetail(HashMap<String, Object> param);
-    BzentyVo selectBzenty(Long seq);
+    BzentyVo selectBzenty(String bzentyId);
     int insertBzenty(BzentyVo BzentyVo);
     int updateBzenty(BzentyVo BzentyVo);
     void deleteBzenty(String bzentyId);

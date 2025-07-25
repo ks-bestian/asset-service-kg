@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import kr.co.bestiansoft.ebillservicekg.asset.bzenty.repository.BzentyMapper;
 import kr.co.bestiansoft.ebillservicekg.asset.bzenty.service.BzentyService;
 import kr.co.bestiansoft.ebillservicekg.asset.bzenty.vo.BzentyVo;
+import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
+import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,17 +27,17 @@ public class BzentyServiceImpl implements BzentyService {
     }
 
     @Override
-    public BzentyVo getBzentyDetail(Long seq) {
-        return bzentyMapper.selectBzenty(seq);
+    public BzentyVo getBzentyDetail(String bzentyId) {
+        return bzentyMapper.selectBzenty(bzentyId);
     }
 
     @Override
     public BzentyVo createBzenty(BzentyVo bzentyVo) {
-        //String regId = new SecurityInfoUtil().getAccountId();
-    	// TODO :: 로그인 처리해야함
-    	String regId = "admin";
+        String rgtrId = new SecurityInfoUtil().getAccountId();
+    	String bzentyId = StringUtil.getBzentyUUID();
     	
-        bzentyVo.setRegId(regId);
+        bzentyVo.setRgtrId(rgtrId);
+        bzentyVo.setBzentyId(bzentyId);
 
         bzentyMapper.insertBzenty(bzentyVo);
 

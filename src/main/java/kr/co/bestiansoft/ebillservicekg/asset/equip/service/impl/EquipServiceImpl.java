@@ -7,6 +7,7 @@ import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.*;
 import kr.co.bestiansoft.ebillservicekg.asset.install.service.InstallService;
 import kr.co.bestiansoft.ebillservicekg.asset.manual.service.MnulService;
 import kr.co.bestiansoft.ebillservicekg.asset.manual.vo.MnulVo;
+import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,7 +37,7 @@ public class EquipServiceImpl implements EquipService {
         String eqpmntId = StringUtil.getEqpmntUUUID();
 
         equipRequest.setEqpmntId(eqpmntId);
-//        equipRequest.setRgtrId(new SecurityInfoUtil().getAccountId());
+        equipRequest.setRgtrId(new SecurityInfoUtil().getAccountId());
 
         equipMapper.createEquip(equipRequest);
 

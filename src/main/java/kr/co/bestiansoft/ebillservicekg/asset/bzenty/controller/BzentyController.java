@@ -36,9 +36,9 @@ public class BzentyController {
     }
 
     @Operation(summary = "업체상세 조회", description = "업체 상세를 조회한다.")
-    @GetMapping("/asset/bzenty/{seq}")
-    public ResponseEntity<CommonResponse> getBzentyDetail(@PathVariable Long seq) {
-        return new ResponseEntity<>(new CommonResponse(200, "ok", bzentyService.getBzentyDetail(seq)), HttpStatus.OK);
+    @GetMapping("/asset/bzenty/detail")
+    public ResponseEntity<CommonResponse> getBzentyDetail(@RequestParam String bzentyId) {
+        return new ResponseEntity<>(new CommonResponse(200, "ok", bzentyService.getBzentyDetail(bzentyId)), HttpStatus.OK);
     }
 
     @Operation(summary = "업체 생성", description = "업체를 생성한다.")

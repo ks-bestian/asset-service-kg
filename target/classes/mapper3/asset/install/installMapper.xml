@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.asset.install.repository.InstallMapper">
     <insert id="insertInstall" useGeneratedKeys="true" keyProperty="instlId" parameterType="kr.co.bestiansoft.ebillservicekg.asset.install.vo.InstallVo">
-            insert into asset_uzb.ams_instl (
+            insert into ams_instl (
                           instl_id
                         , eqpmnt_id
                         , instl_ymd

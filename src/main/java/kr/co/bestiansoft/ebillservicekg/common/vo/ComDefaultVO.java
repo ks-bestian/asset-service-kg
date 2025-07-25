@@ -16,6 +16,8 @@ public class ComDefaultVO implements Serializable {
 
 	private String modId;
 	private LocalDateTime modDt;
+	
+	private String rgtrId;
 
 	private String mdfrId;
 	private LocalDateTime mdfcnDt;

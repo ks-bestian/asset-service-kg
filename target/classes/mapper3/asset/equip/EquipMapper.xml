@@ -2,29 +2,29 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.bestiansoft.ebillservicekg.asset.equip.repository.EquipMapper">
-<insert id="createEquip" parameterType="kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipRequest" >
-    insert into ams_eqpmnt (
-          eqpmnt_id
-        , eqpmnt_cd
-        , eqpmnt_se
-        , eqpmnt_nm
-        , expln
-        , bzenty_id
-        , tkcg_dept_id
-        , reg_dt
-        , rgtr_id
-    ) values (
-          #{eqpmntId}
-        , #{eqpmntCd}
-        , #{eqpmntSe}
-        , #{eqpmntNm}
-        , #{expln}
-        , #{bzentyId}
-        , #{tkcgDeptId}
-        , now()
-        , #{rgtrId}
-    )
-</insert>
+	<insert id="createEquip" parameterType="kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipRequest" >
+	    insert into ams_eqpmnt (
+	          eqpmnt_id
+	        , eqpmnt_cd
+	        , eqpmnt_se
+	        , eqpmnt_nm
+	        , expln
+	        , bzenty_id
+	        , tkcg_dept_id
+	        , reg_dt
+	        , rgtr_id
+	    ) values (
+	          #{eqpmntId}
+	        , #{eqpmntCd}
+	        , #{eqpmntSe}
+	        , #{eqpmntNm}
+	        , #{expln}
+	        , #{bzentyId}
+	        , #{tkcgDeptId}
+	        , now()
+	        , #{rgtrId}
+	    )
+	</insert>
 
     <select id="getEquipList" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipDetailVo">
         select
@@ -38,10 +38,10 @@
             , ae.reg_dt
             , ae.rgtr_id
             , ab.bzenty_nm_1 as bzenty_nm
-            , acc.cd_nm_1 as eqpmnt_se_nm
+            , ccd.code_nm1 as eqpmnt_se_nm
         from ams_eqpmnt ae
         left join ams_bzenty ab on ab.bzenty_id = ae.bzenty_id
-        left join ams_com_cd acc on acc.cd_id = ae.eqpmnt_se
+        left join kgst.com_code_detail ccd on ccd.code_id = ae.eqpmnt_se
         where 1=1
         <if test="searchEq != null and searchEq != ''">
             and eqpmnt_nm like '%' || #{searchEq} || '%'

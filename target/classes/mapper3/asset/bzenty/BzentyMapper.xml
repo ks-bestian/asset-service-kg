@@ -19,7 +19,7 @@
 			, mdfcn_dt
 			, mdfr_id
 		FROM
-			asset_uzb.ams_bzenty
+			ams_bzenty
 		where 1=1
 		<if test="bzentyNm != null and bzentyNm !=''">
 		    <choose>
@@ -36,10 +36,29 @@
 		</if>
 		order by reg_dt desc
     </select>
+    <select id="selectBzenty" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.asset.bzenty.vo.BzentyVo">
+        /* QueryID : kr.co.bestiansoft.ebillservicekg.asset.bzenty.repository.selectBzenty */
+		SELECT
+			bzenty_id
+			, bzenty_nm_1
+			, bzenty_nm_2
+			, bzenty_nm_3
+			, telno
+			, eml
+			, pic_nm
+			, use_yn
+			, reg_dt
+			, rgtr_id
+			, mdfcn_dt
+			, mdfr_id
+		FROM
+			ams_bzenty
+		where bzenty_id = #{bzentyId}
+    </select>
     
     <insert id="insertBzenty" parameterType="kr.co.bestiansoft.ebillservicekg.asset.bzenty.vo.BzentyVo">
         
-        INSERT INTO asset_uzb.ams_bzenty (
+        INSERT INTO ams_bzenty (
 			bzenty_id
 			, bzenty_nm_1
 			, bzenty_nm_2
@@ -53,7 +72,7 @@
 			, mdfcn_dt
 			, mdfr_id
 		) VALUES (
-			'BZ' || LPAD(NEXTVAL('asset_uzb.bzenty_seq')::TEXT, 6, '0'),
+			#{bzentyId},
 			#{bzentyNm1},
 			#{bzentyNm2},
 			#{bzentyNm3},
@@ -67,5 +86,25 @@
             null
 		)
     </insert>
+    
+    <update id="updateBzenty" parameterType="kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipVo">
+        update ams_bzenty
+        set
+              bzenty_nm_1 = #{bzentyNm1}
+            , bzenty_nm_2 = #{bzentyNm2}
+            , bzenty_nm_3 = #{bzentyNm3}
+            , telno = #{telno}
+            , eml = #{eml}
+            , pic_nm = #{picNm}
+            , use_yn = #{useYn}
+            , mdfcn_dt = now()
+            , mdfr_id = #{mdfrId}
+        where bzenty_id = #{bzentyId}
+    </update>
+    
+    <delete id="deleteBzenty" parameterType="java.lang.String" >
+        delete from ams_bzenty
+        where bzenty_id = #{bzentyId}
+    </delete>
 
 </mapper>
