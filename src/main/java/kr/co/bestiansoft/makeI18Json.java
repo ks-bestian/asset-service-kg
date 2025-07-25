@@ -11,7 +11,7 @@ import com.google.gson.GsonBuilder;
 public class makeI18Json {
 
 
-	public static final String JSON_ROOT_PATH = "D:/imsi/";
+	public static final String JSON_ROOT_PATH = "C:/imsi/";
 
 	public static void main(String[] args) {
 

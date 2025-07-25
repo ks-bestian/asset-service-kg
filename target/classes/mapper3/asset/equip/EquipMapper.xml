@@ -46,6 +46,9 @@
         <if test="searchEq != null and searchEq != ''">
             and eqpmnt_nm like '%' || #{searchEq} || '%'
         </if>
+        <if test="searchSe != null and searchSe != ''">
+            and eqpmnt_se = #{searchSe}
+        </if>
     </select>
 
     <select id="getDetailEquip" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipDetailVo">
