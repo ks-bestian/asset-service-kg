@@ -23,6 +23,9 @@ public class InstallVo extends ComDefaultVO {
     private String imgId;
     //설치 위치명
     private String cdNm;
+    private String instlPlcNm1;
+    private String instlPlcNm2;
+    private String instlPlcNm3;
 
     public InstallVo(EquipDetailVo vo) {
         this.instlId = vo.getInstlId();

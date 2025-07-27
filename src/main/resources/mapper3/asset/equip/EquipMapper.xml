@@ -37,14 +37,21 @@
             , ae.tkcg_dept_id
             , ae.reg_dt
             , ae.rgtr_id
-            , ab.bzenty_nm_1 as bzenty_nm
-            , ccd.code_nm1 as eqpmnt_se_nm
+            , ab.bzenty_nm_1
+            , ab.bzenty_nm_2
+            , ab.bzenty_nm_3
+            , ccd.code_nm1 as eqpmnt_se_nm_1
+            , ccd.code_nm2 as eqpmnt_se_nm_2
+            , ccd.code_nm3 as eqpmnt_se_nm_3
         from ams_eqpmnt ae
         left join ams_bzenty ab on ab.bzenty_id = ae.bzenty_id
         left join kgst.com_code_detail ccd on ccd.code_id = ae.eqpmnt_se
         where 1=1
         <if test="searchEq != null and searchEq != ''">
             and eqpmnt_nm like '%' || #{searchEq} || '%'
+        </if>
+        <if test="searchBz != null and searchBz != ''">
+        	and bzenty_id = #{searchBz}
         </if>
         <if test="searchSe != null and searchSe != ''">
             and eqpmnt_se = #{searchSe}
@@ -62,9 +69,15 @@
             , ae.tkcg_dept_id
             , ae.reg_dt
             , ae.rgtr_id
-            , ab.bzenty_nm_1 as bzenty_nm
+            , ab.bzenty_nm_1
+            , ab.bzenty_nm_2
+            , ab.bzenty_nm_3
+            , ccd.code_nm1 as eqpmnt_se_nm_1
+            , ccd.code_nm2 as eqpmnt_se_nm_2
+            , ccd.code_nm3 as eqpmnt_se_nm_3
         from ams_eqpmnt ae
         left join ams_bzenty ab on ab.bzenty_id = ae.bzenty_id
+        left join kgst.com_code_detail ccd on ccd.code_id = ae.eqpmnt_se
         where ae.eqpmnt_id = #{eqpmntId}
     </select>
 

@@ -29,9 +29,15 @@ public class EquipDetailVo {
 
     //업체
     private String bzentyNm;
+    private String bzentyNm1;
+    private String bzentyNm2;
+    private String bzentyNm3;
 
     //제품구분
     private String eqpmntSeNm;
+    private String eqpmntSeNm1;
+    private String eqpmntSeNm2;
+    private String eqpmntSeNm3;
 
     @Builder
     public EquipDetailVo(EquipDetailVo vo) {
@@ -43,6 +49,12 @@ public class EquipDetailVo {
         this.bzentyId = vo.getBzentyId();
         this.tkcgDeptId = vo.getTkcgDeptId();
         this.bzentyNm = vo.getBzentyNm();
+        this.bzentyNm1 = vo.getBzentyNm1();
+        this.bzentyNm2 = vo.getBzentyNm2();
+        this.bzentyNm3 = vo.getBzentyNm3();
         this.eqpmntSeNm = vo.getEqpmntSeNm();
+        this.eqpmntSeNm1 = vo.getEqpmntSeNm1();
+        this.eqpmntSeNm2 = vo.getEqpmntSeNm2();
+        this.eqpmntSeNm3 = vo.getEqpmntSeNm3();
     }
 }

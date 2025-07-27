@@ -47,10 +47,12 @@
             , ast.rmrk
             , ast.reg_dt
             , ai.img_id
-            , acc.cd_nm_1 as cd_nm
+            , ccd.code_nm1 as instl_plc_nm_1
+            , ccd.code_nm2 as instl_plc_nm_2
+            , ccd.code_nm3 as instl_plc_nm_3
         from ams_instl ast
         left join ams_img ai on ai.instl_id = ast.instl_id
-        left join ams_com_cd acc on acc.cd_id = ast.instl_plc_cd
+        left join kgst.com_code_detail ccd on ccd.code_id = ast.instl_plc_cd
         where ast.eqpmnt_id = #{eqpmntId}
     </select>
 
