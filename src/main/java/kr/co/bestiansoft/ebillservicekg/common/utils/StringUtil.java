@@ -59,28 +59,31 @@ public class StringUtil {
     public static String getUUUID() {
         return UUID.randomUUID().toString();
     }
-    
+
     public static String getEqpmntUUUID() {
     	return "EQ_" + UUID.randomUUID().toString();
     }
-    
+
     public static String getImgUUUID() {
     	return "IG_" + UUID.randomUUID().toString();
     }
-    
+
     public static String getInstlUUUID() {
     	return "ST_" + UUID.randomUUID().toString();
     }
-    
+
     public static String getBkmkUUID() {
     	return "MK_" + UUID.randomUUID().toString();
     }
-    
+
     public static String getBzentyUUID() {
     	return "BZ_" + UUID.randomUUID().toString();
     }
     public static String getMnlUUID() {
     	return "MN_" + UUID.randomUUID().toString();
+    }
+    public static String getFaqUUID() {
+    	return "QA_" + UUID.randomUUID().toString();
     }
 
     public static String getNameUUUID() {

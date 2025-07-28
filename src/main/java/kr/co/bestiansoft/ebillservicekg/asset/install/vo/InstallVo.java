@@ -18,7 +18,7 @@ public class InstallVo extends ComDefaultVO {
     private String instlPlcDtl3;
     private String rmrk;
     private String instlPicNm;
-    
+
     //설치장소 이미지
     private String imgId;
     //설치 위치명
@@ -26,6 +26,9 @@ public class InstallVo extends ComDefaultVO {
     private String instlPlcNm1;
     private String instlPlcNm2;
     private String instlPlcNm3;
+    
+    private String regNm1;
+    private String regNm2;
 
     public InstallVo(EquipDetailVo vo) {
         this.instlId = vo.getInstlId();

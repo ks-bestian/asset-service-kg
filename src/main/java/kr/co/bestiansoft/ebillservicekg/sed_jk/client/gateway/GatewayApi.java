@@ -1,9 +1,9 @@
 package kr.co.bestiansoft.ebillservicekg.sed_jk.client.gateway;
 
-import org.springframework.http.HttpMethod;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import org.springframework.http.HttpMethod;
 
 public enum GatewayApi {
     V1("/integra-gateway-docs/api/v1", HttpMethod.GET),

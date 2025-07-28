@@ -1,6 +1,7 @@
 package kr.co.bestiansoft.ebillservicekg.sed_jk.client.gateway.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Data;
 
 @Data

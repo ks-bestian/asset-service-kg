@@ -1,17 +1,25 @@
 package kr.co.bestiansoft.ebillservicekg.sed_jk.endpoint.organization;
 
-import kr.co.bestiansoft.ebillservicekg.sed_jk.client.gateway.GatewayApi;
-import kr.co.bestiansoft.ebillservicekg.sed_jk.client.gateway.GatewayClient;
-import kr.co.bestiansoft.ebillservicekg.sed_jk.client.gateway.dto.*;
-import kr.co.bestiansoft.ebillservicekg.sed_jk.endpoint.organization.dto.OrganizationAddDto;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.function.Consumer;
+import kr.co.bestiansoft.ebillservicekg.sed_jk.client.gateway.GatewayApi;
+import kr.co.bestiansoft.ebillservicekg.sed_jk.client.gateway.GatewayClient;
+import kr.co.bestiansoft.ebillservicekg.sed_jk.client.gateway.dto.GatewayAddOrganizationResponseDto;
+import kr.co.bestiansoft.ebillservicekg.sed_jk.client.gateway.dto.GatewayAllOrganizationsResponseDto;
+import kr.co.bestiansoft.ebillservicekg.sed_jk.client.gateway.dto.GatewayOrganizationResponseDto;
+import kr.co.bestiansoft.ebillservicekg.sed_jk.client.gateway.dto.GatewayOrganizationsDto;
+import kr.co.bestiansoft.ebillservicekg.sed_jk.client.gateway.dto.GatewaySearchOrganizationsResponseDto;
+import kr.co.bestiansoft.ebillservicekg.sed_jk.endpoint.organization.dto.OrganizationAddDto;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
@@ -80,8 +88,9 @@ public class OrganizationEndpointImpl implements OrganizationEndpoint {
         for (GatewayAllOrganizationsResponseDto.SedSystemsResponseDto.SedSystemResponseDto systemsResponseDtos:  apiResponse.getResult().getSystems()){
 
             for (GatewayOrganizationResponseDto organization: systemsResponseDtos.getOrganizations()){
-                if(organization.isEnabled())
-                    organizations.add(organization);
+                if(organization.isEnabled()) {
+					organizations.add(organization);
+				}
             }
         }
 

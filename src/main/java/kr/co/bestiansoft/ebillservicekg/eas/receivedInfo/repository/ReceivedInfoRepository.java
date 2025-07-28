@@ -1,10 +1,11 @@
 package kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.repository;
 
-import kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.vo.ReceivedInfoVo;
-import kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.vo.UpdateReceivedInfoVo;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
-import java.util.List;
+import kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.vo.ReceivedInfoVo;
+import kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.vo.UpdateReceivedInfoVo;
 
 @Mapper
 public interface ReceivedInfoRepository {

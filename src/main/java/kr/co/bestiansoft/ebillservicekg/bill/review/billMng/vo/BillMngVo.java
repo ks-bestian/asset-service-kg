@@ -155,11 +155,11 @@ public class BillMngVo extends ComDefaultVO {
     private String intExtCls;
 
     private String rvwDt;
-    
+
     private String opbYn;
-    
+
     private List<EbsFileUpload> fileUploads;
-    
+
     // 대통령거부번호
     private String prsdRjctNo;
 

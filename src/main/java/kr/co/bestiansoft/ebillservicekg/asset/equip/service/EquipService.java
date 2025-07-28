@@ -1,11 +1,11 @@
 package kr.co.bestiansoft.ebillservicekg.asset.equip.service;
 
+import java.util.HashMap;
+import java.util.List;
+
 import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipDetailVo;
 import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipRequest;
 import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipResponse;
-
-import java.util.HashMap;
-import java.util.List;
 
 public interface EquipService {
     int createEquip(EquipRequest equipRequest);

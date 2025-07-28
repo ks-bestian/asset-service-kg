@@ -1,13 +1,12 @@
 package kr.co.bestiansoft.ebillservicekg.config.web.interceptor;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import kr.co.bestiansoft.ebillservicekg.admin.acsHist.service.AcsHistService;
 import kr.co.bestiansoft.ebillservicekg.admin.acsHist.vo.AcsHistVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
@@ -34,7 +33,7 @@ public class LogInterceptor implements HandlerInterceptor {
         String reqMethod = request.getMethod();
         String reqServletPath = request.getServletPath();
         AcsHistVo ahVo = new AcsHistVo();
-        
+
         if(       !reqServletPath.contains("/api/accessHist")
                 &&!reqServletPath.contains("/api/save-route")
                 &&!reqServletPath.contains("/api/lngCode")
@@ -44,7 +43,7 @@ public class LogInterceptor implements HandlerInterceptor {
             if(!reqServletPath.contains("/login")) {
             	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             	if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            		userId = new SecurityInfoUtil().getAccountId();	
+            		userId = new SecurityInfoUtil().getAccountId();
             	}
             }
 
@@ -54,7 +53,7 @@ public class LogInterceptor implements HandlerInterceptor {
             ahVo.setReqMethod(reqMethod);
             ahVo.setAcsIp(accessIp);
             acsHistService.createAcsHist(ahVo);
-            
+
             if(reqURL.startsWith("/bill/") && !reqMethod.equals("GET")) {
             	acsHistService.createBillHist(ahVo);
             }

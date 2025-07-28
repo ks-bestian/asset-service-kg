@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 public class StatusVo extends ComDefaultVO {
-	
+
 	//calendar
 	//회의종류
 	private String mtngTypeCd;
@@ -15,8 +15,8 @@ public class StatusVo extends ComDefaultVO {
 	private String openDtm;
 	//회의장소
 	private String mtngPlc;
-	
-	
+
+
 	//monitoring
-	
+
 }

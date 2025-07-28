@@ -1,12 +1,8 @@
 package kr.co.bestiansoft.ebillservicekg.eas.draftData.vo;
 
-import kr.co.bestiansoft.ebillservicekg.formField.vo.FormFieldVo;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @NoArgsConstructor
 @Data

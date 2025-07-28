@@ -1,22 +1,22 @@
 package kr.co.bestiansoft.ebillservicekg.admin.dept.service.impl;
 
+import java.util.HashMap;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.fasterxml.jackson.databind.node.ArrayNode;
+
 import kr.co.bestiansoft.ebillservicekg.admin.ccof.repository.CcofMapper;
 import kr.co.bestiansoft.ebillservicekg.admin.dept.domain.DeptHierarchy;
 import kr.co.bestiansoft.ebillservicekg.admin.dept.repository.DeptMapper;
 import kr.co.bestiansoft.ebillservicekg.admin.dept.service.DeptService;
 import kr.co.bestiansoft.ebillservicekg.admin.dept.vo.DeptVo;
-import kr.co.bestiansoft.ebillservicekg.admin.user.repository.UserMapper;
 import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 @Slf4j
 @Transactional
@@ -157,8 +157,9 @@ public class DeptServiceImpl implements DeptService {
      */
     @Override
     public void deleteDept(List<String> deptCd) {
-        for (String cd : deptCd)
-            deptMapper.deleteDept(cd);
+        for (String cd : deptCd) {
+			deptMapper.deleteDept(cd);
+		}
     }
 
     /**

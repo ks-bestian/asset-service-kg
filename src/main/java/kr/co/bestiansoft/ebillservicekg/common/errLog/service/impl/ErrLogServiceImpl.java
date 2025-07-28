@@ -1,13 +1,12 @@
 package kr.co.bestiansoft.ebillservicekg.common.errLog.service.impl;
 
 
-import jakarta.servlet.http.HttpServletRequest;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import jakarta.servlet.http.HttpServletRequest;
 import kr.co.bestiansoft.ebillservicekg.common.errLog.repository.ErrLogMapper;
 import kr.co.bestiansoft.ebillservicekg.common.errLog.service.ErrLogService;
 import kr.co.bestiansoft.ebillservicekg.common.errLog.vo.ErrLogVo;
@@ -46,10 +45,10 @@ public class ErrLogServiceImpl implements ErrLogService {
         String reqURL = request.getRequestURI();
         String reqMethod = request.getMethod();
         String reqServletPath = request.getServletPath();
-        
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userId = authentication == null ? null : new SecurityInfoUtil().getAccountId();
-        
+
     	ErrLogVo errLogVo = new ErrLogVo();
     	errLogVo.setAcsIp(accessIp);
     	errLogVo.setRqtUrl(reqURL);
@@ -57,7 +56,7 @@ public class ErrLogServiceImpl implements ErrLogService {
     	errLogVo.setErrCd(errCd);
     	errLogVo.setErrMsg(errMsg);
     	errLogVo.setRegId(userId);
-    	
+
     	this.insertErrLog(errLogVo);
     }
 

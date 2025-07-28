@@ -2,7 +2,6 @@ package kr.co.bestiansoft.ebillservicekg.bill.review.billMng.service;
 import java.util.HashMap;
 import java.util.List;
 
-import kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngResponse;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.ProposerVo;
@@ -75,10 +74,10 @@ public interface BillMngService {
 	EbsFileVo updateEbsFileDelYn(EbsFileVo ebsFileVo);
 
 	BillMngVo insertBillDetailFile(BillMngVo billMngVo) throws Exception;
-	
+
 	void deleteBillDetail(BillMngVo billMngVo);
-	
+
 	BillMngVo insertBillPrmg(BillMngVo billMngVo) throws Exception;
-	
+
 	BillMngVo presidentReject(BillMngVo billMngVo) throws Exception;
 }

@@ -1,11 +1,10 @@
 package kr.co.bestiansoft.ebillservicekg.eas.draftDocument.vo;
 
-import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
+import java.time.LocalDateTime;
+
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 
 @NoArgsConstructor

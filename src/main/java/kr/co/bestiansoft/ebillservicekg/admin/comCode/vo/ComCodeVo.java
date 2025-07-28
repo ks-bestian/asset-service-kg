@@ -3,8 +3,6 @@ package kr.co.bestiansoft.ebillservicekg.admin.comCode.vo;
 import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 @Data
 public class ComCodeVo extends ComDefaultVO{
     private Integer grpCode;

@@ -1,11 +1,10 @@
 package kr.co.bestiansoft.ebillservicekg.admin.authMenu.vo;
 
-import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
-import lombok.Data;
-
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
+import lombok.Data;
 
 @Data
 public class AuthMenuVo extends ComDefaultVO {

@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.vo.MtngAllVo;
-import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.vo.MtngFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
@@ -138,11 +137,11 @@ public class BillAllVo extends ComDefaultVO {
     private String pdfFileId;
     private String pdfFileNm;
     private String detailSeq;
-    
+
     private Long cnt;
     private String polyCd;
     private String polyNm;
-    
+
     // 대통령거부번호
     private String prsdRjctNo;
 }

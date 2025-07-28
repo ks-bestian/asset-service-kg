@@ -3,8 +3,6 @@ package kr.co.bestiansoft.ebillservicekg.admin.baseCode.vo;
 import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 @Data
 public class BaseCodeVo extends ComDefaultVO {
     private Long seq;

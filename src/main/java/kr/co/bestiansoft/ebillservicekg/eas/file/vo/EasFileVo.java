@@ -1,12 +1,12 @@
 package kr.co.bestiansoft.ebillservicekg.eas.file.vo;
 
-import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
+import java.time.LocalDateTime;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Data

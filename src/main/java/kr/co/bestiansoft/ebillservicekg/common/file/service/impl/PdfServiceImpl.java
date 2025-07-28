@@ -14,9 +14,6 @@ import org.springframework.stereotype.Service;
 import com.aspose.cells.Workbook;
 import com.aspose.slides.Presentation;
 import com.aspose.words.Document;
-import com.aspose.words.PdfFontEmbeddingMode;
-import com.aspose.words.PdfImageCompression;
-import com.aspose.words.PdfSaveOptions;
 import com.aspose.words.SaveFormat;
 
 import kr.co.bestiansoft.ebillservicekg.common.file.service.PdfService;
@@ -125,7 +122,7 @@ public class PdfServiceImpl implements PdfService {
             }
 //            document.setAllSecurityToBeRemoved(true);
             document.save(outputPath);
-        } 
+        }
 	}
 
 

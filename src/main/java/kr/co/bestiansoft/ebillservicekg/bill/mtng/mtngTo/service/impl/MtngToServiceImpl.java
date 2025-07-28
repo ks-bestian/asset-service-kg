@@ -1,31 +1,25 @@
 package kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.service.impl;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.aspose.slides.internal.ax.av;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.repository.MtngToMapper;
-import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.service.MtngToService;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.repository.MtngAllMapper;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.repository.MtngFromMapper;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.AgendaVo;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MemberVo;
+import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.repository.MtngToMapper;
+import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.service.MtngToService;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.vo.MtngFileVo;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.vo.MtngToVo;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
-import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.process.service.ProcessService;
 import kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo;
@@ -152,10 +146,10 @@ public class MtngToServiceImpl implements MtngToService {
 //				ProcessVo pVo = new ProcessVo();
 //				pVo.setBillId(aVo.getBillId());
 //				pVo.setStepId("1900");//Legal behavior management
-//				processService.handleProcess(pVo);	
+//				processService.handleProcess(pVo);
 //			}
 //		}
-		
+
 		return mtngToVo;
 	}
 
@@ -193,11 +187,11 @@ public class MtngToServiceImpl implements MtngToService {
 //    		BillMngVo vo = new BillMngVo();
 //    		vo.setBillId(agenda.getBillId());
 //    		BillMngVo bill = billMngMapper.selectOneBill(vo);
-    		
+
     		HashMap<String, Object> param = new HashMap<>();
     		param.put("billId", agenda.getBillId());
     		BillMngVo bill = billMngMapper.selectBill(param);
-    		
+
     		if(!"1700".equals(bill.getCurrentStepId()) && !"1800".equals(bill.getCurrentStepId())) {
     			continue;
     		}

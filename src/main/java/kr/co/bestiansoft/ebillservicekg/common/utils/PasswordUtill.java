@@ -26,7 +26,9 @@ public class PasswordUtill {
         Collections.shuffle(chars, random);
 
         StringBuilder sb = new StringBuilder();
-        for (char c : chars) sb.append(c);
+        for (char c : chars) {
+			sb.append(c);
+		}
         return sb.toString();
     }
 }

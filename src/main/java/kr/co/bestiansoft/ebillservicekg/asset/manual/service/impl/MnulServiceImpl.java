@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import kr.co.bestiansoft.ebillservicekg.asset.manual.repository.MnulMapper;
 import kr.co.bestiansoft.ebillservicekg.asset.manual.service.MnulService;
 import kr.co.bestiansoft.ebillservicekg.asset.manual.vo.MnulVo;
+import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
 import lombok.RequiredArgsConstructor;
 
@@ -23,8 +24,8 @@ public class MnulServiceImpl implements MnulService {
             mnulVo.setMnlId(StringUtil.getMnlUUID());
             mnulVo.setEqpmntId(eqpmntId);
             mnulVo.setSeq(i);
-            mnulVo.setMnlLng("uz"); //todo 수정
-//            mnulVo.setRgtrId(new SecurityInfoUtil().getAccountId());
+            mnulVo.setMnlLng("uz"); //TODO 수정
+            mnulVo.setRgtrId(new SecurityInfoUtil().getAccountId());
             i++;
         }
 

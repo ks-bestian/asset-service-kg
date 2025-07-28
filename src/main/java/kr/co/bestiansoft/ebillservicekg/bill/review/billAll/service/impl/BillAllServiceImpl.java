@@ -67,7 +67,7 @@ public class BillAllServiceImpl implements BillAllService {
     	/* Proposer String */
     	if(proposerList != null) {
     		String proposerItem = proposerList.stream().map(AgreeVo::getMemberNm).collect(Collectors.joining(", "));
-        	billBasicInfo.setProposerItems(proposerItem);	
+        	billBasicInfo.setProposerItems(proposerItem);
     	}
 
 //    	/* Bill doc list*/
@@ -75,10 +75,10 @@ public class BillAllServiceImpl implements BillAllService {
 //
 //    	/* Bill Etc doc list*/
 //    	List<EbsFileVo> etcFileList = billAllMapper.selectListBillEtcFile(param);
-    	
+
     	//file List
 		List<EbsFileVo> fileList = applyMapper.selectBillFileList(param);
-		
+
 		//List of proposed documents
 		List<EbsFileVo> applyFileList = applyMapper.selectApplyFileList(param);
 
@@ -87,7 +87,7 @@ public class BillAllServiceImpl implements BillAllService {
 
     	for(BillAllVo cmtVo: cmtList) {
 
-    		List<EbsFileVo> cmtReviewFileList = new ArrayList<EbsFileVo>();
+    		List<EbsFileVo> cmtReviewFileList = new ArrayList<>();
     		for(EbsFileVo fileVo:fileList) {
 
     			if(    cmtVo.getCmtCd().equals(fileVo.getDeptCd())
@@ -125,7 +125,7 @@ public class BillAllServiceImpl implements BillAllService {
     	List<BillAllVo> etcInfoList = billAllMapper.selectListBillEtcInfo(param);
 
     	BillAllVo billlegalReviewVo = new BillAllVo();//bill legal review department
-    	List<BillAllVo> billLangReviewVoList = new ArrayList<BillAllVo>();//bill Language review department
+    	List<BillAllVo> billLangReviewVoList = new ArrayList<>();//bill Language review department
 
     	for(BillAllVo listVo : etcInfoList) {
 

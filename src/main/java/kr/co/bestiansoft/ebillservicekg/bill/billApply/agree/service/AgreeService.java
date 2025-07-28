@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.vo.AgreeResponse;
-import kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.vo.AgreeVo;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo;
 
 public interface AgreeService {

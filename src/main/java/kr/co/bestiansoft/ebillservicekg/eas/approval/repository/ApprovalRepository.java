@@ -1,12 +1,11 @@
 package kr.co.bestiansoft.ebillservicekg.eas.approval.repository;
 
-import kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalLIstDto;
-import kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalVo;
-import kr.co.bestiansoft.ebillservicekg.eas.approval.vo.UpdateApprovalVo;
-import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.SearchDocumentVo;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
-import java.util.List;
+import kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalVo;
+import kr.co.bestiansoft.ebillservicekg.eas.approval.vo.UpdateApprovalVo;
 
 @Mapper
 public interface ApprovalRepository {

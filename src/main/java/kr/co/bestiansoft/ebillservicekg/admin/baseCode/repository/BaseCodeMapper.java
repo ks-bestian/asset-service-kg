@@ -1,10 +1,11 @@
 package kr.co.bestiansoft.ebillservicekg.admin.baseCode.repository;
 
-import kr.co.bestiansoft.ebillservicekg.admin.baseCode.vo.BaseCodeVo;
-import org.apache.ibatis.annotations.Mapper;
-
 import java.util.HashMap;
 import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import kr.co.bestiansoft.ebillservicekg.admin.baseCode.vo.BaseCodeVo;
 
 @Mapper
 public interface BaseCodeMapper {

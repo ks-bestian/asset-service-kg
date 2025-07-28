@@ -3,7 +3,6 @@ package kr.co.bestiansoft.ebillservicekg.admin.bbs.service.impl;
 import java.util.HashMap;
 import java.util.List;
 
-import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,6 +10,7 @@ import kr.co.bestiansoft.ebillservicekg.admin.bbs.repository.BoardMapper;
 import kr.co.bestiansoft.ebillservicekg.admin.bbs.service.BoardService;
 import kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
+import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -118,7 +118,7 @@ public class BoardServiceImpl implements BoardService {
             String fileGroupId = comFileService.saveFileList(boardVo.getFiles());
             boardVo.setFileGroupId(fileGroupId);
         }
-    	
+
     	boardVo.setBrdType(brdType);
 
         boardVo.setRegId(new SecurityInfoUtil().getAccountId());

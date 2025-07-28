@@ -1,16 +1,16 @@
 package kr.co.bestiansoft.ebillservicekg.sed_jk.client.gateway.dto.document.response;
 
+import java.util.List;
+import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import kr.co.bestiansoft.ebillservicekg.sed_jk.client.gateway.dto.GatewaySystem;
 import kr.co.bestiansoft.ebillservicekg.sed_jk.client.gateway.dto.document.Attachment;
 import kr.co.bestiansoft.ebillservicekg.sed_jk.client.gateway.dto.document.DocStatus;
 import kr.co.bestiansoft.ebillservicekg.sed_jk.client.gateway.dto.document.DocType;
-import kr.co.bestiansoft.ebillservicekg.sed_jk.endpoint.organization.dto.OrganizationAddDto;
 import kr.co.bestiansoft.ebillservicekg.sed_jk.services.document.dto.OrganizationDto;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-
-import java.util.List;
-import java.util.UUID;
 
 @Data
 public class DocumentContent {

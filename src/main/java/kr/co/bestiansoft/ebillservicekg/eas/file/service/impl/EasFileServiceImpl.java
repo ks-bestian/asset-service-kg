@@ -1,5 +1,17 @@
 package kr.co.bestiansoft.ebillservicekg.eas.file.service.impl;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import kr.co.bestiansoft.ebillservicekg.common.file.service.PdfService;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.impl.EDVHelper;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
@@ -11,18 +23,6 @@ import kr.co.bestiansoft.ebillservicekg.eas.file.vo.SaveFileDto;
 import kr.co.bestiansoft.ebillservicekg.eas.file.vo.UpdatePdfFileDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
 
 
 @RequiredArgsConstructor
@@ -96,17 +96,18 @@ public class EasFileServiceImpl implements EasFileService {
      * 이 메서드는 저장 작업을 리포지토리의 insertEasFile 메서드에 위임합니다.
      *
      * @param vo the EasFileVo object containing the file's metadata and other associated details
-     * @return an integer representing the result of the database insert operation; typically, 
+     * @return an integer representing the result of the database insert operation; typically,
      *         the number of rows affected
      */
-    public int saveEasFile(EasFileVo vo){
+    @Override
+	public int saveEasFile(EasFileVo vo){
         return easFileRepository.insertEasFile(vo);
     }
 
     /**
-     * Updates the PDF information for a specified file. This method retrieves 
-     * the file from the repository using the provided file ID, updates its 
-     * PDF file ID and name with the information from the DTO, and saves the 
+     * Updates the PDF information for a specified file. This method retrieves
+     * the file from the repository using the provided file ID, updates its
+     * PDF file ID and name with the information from the DTO, and saves the
      * changes back to the repository.
      *
      * 지정된 파일의 PDF 정보를 업데이트합니다. 이 메서드는 제공된 파일 ID를 사용하여
@@ -114,7 +115,7 @@ public class EasFileServiceImpl implements EasFileService {
      * 변경 사항을 저장소에 다시 저장합니다.
      *
      * @param fileId the ID of the file whose PDF information is to be updated
-     * @param dto an UpdatePdfFileDto containing the new PDF file ID and name 
+     * @param dto an UpdatePdfFileDto containing the new PDF file ID and name
      *            to be associated with the file
      */
     public void updatePdfInfo(String fileId, UpdatePdfFileDto dto){
@@ -138,7 +139,7 @@ public class EasFileServiceImpl implements EasFileService {
      * 저장소에 쿼리하여 문서에 연결된 파일 메타데이터를 가져옵니다.
      *
      * @param docId the ID of the document for which to retrieve attached files
-     * @return a list of EasFileVo objects representing the attached files; 
+     * @return a list of EasFileVo objects representing the attached files;
      *         an empty list if no files are attached to the specified document
      */
     @Override
@@ -158,7 +159,7 @@ public class EasFileServiceImpl implements EasFileService {
 
     /**
      * Saves the provided file and generates metadata related to the saved file.
-     * The file is stored using a unique file ID, and its metadata includes 
+     * The file is stored using a unique file ID, and its metadata includes
      * the original filename, file size, and file extension.
      *
      * 제공된 파일을 저장하고 저장된 파일과 관련된 메타데이터를 생성합니다.
@@ -170,7 +171,8 @@ public class EasFileServiceImpl implements EasFileService {
      *         filename, file size, and file extension
      * @throws RuntimeException if an error occurs while saving the file
      */
-    public SaveFileDto saveFile(MultipartFile file){
+    @Override
+	public SaveFileDto saveFile(MultipartFile file){
         SaveFileDto result = new SaveFileDto();
         String fileId = StringUtil.getUUUID();
 
@@ -199,7 +201,8 @@ public class EasFileServiceImpl implements EasFileService {
      * @return a unique identifier for the saved file
      * @throws RuntimeException if an error occurs during the file saving process
      */
-    public String saveFile(File file){
+    @Override
+	public String saveFile(File file){
         String fileId = StringUtil.getUUUID();
         try (InputStream edvIs = new FileInputStream(file)){
             edv.save(fileId, edvIs);
@@ -217,7 +220,8 @@ public class EasFileServiceImpl implements EasFileService {
      * @param fileName the name of the file to be associated with the stored PDF
      * @return a CompletableFuture containing an UpdatePdfFileDto object with details about the saved PDF file
      */
-    public CompletableFuture<UpdatePdfFileDto> savePdfFile(byte[] fileBytes, String fileName) {
+    @Override
+	public CompletableFuture<UpdatePdfFileDto> savePdfFile(byte[] fileBytes, String fileName) {
 
         return CompletableFuture.supplyAsync(() -> {
 
@@ -263,7 +267,8 @@ public class EasFileServiceImpl implements EasFileService {
      * @return A CompletableFuture containing an UpdatePdfFileDto with details of the saved PDF file.
      * @throws RuntimeException If the PDF conversion fails or the file cannot be saved.
      */
-    public CompletableFuture<UpdatePdfFileDto> savePdfFile(File file) {
+    @Override
+	public CompletableFuture<UpdatePdfFileDto> savePdfFile(File file) {
 
         return CompletableFuture.supplyAsync(() -> {
             String fileId = StringUtil.getUUUID();
@@ -309,9 +314,9 @@ public class EasFileServiceImpl implements EasFileService {
      *
      * 주어진 파일 확장자가 PDF 파일인지 확인합니다.
      *
-     * @param fileExt the file extension to check; expected to be a string, 
+     * @param fileExt the file extension to check; expected to be a string,
      *                such as "pdf" or "PDF"
-     * @return true if the file extension matches "pdf" (case-insensitive), 
+     * @return true if the file extension matches "pdf" (case-insensitive),
      *         false otherwise
      */
     public boolean isPdfFile(String fileExt){
@@ -319,13 +324,13 @@ public class EasFileServiceImpl implements EasFileService {
     }
 
     /**
-     * Creates a new instance of EasFileVo by copying selected properties 
+     * Creates a new instance of EasFileVo by copying selected properties
      * from the provided easFileVo object.
      *
-     * 제공된 easFileVo 객체에서 선택된 속성을 복사하여 EasFileVo의 
+     * 제공된 easFileVo 객체에서 선택된 속성을 복사하여 EasFileVo의
      * 새 인스턴스를 생성합니다.
      *
-     * @param easFileVo the source EasFileVo instance from which properties 
+     * @param easFileVo the source EasFileVo instance from which properties
      *                  will be copied
      * @return a new EasFileVo instance with values derived from the input object
      */

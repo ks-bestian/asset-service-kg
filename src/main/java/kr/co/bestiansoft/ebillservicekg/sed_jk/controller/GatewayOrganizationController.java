@@ -1,14 +1,21 @@
 package kr.co.bestiansoft.ebillservicekg.sed_jk.controller;
 
+import java.util.List;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import kr.co.bestiansoft.ebillservicekg.sed_jk.client.gateway.dto.GatewayAllOrganizationsResponseDto;
 import kr.co.bestiansoft.ebillservicekg.sed_jk.client.gateway.dto.GatewayOrganizationResponseDto;
 import kr.co.bestiansoft.ebillservicekg.sed_jk.endpoint.organization.OrganizationEndpoint;
 import kr.co.bestiansoft.ebillservicekg.sed_jk.endpoint.organization.dto.OrganizationAddDto;
 //import kr.co.bestiansoft.ebillservicekg.sed_jk.enums.Paths;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor

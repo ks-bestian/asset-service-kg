@@ -2,7 +2,6 @@ package kr.co.bestiansoft.ebillservicekg.admin.bbs.vo;
 
 import java.util.List;
 
-import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
 
 @Data

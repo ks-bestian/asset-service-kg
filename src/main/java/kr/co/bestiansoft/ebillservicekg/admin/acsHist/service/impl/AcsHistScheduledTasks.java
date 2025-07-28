@@ -10,7 +10,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import kr.co.bestiansoft.ebillservicekg.admin.acsHist.repository.AcsHistMapper;
-import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
 import lombok.RequiredArgsConstructor;
 
 @Component

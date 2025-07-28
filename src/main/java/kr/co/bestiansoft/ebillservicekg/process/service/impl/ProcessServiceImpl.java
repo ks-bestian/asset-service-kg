@@ -1,12 +1,12 @@
 package kr.co.bestiansoft.ebillservicekg.process.service.impl;
 
-import java.util.Comparator;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.ProposerVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper;
 import kr.co.bestiansoft.ebillservicekg.process.service.ProcessService;
@@ -15,8 +15,6 @@ import kr.co.bestiansoft.ebillservicekg.process.vo.CmttVo;
 import kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Slf4j
 @Transactional
@@ -92,7 +90,9 @@ public class ProcessServiceImpl implements ProcessService {
 		String stepId = argVo.getStepId();
 		//String nextStepId = argVo.getNextStepId();
 
-		if(stepId == null || "".equals(stepId)) return;
+		if(stepId == null || "".equals(stepId)) {
+			return;
+		}
 
 		switch (stepId) {
 	        case "0":
@@ -105,7 +105,7 @@ public class ProcessServiceImpl implements ProcessService {
 	        case "1100":
 	        	executeService_1100(argVo);
 	            break;
-	            
+
 	        case "1150":
 	        	executeService_1150(argVo);
 	            break;
@@ -197,7 +197,7 @@ public class ProcessServiceImpl implements ProcessService {
 	        case "3300":
 	        	executeService_3300(argVo);
 	            break;
-	            
+
 	        case "3400":
 	        	executeService_3400(argVo);
 	            break;
@@ -234,7 +234,7 @@ public class ProcessServiceImpl implements ProcessService {
 
 		/*안건접수관리*/
 		void executeService_1000(ProcessVo argVo) {
-			
+
 			String currentStepId = processMapper.selectCurrentStepId(argVo.getBillId());
 			if(!"0".equals(currentStepId)) {
 				throw new IllegalArgumentException();
@@ -258,7 +258,7 @@ public class ProcessServiceImpl implements ProcessService {
 			if("1100".equals(currentStepId)) {
 				throw new IllegalArgumentException();
 			}
-			
+
 //			String userId = new SecurityInfoUtil().getAccountId();
 //			List<ProposerVo> properList = processMapper.selectListProposerId(argVo);
 //
@@ -278,25 +278,25 @@ public class ProcessServiceImpl implements ProcessService {
 //				processMapper.insertBpTask(taskVo);
 //			}
 		}
-		
+
 		/*안건철회접수관리*/
 		void executeService_1150(ProcessVo argVo) {
-			
+
 			String currentStepId = processMapper.selectCurrentStepId(argVo.getBillId());
 			if(!"1100".equals(currentStepId)) {
 				throw new IllegalArgumentException();
 			}
 
 			String userId = new SecurityInfoUtil().getAccountId();
-			
+
 			ProcessVo vo = new ProcessVo();
 			vo.setBillId(argVo.getBillId());
 			vo.setStepId("1100"); //안건철회관리
 			vo.setMdfrId(userId);
 			vo.setTaskStatus("C");
 			processMapper.updateStepTasks(vo);
-			
-			
+
+
 			ProcessVo taskVo = new ProcessVo();
 			taskVo.setBillId(argVo.getBillId());
 			taskVo.setStepId(argVo.getStepId());
@@ -318,7 +318,7 @@ public class ProcessServiceImpl implements ProcessService {
 			if("1200".equals(currentStepId)) {
 				throw new IllegalArgumentException();
 			}
-			
+
 			ProcessVo taskVo = new ProcessVo();
 			taskVo.setBillId(argVo.getBillId());
 			taskVo.setStepId(argVo.getStepId());
@@ -337,7 +337,7 @@ public class ProcessServiceImpl implements ProcessService {
 			if(!"1200".equals(currentStepId)) {
 				throw new IllegalArgumentException();
 			}
-			
+
 			ProcessVo taskVo = new ProcessVo();
 			taskVo.setBillId(argVo.getBillId());
 			taskVo.setStepId(argVo.getStepId());
@@ -356,7 +356,7 @@ public class ProcessServiceImpl implements ProcessService {
 			if(!"1300".equals(currentStepId) && !"1900".equals(currentStepId)) {
 				throw new IllegalArgumentException();
 			}
-			
+
 //			언어전문파트 의견서등록
 //			심사부서 의견서등록
 //			회의예정화면에서 회의안건으로 선택하여	회의를 저장한다.
@@ -374,7 +374,7 @@ public class ProcessServiceImpl implements ProcessService {
 				taskVo.setTaskNm("심사부서의견서등록");
 				taskVo.setStatus("P");
 				taskVo.setAssignedTo(AuthConstants.AUTH_LGEXNTN);//심사부서 할당
-				processMapper.insertBpTask(taskVo);	
+				processMapper.insertBpTask(taskVo);
 			}
 		}
 
@@ -423,7 +423,7 @@ public class ProcessServiceImpl implements ProcessService {
 			if(!"1400".equals(currentStepId) && !"1500".equals(currentStepId) && !"1600".equals(currentStepId)) {
 				throw new IllegalArgumentException();
 			}
-//			
+//
 //			//CmttVo cmttVo = processMapper.selectOneCmtt(argVo);
 //
 //			ProcessVo taskVo = new ProcessVo();
@@ -462,7 +462,7 @@ public class ProcessServiceImpl implements ProcessService {
 			if(!"1700".equals(currentStepId) && !"1800".equals(currentStepId)) {
 				throw new IllegalArgumentException();
 			}
-			
+
 //			"1차 법적행위 검토 보고서등록
 //			번역언어심사
 //			법률검토
@@ -572,7 +572,7 @@ public class ProcessServiceImpl implements ProcessService {
 			if(!"1900".equals(currentStepId)) {
 				throw new IllegalArgumentException();
 			}
-			
+
 			ProcessVo taskVo = new ProcessVo();
 			taskVo.setBillId(argVo.getBillId());
 			taskVo.setStepId(argVo.getStepId());
@@ -597,7 +597,7 @@ public class ProcessServiceImpl implements ProcessService {
 			processMapper.insertBpTask(taskVo);
 
 		}
-		
+
 		/*대통령거부*/
 		void executeService_3400(ProcessVo argVo) {
 
@@ -656,19 +656,19 @@ public class ProcessServiceImpl implements ProcessService {
 	@Transactional
 		@Override
 		public void undoProcess(String billId, String stepId) {
-			
+
 			String currentStepId = processMapper.selectCurrentStepId(billId);
 			if(!stepId.equals(currentStepId)) {
 				throw new IllegalArgumentException();
 			}
-			
+
 			ProcessVo vo = new ProcessVo();
 			vo.setBillId(billId);
 			List<ProcessVo> taskList = processMapper.selectBpStepTasks(vo);
 			if(taskList == null || taskList.isEmpty()) {
 				throw new IllegalArgumentException();
 			}
-			
+
 			if("1100".equals(stepId) || "1150".equals(stepId)) { //안건철회관리
 				String lastStepId = null;
 				for(int i = taskList.size() - 1; i >= 0; --i) {
@@ -695,5 +695,5 @@ public class ProcessServiceImpl implements ProcessService {
 			}
 
 		}
-		
+
 }

@@ -1,10 +1,11 @@
 package kr.co.bestiansoft.ebillservicekg.eas.linkDocument.repository;
 
-import kr.co.bestiansoft.ebillservicekg.eas.linkDocument.vo.LinkDocumentListDto;
-import kr.co.bestiansoft.ebillservicekg.eas.linkDocument.vo.LinkDocumentVo;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
-import java.util.List;
+import kr.co.bestiansoft.ebillservicekg.eas.linkDocument.vo.LinkDocumentListDto;
+import kr.co.bestiansoft.ebillservicekg.eas.linkDocument.vo.LinkDocumentVo;
 
 @Mapper
 public interface LinkDocumentRepository {

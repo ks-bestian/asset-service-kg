@@ -1,5 +1,18 @@
 package kr.co.bestiansoft.ebillservicekg.sed_jk.services.document;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
+
+//import org.hibernate.Hibernate;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import kr.co.bestiansoft.ebillservicekg.common.file.service.impl.EDVHelper;
 import kr.co.bestiansoft.ebillservicekg.eas.file.vo.EasFileVo;
 import kr.co.bestiansoft.ebillservicekg.sed_jk.client.gateway.GatewayClient;
@@ -19,18 +32,6 @@ import kr.co.bestiansoft.ebillservicekg.sed_jk.client.gateway.dto.document.respo
 import kr.co.bestiansoft.ebillservicekg.sed_jk.services.document.dto.GatewaySendResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-//import org.hibernate.Hibernate;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
 
 @Slf4j
 @Service
@@ -89,7 +90,7 @@ public class DocumentDeliveryServiceImpl implements DocumentDeliveryService {
             String documentDescription = "document-send-test-8";
             String documentCreatorName = "Казакбаев Азим Нургалиевич";
             String documentSignerName = "Казакбаев Азим Нургалиевич";
-            
+
             AttachmentFileDto officialFile = getOfficialFileDto(null, documentSignature);
 
             List<AttachmentFileDto> attachmentFiles = new ArrayList<>();
@@ -127,7 +128,7 @@ public class DocumentDeliveryServiceImpl implements DocumentDeliveryService {
                         );
 //
                 AddDocumentResponse gatewayResponse = gatewayClient.sendDocumentToGateway(requestBody);
-                
+
                 System.out.println("requestBody=========================================");
                 System.out.println(requestBody);
                 System.out.println("gatewayResponse=====================================");
@@ -157,13 +158,13 @@ public class DocumentDeliveryServiceImpl implements DocumentDeliveryService {
             return new GatewaySendResponseDto(false, "Failed to send document: " + e.getMessage());
         }
     }
-    
+
     private byte[] toByteArray(InputStream inputStream) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         inputStream.transferTo(outputStream);
         return outputStream.toByteArray();
     }
-    
+
     private AttachmentFileDto getAttachmentDto(EasFileVo easFileVo) throws Exception {
 //        byte[] content = storageFileService.loadFileContent(storageFile);
         InputStream is = edv.download(easFileVo.getFileId());

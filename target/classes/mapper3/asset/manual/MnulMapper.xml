@@ -54,6 +54,8 @@
             , file_extn
             , file_sz
             , mnl_lng
+            , reg_dt
+            , rgtr_id
         )
         <foreach collection="mnulVoList" item="vo" open="VALUES" separator="," >
             (
@@ -67,6 +69,8 @@
             , #{vo.fileExtn}
             , #{vo.fileSz}
             , #{vo.mnlLng}
+            , now()
+            , #{vo.rgtrId}
             )
         </foreach>
 

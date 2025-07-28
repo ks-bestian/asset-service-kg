@@ -15,11 +15,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.vo.MtngFromVo;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.service.MtngToService;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngTo.vo.MtngToVo;
@@ -78,12 +77,12 @@ public class MtngToController {
     public ResponseEntity<CommonResponse> updateMtngFileDel(@RequestBody HashMap<String, Object> param) {
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "mtng report delete successfully", mtngToService.updateMtngFileDel(param)), HttpStatus.OK);
     }
-    
+
     @Operation(summary = "Send meeting agenda to the Legal Department.", description = "Send meeting agenda to the Legal Department.")
     @PutMapping("/bill/mtng/to/send")
     public ResponseEntity<CommonResponse> sendLegalActMtngAgenda(@RequestBody MtngFromVo mtngFromVo){
     	mtngToService.sendLegalActMtngAgenda(mtngFromVo.getAgendaList());
         return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "OK", "submission successful"), HttpStatus.OK);
     }
-    
+
 }

@@ -15,13 +15,13 @@ public class DataSourceConfig {
     public DataSource kgstDataSource() {
         return DataSourceBuilder.create().build();
     }
-	
+
     @Bean
     @ConfigurationProperties(prefix = "spring.datasource.homepage")
     public DataSource homepageDataSource() {
         return DataSourceBuilder.create().build();
     }
-    
+
     @Bean
     @ConfigurationProperties(prefix = "spring.datasource.asset")
     public DataSource assetDataSource() {

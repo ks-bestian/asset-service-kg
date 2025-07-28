@@ -24,7 +24,7 @@ public interface BillMngMapper {
 
 	void updateBillno(BillMngVo billMngVo);
 	List<BillMngVo> selectListBillEtcInfo(HashMap<String, Object> param);
-	
+
 	List<MtngAllVo> selectListCmtMeetingList(HashMap<String, Object> param);
 
 	//List<BillMngVo> selectListlegalReview(HashMap<String, Object> param);
@@ -65,6 +65,6 @@ public interface BillMngMapper {
 	void updateEbsFileDelYn(EbsFileVo ebsFileVo);
 
 	void deleteBillDetail(BillMngVo billMngVo);
-	
-	void updateBillMaster(BillMngVo billMngVo);	
+
+	void updateBillMaster(BillMngVo billMngVo);
 }

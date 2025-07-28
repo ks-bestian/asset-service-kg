@@ -1,12 +1,13 @@
 package kr.co.bestiansoft.ebillservicekg.myPage.message.repository;
 
+import java.util.HashMap;
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
 import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo;
 import kr.co.bestiansoft.ebillservicekg.myPage.message.vo.MsgRequest;
 import kr.co.bestiansoft.ebillservicekg.myPage.message.vo.MsgVo;
-import org.apache.ibatis.annotations.Mapper;
-
-import java.util.HashMap;
-import java.util.List;
 
 @Mapper
 public interface MsgMapper {

@@ -1,9 +1,8 @@
 package kr.co.bestiansoft.ebillservicekg.asset.manual.service;
 
-import kr.co.bestiansoft.ebillservicekg.asset.manual.vo.MnulVo;
-
-import java.util.HashMap;
 import java.util.List;
+
+import kr.co.bestiansoft.ebillservicekg.asset.manual.vo.MnulVo;
 
 public interface MnulService {
     int createMnul(List<MnulVo> mnulVo, String eqpmntId);

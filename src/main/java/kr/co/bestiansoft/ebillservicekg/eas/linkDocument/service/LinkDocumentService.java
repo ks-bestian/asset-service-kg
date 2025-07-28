@@ -1,9 +1,9 @@
 package kr.co.bestiansoft.ebillservicekg.eas.linkDocument.service;
 
+import java.util.List;
+
 import kr.co.bestiansoft.ebillservicekg.eas.linkDocument.vo.LinkDocumentListDto;
 import kr.co.bestiansoft.ebillservicekg.eas.linkDocument.vo.LinkDocumentVo;
-
-import java.util.List;
 
 public interface LinkDocumentService {
     int insertLinkDocument(LinkDocumentVo vo);

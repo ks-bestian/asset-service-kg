@@ -1,7 +1,8 @@
 package kr.co.bestiansoft.ebillservicekg.sed_jk.client.cds;
 
-import lombok.Getter;
 import org.springframework.http.HttpMethod;
+
+import lombok.Getter;
 
 @Getter
 public enum CdsApi {

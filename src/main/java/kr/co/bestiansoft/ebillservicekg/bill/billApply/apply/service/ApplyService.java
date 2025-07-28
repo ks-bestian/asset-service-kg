@@ -11,7 +11,7 @@ import kr.co.bestiansoft.ebillservicekg.test.vo.CommentsVo;
 public interface ApplyService {
 
 	ApplyVo createApply(ApplyVo applyVo) throws Exception;
-	
+
 	ApplyVo createApplyRegister(ApplyVo applyVo) throws Exception;
 
 	List<ApplyVo> getApplyList(HashMap<String, Object> param);
@@ -31,7 +31,7 @@ public interface ApplyService {
 	ApplyVo saveBillAccept(String billId, ApplyVo applyVo);
 
 	int deleteBillFile(EbsFileVo ebsFileVo);
-	
+
 	int updateFileOpbYn(EbsFileVo ebsFileVo);
 
 	List<ApplyVo> selectBillAll(HashMap<String, Object> param);

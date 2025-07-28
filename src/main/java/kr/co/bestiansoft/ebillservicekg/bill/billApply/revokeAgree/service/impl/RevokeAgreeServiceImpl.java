@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Service
 public class RevokeAgreeServiceImpl implements RevokeAgreeService {
-	
+
 	private final RevokeAgreeMapper revokeAgreeMapper;
 	private final ApplyMapper applyMapper;
 
@@ -39,7 +39,7 @@ public class RevokeAgreeServiceImpl implements RevokeAgreeService {
 		param.put("loginId", userId);
 		return applyMapper.selectListBillRevokeAgree(param);
 	}
-	
+
 //	@Override
 //	public List<RevokeAgreeVo> getRevokeAgreeList(HashMap<String, Object> param) {
 //		String userId = new SecurityInfoUtil().getAccountId();
@@ -59,18 +59,18 @@ public class RevokeAgreeServiceImpl implements RevokeAgreeService {
 	public RevokeAgreeResponse getRevokeDetail(String billId, HashMap<String, Object> param) {
 		RevokeAgreeResponse result = new RevokeAgreeResponse();
 		String userId = new SecurityInfoUtil().getAccountId();
-		
+
 		param.put("userId", userId);
 		param.put("billId", billId);
 		RevokeAgreeVo revokeAgreeDetail = revokeAgreeMapper.getRevokeAgreeDetail(param);
 		result.setRevokeAgreeDetail(revokeAgreeDetail);
-		
+
 		List<RevokeAgreeVo> proposerList = revokeAgreeMapper.getProposerList(param);
 		result.setProposerList(proposerList);
-		
+
 		List<EbsFileVo> fileList = applyMapper.selectApplyFileList(param);
 		result.setFileList(fileList);
-		
+
 		return result;
 	}
 

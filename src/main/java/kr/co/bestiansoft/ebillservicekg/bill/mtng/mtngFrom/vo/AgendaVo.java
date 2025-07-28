@@ -28,7 +28,7 @@ public class AgendaVo extends ComDefaultVO {
 	private String statNm;
 	private String sessionNo;
 	private String sessionOrd;
-	
+
 	private String openDtm;
 	private int agendaOrd;
 

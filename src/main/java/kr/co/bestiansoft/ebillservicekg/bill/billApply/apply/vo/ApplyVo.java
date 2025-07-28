@@ -97,25 +97,25 @@ public class ApplyVo extends ComDefaultVO {
 	private String stepId;
 	private Long taskId;
 	private String currentStepId;
-	
+
 	//comment
 	private String lawId;
 	private String parentId;
 	private String content;
 	private Boolean status;
 	private String rcpDt;
-	
+
     //동의여부
     private String agreeYn;
 
     private String revokeYn;
-    
+
     //제안자 대상
     private String proposerId;
 
     private LocalDateTime revokeRegDt;
     private LocalDateTime wtDt;
 	private LocalDateTime wtCncDt;
-	
+
 	private List<EbsFileUpload> fileUploads;
 }

@@ -1,5 +1,8 @@
 package kr.co.bestiansoft.ebillservicekg.sed_jk.services.common;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import kr.co.bestiansoft.ebillservicekg.common.file.service.impl.EDVHelper;
 import kr.co.bestiansoft.ebillservicekg.eas.approval.service.ApprovalService;
 import kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalVo;
@@ -33,11 +36,6 @@ import kr.co.bestiansoft.ebillservicekg.sed_jk.exception.ServiceException;
 //import kr.co.bestiansoft.ebillservicekg.sed_jk.services.employee.EmployeeProfileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Slf4j
 @Service
@@ -52,7 +50,8 @@ public class DocumentSignServiceImpl implements DocumentSignService{
     private final HashingService hashingService;
     private final EDVHelper edv;
 
-    @Transactional
+    @Override
+	@Transactional
     public SignResponseDto signDocument(SignRequestDto signRequestDto) {
 //        EmployeeProfile employeeProfile = employeeService.getCurrentEmployee()
 //                .orElseThrow(() -> new UnAuthorizedException("Пользователь не авторизован."));
@@ -112,7 +111,7 @@ public class DocumentSignServiceImpl implements DocumentSignService{
     private String authenticateWithCds(String pinCode) {
 //        String personIdnp = employeeProfile.getPin();
 //        String organizationInn = employeePositionHistory.getPosition().getDepartment().getState().getInn();
-    	
+
     	String personIdnp = "22512198900930";
         String organizationInn = "01806199610125";
 

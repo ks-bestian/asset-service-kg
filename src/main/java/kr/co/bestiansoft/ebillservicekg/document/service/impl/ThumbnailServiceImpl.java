@@ -8,7 +8,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import javax.imageio.ImageIO;
 
@@ -39,16 +38,16 @@ public class ThumbnailServiceImpl implements ThumbnailService {
 
 	@Autowired
 	private EDVHelper edv;
-	
+
 	@Autowired
 	private ExecutorService executorService;
-	
+
 	@Autowired
 	private DocumentMapper fileMapper;
-	
+
 	private int DEFAULT_THUMBNAIL_WIDTH = 300;
 	private int DEFAULT_THUMBNAIL_HEIGHT = 200;
-	
+
 	InputStream asInputStream(BufferedImage bi) throws IOException {
 		if(bi == null) {
 			return null;
@@ -57,22 +56,22 @@ public class ThumbnailServiceImpl implements ThumbnailService {
 		ImageIO.write(bi, "png", baos);
 		return new ByteArrayInputStream(baos.toByteArray());
 	}
-	
+
 	BufferedImage thumbnailDoc(InputStream is, int width, int height) throws Exception {
 		Document doc = new Document(is);
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		doc.save(output, SaveFormat.PNG);
-		
+
 		byte[] data = output.toByteArray();
 		ByteArrayInputStream input = new ByteArrayInputStream(data);
 		BufferedImage image = ImageIO.read(input);
-		
+
 		return Scalr.resize(image, width, height, null);
 	}
-	
+
 	BufferedImage thumbnailPpt(InputStream is, int width, int height) throws Exception {
 		Presentation pres = new Presentation(is);
-		
+
 		// User defined dimension
 		int desiredX = width;
 		int desiredY = height;
@@ -80,13 +79,13 @@ public class ThumbnailServiceImpl implements ThumbnailService {
 		// Getting scaled value of X and Y
 		float ScaleX = (float) (1.0 / pres.getSlideSize().getSize().getWidth()) * desiredX;
 		float ScaleY = (float) (1.0 / pres.getSlideSize().getSize().getHeight()) * desiredY;
-		
+
 		ISlide slide = pres.getSlides().get_Item(0);
         BufferedImage bi = slide.getThumbnail(ScaleX, ScaleY);
 
         return bi;
 	}
-	
+
 	BufferedImage thumbnailXls(InputStream is, int width, int height) throws Exception {
 		// Instantiate and open an Excel file
 		Workbook book = new Workbook(is);
@@ -105,26 +104,26 @@ public class ThumbnailServiceImpl implements ThumbnailService {
 		Worksheet sheet = book.getWorksheets().get(0);
 		// Render the sheet with respect to specified image/print options
 		SheetRender sr = new SheetRender(sheet, imgOptions);
-		
+
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		sr.toImage(0, output);
-		
+
 		byte[] data = output.toByteArray();
 		ByteArrayInputStream input = new ByteArrayInputStream(data);
 		BufferedImage image = ImageIO.read(input);
 		return Scalr.resize(image, width, height, null);
 	}
-	
+
 	BufferedImage thumbnailPdf(InputStream is, int width, int height) throws Exception {
 		PDDocument document = PDDocument.load(is);
 		PDFRenderer renderer = new PDFRenderer(document);
-		
+
 		BufferedImage image = renderer.renderImage(0);
-		
+
 		document.close();
 		return Scalr.resize(image, width, height, null);
 	}
-	
+
 	BufferedImage thumbnailImg(InputStream is, int width, int height) throws Exception {
 		BufferedImage image = ImageIO.read(is);
 		if (image == null) { // not an image
@@ -132,8 +131,9 @@ public class ThumbnailServiceImpl implements ThumbnailService {
 		}
 		return Scalr.resize(image, width, height, null);
 	}
-	
-	
+
+
+	@Override
 	public BufferedImage createThumbnail(InputStream is, String filename, int width, int height) {
 
 		try {
@@ -158,41 +158,43 @@ public class ThumbnailServiceImpl implements ThumbnailService {
 			return null;
 		}
 	}
-	
+
+	@Override
 	public void createThumbnailAsync(File file, String filename, String fileId) {
 		createThumbnailAsync(file, filename, fileId, DEFAULT_THUMBNAIL_WIDTH, DEFAULT_THUMBNAIL_HEIGHT);
 	}
-	
+
+	@Override
 	public void createThumbnailAsync(File file, String filename, String fileId, int width, int height) {
 		executorService.submit(() -> {
 			try {
 				InputStream is = new FileInputStream(file);
 				BufferedImage image = createThumbnail(is, filename, width, height);
-				
+
 				if(image == null) {
 					return;
 				}
-				
+
 				String thumbnailFileId = StringUtil.getUUUID();
-				
+
 				try (InputStream tis = asInputStream(image)){
 					edv.save(thumbnailFileId, tis);
 				} catch (Exception edvEx) {
 					throw new RuntimeException("EDV_NOT_WORK", edvEx);
 				}
 				is.close();
-				
+
 				FileVo vo = new FileVo();
 				vo.setFileId(fileId);
 				vo.setThumbnail(thumbnailFileId);
 				fileMapper.updateThumbnail(vo);
-				
+
 				file.delete();
-				
+
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		});
 	}
-   
+
 }

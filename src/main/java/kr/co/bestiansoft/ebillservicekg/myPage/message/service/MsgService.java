@@ -1,12 +1,11 @@
 package kr.co.bestiansoft.ebillservicekg.myPage.message.service;
 
-import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo;
-import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserVo;
-import kr.co.bestiansoft.ebillservicekg.myPage.message.vo.MsgRequest;
-import kr.co.bestiansoft.ebillservicekg.myPage.message.vo.MsgVo;
-
 import java.util.HashMap;
 import java.util.List;
+
+import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo;
+import kr.co.bestiansoft.ebillservicekg.myPage.message.vo.MsgRequest;
+import kr.co.bestiansoft.ebillservicekg.myPage.message.vo.MsgVo;
 
 public interface MsgService {
     List<MsgVo> getRcvList(HashMap<String, Object> param);

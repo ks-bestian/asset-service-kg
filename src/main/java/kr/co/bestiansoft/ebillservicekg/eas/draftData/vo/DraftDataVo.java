@@ -3,8 +3,6 @@ package kr.co.bestiansoft.ebillservicekg.eas.draftData.vo;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 @Data
 public class DraftDataVo {
     private String dataSeq;

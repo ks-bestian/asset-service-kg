@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Service
 public class StatusServiceImpl implements StatusService {
-	
+
 	private final StatusMapper statusMapper;
 
 	/**
@@ -44,5 +44,5 @@ public class StatusServiceImpl implements StatusService {
 	public List<StatusVo> getMonitorList(HashMap<String, Object> param) {
 		return statusMapper.getMonitorList(param);
 	}
-	
+
 }

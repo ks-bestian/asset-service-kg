@@ -1,7 +1,8 @@
 package kr.co.bestiansoft.ebillservicekg.eas.draftDocument.repository;
 
-import kr.co.bestiansoft.ebillservicekg.eas.draftDocument.vo.DraftDocumentVo;
 import org.apache.ibatis.annotations.Mapper;
+
+import kr.co.bestiansoft.ebillservicekg.eas.draftDocument.vo.DraftDocumentVo;
 
 @Mapper
 public interface DraftDocumentRepository {

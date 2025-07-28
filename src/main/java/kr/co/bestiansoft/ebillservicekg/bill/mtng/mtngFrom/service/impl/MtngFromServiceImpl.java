@@ -3,7 +3,6 @@ package kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngFrom.service.impl;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.springframework.stereotype.Service;
@@ -399,7 +398,7 @@ public class MtngFromServiceImpl implements MtngFromService {
 			pVo.setBillId(agenda.getBillId());
 			pVo.setStepId("1700");//Request for review of the plenary session
 			processService.handleProcess(pVo);
-			
+
 			MtngFromVo vo = new MtngFromVo();
 			vo.setSubmitted(true);
 			vo.setMtngId(mtngId);
@@ -422,7 +421,7 @@ public class MtngFromServiceImpl implements MtngFromService {
 	public List<MtngFromVo> getHallMtngList(HashMap<String, Object> param) {
 
 		List<MtngFromVo> mtngList = mtngFromMapper.selectListHallMtng(param);
-		HashMap<String, Object> agendaParam = new HashMap<String, Object>();
+		HashMap<String, Object> agendaParam = new HashMap<>();
 
 		for(MtngFromVo vo:mtngList) {
 
@@ -518,7 +517,7 @@ public class MtngFromServiceImpl implements MtngFromService {
 
 			processService.undoProcess(mtngFromVo.getBillId(), "1700");
 		}
-		
+
 		mtngFromMapper.deleteMtngAgenda(mtngFromVo.getMtngId(),mtngFromVo.getBillId());
 
 		return mtngFromVo;
@@ -553,7 +552,7 @@ public class MtngFromServiceImpl implements MtngFromService {
 			mtngFromMapper.insertEbsMtngAgenda(agendaVo);
 		}
 		idx=1;
-		
+
 		return null;
 	}
 

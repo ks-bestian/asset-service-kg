@@ -1,10 +1,10 @@
 package kr.co.bestiansoft.ebillservicekg.admin.comCode.service;
 
-import kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeDetailVo;
-import kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeVo;
-
 import java.util.HashMap;
 import java.util.List;
+
+import kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeDetailVo;
+import kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeVo;
 
 public interface ComCodeService {
     List<ComCodeVo> getGrpCodeList(HashMap<String, Object> param);

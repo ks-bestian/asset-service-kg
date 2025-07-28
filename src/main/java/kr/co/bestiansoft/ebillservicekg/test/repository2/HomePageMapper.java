@@ -10,9 +10,9 @@ import kr.co.bestiansoft.ebillservicekg.test.vo.CommentsVo;
 
 @Mapper
 public interface HomePageMapper {
-	
+
 	void insertHomeLaws(ApplyVo applyVo);
-	
+
 	List<ApplyVo> selectBillCommentList(String lawId);
 	void updateLaws(Map<String, Object> map);
 	List<CommentsVo> selectCommentsByLawId(Long lawId);

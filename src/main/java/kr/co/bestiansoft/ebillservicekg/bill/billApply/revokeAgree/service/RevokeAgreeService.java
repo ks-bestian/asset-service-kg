@@ -5,7 +5,6 @@ import java.util.List;
 
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.revokeAgree.vo.RevokeAgreeResponse;
-import kr.co.bestiansoft.ebillservicekg.bill.billApply.revokeAgree.vo.RevokeAgreeVo;
 
 public interface RevokeAgreeService {
 

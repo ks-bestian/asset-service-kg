@@ -1,11 +1,11 @@
 package kr.co.bestiansoft.ebillservicekg.admin.dept.repository;
 
-import kr.co.bestiansoft.ebillservicekg.admin.dept.vo.DeptVo;
-import kr.co.bestiansoft.ebillservicekg.admin.member.vo.MemberVo;
-import org.apache.ibatis.annotations.Mapper;
-
 import java.util.HashMap;
 import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import kr.co.bestiansoft.ebillservicekg.admin.dept.vo.DeptVo;
 
 @Mapper
 public interface DeptMapper {

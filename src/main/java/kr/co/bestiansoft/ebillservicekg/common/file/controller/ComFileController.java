@@ -5,24 +5,29 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
-import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.impl.EDVHelper;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.ComFileVo;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "file API")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -43,7 +48,9 @@ public class ComFileController {
 		InputStream ins = edv.download(fileId);
 		Resource resource = new InputStreamResource(ins);
 
-		if (resource == null) return ResponseEntity.notFound().build();
+		if (resource == null) {
+			return ResponseEntity.notFound().build();
+		}
 
 		return ResponseEntity.ok()
 				.contentType(MediaType.APPLICATION_OCTET_STREAM)
@@ -57,7 +64,7 @@ public class ComFileController {
 		List<ComFileVo> list = comFileService.getFileList(fileGroupId);
 		return ResponseEntity.ok(list);
 	}
-	
+
 	@GetMapping("/com/file/pdf")
 	public ResponseEntity<?> pdfFileDownload(@RequestParam String pdfFileNm, HttpServletResponse response, HttpServletRequest request) throws Exception {
 
@@ -72,7 +79,9 @@ public class ComFileController {
 		InputStream ins = edv.download(pdfFileId);
 		Resource resource = new InputStreamResource(ins);
 
-		if (resource == null) return ResponseEntity.notFound().build();
+		if (resource == null) {
+			return ResponseEntity.notFound().build();
+		}
 
 		return ResponseEntity.ok()
 				.contentType(MediaType.APPLICATION_PDF)

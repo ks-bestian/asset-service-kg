@@ -29,6 +29,6 @@ public class EbsFileVo extends ComDefaultVO {
 
 	private MultipartFile[] files;
 	private String ppsrNm;
-	
+
 	private String lngType;
 }

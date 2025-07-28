@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.service.ApplyService;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.service.RevokeService;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.revoke.vo.RevokeVo;
@@ -49,13 +49,13 @@ public class RevokeController {
     public ResponseEntity<CommonResponse> billRevokeRequest(@PathVariable String billId, RevokeVo vo) throws Exception {
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill revoke request successfully", revokeService.billRevokeRequest(billId,vo)), HttpStatus.OK);
     }
-    
+
 //    @Operation(summary = "proponent everyone Withdrawal Confirmation", description = "proponent All Withdrawal I agreed Check")
 //    @PostMapping(value = "/bill/revoke/checkagree/{billId}")
 //    public ResponseEntity<CommonResponse> billRevokeCheckAgree(@PathVariable String billId, RevokeVo vo) {
 //    	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill revoke submit successfully", revokeService.hasEveryProposerAgreedToRevoke(billId)), HttpStatus.OK);
 //    }
-    
+
     @Operation(summary = "Request for withdrawal reception", description = "Withdrawal Request")
     @PostMapping(value = "/bill/revoke/submit/{billId}")
     public ResponseEntity<CommonResponse> billRevokeSubmit(@PathVariable String billId, RevokeVo vo) {

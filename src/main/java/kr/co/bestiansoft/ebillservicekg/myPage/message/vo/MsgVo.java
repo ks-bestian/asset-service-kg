@@ -1,10 +1,10 @@
 package kr.co.bestiansoft.ebillservicekg.myPage.message.vo;
 
-import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
-import lombok.Data;
-
 import java.time.LocalDateTime;
 import java.util.List;
+
+import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
+import lombok.Data;
 
 @Data
 public class MsgVo extends ComDefaultVO {

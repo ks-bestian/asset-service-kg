@@ -1,8 +1,8 @@
 package kr.co.bestiansoft.ebillservicekg.sed_jk.client.gateway.dto;
 
-import lombok.Data;
-
 import java.util.List;
+
+import lombok.Data;
 
 @Data
 public class GatewayOrganizationsDto extends GatewayResponseDto {

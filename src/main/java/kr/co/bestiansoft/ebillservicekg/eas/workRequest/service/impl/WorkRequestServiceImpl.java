@@ -1,7 +1,11 @@
 package kr.co.bestiansoft.ebillservicekg.eas.workRequest.service.impl;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
-import kr.co.bestiansoft.ebillservicekg.eas.history.service.HistoryService;
 import kr.co.bestiansoft.ebillservicekg.eas.workRequest.repository.WorkRequestRepository;
 import kr.co.bestiansoft.ebillservicekg.eas.workRequest.service.WorkRequestService;
 import kr.co.bestiansoft.ebillservicekg.eas.workRequest.vo.WorkRequestAndResponseVo;
@@ -10,10 +14,6 @@ import kr.co.bestiansoft.ebillservicekg.eas.workResponse.service.WorkResponseSer
 import kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.WorkResponseVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor

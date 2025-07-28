@@ -1,10 +1,9 @@
 package kr.co.bestiansoft.ebillservicekg.eas.workResponse.service;
 
+import java.util.List;
+
 import kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.UpdateWorkResponseVo;
 import kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.WorkResponseVo;
-import org.apache.ibatis.annotations.Param;
-
-import java.util.List;
 
 public interface WorkResponseService {
     int insertWorkResponse(WorkResponseVo vo);

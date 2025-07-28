@@ -1,9 +1,10 @@
 package kr.co.bestiansoft.ebillservicekg.admin.authMenu.repository;
 
-import kr.co.bestiansoft.ebillservicekg.admin.authMenu.vo.AuthMenuVo;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
-import java.util.List;
+import kr.co.bestiansoft.ebillservicekg.admin.authMenu.vo.AuthMenuVo;
 
 @Mapper
 public interface AuthMenuMapper {

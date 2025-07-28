@@ -1,6 +1,58 @@
 package kr.co.bestiansoft.ebillservicekg.eas.draftDocument.service.impl;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigInteger;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
+import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFNumbering;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.XWPFTableCell;
+import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.apache.xmlbeans.XmlCursor;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+import org.jsoup.nodes.TextNode;
+import org.jsoup.select.Elements;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTAbstractNum;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDecimalNumber;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHMerge;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTInd;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTJc;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTLvl;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTNumPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPrGeneral;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTShd;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTVMerge;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTVerticalJc;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STJc;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STNumberFormat;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STShd;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc;
+import org.springframework.stereotype.Service;
+
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+
 import kr.co.bestiansoft.ebillservicekg.common.file.service.PdfService;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.impl.EDVHelper;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
@@ -17,25 +69,6 @@ import kr.co.bestiansoft.ebillservicekg.form.vo.FormWithFieldsVo;
 import kr.co.bestiansoft.ebillservicekg.formField.vo.FormFieldVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.xwpf.usermodel.*;
-import org.apache.xmlbeans.XmlCursor;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
-import org.jsoup.nodes.TextNode;
-import org.jsoup.select.Elements;
-import java.math.BigInteger;
-import java.util.*;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
-
-
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
-import org.springframework.stereotype.Service;
-
-import java.io.*;
-import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -92,7 +125,7 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
 
         return vo;
     }
-    
+
     /**
      * Updates the status of a draft document in the repository.
      *
@@ -110,7 +143,8 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
      * @param aarsDocId the ID of the document to retrieve
      * @return a DraftDocumentVo object representing the draft document, or null if no document is found
      */
-    public DraftDocumentVo getDraftDocument(int aarsDocId){
+    @Override
+	public DraftDocumentVo getDraftDocument(int aarsDocId){
         return draftDocumentRepository.getDraftDocument(aarsDocId);
     }
 
@@ -187,27 +221,19 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
 
         // 모든 단락 처리 - 문서 순서대로 처리
         List<XWPFParagraph> paragraphs = new ArrayList<>(doc.getParagraphs());
-        for (int i = 0; i < paragraphs.size(); i++) {
-            XWPFParagraph paragraph = paragraphs.get(i);
+        for (XWPFParagraph paragraph : paragraphs) {
             replaceInParagraph(paragraph, map);
         }
 
         // 모든 테이블 처리 - 문서 순서대로 처리
         List<XWPFTable> tables = new ArrayList<>(doc.getTables());
-        for (int tableIndex = 0; tableIndex < tables.size(); tableIndex++) {
-            XWPFTable table = tables.get(tableIndex);
-
+        for (XWPFTable table : tables) {
             List<XWPFTableRow> rows = new ArrayList<>(table.getRows());
-            for (int rowIndex = 0; rowIndex < rows.size(); rowIndex++) {
-                XWPFTableRow row = rows.get(rowIndex);
-
+            for (XWPFTableRow row : rows) {
                 List<XWPFTableCell> cells = new ArrayList<>(row.getTableCells());
-                for (int cellIndex = 0; cellIndex < cells.size(); cellIndex++) {
-                    XWPFTableCell cell = cells.get(cellIndex);
-
+                for (XWPFTableCell cell : cells) {
                     List<XWPFParagraph> cellParagraphs = new ArrayList<>(cell.getParagraphs());
-                    for (int paraIndex = 0; paraIndex < cellParagraphs.size(); paraIndex++) {
-                        XWPFParagraph paragraph = cellParagraphs.get(paraIndex);
+                    for (XWPFParagraph paragraph : cellParagraphs) {
                         replaceInParagraph(paragraph, map);
                     }
                 }
@@ -217,7 +243,7 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
         log.info("Variable substitution completed");
     }
 
-    
+
     private void replaceInParagraph(XWPFParagraph paragraph, Map<String, String> map) {
         String text = paragraph.getText();
 
@@ -234,7 +260,7 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
                 String beforeText = text.substring(0, varIndex);
                 String afterText = text.substring(varIndex + variable.length());
 
-                
+
                 // 단락의 기존 정렬 정보 보존
                 ParagraphAlignment originalAlignment = paragraph.getAlignment();
 
@@ -541,7 +567,7 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
         }
     }
 
-    /** 
+    /**
      *  HTML 테이블을 처리하는 메소드
      */
     private void processHtmlTable(XWPFDocument doc, String htmlContent, XWPFParagraph currentParagraph) {
@@ -1726,7 +1752,9 @@ public class DraftDocumentServiceImpl implements DraftDocumentService {
     }
 
     private String normalizeVerticalAlignment(String align) {
-        if (align == null) return null;
+        if (align == null) {
+			return null;
+		}
 
         align = align.toLowerCase().trim();
         switch (align) {

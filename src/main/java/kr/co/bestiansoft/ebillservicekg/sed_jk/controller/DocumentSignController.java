@@ -1,16 +1,17 @@
 package kr.co.bestiansoft.ebillservicekg.sed_jk.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import jakarta.validation.Valid;
 import kr.co.bestiansoft.ebillservicekg.sed_jk.dto.request.SignRequestDto;
-import kr.co.bestiansoft.ebillservicekg.sed_jk.dto.response.CheckResponseDto;
 import kr.co.bestiansoft.ebillservicekg.sed_jk.dto.response.SignResponseDto;
 //import kr.co.bestiansoft.ebillservicekg.sed_jk.enums.Paths;
 import kr.co.bestiansoft.ebillservicekg.sed_jk.services.common.DocumentSignService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController

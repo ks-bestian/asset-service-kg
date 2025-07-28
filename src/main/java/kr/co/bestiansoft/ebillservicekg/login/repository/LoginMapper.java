@@ -10,9 +10,9 @@ import kr.co.bestiansoft.ebillservicekg.login.vo.LoginUserVo;
 
 @Mapper
 public interface LoginMapper {
-	
+
 	LoginUserVo selectUser(String userId);
 	List<AuthVo> selectUserAuth(String userId);
 	List<ComCodeDetailVo> selectListComCodeAll();
-	
+
 }

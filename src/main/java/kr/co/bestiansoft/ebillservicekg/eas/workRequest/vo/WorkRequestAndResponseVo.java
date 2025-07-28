@@ -1,13 +1,13 @@
 package kr.co.bestiansoft.ebillservicekg.eas.workRequest.vo;
 
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.WorkResponseVo;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @NoArgsConstructor
 @Data

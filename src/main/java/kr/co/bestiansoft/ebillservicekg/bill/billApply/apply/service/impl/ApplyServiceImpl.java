@@ -6,10 +6,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import kr.co.bestiansoft.ebillservicekg.test.domain.CommentsHierarchy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.repository.AgreeMapper;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.vo.AgreeVo;
@@ -17,7 +17,6 @@ import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMap
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.service.ApplyService;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyResponse;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo;
-import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.repository.BillMngMapper;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.service.BillMngService;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
@@ -27,6 +26,7 @@ import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
 import kr.co.bestiansoft.ebillservicekg.process.repository.ProcessMapper;
 import kr.co.bestiansoft.ebillservicekg.process.service.ProcessService;
 import kr.co.bestiansoft.ebillservicekg.process.vo.ProcessVo;
+import kr.co.bestiansoft.ebillservicekg.test.domain.CommentsHierarchy;
 import kr.co.bestiansoft.ebillservicekg.test.repository2.HomePageMapper;
 import kr.co.bestiansoft.ebillservicekg.test.vo.CommentsVo;
 import lombok.RequiredArgsConstructor;
@@ -64,7 +64,7 @@ public class ApplyServiceImpl implements ApplyService {
 		String billId = StringUtil.getEbillId();
 		applyVo.setBillId(billId);
 		String ppsrId = new SecurityInfoUtil().getAccountId();
-		
+
 		applyVo.setPpsrId(ppsrId);
 		applyVo.setRegId(ppsrId);
 		applyMapper.insertApplyBill(applyVo);
@@ -89,16 +89,18 @@ public class ApplyServiceImpl implements ApplyService {
 		if(proposerList == null) {
 			proposerList = new ArrayList<>();
 		}
-		
+
 		if(!proposerList.contains(applyVo.getPpsrId())) {
-			proposerList.add(applyVo.getPpsrId());	
+			proposerList.add(applyVo.getPpsrId());
 		}
 
 		int ord = proposerList.size();
 		for(String memberId : proposerList) {
 			ApplyVo member = applyMapper.getProposerInfo(memberId);
 
-			if(member == null) break;
+			if(member == null) {
+				break;
+			}
 
 			applyVo.setOrd(++ord);
 			applyVo.setPolyCd(member.getPolyCd());
@@ -137,7 +139,7 @@ public class ApplyServiceImpl implements ApplyService {
 		String billId = StringUtil.getEbillId();
 		applyVo.setBillId(billId);
 		applyVo.setRegId(new SecurityInfoUtil().getAccountId());
-		
+
 		applyMapper.insertApplyBill(applyVo);
 
 //		//파일등록
@@ -150,7 +152,7 @@ public class ApplyServiceImpl implements ApplyService {
 		billMngVo.setFileUploads(applyVo.getFileUploads());
 		billMngVo.setBillId(applyVo.getBillId());
 		comFileService.saveFileBillDetailMng(billMngVo);
-		
+
 		//파일 정보를 가지고 있어서 null처리
 		applyVo.setFiles(null);
 		applyVo.setFileUploads(null);
@@ -166,7 +168,9 @@ public class ApplyServiceImpl implements ApplyService {
 		for(String memberId : proposerList) {
 			ApplyVo member = applyMapper.getProposerInfo(memberId);
 
-			if(member == null) break;
+			if(member == null) {
+				break;
+			}
 
 			applyVo.setOrd(++ord);
 			applyVo.setPolyCd(member.getPolyCd());
@@ -182,37 +186,37 @@ public class ApplyServiceImpl implements ApplyService {
 			applyVo.setSignDt("sign");
 			applyMapper.insertProposerList(applyVo);
 		}
-		
+
 		ProcessVo pVo = new ProcessVo();
 		pVo.setBillId(billId);
 		pVo.setStepId("PC_START");//안건생성 프로세스시작
 		processService.handleProcess(pVo);
-		
+
 		//접수요청 프로세스
 		pVo = new ProcessVo();
 		pVo.setBillId(billId);
 		pVo.setStepId("0");
 		ProcessVo task = processMapper.selectBpStepTasks(pVo).get(0);
-		
+
 		applyVo.setTaskId(task.getTaskId());
 		applyVo.setStepId("1000");
 		this.saveBillAccept(billId, applyVo);
-		
+
 		//안건접수
 		pVo = new ProcessVo();
 		pVo.setBillId(billId);
 		pVo.setStepId("1000");
 		task = processMapper.selectBpStepTasks(pVo).get(0);
-		
+
 		BillMngVo billMngVo2 = new BillMngVo();
 		billMngVo2.setBillId(billId);
 		billMngVo2.setRcpDt(applyVo.getRcpDt());
 		billMngVo2.setStepId("1200");
 		billMngVo2.setTaskId(task.getTaskId());
 		billMngService.billRegisterMng(billMngVo2);
-		
+
 		applyVo.setBillNo(billMngVo2.getBillNo());
-		
+
 		return applyVo;
 	}
 
@@ -298,13 +302,13 @@ public class ApplyServiceImpl implements ApplyService {
 //			applyVo.setFiles(null);
 //		}
 //		if(applyVo.getMyFileIds() != null) {
-//			comFileService.saveFileEbs(applyVo.getMyFileIds(), applyVo.getFileKindCds2(), applyVo.getOpbYns2(), billId);	
+//			comFileService.saveFileEbs(applyVo.getMyFileIds(), applyVo.getFileKindCds2(), applyVo.getOpbYns2(), billId);
 //		}
 	    BillMngVo billMngVo = new BillMngVo();
 		billMngVo.setFileUploads(applyVo.getFileUploads());
 		billMngVo.setBillId(billId);
 		comFileService.saveFileBillDetailMng(billMngVo);
-		
+
 
 		//bill update
 		applyVo.setLoginId(loginId);
@@ -326,18 +330,18 @@ public class ApplyServiceImpl implements ApplyService {
 	@Override
 	public int deleteApply(String billId) {
 		applyMapper.deleteProposerByBillId(billId);
-		
+
 		HashMap<String, Object> param = new HashMap<>();
 		param.put("userId", new SecurityInfoUtil().getAccountId());
 		param.put("billId", billId);
 		applyMapper.deleteBillFileByBillId(param);
-		
+
 		ProcessVo processVo = new ProcessVo();
 		processVo.setBillId(billId);
 		processMapper.deleteBpTasks(processVo);
 		processMapper.deleteBpInstance(processVo);
-		
-		
+
+
 		return applyMapper.deleteApplyByBillId(billId);
 	}
 
@@ -364,7 +368,7 @@ public class ApplyServiceImpl implements ApplyService {
 		//파일 리스트
 		List<EbsFileVo> fileList = applyMapper.selectBillFileList(param);
 		result.setFileList(fileList);
-		
+
 		//발의문서 리스트
 		List<EbsFileVo> applyFileList = applyMapper.selectApplyFileList(param);
 		result.setApplyFileList(applyFileList);
@@ -544,7 +548,7 @@ public class ApplyServiceImpl implements ApplyService {
 	 */
 	@Override
 	public void stopBillHome(ApplyVo applyVo) {
-		
+
 		String sclDscRcpNmb = applyVo.getSclDscRcpNmb();
 		Long id = Long.valueOf(sclDscRcpNmb);
 

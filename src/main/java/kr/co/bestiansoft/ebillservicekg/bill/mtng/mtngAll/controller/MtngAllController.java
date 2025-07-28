@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.bestiansoft.ebillservicekg.bill.mtng.mtngAll.service.MtngAllService;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +41,7 @@ public class MtngAllController {
     public ResponseEntity<CommonResponse> getMtngParticipants(@RequestParam HashMap<String, Object> param) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", mtngAllService.getMtngParticipants(param)), HttpStatus.OK);
     }
-    
+
     @Operation(summary = "Agenda meeting List check", description = "Agenda meeting List Inquiry.")
     @GetMapping("/bill/mtng/all/bybill")
     public ResponseEntity<CommonResponse> selectMtngByBillId(@RequestParam HashMap<String, Object> param) {

@@ -1,12 +1,12 @@
 package kr.co.bestiansoft.ebillservicekg.asset.equip.repository;
 
-import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipDetailVo;
-import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipRequest;
-import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipVo;
-import org.apache.ibatis.annotations.Mapper;
-
 import java.util.HashMap;
 import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipDetailVo;
+import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipRequest;
 
 @Mapper
 public interface EquipMapper {

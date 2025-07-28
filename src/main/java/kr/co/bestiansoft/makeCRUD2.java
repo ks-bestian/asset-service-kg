@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -29,7 +28,7 @@ public class makeCRUD2 {
 //				     , "best1234"	//password
 //				     , "c:\\starproject_file"	//Storage path
 //				     );
-			
+
 			Map<String, Long> map = o.getTableRowCount("192.168.0.31:1433"	//dbIP
 			     ,"sed"	//db name
 			     , "admin_id"	//account
@@ -37,12 +36,12 @@ public class makeCRUD2 {
 			     , "c:\\starproject_file"	//Storage path
 			     , "cnt5" //Table_Div Table Column Name(cnt1 / cnt2 / cnt3)
 		     );
-			
+
 			for(String tableName : map.keySet()) {
 				Long cnt = map.get(tableName);
 				System.out.println(tableName + " " + cnt);
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -67,13 +66,13 @@ public class makeCRUD2 {
 		Class.forName("oracle.jdbc.driver.OracleDriver");
 		return DriverManager.getConnection("jdbc:oracle:thin:@"+ip+":1521:"+db, user, pwd);
 	}
-	
+
 	private Connection getMSSQLConnection(String ip, String db, String user, String pwd) throws Exception
 	{
 		Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 		return DriverManager.getConnection("jdbc:sqlserver://" + ip + ";database=" + db, user, pwd);
 	}
-	
+
 	public List<String> getTableNames(Statement stmt) throws SQLException {
 		String sql = "SELECT TABLE_NAME\r\n"
 				+ "FROM INFORMATION_SCHEMA.TABLES\r\n"
@@ -89,7 +88,7 @@ public class makeCRUD2 {
 		rs.close();
 		return ret;
 	}
-	
+
 	public Long getRowCount(Statement stmt, String tableName) throws SQLException {
 		String sql = "SELECT COUNT(*)\r\n"
 				+ "FROM " + tableName + "\r\n"
@@ -102,7 +101,7 @@ public class makeCRUD2 {
 		rs.close();
 		return ret;
 	}
-	
+
 	public void saveRowCount(Statement stmt, String tableName, Long cnt, String colname) throws SQLException {
 		String sql = "MERGE INTO test_div AS a\r\n"
 				+ "USING (SELECT 1 AS dual) AS b\r\n"
@@ -113,14 +112,14 @@ public class makeCRUD2 {
 				+ "   INSERT(table_name, " + colname + ") VALUES('" + tableName + "', " + cnt + ");\r\n";
 		stmt.executeUpdate(sql);
 	}
-	
+
 	public Map<String, Long> getTableRowCount(String host, String db, String user, String pwd, String filePath, String colname) {
 		Connection conn = null;
 		Statement stmt = null;
 
 		try{
 			Map<String, Long> map = new HashMap<>();
-			
+
 			conn = getMSSQLConnection(host,db, user, pwd);
 			stmt = conn.createStatement();
 			List<String> tableNames = getTableNames(stmt);
@@ -135,7 +134,7 @@ public class makeCRUD2 {
 			conn = null;
 
 			return map;
-			
+
 		}catch(Exception e){
 			e.printStackTrace();
 		}finally{
@@ -148,11 +147,11 @@ public class makeCRUD2 {
 				conn = null;
 			}
 		}
-		
+
 		return null;
 	}
-	
-	
+
+
 	public void generateSQL(String host, String db, String user, String pwd, String filePath)
 	{
 		Connection conn = null;
@@ -171,14 +170,14 @@ public class makeCRUD2 {
 			//table list
 			//ResultSet rsTables = dmd.getTables(conn.getCatalog(), null, "%", null);
 
-			ArrayList<String> tableList = new ArrayList<String>();
+			ArrayList<String> tableList = new ArrayList<>();
 			tableList.add("ebs_bp_instance");
 
 
 			for(int i=0;i<tableList.size();i++) {
 
-			    ArrayList<String> arrColumns = new ArrayList<String>();
-			    ArrayList<String> arrPkColumns = new ArrayList<String>();
+			    ArrayList<String> arrColumns = new ArrayList<>();
+			    ArrayList<String> arrPkColumns = new ArrayList<>();
 				String tableName = tableList.get(i);
 
 				//column list

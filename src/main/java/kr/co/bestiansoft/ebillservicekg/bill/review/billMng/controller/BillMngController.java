@@ -1,23 +1,20 @@
 package kr.co.bestiansoft.ebillservicekg.bill.review.billMng.controller;
 
 import java.util.HashMap;
-import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.service.BillMngService;
 import kr.co.bestiansoft.ebillservicekg.bill.review.billMng.vo.BillMngVo;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
@@ -79,19 +76,19 @@ public class BillMngController {
     public ResponseEntity<CommonResponse> insertBillDetail(@RequestBody BillMngVo billMngVo) throws Exception {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Bill created successfully", billMngService.insertBillDetail(billMngVo)), HttpStatus.CREATED);
     }
-    
+
     @Operation(summary = "Agenda registration", description = "Agenda registration")
     @PostMapping(value = "/bill/review/billMng/detail", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<CommonResponse> insertBillDetail2(BillMngVo billMngVo) throws Exception {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "review created successfully", billMngService.insertBillDetail(billMngVo)), HttpStatus.CREATED);
     }
-    
+
     @Operation(summary = "promulgation registration", description = "promulgation registration")
     @PostMapping(value = "/bill/review/billMng/prmg", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<CommonResponse> insertBillPrmg(BillMngVo billMngVo) throws Exception {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "review created successfully", billMngService.insertBillPrmg(billMngVo)), HttpStatus.CREATED);
     }
-    
+
     @Operation(summary = "president refusal", description = "president refusal")
     @PostMapping(value = "/bill/review/billMng/presidentReject", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<CommonResponse> presidentReject(BillMngVo billMngVo) throws Exception {

@@ -1,9 +1,9 @@
 package kr.co.bestiansoft.ebillservicekg.eas.draftData.repository;
 
+import java.util.List;
+
 import kr.co.bestiansoft.ebillservicekg.eas.draftData.vo.DraftDataAndComFormFieldDto;
 import kr.co.bestiansoft.ebillservicekg.eas.draftData.vo.DraftDataVo;
-
-import java.util.List;
 
 public interface DraftDataRepository {
     void insertDraftData(DraftDataVo vo);

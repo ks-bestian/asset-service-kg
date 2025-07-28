@@ -1,18 +1,17 @@
 package kr.co.bestiansoft.ebillservicekg.admin.baseCode.service.impl;
 
-import kr.co.bestiansoft.ebillservicekg.admin.baseCode.repository.BaseCodeMapper;
-import kr.co.bestiansoft.ebillservicekg.admin.baseCode.service.BaseCodeService;
-import kr.co.bestiansoft.ebillservicekg.admin.baseCode.vo.BaseCodeVo;
-import kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo;
-import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DuplicateKeyException;
+import java.util.HashMap;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
+import kr.co.bestiansoft.ebillservicekg.admin.baseCode.repository.BaseCodeMapper;
+import kr.co.bestiansoft.ebillservicekg.admin.baseCode.service.BaseCodeService;
+import kr.co.bestiansoft.ebillservicekg.admin.baseCode.vo.BaseCodeVo;
+import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j

@@ -1,18 +1,7 @@
 package kr.co.bestiansoft.ebillservicekg.login.vo;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-
-import kr.co.bestiansoft.ebillservicekg.admin.member.vo.MemberVo;
 import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Data
 public class LoginUserVo extends ComDefaultVO {
@@ -44,7 +33,7 @@ public class LoginUserVo extends ComDefaultVO {
 	private String polyNm;
 	private String rsdnRgstNmbr;
 	private String uprDeptCd;
-	
+
 	private String password = "best1234"; //Temporary password
-	
+
 }

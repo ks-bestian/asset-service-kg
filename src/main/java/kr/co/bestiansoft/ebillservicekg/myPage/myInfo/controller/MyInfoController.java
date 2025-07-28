@@ -1,14 +1,7 @@
 package kr.co.bestiansoft.ebillservicekg.myPage.myInfo.controller;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.Operation;
-import kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo;
-import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo;
-import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
-import kr.co.bestiansoft.ebillservicekg.common.file.service.impl.EDVHelper;
-import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
-import kr.co.bestiansoft.ebillservicekg.myPage.myInfo.service.MyInfoService;
-import lombok.RequiredArgsConstructor;
+import java.io.InputStream;
+import java.util.HashMap;
 
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -16,13 +9,18 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.io.InputStream;
-import java.util.HashMap;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo;
+import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
+import kr.co.bestiansoft.ebillservicekg.myPage.myInfo.service.MyInfoService;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor

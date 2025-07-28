@@ -15,8 +15,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
@@ -26,7 +24,6 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
-import kr.co.bestiansoft.ebillservicekg.admin.auth.vo.AuthVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
 import kr.co.bestiansoft.ebillservicekg.login.service.CustomUserDetailsService;
 import kr.co.bestiansoft.ebillservicekg.login.vo.Account;
@@ -52,7 +49,7 @@ public class TokenProvider implements InitializingBean {
     // In order to assign a Secret value to a variable after bin is generated and injected
     @Override
     public void afterPropertiesSet() {
-    	
+
     	this.key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     }
 
@@ -60,13 +57,13 @@ public class TokenProvider implements InitializingBean {
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
-        
+
         // Set the expire time of the token
         long now = (new Date()).getTime();
         Date validity = new Date(now + this.tokenValidityInSeconds*1000);
 
         Account account = (Account)authentication.getPrincipal();
-        
+
         return Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim("deptCd", account.getDeptCd())
@@ -85,12 +82,12 @@ public class TokenProvider implements InitializingBean {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-        
+
         String userId = claims.getSubject();
         String deptCd = Objects.toString(claims.get("deptCd"), null);
         String deptHeadYn = Objects.toString(claims.get("deptHeadYn"), null);
         String authorities = Objects.toString(claims.get(AUTHORITIES_KEY), null);
-        
+
         LoginUserVo user = new LoginUserVo();
         user.setUserId(userId);
         user.setDeptCd(deptCd);
@@ -101,13 +98,13 @@ public class TokenProvider implements InitializingBean {
         	String[] authList = authorities.split(",");
 			for(String auth : authList) {
 				if(!StringUtil.isNullOrEmpty(auth)) {
-					grantedAuthorities.add(new SimpleGrantedAuthority(auth));	
+					grantedAuthorities.add(new SimpleGrantedAuthority(auth));
 				}
 			}
         }
-        
+
         Account accont = new Account(user, grantedAuthorities);
-        
+
 //        User principal = new User(claims.getSubject(), "", new ArrayList<>());
 //		UserDetails userDetails = customUserDetailsService.loadUserByUsername(claims.getSubject());
 
@@ -121,16 +118,16 @@ public class TokenProvider implements InitializingBean {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            
+
             logger.info("This is the wrong JWT signature.");
         } catch (ExpiredJwtException e) {
-            
+
             logger.info("This is the expired JWT token.");
         } catch (UnsupportedJwtException e) {
-            
+
             logger.info("This is not supported JWT token.");
         } catch (IllegalArgumentException e) {
-            
+
             logger.info("JWT tokens are wrong.");
         }
         return false;

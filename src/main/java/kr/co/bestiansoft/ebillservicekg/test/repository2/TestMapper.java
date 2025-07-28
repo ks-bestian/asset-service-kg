@@ -11,9 +11,9 @@ import kr.co.bestiansoft.ebillservicekg.test.vo.TestVo;
 public interface TestMapper {
 	void insertTest(TestVo testVo);
 	List<TestVo> selectTest(TestVo testVo);
-	
-	
+
+
 	void insertHomeLaws(ApplyVo applyVo);
-	
+
 	List<ApplyVo> selectBillCommentList(String lawId);
 }

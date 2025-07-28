@@ -1,6 +1,5 @@
 package kr.co.bestiansoft.ebillservicekg.admin.bbs.vo;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -31,5 +30,5 @@ public class BoardVo extends ComDefaultVO {
     private MultipartFile[] files;
     private String deptNm;
     private String cmtCd;
-    
+
 }

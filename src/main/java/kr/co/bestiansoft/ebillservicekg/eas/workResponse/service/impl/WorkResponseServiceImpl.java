@@ -1,6 +1,11 @@
 package kr.co.bestiansoft.ebillservicekg.eas.workResponse.service.impl;
 
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.eas.workResponse.repository.WorkResponseRepository;
 import kr.co.bestiansoft.ebillservicekg.eas.workResponse.service.WorkResponseService;
@@ -8,10 +13,6 @@ import kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.UpdateWorkResponseVo
 import kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.WorkResponseVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -69,7 +70,8 @@ public class WorkResponseServiceImpl implements WorkResponseService {
      * @param docId the ID of the document for which work responses are to be retrieved
      * @return a list of WorkResponseVo objects representing the work responses
      */
-    public List<WorkResponseVo> getWorkResponse(String docId) {
+    @Override
+	public List<WorkResponseVo> getWorkResponse(String docId) {
         return workResponseRepository.getWorkResponseByRcvId(null, docId);
     }
 
@@ -81,7 +83,8 @@ public class WorkResponseServiceImpl implements WorkResponseService {
      * @return a list of WorkResponseVo objects representing the work responses associated with the given work request ID
      *         and the current user
      */
-    public List<WorkResponseVo> getWorkResponseByUserId(int workReqId) {
+    @Override
+	public List<WorkResponseVo> getWorkResponseByUserId(int workReqId) {
         return workResponseRepository.getWorkResponseByUserId(workReqId, new SecurityInfoUtil().getAccountId());
     }
 
@@ -90,7 +93,8 @@ public class WorkResponseServiceImpl implements WorkResponseService {
      *
      * @param rspnsId the identifier of the work response record to be updated
      */
-    public void updateReadDtm(int rspnsId) {
+    @Override
+	public void updateReadDtm(int rspnsId) {
         UpdateWorkResponseVo vo = UpdateWorkResponseVo.builder()
                 .rspnsId(rspnsId)
                 .checkDtm(LocalDateTime.now())

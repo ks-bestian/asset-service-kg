@@ -1,5 +1,11 @@
 package kr.co.bestiansoft.ebillservicekg.admin.user.service.impl;
 
+import java.util.HashMap;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import kr.co.bestiansoft.ebillservicekg.admin.ccof.repository.CcofMapper;
 import kr.co.bestiansoft.ebillservicekg.admin.member.repository.MemberMapper;
 import kr.co.bestiansoft.ebillservicekg.admin.user.repository.UserMapper;
@@ -11,11 +17,6 @@ import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.login.vo.LoginRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.HashMap;
-import java.util.List;
 
 
 @Service
@@ -57,7 +58,8 @@ public class UserServiceImpl implements UserService {
      * @return a {@code UserMemberVo} object containing the user's details and membership information,
      *         or {@code null} if the provided user ID is null or empty
      */
-    public UserMemberVo getUserMemberDetail(String userId) {
+    @Override
+	public UserMemberVo getUserMemberDetail(String userId) {
         if(userId == null || userId.isEmpty()) { return null;}
         HashMap<String, Object> map = new HashMap<>();
         map.put("userId", userId);

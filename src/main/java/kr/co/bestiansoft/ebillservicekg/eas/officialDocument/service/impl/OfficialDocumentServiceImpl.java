@@ -1,23 +1,27 @@
 package kr.co.bestiansoft.ebillservicekg.eas.officialDocument.service.impl;
 
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalLIstDto;
 import kr.co.bestiansoft.ebillservicekg.eas.documentWorkFlow.enums.EasFileType;
 import kr.co.bestiansoft.ebillservicekg.eas.file.service.EasFileService;
 import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.repository.OfficialDocumentMapper;
 import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.service.OfficialDocumentService;
-import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.*;
+import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.DocumentDetailDto;
+import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.DocumentListDto;
+import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.DocumentUserDto;
+import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.OfficialDocumentVo;
+import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.SearchDocumentVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.List;
 
 
 @Slf4j
@@ -60,7 +64,8 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
      *           of the document to be saved, such as ID, attributes, status, and other metadata.
      * @return an integer indicating the number of rows affected by the save operation.
      */
-    public int saveOfficialDocument(OfficialDocumentVo vo){
+    @Override
+	public int saveOfficialDocument(OfficialDocumentVo vo){
         return officialDocumentMapper.saveOfficialDocument(vo);
     }
 
@@ -321,7 +326,8 @@ public class OfficialDocumentServiceImpl implements OfficialDocumentService {
      *
      * @return the count of approval items for the current account.
      */
-    public int countApprovalList(){
+    @Override
+	public int countApprovalList(){
         return officialDocumentMapper.countApprovalList(new SecurityInfoUtil().getAccountId());
     }
 

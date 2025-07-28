@@ -1,4 +1,9 @@
 package kr.co.bestiansoft.ebillservicekg.asset.install.service.impl;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import kr.co.bestiansoft.ebillservicekg.asset.install.repository.InstallMapper;
 import kr.co.bestiansoft.ebillservicekg.asset.install.service.InstallService;
 import kr.co.bestiansoft.ebillservicekg.asset.install.vo.InstallVo;
@@ -6,13 +11,6 @@ import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -29,7 +27,7 @@ public class InstallServiceImpl implements InstallService {
             String instlId = StringUtil.getInstlUUUID();
             installVo.setInstlId(instlId);
             installVo.setEqpmntId(eqpmntId);
-//            installVo.setRgtrId(new SecurityInfoUtil().getAccountId());
+            installVo.setRgtrId(new SecurityInfoUtil().getAccountId());
 
         }
         installMapper.insertInstall(installVoList);

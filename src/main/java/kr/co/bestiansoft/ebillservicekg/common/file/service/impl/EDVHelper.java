@@ -7,14 +7,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.Properties;
 
-import jakarta.annotation.Resource;
 import javax.jcr.Binary;
 import javax.jcr.LoginException;
 import javax.jcr.Node;
@@ -30,13 +26,11 @@ import javax.jcr.query.QueryResult;
 import org.apache.jackrabbit.JcrConstants;
 //import org.apache.jackrabbit.api.JackrabbitValue;
 import org.apache.jackrabbit.commons.JcrUtils;
-import org.apache.jackrabbit.value.BinaryValue;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 
 @Component

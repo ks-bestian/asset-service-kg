@@ -1,8 +1,8 @@
 package kr.co.bestiansoft.ebillservicekg.admin.comCode.vo;
 
-import lombok.Data;
-
 import java.util.List;
+
+import lombok.Data;
 
 @Data
 public class ComCodeResponse {

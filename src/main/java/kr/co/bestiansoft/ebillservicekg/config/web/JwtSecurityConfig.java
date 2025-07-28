@@ -19,7 +19,7 @@ public class JwtSecurityConfig extends SecurityConfigurerAdapter<DefaultSecurity
         this.tokenBlacklist = tokenBlacklist;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
     }
-    
+
     @Override
     public void configure(HttpSecurity http) {
     	JwtFilter customFilter = new JwtFilter(tokenProvider, tokenBlacklist);

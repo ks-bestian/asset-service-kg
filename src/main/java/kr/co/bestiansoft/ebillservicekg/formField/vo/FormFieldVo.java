@@ -1,6 +1,7 @@
 package kr.co.bestiansoft.ebillservicekg.formField.vo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
 

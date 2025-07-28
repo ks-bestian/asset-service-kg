@@ -1,9 +1,10 @@
 package kr.co.bestiansoft.ebillservicekg.eas.history.repository;
 
-import kr.co.bestiansoft.ebillservicekg.eas.history.vo.HistoryVo;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
-import java.util.List;
+import kr.co.bestiansoft.ebillservicekg.eas.history.vo.HistoryVo;
 
 @Mapper
 public interface HistoryRepository {

@@ -5,14 +5,10 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,7 +72,7 @@ public class makeCRUD {
 			//table list
 			//ResultSet rsTables = dmd.getTables(conn.getCatalog(), null, "%", null);
 
-			ArrayList<String> tableList = new ArrayList<String>();
+			ArrayList<String> tableList = new ArrayList<>();
 			tableList.add("ebs_bp_define");
 			tableList.add("ebs_bp_instance");
 			tableList.add("ebs_bp_service");
@@ -86,8 +82,8 @@ public class makeCRUD {
 
 			for(int i=0;i<tableList.size();i++) {
 
-			    ArrayList<String> arrColumns = new ArrayList<String>();
-			    ArrayList<String> arrPkColumns = new ArrayList<String>();
+			    ArrayList<String> arrColumns = new ArrayList<>();
+			    ArrayList<String> arrPkColumns = new ArrayList<>();
 				String tableName = tableList.get(i);
 
 				//column list
@@ -323,7 +319,7 @@ public class makeCRUD {
 		return sb.toString();
 	}
 
-	/** SELECT query (where PK)  
+	/** SELECT query (where PK)
 	 * @param tableName
 	 * @param columns
 	 * @param pkColumns

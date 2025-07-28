@@ -1,6 +1,7 @@
 package kr.co.bestiansoft.ebillservicekg.config.datasource;
 
 import javax.sql.DataSource;
+
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -19,7 +20,8 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 	    "kr.co.bestiansoft.ebillservicekg.asset.bzenty.repository",
 	    "kr.co.bestiansoft.ebillservicekg.asset.equip.repository",
 	    "kr.co.bestiansoft.ebillservicekg.asset.install.repository",
-	    "kr.co.bestiansoft.ebillservicekg.asset.manual.repository"
+	    "kr.co.bestiansoft.ebillservicekg.asset.manual.repository",
+	    "kr.co.bestiansoft.ebillservicekg.asset.faq.repository"
 	}, sqlSessionFactoryRef = "assetSqlSessionFactory")
 public class AssetDataSourceConfig {
 

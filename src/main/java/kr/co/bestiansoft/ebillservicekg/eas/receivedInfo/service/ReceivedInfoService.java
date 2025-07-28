@@ -1,10 +1,10 @@
 package kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.service;
 
+import java.util.List;
+
 import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo;
 import kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.vo.ReceivedInfoVo;
 import kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.vo.UpdateReceivedInfoVo;
-
-import java.util.List;
 
 public interface ReceivedInfoService {
     int insertReceivedInfo (ReceivedInfoVo vo);

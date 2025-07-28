@@ -1,9 +1,9 @@
 package kr.co.bestiansoft.ebillservicekg.admin.acsHist.service;
 
-import kr.co.bestiansoft.ebillservicekg.admin.acsHist.vo.AcsHistVo;
-
 import java.util.HashMap;
 import java.util.List;
+
+import kr.co.bestiansoft.ebillservicekg.admin.acsHist.vo.AcsHistVo;
 
 public interface AcsHistService {
     List<AcsHistVo> getAcsHistList(HashMap<String, Object> param);

@@ -2,7 +2,6 @@ package kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.controller;
 
 import java.util.HashMap;
 
-import kr.co.bestiansoft.ebillservicekg.test.vo.CommentsVo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +16,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.service.ApplyService;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
+import kr.co.bestiansoft.ebillservicekg.test.vo.CommentsVo;
 import lombok.RequiredArgsConstructor;
 
 @Tag(name = "agenda submission API")
@@ -40,7 +40,7 @@ public class ApplyController {
     public ResponseEntity<CommonResponse> createBillApply(ApplyVo applyVo) throws Exception {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "apply create successfully", applyService.createApply(applyVo)), HttpStatus.CREATED);
     }
-    
+
     @Operation(summary = "Agenda registration", description = "Agenda Register")
     @PostMapping(value = "/bill/apply/register", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<CommonResponse> createBillApplySubmit(ApplyVo applyVo) throws Exception {
@@ -100,7 +100,7 @@ public class ApplyController {
     public ResponseEntity<CommonResponse> deleteBillFile(@RequestBody EbsFileVo ebsFileVo){
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill file delete successfully", applyService.deleteBillFile(ebsFileVo)), HttpStatus.OK);
     }
-    
+
     @Operation(summary = "Modify whether the file is disclosed", description = "Modify whether the file is disclosed")
     @PutMapping("/bill/file/updateopen")
     public ResponseEntity<CommonResponse> updateopenBillFile(@RequestBody EbsFileVo ebsFileVo){
@@ -119,7 +119,7 @@ public class ApplyController {
     public ResponseEntity<CommonResponse> createBillHome(@RequestBody ApplyVo applyVo) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "insert homepage successfully", applyService.createBillHome(applyVo)), HttpStatus.CREATED);
     }
-    
+
     @Operation(summary = "Homepage Publication stop", description = "Agenda On the homepage Publication Stop")
     @PostMapping(value = "/bill/apply/home/stop")
     public ResponseEntity<CommonResponse> stopBillHome(@RequestBody ApplyVo applyVo) {
@@ -132,6 +132,6 @@ public class ApplyController {
     public ResponseEntity<CommonResponse> createComment(@RequestBody CommentsVo commentsVo) {
         applyService.createComments(commentsVo);
         return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "OK", "successfully"), HttpStatus.OK);
-    };
+    }
 
 }

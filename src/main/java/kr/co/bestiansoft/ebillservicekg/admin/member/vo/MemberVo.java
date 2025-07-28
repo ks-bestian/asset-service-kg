@@ -1,10 +1,9 @@
 package kr.co.bestiansoft.ebillservicekg.admin.member.vo;
 
+import java.util.List;
+
 import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 public class MemberVo extends ComDefaultVO {

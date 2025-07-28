@@ -9,8 +9,8 @@ import lombok.Data;
 public class RevokeResponse {
 
 	RevokeVo revokeDetail;
-	
+
 	List<RevokeVo> proposerList;
-	
+
 	List<EbsFileVo> fileList;
 }

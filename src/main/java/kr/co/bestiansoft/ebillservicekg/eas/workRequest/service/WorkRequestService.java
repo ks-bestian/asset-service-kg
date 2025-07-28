@@ -1,9 +1,9 @@
 package kr.co.bestiansoft.ebillservicekg.eas.workRequest.service;
 
+import java.util.List;
+
 import kr.co.bestiansoft.ebillservicekg.eas.workRequest.vo.WorkRequestAndResponseVo;
 import kr.co.bestiansoft.ebillservicekg.eas.workRequest.vo.WorkRequestVo;
-
-import java.util.List;
 
 public interface WorkRequestService {
     int insertWorkRequest(WorkRequestVo vo);

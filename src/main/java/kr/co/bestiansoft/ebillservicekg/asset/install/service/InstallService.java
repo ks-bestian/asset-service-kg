@@ -1,9 +1,8 @@
 package kr.co.bestiansoft.ebillservicekg.asset.install.service;
 
-import kr.co.bestiansoft.ebillservicekg.asset.install.vo.InstallVo;
-
-import java.util.HashMap;
 import java.util.List;
+
+import kr.co.bestiansoft.ebillservicekg.asset.install.vo.InstallVo;
 
 public interface InstallService {
    void createInstall(List<InstallVo> installVoList, String eqpmntId);

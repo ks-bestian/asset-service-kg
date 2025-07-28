@@ -1,23 +1,27 @@
 package kr.co.bestiansoft.ebillservicekg.asset.equip.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import kr.co.bestiansoft.ebillservicekg.asset.amsImg.service.AmsImgService;
 import kr.co.bestiansoft.ebillservicekg.asset.equip.repository.EquipMapper;
 import kr.co.bestiansoft.ebillservicekg.asset.equip.service.EquipService;
-import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.*;
+import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipDetailVo;
+import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipRequest;
+import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipResponse;
+import kr.co.bestiansoft.ebillservicekg.asset.faq.service.FaqService;
 import kr.co.bestiansoft.ebillservicekg.asset.install.service.InstallService;
 import kr.co.bestiansoft.ebillservicekg.asset.manual.service.MnulService;
 import kr.co.bestiansoft.ebillservicekg.asset.manual.vo.MnulVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
@@ -27,12 +31,13 @@ public class EquipServiceImpl implements EquipService {
     private final EquipMapper equipMapper;
     private final MnulService mnulService;
     private final InstallService installService;
+    private final FaqService faqService;
     private final AmsImgService amsImgService;
 
     @Transactional
     @Override
     public int createEquip(EquipRequest equipRequest) {
-
+    	System.out.println("aaaaaaaaaaa :: ");
         //1.제품정보(pdf메뉴얼, 이미지저장 보류)
         String eqpmntId = StringUtil.getEqpmntUUUID();
 
@@ -46,6 +51,9 @@ public class EquipServiceImpl implements EquipService {
 
         //3.설치정보
         installService.createInstall(equipRequest.getInstallVoList(), eqpmntId);
+        
+        //4. faq
+        faqService.createFaq(equipRequest.getFaqVoList(), eqpmntId);
 
         return 1;
     }

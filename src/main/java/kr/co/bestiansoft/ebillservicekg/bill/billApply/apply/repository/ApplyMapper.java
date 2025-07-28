@@ -14,15 +14,15 @@ public interface ApplyMapper {
 	int insertApplyBill(ApplyVo applyVo);
 
 	List<ApplyVo> selectListBillApply(HashMap<String, Object> param);
-	
+
 	List<ApplyVo> selectListBillAgree(HashMap<String, Object> param);
-	
+
 	List<ApplyVo> selectListBillRevoke(HashMap<String, Object> param);
 
 	List<ApplyVo> selectListBillRevokeAgree(HashMap<String, Object> param);
-	
+
 	ApplyVo selectBill(HashMap<String, Object> param);
-	
+
 //	List<ApplyVo> selectListApply(HashMap<String, Object> param);
 
 	int updateApplyByBillId(ApplyVo applyVo);
@@ -54,13 +54,13 @@ public interface ApplyMapper {
 	int insertHomeLaws(ApplyVo applyVo);
 
 	List<EbsFileVo> selectBillFileList(HashMap<String, Object> param);
-	
+
 	List<EbsFileVo> selectApplyFileList(HashMap<String, Object> param);
 
 	int updateFileDelete(EbsFileVo ebsFileVo, String userId);
-	
+
 	int deleteBillFileByBillId(HashMap<String, Object> param);
-	
+
 	int updateFileOpbYn(EbsFileVo ebsFileVo, String userId);
 
 	List<ApplyVo> selectBillAll(HashMap<String, Object> param);

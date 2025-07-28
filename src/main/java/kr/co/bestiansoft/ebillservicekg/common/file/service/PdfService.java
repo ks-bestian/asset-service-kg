@@ -1,11 +1,6 @@
 package kr.co.bestiansoft.ebillservicekg.common.file.service;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-
-import org.springframework.web.multipart.MultipartFile;
 
 public interface PdfService {
 
@@ -14,7 +9,7 @@ public interface PdfService {
 	void convertXlsToPdf(String xlsfilepath, String pdffilepath) throws Exception;
 	boolean convertToPdf(String filepath, String filename, String pdffilepath) throws Exception;
 	/**
-	 * 
+	 *
 	 * @param pdfPath PDF file channel
 	 * @param imagePath To insert image file channel
 	 * @param outputPath result PDF file channel
@@ -23,10 +18,10 @@ public interface PdfService {
 	 * @param y Image To be inserted Y coordinate (page Left side Bottom standard, point unit)
 	 * @param width To be inserted Image width (point unit)
 	 * @param height To be inserted Image height (point unit)
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	void addImageToPdf(String pdfPath, String imagePath, String outputPath, int pageNumber, float x, float y,
 			float width, float height) throws IOException;
-	
+
 }
 

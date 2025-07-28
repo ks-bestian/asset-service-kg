@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper;
@@ -113,16 +112,16 @@ public class RevokeServiceImpl implements RevokeService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 //		this.updateRevoke(billId, vo);
 //		if(vo.getFiles() != null) {
 //			String[] fileKindCd = new String[vo.getFiles().length];
 //			for(int i = 0; i < vo.getFiles().length; ++i) {
 //				fileKindCd[i] = "170"; //Withdrawal
 //			}
-//			comFileService.saveFileEbs(vo.getFiles(), fileKindCd, billId);	
+//			comFileService.saveFileEbs(vo.getFiles(), fileKindCd, billId);
 //		}
-		
+
 		// Voter Withdrawal
 		String userId = new SecurityInfoUtil().getAccountId();
 		HashMap<String, Object> param = new HashMap<>();
@@ -130,14 +129,14 @@ public class RevokeServiceImpl implements RevokeService {
 		param.put("billId", billId);
 		param.put("agreeYn", "Y");
 		revokeAgreeMapper.updateRevokeAgree(param);
-		
+
 		ProcessVo pVo = new ProcessVo();
 		pVo.setBillId(billId);
 		pVo.setStepId("1100"); //Agenda withdrawal management
 //		pVo.setTaskId(vo.getTaskId());
 		processService.handleProcess(pVo);
-		
-		
+
+
 
 		return pVo;
 	}
@@ -174,24 +173,24 @@ public class RevokeServiceImpl implements RevokeService {
 	@Override
 	public int billRevokeCancel(String billId, HashMap<String, Object> param) {
 		processService.undoProcess(billId, "1100");
-		
+
 		BillMngVo billMngVo = new BillMngVo();
 		billMngVo.setBillId(billId);
 		billMngVo.setFileKindCd("170"); //Agenda
 		billMngVo.setClsCd("400"); //Withdrawal
 		billMngService.deleteBillDetail(billMngVo);
-		
+
 //		EbsFileVo ebsFileVo = new EbsFileVo();
 //		ebsFileVo.setBillId(billId);
 //		ebsFileVo.setFileKindCd("170"); //Withdrawal
 //		ebsFileVo.setModId(new SecurityInfoUtil().getAccountId());
 //		billMngService.updateEbsFileDelYn(ebsFileVo);
-		
+
 		//Withdrawal To the lawmaker alarm
 		String msgSj = "Withdrawal";
 		String msgCn = "Canceled withdrawal";
 		List<String> rcvIds = new ArrayList<>();
-		
+
 		String userId = new SecurityInfoUtil().getAccountId();
 		param.put("userId", userId);
 		param.put("billId", billId);
@@ -201,16 +200,16 @@ public class RevokeServiceImpl implements RevokeService {
 				rcvIds.add(proposer.getProposerId());
 			}
 		}
-		
+
 		MsgRequest msgRequest = new MsgRequest();
 		msgRequest.setMsgSj(msgSj);
 		msgRequest.setMsgCn(msgCn);
 		msgRequest.setRcvIds(rcvIds);
 		msgService.sendMsg(msgRequest);
-		
+
 		return 0;
 	}
-	
+
 //	@Override
 //	public boolean hasEveryProposerAgreedToRevoke(String billId) {
 //		HashMap<String, Object> param = new HashMap<>();
@@ -219,7 +218,7 @@ public class RevokeServiceImpl implements RevokeService {
 //		if(proposerList == null) {
 //			return false;
 //		}
-//		
+//
 //		for(RevokeVo proposer : proposerList) {
 //			if(!"Y".equals(proposer.getRevokeYn())) {
 //				return false;

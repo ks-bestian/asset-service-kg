@@ -12,7 +12,7 @@ public interface SystemBillService {
 	SystemBillResponse selectBillDetail(String billId, HashMap<String, Object> param);
 
 	SystemBillVo createBillDetail(SystemBillVo systemBillVo);
-	
+
 	List<EbsFileVo> selectOpinionFile(String billId);
 
 	SystemBillVo createBillFile(SystemBillVo systemBillVo);

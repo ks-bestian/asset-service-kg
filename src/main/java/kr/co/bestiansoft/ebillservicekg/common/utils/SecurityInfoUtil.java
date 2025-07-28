@@ -12,11 +12,11 @@ import kr.co.bestiansoft.ebillservicekg.login.vo.Account;
 import lombok.Data;
 
 @Data
-public class SecurityInfoUtil {    
-	
+public class SecurityInfoUtil {
+
     private Authentication authentication;
     private final Account account;
-    
+
     public SecurityInfoUtil() {
         authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
@@ -25,21 +25,21 @@ public class SecurityInfoUtil {
             throw new UnauthorizedException("Unauthorized access");
         }
     }
-    
+
     public String getAccountId() {
 		return account.getUserId();
 	}
-	
+
 	public String getDeptCd() {
 		return account.getDeptCd();
 	}
-	
+
 	public String getDeptHeadYn() {
 		return account.getDeptHeadYn();
 	}
-	
+
 	public Collection<GrantedAuthority> getAuthorities() {
 		return account.getAuthorities();
 	}
-    
+
 }

@@ -1,11 +1,15 @@
 package kr.co.bestiansoft.ebillservicekg.eas.officialDocument.repository;
 
-import com.aspose.cells.DateTime;
-import kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalLIstDto;
-import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.*;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
-import java.util.List;
+import kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalLIstDto;
+import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.DocumentDetailDto;
+import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.DocumentListDto;
+import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.DocumentUserDto;
+import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.OfficialDocumentVo;
+import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.SearchDocumentVo;
 
 @Mapper
 public interface OfficialDocumentMapper {

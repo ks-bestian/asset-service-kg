@@ -1,5 +1,9 @@
 package kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.service.impl;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import kr.co.bestiansoft.ebillservicekg.admin.user.service.UserService;
 import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
@@ -9,9 +13,6 @@ import kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.vo.ReceivedInfoVo;
 import kr.co.bestiansoft.ebillservicekg.eas.receivedInfo.vo.UpdateReceivedInfoVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -53,7 +54,8 @@ public class ReceivedInfoServiceImpl implements ReceivedInfoService {
     public List<ReceivedInfoVo> getReceivedInfo(String docId) {
         return receivedInfoRepository.getReceivedInfo(docId);
     }
-    public boolean isReceipt(int docId) {
+    @Override
+	public boolean isReceipt(int docId) {
         return receivedInfoRepository.isReceipt(docId);
     }
 

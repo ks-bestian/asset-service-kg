@@ -9,7 +9,7 @@ public class ResourceNotFoundException extends RuntimeException implements Suppl
     public ResourceNotFoundException(String dataSource, Long id) {
         super("cannot found : " + id + " in " + dataSource);
     }
-    
+
     //String
     public ResourceNotFoundException(String dataSource, String id) {
     	super("cannot found : " + id + " in " + dataSource);

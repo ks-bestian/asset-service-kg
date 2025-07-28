@@ -14,13 +14,13 @@ public interface ComFileMapper {
 	ComFileVo findByFileId(String fileId);
 	List<ComFileVo> batchGetDeleteFileList();
 	void deleteServerFile(String fileId);
-	
+
 	int insertFileEbs(EbsFileVo vo);
 	int updateFileEbs(EbsFileVo vo);
-	
+
 	int insertFileEbsMtng(EbsFileVo vo);
 	int updateFileEbsMtng(EbsFileVo vo);
-	
+
 	EbsFileVo selectEbsFile(String orgFileId);
 
 	void updatePdfFileInfo(ComFileVo updateVo);

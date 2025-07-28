@@ -18,7 +18,7 @@ public class TokenBlacklist implements InitializingBean{
         blacklist.add(token);
     }
 
-    // You can also add methods to remove tokens from the blacklist as needed. 
+    // You can also add methods to remove tokens from the blacklist as needed.
     public void removeFromBlacklist(String token) {
         blacklist.remove(token);
     }
@@ -26,6 +26,6 @@ public class TokenBlacklist implements InitializingBean{
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

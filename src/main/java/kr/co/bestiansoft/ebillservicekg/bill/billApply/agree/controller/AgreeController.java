@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.service.AgreeService;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.service.ApplyService;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
@@ -34,7 +34,7 @@ public class AgreeController {
 		// TODO :: 대수 검색조건 설정 필요(현재 14로 하드코딩)
         return new ResponseEntity<>(new CommonResponse(200, "OK", agreeService.getAgreeList(param)), HttpStatus.OK);
     }
-    
+
     @Operation(summary = "Signature particular", description = "Signature Details check")
     @GetMapping("/bill/agree/{billId}")
     public ResponseEntity<CommonResponse> getApplyDetail(@PathVariable String billId, @RequestParam HashMap<String, Object> param) {
@@ -42,12 +42,12 @@ public class AgreeController {
 //    	return new ResponseEntity<>(new CommonResponse(200, "OK", agreeService.getAgreeDetail(billId, lang)), HttpStatus.OK);
     	return new ResponseEntity<>(new CommonResponse(200, "OK", applyService.getApplyDetail(billId, param)), HttpStatus.OK);
     }
-    
+
     @Operation(summary = "agreement signature", description = "Agenda about agreement and agreement cancellation")
     @PutMapping("/bill/agree/{billId}")
     public ResponseEntity<CommonResponse> setBillAgree(@PathVariable String billId, @RequestBody HashMap<String, Object> param) {
     	return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "bill agree successfully", agreeService.setBillAgree(billId, param)), HttpStatus.OK);
     }
-    
-    
+
+
 }

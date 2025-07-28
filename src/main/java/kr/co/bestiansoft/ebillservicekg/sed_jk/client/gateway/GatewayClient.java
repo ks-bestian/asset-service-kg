@@ -1,19 +1,5 @@
 package kr.co.bestiansoft.ebillservicekg.sed_jk.client.gateway;
 
-import kr.co.bestiansoft.ebillservicekg.sed_jk.client.gateway.dto.common.DownloadedFile;
-import kr.co.bestiansoft.ebillservicekg.sed_jk.client.gateway.dto.document.request.AddDocumentRequest;
-import kr.co.bestiansoft.ebillservicekg.sed_jk.client.gateway.dto.document.response.AddDocumentResponse;
-import kr.co.bestiansoft.ebillservicekg.sed_jk.exception.ClientServerException;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestClient;
-
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
@@ -24,6 +10,21 @@ import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClient;
+
+import kr.co.bestiansoft.ebillservicekg.sed_jk.client.gateway.dto.common.DownloadedFile;
+import kr.co.bestiansoft.ebillservicekg.sed_jk.client.gateway.dto.document.request.AddDocumentRequest;
+import kr.co.bestiansoft.ebillservicekg.sed_jk.client.gateway.dto.document.response.AddDocumentResponse;
+import kr.co.bestiansoft.ebillservicekg.sed_jk.exception.ClientServerException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component

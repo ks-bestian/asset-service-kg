@@ -1,9 +1,10 @@
 package kr.co.bestiansoft.ebillservicekg.asset.amsImg.repository;
 
-import kr.co.bestiansoft.ebillservicekg.asset.amsImg.vo.AmsImgVo;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
-import java.util.List;
+import kr.co.bestiansoft.ebillservicekg.asset.amsImg.vo.AmsImgVo;
 
 @Mapper
 public interface AmsImgMapper {

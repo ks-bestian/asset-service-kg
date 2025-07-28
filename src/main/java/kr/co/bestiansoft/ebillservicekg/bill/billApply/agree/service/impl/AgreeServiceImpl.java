@@ -3,10 +3,10 @@ package kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.service.impl;
 import java.util.HashMap;
 import java.util.List;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import kr.co.bestiansoft.ebillservicekg.test.domain.CommentsHierarchy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.repository.AgreeMapper;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.service.AgreeService;
@@ -14,9 +14,9 @@ import kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.vo.AgreeResponse;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.agree.vo.AgreeVo;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.repository.ApplyMapper;
 import kr.co.bestiansoft.ebillservicekg.bill.billApply.apply.vo.ApplyVo;
-import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
 import kr.co.bestiansoft.ebillservicekg.common.file.vo.EbsFileVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
+import kr.co.bestiansoft.ebillservicekg.test.domain.CommentsHierarchy;
 import kr.co.bestiansoft.ebillservicekg.test.repository2.HomePageMapper;
 import kr.co.bestiansoft.ebillservicekg.test.vo.CommentsVo;
 import lombok.RequiredArgsConstructor;
@@ -83,7 +83,7 @@ public class AgreeServiceImpl implements AgreeService {
 		param.put("lang", lang);
 		List<EbsFileVo> fileList = applyMapper.selectApplyFileList(param);
 		result.setFileList(fileList);
-		
+
 		List<CommentsVo> commentList = homePageMapper.selectCommentsByLawId(null);
 
 		CommentsHierarchy ch = new CommentsHierarchy();

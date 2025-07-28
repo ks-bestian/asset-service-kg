@@ -1,9 +1,9 @@
 package kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo;
 
-import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
-import lombok.*;
-
 import java.time.LocalDateTime;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor

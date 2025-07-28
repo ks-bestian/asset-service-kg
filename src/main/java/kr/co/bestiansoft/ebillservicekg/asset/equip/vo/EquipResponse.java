@@ -1,12 +1,12 @@
 package kr.co.bestiansoft.ebillservicekg.asset.equip.vo;
 
 
+import java.util.List;
+
 import kr.co.bestiansoft.ebillservicekg.asset.amsImg.vo.AmsImgVo;
 import kr.co.bestiansoft.ebillservicekg.asset.install.vo.InstallVo;
 import kr.co.bestiansoft.ebillservicekg.asset.manual.vo.MnulVo;
-import lombok.*;
-
-import java.util.List;
+import lombok.Data;
 
 @Data
 public class EquipResponse {

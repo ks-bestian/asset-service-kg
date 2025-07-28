@@ -17,7 +17,7 @@ public class XADataSourceConfig {
 //    public DataSource kgstDataSource() {
 //		return new AtomikosDataSourceBean();
 //    }
-//	
+//
 //    @Bean
 //    @ConfigurationProperties(prefix = "spring.jta.atomikos.datasource.homepage")
 //    public DataSource homepageDataSource() {

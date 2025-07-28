@@ -1,5 +1,10 @@
 package kr.co.bestiansoft.ebillservicekg.eas.history.service.impl;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
 import kr.co.bestiansoft.ebillservicekg.admin.comCode.service.ComCodeService;
 import kr.co.bestiansoft.ebillservicekg.admin.comCode.vo.ComCodeDetailVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
@@ -8,10 +13,6 @@ import kr.co.bestiansoft.ebillservicekg.eas.history.service.HistoryService;
 import kr.co.bestiansoft.ebillservicekg.eas.history.vo.HistoryVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -40,7 +41,8 @@ public class HistoryServiceImpl implements HistoryService {
      * @return a string combining the username and the code name associated with the action type,
      *         or an empty string if no code name is found for the given action type
      */
-    public String getActionDetail(String actionType, String userNm){
+    @Override
+	public String getActionDetail(String actionType, String userNm){
         //todo 배포하기전 nm1 으로 바꾸기
         return Optional.ofNullable(codeService.getComCodeById(actionType))
                 .map(ComCodeDetailVo::getCodeNm3)
@@ -66,7 +68,8 @@ public class HistoryServiceImpl implements HistoryService {
      * @return a list of HistoryVo objects containing the history details specific to the provided document ID
      *         and the logged-in user's account
      */
-    public List<HistoryVo> getHistoryByUserId(String docId){
+    @Override
+	public List<HistoryVo> getHistoryByUserId(String docId){
         return historyRepository.getHistoryByUserId(docId, new SecurityInfoUtil().getAccountId());
     }
 

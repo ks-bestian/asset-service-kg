@@ -1,13 +1,14 @@
 package kr.co.bestiansoft.ebillservicekg.asset.amsImg.service.impl;
 
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import kr.co.bestiansoft.ebillservicekg.asset.amsImg.repository.AmsImgMapper;
 import kr.co.bestiansoft.ebillservicekg.asset.amsImg.service.AmsImgService;
 import kr.co.bestiansoft.ebillservicekg.asset.amsImg.vo.AmsImgVo;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

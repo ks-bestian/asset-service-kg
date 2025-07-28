@@ -1,10 +1,10 @@
 package kr.co.bestiansoft.ebillservicekg.asset.install.repository;
 
-import kr.co.bestiansoft.ebillservicekg.asset.install.vo.InstallVo;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
-import java.util.HashMap;
-import java.util.List;
+import kr.co.bestiansoft.ebillservicekg.asset.install.vo.InstallVo;
 
 @Mapper
 public interface InstallMapper {

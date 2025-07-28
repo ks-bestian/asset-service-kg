@@ -1,9 +1,10 @@
 package kr.co.bestiansoft.ebillservicekg.eas.file.repository;
 
-import kr.co.bestiansoft.ebillservicekg.eas.file.vo.EasFileVo;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
-import java.util.List;
+import kr.co.bestiansoft.ebillservicekg.eas.file.vo.EasFileVo;
 
 @Mapper
 public interface EasFileRepository {

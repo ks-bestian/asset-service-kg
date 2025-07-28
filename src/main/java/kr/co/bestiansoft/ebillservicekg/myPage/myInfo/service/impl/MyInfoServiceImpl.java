@@ -1,6 +1,12 @@
 package kr.co.bestiansoft.ebillservicekg.myPage.myInfo.service.impl;
 
-import kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import kr.co.bestiansoft.ebillservicekg.admin.user.repository.UserMapper;
 import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo;
 import kr.co.bestiansoft.ebillservicekg.common.file.service.ComFileService;
@@ -11,15 +17,6 @@ import kr.co.bestiansoft.ebillservicekg.login.vo.LoginRequest;
 import kr.co.bestiansoft.ebillservicekg.myPage.myInfo.service.MyInfoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
 
 @Service
 @Transactional
@@ -67,7 +64,7 @@ public class MyInfoServiceImpl implements MyInfoService {
             	List<ComFileVo> fileList = comFileService.getFileList(myInfo.getProfileImgPath());
             	if(fileList != null && fileList.size() > 0) {
             		String fileId = fileList.get(0).getFileId();
-               		resource = edv.download(fileId);	
+               		resource = edv.download(fileId);
             	}
             }
             return resource;

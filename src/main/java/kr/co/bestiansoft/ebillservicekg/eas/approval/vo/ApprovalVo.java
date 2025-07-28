@@ -1,10 +1,10 @@
 package kr.co.bestiansoft.ebillservicekg.eas.approval.vo;
 
+import java.time.LocalDateTime;
+
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor

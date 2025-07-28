@@ -1,15 +1,20 @@
 package kr.co.bestiansoft.ebillservicekg.admin.authDept.controller;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.bestiansoft.ebillservicekg.admin.authDept.service.AuthDeptService;
 import kr.co.bestiansoft.ebillservicekg.admin.authDept.vo.AuthDeptCreate;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Rights menu API")
 @CrossOrigin(origins = "*", allowedHeaders = "*")

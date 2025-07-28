@@ -8,16 +8,16 @@ import lombok.Data;
 
 @Data
 public class SystemBillResponse {
-	
+
 	List<EbsFileVo> fileList;
-	
+
 	SystemBillVo billDetail;
-	
+
 	List<SystemBillVo> mtngList;
-	
+
 	List<EbsFileVo> cmtFileList;
-	
+
 	List<SystemBillVo> billDetailList;
-	
+
 	List<AgreeVo> proposerList;
 }

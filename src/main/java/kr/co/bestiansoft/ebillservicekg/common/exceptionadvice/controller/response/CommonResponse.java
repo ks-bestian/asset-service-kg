@@ -1,11 +1,11 @@
 package kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response;
 
+import java.util.List;
+
 import kr.co.bestiansoft.ebillservicekg.admin.menu.vo.MenuVo;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @NoArgsConstructor
 @Data

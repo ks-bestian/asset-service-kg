@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 public class RevokeAgreeVo extends ComDefaultVO {
-	
+
 	//안건아이디
 	private String billId;
 	//안건아이디
@@ -45,9 +45,9 @@ public class RevokeAgreeVo extends ComDefaultVO {
 	private String proposerId;
 	//동의여부
 	private String agreeYn;
-	
+
 	private String memberNm;
-	
+
     /** process stepId */
     private String stepId;
 
@@ -56,9 +56,9 @@ public class RevokeAgreeVo extends ComDefaultVO {
 
     /** process taskStatus */
     private String taskStatus;
-    
+
     private LocalDateTime revokeRegDt;
-    
+
     private LocalDateTime wtDt;
 	private LocalDateTime wtCncDt;
 }

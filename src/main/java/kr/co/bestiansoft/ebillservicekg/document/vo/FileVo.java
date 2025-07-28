@@ -1,6 +1,5 @@
 package kr.co.bestiansoft.ebillservicekg.document.vo;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -26,34 +25,34 @@ public class FileVo extends ComDefaultVO {
 	private String groupYn;
 	private String edvHashStr;
 	private String edvPath;
-	
+
 	private String folderYn = "N";
-	
+
 	private MultipartFile[] files;
 	private MultipartFile[] addFiles;
 	private MultipartFile thumbnailImage;
-	
+
 	private String userId;
 	private String favoriteYn;
-	
+
 	private String title;
 	private String regNm;
-	
+
 	private List<String> delFileIds;
-	
+
 	private List<Long> folderIds;
 	private List<String> fileGroupIds;
-	
+
 	private Long toFolderId;
-	
+
 	private String deptFileYn;
 	private String ownerId;
-	
+
 	private Boolean searchYn;
 	private Boolean createYn;
 	private Boolean deleteYn;
 	private Boolean updateYn;
-	
+
 	private Boolean createFolderYn;
 	private Boolean createFileYn;
 }

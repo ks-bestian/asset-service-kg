@@ -1,11 +1,12 @@
 package kr.co.bestiansoft.ebillservicekg.eas.workResponse.repository;
 
-import kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.UpdateWorkResponseVo;
-import kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.WorkResponseVo;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.List;
+import kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.UpdateWorkResponseVo;
+import kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.WorkResponseVo;
 
 @Mapper
 public interface WorkResponseRepository {

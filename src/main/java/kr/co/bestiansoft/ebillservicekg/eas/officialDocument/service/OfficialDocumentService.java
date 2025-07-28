@@ -1,10 +1,13 @@
 package kr.co.bestiansoft.ebillservicekg.eas.officialDocument.service;
 
-import kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalLIstDto;
-import kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalVo;
-import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.*;
-
 import java.util.List;
+
+import kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalLIstDto;
+import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.DocumentDetailDto;
+import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.DocumentListDto;
+import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.DocumentUserDto;
+import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.OfficialDocumentVo;
+import kr.co.bestiansoft.ebillservicekg.eas.officialDocument.vo.SearchDocumentVo;
 
 public interface OfficialDocumentService {
 

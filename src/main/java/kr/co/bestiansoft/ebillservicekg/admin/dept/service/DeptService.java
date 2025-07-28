@@ -1,12 +1,11 @@
 package kr.co.bestiansoft.ebillservicekg.admin.dept.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import kr.co.bestiansoft.ebillservicekg.admin.dept.vo.DeptVo;
-import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserVo;
-
 import java.util.HashMap;
 import java.util.List;
+
+import com.fasterxml.jackson.databind.node.ArrayNode;
+
+import kr.co.bestiansoft.ebillservicekg.admin.dept.vo.DeptVo;
 
 public interface DeptService {
     List<DeptVo> getComDeptList(HashMap<String, Object> param);

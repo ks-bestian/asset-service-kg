@@ -12,22 +12,22 @@ public class FolderVo extends ComDefaultVO {
     private String upperFolderNm;
     private String deptCd;
     private String delYn;
-    
+
     private String title;
     private String regNm;
-    
+
     private String deptFolderYn;
     private String userId;
-    
+
     private String folderYn = "Y";
-    
+
     private String ownerId;
-    
+
     private Boolean searchYn;
 	private Boolean createYn;
 	private Boolean deleteYn;
 	private Boolean updateYn;
-	
+
 	private Boolean createFolderYn;
 	private Boolean createFileYn;
 }

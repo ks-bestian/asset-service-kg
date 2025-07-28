@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class BzentyServiceImpl implements BzentyService {
-	
+
     private final BzentyMapper bzentyMapper;
 
     @Override
@@ -35,7 +35,7 @@ public class BzentyServiceImpl implements BzentyService {
     public BzentyVo createBzenty(BzentyVo bzentyVo) {
         String rgtrId = new SecurityInfoUtil().getAccountId();
     	String bzentyId = StringUtil.getBzentyUUID();
-    	
+
         bzentyVo.setRgtrId(rgtrId);
         bzentyVo.setBzentyId(bzentyId);
 

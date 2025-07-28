@@ -1,10 +1,10 @@
 package kr.co.bestiansoft.ebillservicekg.admin.authDept.repository;
 
-import kr.co.bestiansoft.ebillservicekg.admin.authDept.vo.AuthDeptCreate;
-import kr.co.bestiansoft.ebillservicekg.admin.authDept.vo.AuthDeptVo;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
-import java.util.List;
+import kr.co.bestiansoft.ebillservicekg.admin.authDept.vo.AuthDeptVo;
 
 @Mapper
 public interface AuthDeptMapper {

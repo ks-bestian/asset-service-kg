@@ -20,14 +20,14 @@ public interface ComFileService {
 	void saveFileEbs(String[] myFileIds, String[] fileKindCdList, String[] opbYnList, String billId) throws Exception;
 	void saveFileEbsMtng(MultipartFile[] files, String[] fileKindCdList, Long mtngId);
 	void saveFileEbsMtng(String[] myFileIds, String[] fileKindCdList, Long mtngId) throws Exception;
-	
+
 //	void saveFileBillMng(EbsFileVo ebsFileVo);
 
 	void saveFileBillDetailMng(BillMngVo billMngVo) throws Exception;
-	
+
 	void saveFileEbs(MultipartFile file, String fileKindCd, String billId, String clsCd, String opbYn, Long detailSeq, String lng_type);
 	void saveFileEbs(String myFileId, String fileKindCd, String billId, String clsCd, String opbYn, Long detailSeq, String lng_type) throws Exception;
-	
+
 	void updateEbsFile(EbsFileVo ebsFileVo);
 	void deleteFile(String fieldId);
 }

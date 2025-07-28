@@ -1,7 +1,8 @@
 package kr.co.bestiansoft.ebillservicekg.sed_jk.exception;
 
-import lombok.Getter;
 import org.springframework.http.HttpStatus;
+
+import lombok.Getter;
 
 @Getter
 public class BaseException extends RuntimeException {

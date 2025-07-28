@@ -1,10 +1,10 @@
 package kr.co.bestiansoft.ebillservicekg.admin.user.service;
 
-import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo;
-import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserVo;
-
 import java.util.HashMap;
 import java.util.List;
+
+import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo;
+import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserVo;
 
 public interface UserService {
     List<UserVo> getUserList(HashMap<String, Object> param);

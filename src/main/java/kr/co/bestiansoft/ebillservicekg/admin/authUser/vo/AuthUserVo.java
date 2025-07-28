@@ -1,11 +1,9 @@
 package kr.co.bestiansoft.ebillservicekg.admin.authUser.vo;
 
-import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
-import lombok.Builder;
-import lombok.Data;
-
-import java.time.LocalDateTime;
 import java.util.List;
+
+import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
+import lombok.Data;
 
 @Data
 public class AuthUserVo extends ComDefaultVO {

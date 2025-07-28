@@ -1,14 +1,14 @@
 package kr.co.bestiansoft.ebillservicekg.eas.file.service;
 
-import kr.co.bestiansoft.ebillservicekg.eas.file.vo.EasFileVo;
-import kr.co.bestiansoft.ebillservicekg.eas.file.vo.SaveFileDto;
-import kr.co.bestiansoft.ebillservicekg.eas.file.vo.UpdatePdfFileDto;
-import org.apache.ibatis.annotations.Mapper;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+
+import org.springframework.web.multipart.MultipartFile;
+
+import kr.co.bestiansoft.ebillservicekg.eas.file.vo.EasFileVo;
+import kr.co.bestiansoft.ebillservicekg.eas.file.vo.SaveFileDto;
+import kr.co.bestiansoft.ebillservicekg.eas.file.vo.UpdatePdfFileDto;
 
 public interface EasFileService {
     List<String> uploadEasFileAndConversionPdf (EasFileVo vo);

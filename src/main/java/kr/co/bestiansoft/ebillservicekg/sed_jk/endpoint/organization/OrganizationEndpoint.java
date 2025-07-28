@@ -1,10 +1,10 @@
 package kr.co.bestiansoft.ebillservicekg.sed_jk.endpoint.organization;
 
+import java.util.List;
+
 import kr.co.bestiansoft.ebillservicekg.sed_jk.client.gateway.dto.GatewayAllOrganizationsResponseDto;
 import kr.co.bestiansoft.ebillservicekg.sed_jk.client.gateway.dto.GatewayOrganizationResponseDto;
 import kr.co.bestiansoft.ebillservicekg.sed_jk.endpoint.organization.dto.OrganizationAddDto;
-
-import java.util.List;
 
 public interface OrganizationEndpoint {
     List<GatewayOrganizationResponseDto> search(String name);

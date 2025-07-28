@@ -1,10 +1,9 @@
 package kr.co.bestiansoft.ebillservicekg.admin.baseCode.service;
 
-import kr.co.bestiansoft.ebillservicekg.admin.baseCode.vo.BaseCodeVo;
-import kr.co.bestiansoft.ebillservicekg.admin.bbs.vo.BoardVo;
-
 import java.util.HashMap;
 import java.util.List;
+
+import kr.co.bestiansoft.ebillservicekg.admin.baseCode.vo.BaseCodeVo;
 
 public interface BaseCodeService {
     List<BaseCodeVo> getBaseCodeList(HashMap<String, Object> param);

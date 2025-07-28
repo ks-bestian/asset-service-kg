@@ -1,13 +1,32 @@
 package kr.co.bestiansoft.ebillservicekg.eas.documentWorkFlow.service.Impl;
 
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import kr.co.bestiansoft.ebillservicekg.admin.user.service.UserService;
 import kr.co.bestiansoft.ebillservicekg.admin.user.vo.UserMemberVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.eas.approval.service.ApprovalService;
 import kr.co.bestiansoft.ebillservicekg.eas.approval.vo.ApprovalVo;
 import kr.co.bestiansoft.ebillservicekg.eas.approval.vo.UpdateApprovalVo;
+import kr.co.bestiansoft.ebillservicekg.eas.documentWorkFlow.enums.ActionType;
+import kr.co.bestiansoft.ebillservicekg.eas.documentWorkFlow.enums.ApprovalStatus;
+import kr.co.bestiansoft.ebillservicekg.eas.documentWorkFlow.enums.ApprovalType;
+import kr.co.bestiansoft.ebillservicekg.eas.documentWorkFlow.enums.DocumentStatus;
+import kr.co.bestiansoft.ebillservicekg.eas.documentWorkFlow.enums.DocumentType;
+import kr.co.bestiansoft.ebillservicekg.eas.documentWorkFlow.enums.DraftStatus;
+import kr.co.bestiansoft.ebillservicekg.eas.documentWorkFlow.enums.EasFileType;
+import kr.co.bestiansoft.ebillservicekg.eas.documentWorkFlow.enums.LinkType;
+import kr.co.bestiansoft.ebillservicekg.eas.documentWorkFlow.enums.ReceiveStatus;
+import kr.co.bestiansoft.ebillservicekg.eas.documentWorkFlow.enums.WorkStatus;
 import kr.co.bestiansoft.ebillservicekg.eas.documentWorkFlow.service.DocumentWorkFlowService;
-import kr.co.bestiansoft.ebillservicekg.eas.documentWorkFlow.enums.*;
 import kr.co.bestiansoft.ebillservicekg.eas.draftDocument.service.DraftDocumentService;
 import kr.co.bestiansoft.ebillservicekg.eas.draftDocument.vo.DraftDocumentVo;
 import kr.co.bestiansoft.ebillservicekg.eas.file.service.EasFileService;
@@ -32,12 +51,6 @@ import kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.UpdateWorkResponseVo
 import kr.co.bestiansoft.ebillservicekg.eas.workResponse.vo.WorkResponseVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.time.LocalDateTime;
-import java.util.*;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -250,7 +263,8 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
      * @param vo the data transfer object containing the details of the approval to be rejected,
      *           such as the document ID and current approval status information
      */
-    @Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
+    @Override
+	@Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
     public void approveReject(UpdateApprovalVo vo){
         UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
 
@@ -281,7 +295,8 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
      * @param vo an instance of WorkRequestAndResponseVo containing work request details,
      *           including document type, request ID, worker ID, and other necessary information.
      */
-    @Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
+    @Override
+	@Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
     public void reception(WorkRequestAndResponseVo vo){
         UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
         if(vo.getDocTypeCd() == null){}
@@ -293,13 +308,15 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
             vo.setWorkStatus(WorkStatus.DISPATCHED.getCodeId());
             vo.setRegUserNm(loginUser.getUserNm());
             WorkRequestVo requestVo = vo.toRequestVo();
-            
+
             workRequestService.insertWorkRequest(requestVo);
 
             // 이행자 추가
             vo.getWorkResponseVos().forEach(workResponseVo -> {
                 UserMemberVo user = userService.getUserMemberDetail(workResponseVo.getUserId());
-                if(user == null) return;
+                if(user == null) {
+					return;
+				}
                 workResponseVo.setWorkReqId(requestVo.getWorkReqId());
                 workResponseVo.setDeptCd(user.getDeptCd());
                 workResponseVo.setJobCd(user.getJobCd());
@@ -377,7 +394,8 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
      *           that needs to be updated for rejecting the reception. It includes details such as
      *           document ID and reception status.
      */
-    @Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
+    @Override
+	@Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
     public void rejectReception(UpdateReceivedInfoVo vo){
         //receivedInfo update
         vo.setRjctDtm(LocalDateTime.now());
@@ -403,7 +421,8 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
      *
      * @param docId the unique identifier of the document to be marked as completed
      */
-    @Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
+    @Override
+	@Transactional(rollbackFor = SQLIntegrityConstraintViolationException.class)
     public void endDocument(String docId){
        UserMemberVo loginUser = userService.getUserMemberDetail(new SecurityInfoUtil().getAccountId());
        HistoryVo historyVo = HistoryVo.builder()
@@ -655,7 +674,9 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
         workResponseService.deleteWorkRequestId(requestVo.getWorkReqId());
         vo.getWorkResponseVos().forEach(workResponseVo -> {
             UserMemberVo loginUser = userService.getUserMemberDetail(workResponseVo.getUserId());
-            if(loginUser == null) return;
+            if(loginUser == null) {
+				return;
+			}
             workResponseVo.setWorkReqId(requestVo.getWorkReqId());
             workResponseVo.setDeptCd(loginUser.getDeptCd());
             workResponseVo.setJobCd(loginUser.getJobCd());
@@ -722,7 +743,9 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
         //  response add
         vo.getWorkResponseVos().forEach(workResponseVo -> {
             UserMemberVo user = userService.getUserMemberDetail(workResponseVo.getUserId());
-            if(user == null) return;
+            if(user == null) {
+				return;
+			}
             workResponseVo.setWorkReqId(requestVo.getWorkReqId());
             workResponseVo.setDeptCd(user.getDeptCd());
             workResponseVo.setJobCd(user.getJobCd());
@@ -1102,7 +1125,8 @@ public class DocumentWorkFlowServiceImpl implements DocumentWorkFlowService {
      *
      * @param apvlId the unique identifier of the approval to be updated
      */
-    public void updateReadApproval(int apvlId){
+    @Override
+	public void updateReadApproval(int apvlId){
         UpdateApprovalVo vo = UpdateApprovalVo.builder()
                 .apvlId(apvlId)
                 .checkDtm(LocalDateTime.now())
