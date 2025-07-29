@@ -1,11 +1,10 @@
 package kr.co.bestiansoft.ebillservicekg.asset.bzenty.repository;
 
-import java.util.HashMap;
-import java.util.List;
-
+import kr.co.bestiansoft.ebillservicekg.asset.bzenty.vo.BzentyVo;
 import org.apache.ibatis.annotations.Mapper;
 
-import kr.co.bestiansoft.ebillservicekg.asset.bzenty.vo.BzentyVo;
+import java.util.HashMap;
+import java.util.List;
 
 @Mapper
 public interface BzentyMapper {

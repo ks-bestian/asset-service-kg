@@ -1,14 +1,7 @@
 package kr.co.bestiansoft.ebillservicekg.asset.equip.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.bestiansoft.ebillservicekg.asset.amsImg.service.AmsImgService;
 import kr.co.bestiansoft.ebillservicekg.asset.equip.repository.EquipMapper;
 import kr.co.bestiansoft.ebillservicekg.asset.equip.service.EquipService;
@@ -17,12 +10,22 @@ import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipRequest;
 import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipResponse;
 import kr.co.bestiansoft.ebillservicekg.asset.faq.service.FaqService;
 import kr.co.bestiansoft.ebillservicekg.asset.install.service.InstallService;
+import kr.co.bestiansoft.ebillservicekg.asset.install.vo.InstallVo;
 import kr.co.bestiansoft.ebillservicekg.asset.manual.service.MnulService;
 import kr.co.bestiansoft.ebillservicekg.asset.manual.vo.MnulVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -33,27 +36,56 @@ public class EquipServiceImpl implements EquipService {
     private final InstallService installService;
     private final FaqService faqService;
     private final AmsImgService amsImgService;
+    private final ObjectMapper objectMapper;
 
     @Transactional
     @Override
-    public int createEquip(EquipRequest equipRequest) {
-    	System.out.println("aaaaaaaaaaa :: ");
-        //1.제품정보(pdf메뉴얼, 이미지저장 보류)
-        String eqpmntId = StringUtil.getEqpmntUUUID();
+    public int createEquip(EquipRequest equipRequest, String mnlVoJson, String installVoJson) {
 
+        //1.장비정보
+        String eqpmntId = StringUtil.getEqpmntUUUID();
         equipRequest.setEqpmntId(eqpmntId);
         equipRequest.setRgtrId(new SecurityInfoUtil().getAccountId());
 
         equipMapper.createEquip(equipRequest);
 
-        mnulService.createMnul(equipRequest.getMnulVoList(), eqpmntId);
-        //2.영상메뉴얼 보류
+        //1. 장비 메뉴얼 파일, 이미지 저장
+        if (equipRequest.getFiles() != null) {
+            List files = new ArrayList<>();
+            for (MultipartFile file : equipRequest.getFiles()) {
+                MnulVo vo = MnulVo.builder()
+                        .file(file)
+                        .build();
+                files.add(vo);
+            }
+            mnulService.createMnul(files, eqpmntId, "file");
+        }
 
+        if (equipRequest.getDtlImg() != null) {
+            amsImgService.saveImgs(equipRequest.getDtlImg(), eqpmntId, null, "detail");
+        }
+
+        List<MnulVo> mnulList = null;
+        List<InstallVo> installVoList = null;
+
+        try {
+            if(mnlVoJson != null) {
+                mnulList = objectMapper.readValue(mnlVoJson, new TypeReference<List<MnulVo>>() {});
+            }
+            if(installVoJson != null) {
+                installVoList = objectMapper.readValue(installVoJson, new TypeReference<List<InstallVo>>() {});
+            }
+        }catch (IOException e) {
+            System.err.println("ERROR : " + e);
+        }
+
+        //2.영상메뉴얼
+//        mnulService.createMnul(mnulList, eqpmntId, "video");
         //3.설치정보
-        installService.createInstall(equipRequest.getInstallVoList(), eqpmntId);
-        
+        installService.createInstall(installVoList, eqpmntId);
+
         //4. faq
-        faqService.createFaq(equipRequest.getFaqVoList(), eqpmntId);
+//        faqService.createFaq(equipRequest.getFaqVoList(), eqpmntId);
 
         return 1;
     }
@@ -123,20 +155,15 @@ public class EquipServiceImpl implements EquipService {
     @Override
     public int updateEquip(EquipRequest equipRequest) {
         String eqpmntId = equipRequest.getEqpmntId();
-        //1.제품정보(pdf메뉴얼, 이미지저장 보류)
+        //1.제품정보
 //        equipRequest.setMdfrId(new SecurityInfoUtil().getAccountId());
         equipMapper.updateEquip(equipRequest);
 
-        installService.deleteInstall(eqpmntId);
-        mnulService.deleteMnul(eqpmntId);
-        amsImgService.deleteImg(eqpmntId);
-
-        mnulService.createMnul(equipRequest.getMnulVoList(), eqpmntId);
-
-        //2.영상메뉴얼 보류
+        //2.영상메뉴얼
+//        mnulService.upsertMnul(equipRequest.getMnulVoList(), eqpmntId);
 
         //3.설치정보(위치 : 공통코드)
-        installService.createInstall(equipRequest.getInstallVoList(), eqpmntId);
+//        installService.upsertInstl(equipRequest.getInstallVoList(), eqpmntId);
 
         return equipMapper.updateEquip(equipRequest);
     }
@@ -144,7 +171,7 @@ public class EquipServiceImpl implements EquipService {
     @Transactional
     @Override
     public void deleteEquip(List<String> ids) { //eqpmnt_id 관련 모든 데이터 삭제
-        for(String equipId : ids) {
+        for (String equipId : ids) {
             installService.deleteInstall(equipId);
             mnulService.deleteMnul(equipId);
             amsImgService.deleteImg(equipId);

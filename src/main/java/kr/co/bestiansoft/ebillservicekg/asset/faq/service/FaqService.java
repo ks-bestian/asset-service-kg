@@ -1,8 +1,8 @@
 package kr.co.bestiansoft.ebillservicekg.asset.faq.service;
 
-import java.util.List;
-
 import kr.co.bestiansoft.ebillservicekg.asset.faq.vo.FaqVo;
+
+import java.util.List;
 
 public interface FaqService {
    void createFaq(List<FaqVo> faqVoList, String eqpmntId);

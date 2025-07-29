@@ -1,10 +1,9 @@
 package kr.co.bestiansoft.ebillservicekg.asset.install.repository;
 
-import java.util.List;
-
+import kr.co.bestiansoft.ebillservicekg.asset.install.vo.InstallVo;
 import org.apache.ibatis.annotations.Mapper;
 
-import kr.co.bestiansoft.ebillservicekg.asset.install.vo.InstallVo;
+import java.util.List;
 
 @Mapper
 public interface InstallMapper {
@@ -13,4 +12,5 @@ public interface InstallMapper {
     List<InstallVo> getInstallList(String eqpmntId);
     void deleteInstall(String eqpmntId);
     void deleteInstlById(String instlId);
+    int upsertInstl(InstallVo vo);
 }

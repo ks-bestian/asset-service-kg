@@ -1,11 +1,11 @@
 package kr.co.bestiansoft.ebillservicekg.asset.manual.service;
 
-import java.util.List;
-
 import kr.co.bestiansoft.ebillservicekg.asset.manual.vo.MnulVo;
 
+import java.util.List;
+
 public interface MnulService {
-    int createMnul(List<MnulVo> mnulVo, String eqpmntId);
+    int createMnul(List<MnulVo> mnulVo, String eqpmntId, String mnlSe);
 
     List<MnulVo> getMnulListByEquipIds(List<String> eqpmntIds);
 
@@ -13,5 +13,6 @@ public interface MnulService {
 
     void deleteMnul(String eqpmntId);
     void deleteMnulById(List<String> ids);
+    int upsertMnul(List<MnulVo> mnulVoList, String eqpmntId);
 
 }

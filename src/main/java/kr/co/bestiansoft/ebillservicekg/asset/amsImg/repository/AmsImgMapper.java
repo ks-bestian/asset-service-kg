@@ -1,13 +1,14 @@
 package kr.co.bestiansoft.ebillservicekg.asset.amsImg.repository;
 
-import java.util.List;
-
+import kr.co.bestiansoft.ebillservicekg.asset.amsImg.vo.AmsImgVo;
 import org.apache.ibatis.annotations.Mapper;
 
-import kr.co.bestiansoft.ebillservicekg.asset.amsImg.vo.AmsImgVo;
+import java.util.List;
 
 @Mapper
 public interface AmsImgMapper {
     List<AmsImgVo> getImgListByEqpmntId(String eqpmntId);
     void deleteImg(String eqpmntId);
+    int saveImg(AmsImgVo amsImgVo);
+
 }

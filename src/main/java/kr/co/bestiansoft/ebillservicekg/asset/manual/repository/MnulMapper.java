@@ -1,10 +1,9 @@
 package kr.co.bestiansoft.ebillservicekg.asset.manual.repository;
 
-import java.util.List;
-
+import kr.co.bestiansoft.ebillservicekg.asset.manual.vo.MnulVo;
 import org.apache.ibatis.annotations.Mapper;
 
-import kr.co.bestiansoft.ebillservicekg.asset.manual.vo.MnulVo;
+import java.util.List;
 
 @Mapper
 public interface MnulMapper {
@@ -13,5 +12,6 @@ public interface MnulMapper {
     int createMnul(List<MnulVo> mnulVoList);
     void deleteMnul(String eqpmntId);
     void deleteMnulById(String mnlId);
+    int upsertMnul(MnulVo vo);
 
 }

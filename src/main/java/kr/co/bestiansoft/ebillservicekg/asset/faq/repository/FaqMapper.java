@@ -1,10 +1,9 @@
 package kr.co.bestiansoft.ebillservicekg.asset.faq.repository;
 
-import java.util.List;
-
+import kr.co.bestiansoft.ebillservicekg.asset.faq.vo.FaqVo;
 import org.apache.ibatis.annotations.Mapper;
 
-import kr.co.bestiansoft.ebillservicekg.asset.faq.vo.FaqVo;
+import java.util.List;
 
 @Mapper
 public interface FaqMapper {

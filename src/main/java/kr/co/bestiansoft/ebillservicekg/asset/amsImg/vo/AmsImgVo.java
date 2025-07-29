@@ -13,6 +13,6 @@ public class AmsImgVo extends ComDefaultVO {
     private String fileNm;
     private String orgnlFileNm;
     private String fileExtn;
-    private int fileSz;
+    private Long fileSz;
 
 }

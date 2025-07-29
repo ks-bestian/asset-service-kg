@@ -4,6 +4,7 @@ import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipDetailVo;
 import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @NoArgsConstructor
 @Data
@@ -23,6 +24,7 @@ public class InstallVo extends ComDefaultVO {
     private String imgId;
     //설치 위치명
     private String cdNm;
+    private MultipartFile file;
     private String instlPlcNm1;
     private String instlPlcNm2;
     private String instlPlcNm3;
