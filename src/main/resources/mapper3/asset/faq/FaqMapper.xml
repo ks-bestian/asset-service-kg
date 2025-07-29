@@ -28,35 +28,31 @@
     </insert>
 
     <select id="getFaqList" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.asset.faq.vo.FaqVo">
+
         select
-              ast.instl_id
-            , ast.eqpmnt_id
-            , ast.instl_ymd
-            , ast.dscd_ymd
-            , ast.instl_plc_cd
-            , ast.instl_plc_dtl_1
-            , ast.instl_plc_dtl_2
-            , ast.instl_plc_dtl_3
-            , ast.instl_pic_nm
-            , ast.rmrk
-            , ast.reg_dt
-            , ai.img_id
-            , ccd.code_nm1 as instl_plc_nm_1
-            , ccd.code_nm2 as instl_plc_nm_2
-            , ccd.code_nm3 as instl_plc_nm_3
-        from ams_instl ast
-        left join ams_img ai on ai.instl_id = ast.instl_id
-        left join kgst.com_code_detail ccd on ccd.code_id = ast.instl_plc_cd
-        where ast.eqpmnt_id = #{eqpmntId}
+			faq_id
+			, eqpmnt_id
+			, faq_se
+			, qstn
+			, ans
+			, seq
+			, ccd.code_nm1 as faq_se_nm_1
+            , ccd.code_nm2 as faq_se_nm_2
+            , ccd.code_nm3 as faq_se_nm_3
+		from
+			ams_faq ast
+			left join kgst.com_code_detail ccd on ccd.code_id = ast.faq_se
+		where ast.eqpmnt_id = #{eqpmntId}
+		
     </select>
 
     <select id="deleteFaq" parameterType="java.lang.String">
-        delete from ams_instl
+        delete from ams_faq
         where eqpmnt_id = #{eqpmntId}
     </select>
 
-    <delete id="deleteInstlById" parameterType="java.lang.String">
-        delete from ams_instl
-        where instl_id = #{instlId}
+    <delete id="deleteFaqById" parameterType="java.lang.String">
+        delete from ams_faq
+        where faq_id = #{faqId}
     </delete>
 </mapper>

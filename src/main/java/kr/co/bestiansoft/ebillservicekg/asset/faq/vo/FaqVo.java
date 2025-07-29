@@ -14,5 +14,21 @@ public class FaqVo extends ComDefaultVO{
     private String ans;
     private int seq;
     
+    private String faqSeNm1;
+    private String faqSeNm2;
+    private String faqSeNm3;
+    
+    public FaqVo(FaqVo vo) {
+    	this.eqpmntId = vo.getEqpmntId();
+    	this.faqSe = vo.getFaqSe();
+    	this.qstn = vo.getQstn();
+    	this.ans = vo.getAns();
+    	this.seq = vo.getSeq();
+    	this.faqSeNm1 = vo.getFaqSeNm1();
+    	this.faqSeNm2 = vo.getFaqSeNm2();
+    	this.faqSeNm3 = vo.getFaqSeNm3();
+    	
+    }
+    
 
 }
