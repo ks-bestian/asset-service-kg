@@ -22,4 +22,32 @@
         delete from ams_img
         where eqpmnt_id = #{eqpmntId}
     </delete>
+
+    <insert id="saveImg" parameterType="kr.co.bestiansoft.ebillservicekg.asset.amsImg.vo.AmsImgVo">
+        insert into ams_img (
+              img_id
+            , eqpmnt_id
+            , instl_id
+            , img_se
+            , file_path
+            , file_nm
+            , orgnl_file_nm
+            , file_extn
+            , file_sz
+            , reg_dt
+            , rgtr_id
+        ) values (
+              #{imgId}
+            , #{eqpmntId}
+            , #{instlId}
+            , #{imgSe}
+            , #{filePath}
+            , #{fileNm}
+            , #{orgnlFileNm}
+            , #{fileExtn}
+            , #{fileSz}
+            , now()
+            , #{rgtrId}
+        )
+    </insert>
 </mapper>

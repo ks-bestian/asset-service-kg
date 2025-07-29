@@ -85,4 +85,43 @@
         delete from ams_mnl
         where mnl_id = #{mnlId}
     </delete>
+
+
+    <update id="upsertMnul" parameterType="kr.co.bestiansoft.ebillservicekg.asset.manual.vo.MnulVo">
+        insert into ams_mnl (
+        mnl_id
+        , eqpmnt_id
+        , mnl_se
+        , seq
+        , file_path
+        , file_nm
+        , orgnl_file_nm
+        , file_extn
+        , file_sz
+        , mnl_lng
+        ) values (
+        #{mnlId}
+        , #{eqpmntId}
+        , #{mnlSe}
+        , #{seq}
+        , #{filePath}
+        , #{fileNm}
+        , #{orgnlFileNm}
+        , #{fileExtn}
+        , #{fileSz}
+        , #{mnlLng}
+        )
+        on conflict (mnl_id)
+        do update set
+        mnl_se = excluded.mnl_se
+        , seq = excluded.seq
+        , file_path = excluded.file_path
+        , file_nm = excluded.file_nm
+        , orgnl_file_nm = excluded.orgnl_file_nm
+        , file_extn = excluded.file_extn
+        , file_sz = excluded.file_sz
+        , mnl_lng = excluded.mnl_lng
+        , mdfcn_dt = now()
+        where ams_mnl.mnl_id = excluded.mnl_id
+    </update>
 </mapper>

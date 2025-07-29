@@ -85,7 +85,7 @@ public class EquipServiceImpl implements EquipService {
         installService.createInstall(installVoList, eqpmntId);
 
         //4. faq
-//        faqService.createFaq(equipRequest.getFaqVoList(), eqpmntId);
+        faqService.createFaq(equipRequest.getFaqVoList(), eqpmntId);
 
         return 1;
     }

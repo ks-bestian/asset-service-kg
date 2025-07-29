@@ -70,4 +70,44 @@
         delete from ams_instl
         where instl_id = #{instlId}
     </delete>
+
+    <update id="upsertInstl" parameterType="kr.co.bestiansoft.ebillservicekg.asset.install.vo.InstallVo">
+        insert into asset_uzb.ams_instl (
+        instl_id
+        , eqpmnt_id
+        , instl_ymd
+        , dscd_ymd
+        , instl_plc_cd
+        , instl_plc_dtl_1
+        , instl_plc_dtl_2
+        , instl_plc_dtl_3
+        , instl_pic_nm
+        , rmrk
+        , reg_dt
+        ) values
+        (
+        #{instlId}
+        , #{eqpmntId}
+        , #{instlYmd}
+        , #{dscdYmd}
+        , #{instlPlcCd}
+        , #{instlPlcDtl1}
+        , #{instlPlcDtl2}
+        , #{instlPlcDtl3}
+        , #{instlPicNm}
+        , #{rmrk}
+        , now()
+        )
+        on conflict (instl_id)
+        do update set
+        instl_ymd = excluded.instl_ymd
+        , dscd_ymd = excluded.dscd_ymd
+        , instl_plc_cd = excluded.instl_plc_cd
+        , instl_plc_dtl_1 = excluded.instl_plc_dtl_1
+        , instl_plc_dtl_2 = excluded.instl_plc_dtl_2
+        , instl_plc_dtl_3 = excluded.instl_plc_dtl_3
+        , rmrk = excluded.rmrk
+        , mdfcn_dt = now()
+        where ams_instl.instl_id = excluded.instl_id
+    </update>
 </mapper>
