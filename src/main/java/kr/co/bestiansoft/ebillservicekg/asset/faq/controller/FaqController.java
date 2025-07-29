@@ -22,9 +22,9 @@ public class FaqController {
 
     private final FaqService faqService;
 
-    @Operation(summary = "get faq detail by faq id")
+    @Operation(summary = "get faq list by eqpmntId")
     @GetMapping
-    public ResponseEntity<CommonResponse> getInstallList(@RequestParam String eqpmntId) {
+    public ResponseEntity<CommonResponse> getFaqList(@RequestParam String eqpmntId) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", faqService.getFaqList(eqpmntId)), HttpStatus.OK);
     }
 
