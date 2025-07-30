@@ -6,6 +6,7 @@ import kr.co.bestiansoft.ebillservicekg.asset.faq.vo.FaqVo;
 import kr.co.bestiansoft.ebillservicekg.asset.install.vo.InstallVo;
 import kr.co.bestiansoft.ebillservicekg.asset.manual.vo.MnulVo;
 import lombok.Data;
+import org.springframework.core.io.Resource;
 
 import java.util.List;
 
@@ -16,4 +17,10 @@ public class EquipResponse {
     List<MnulVo> mnulList;
     List<FaqVo> faqList;
     List<AmsImgVo> amsImgList;
+
+
+    //list
+    String thumbnail;
+    String mnlPath;
+    String videoPath;
 }

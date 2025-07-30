@@ -3,12 +3,14 @@ package kr.co.bestiansoft.ebillservicekg.asset.equip.service.impl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.bestiansoft.ebillservicekg.asset.amsImg.service.AmsImgService;
+import kr.co.bestiansoft.ebillservicekg.asset.amsImg.vo.AmsImgVo;
 import kr.co.bestiansoft.ebillservicekg.asset.equip.repository.EquipMapper;
 import kr.co.bestiansoft.ebillservicekg.asset.equip.service.EquipService;
 import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipDetailVo;
 import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipRequest;
 import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipResponse;
 import kr.co.bestiansoft.ebillservicekg.asset.faq.service.FaqService;
+import kr.co.bestiansoft.ebillservicekg.asset.faq.vo.FaqVo;
 import kr.co.bestiansoft.ebillservicekg.asset.install.service.InstallService;
 import kr.co.bestiansoft.ebillservicekg.asset.install.vo.InstallVo;
 import kr.co.bestiansoft.ebillservicekg.asset.manual.service.MnulService;
@@ -21,10 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -40,7 +39,7 @@ public class EquipServiceImpl implements EquipService {
 
     @Transactional
     @Override
-    public int createEquip(EquipRequest equipRequest, String mnlVoJson, String installVoJson) {
+    public int createEquip(EquipRequest equipRequest, String mnlVoJson, String installVoJson, String faqVoJson,  Map<String, MultipartFile> fileMap) {
 
         //1.장비정보
         String eqpmntId = StringUtil.getEqpmntUUUID();
@@ -65,27 +64,51 @@ public class EquipServiceImpl implements EquipService {
             amsImgService.saveImgs(equipRequest.getDtlImg(), eqpmntId, null, "detail");
         }
 
+        if (equipRequest.getThumbnail() != null) {
+            amsImgService.saveImgs(equipRequest.getThumbnail(), eqpmntId, null, "thumbnail");
+        }
+
+
+
         List<MnulVo> mnulList = null;
         List<InstallVo> installVoList = null;
+        List<FaqVo> faqList = null;
 
         try {
-            if(mnlVoJson != null) {
+            if (mnlVoJson != null) {
                 mnulList = objectMapper.readValue(mnlVoJson, new TypeReference<List<MnulVo>>() {});
             }
-            if(installVoJson != null) {
+            if (installVoJson != null) {
                 installVoList = objectMapper.readValue(installVoJson, new TypeReference<List<InstallVo>>() {});
             }
-        }catch (IOException e) {
+            if(faqVoJson != null) {
+                faqList = objectMapper.readValue(faqVoJson, new TypeReference<List<FaqVo>>() {});
+            }
+
+
+        } catch (IOException e) {
             System.err.println("ERROR : " + e);
         }
 
+        for (MnulVo vo : mnulList) {
+            if(vo.getFileId() != null) {
+                vo.setFile(fileMap.get(vo.getFileId()));
+            }
+        }
+
+        for (InstallVo vo : installVoList) {
+            if(vo.getFileId() != null) {
+                vo.setFile(fileMap.get(vo.getFileId()));
+            }
+        }
+
         //2.영상메뉴얼
-//        mnulService.createMnul(mnulList, eqpmntId, "video");
+        mnulService.createMnul(mnulList, eqpmntId, "video");
         //3.설치정보
         installService.createInstall(installVoList, eqpmntId);
 
         //4. faq
-        faqService.createFaq(equipRequest.getFaqVoList(), eqpmntId);
+        faqService.createFaq(faqList, eqpmntId);
 
         return 1;
     }
@@ -105,36 +128,25 @@ public class EquipServiceImpl implements EquipService {
         Map<String, List<MnulVo>> mnulMap = mList.stream()
                 .collect(Collectors.groupingBy(MnulVo::getEqpmntId));
 
-        //이미지
-//        List<AmsImgVo> imgs = amsImgService.getImgListByEqpmntId(eqpmntIds);
+        //장비 상세 이미지
+        List<AmsImgVo> imgList = amsImgService.getImgListByEqpmntId(eqpmntIds);
+
+        Map<String, List<AmsImgVo>> imgMap = imgList.stream()
+                .filter(img -> "thumbnail".equals(img.getImgSe()))
+                .collect(Collectors.groupingBy(AmsImgVo::getEqpmntId));
+
 
         //result
         List<EquipResponse> result = new ArrayList<>();
+
         for (EquipDetailVo raw : equipList) {
             EquipResponse eq = new EquipResponse();
 
             eq.setEquipDetailVo(new EquipDetailVo(raw));
             eq.setMnulList(mnulMap.getOrDefault(raw.getEqpmntId(), new ArrayList<>()));
-
             result.add(eq);
         }
-
         return result;
-    }
-
-    @Override
-    public List<EquipDetailVo> getEquipItemLists(HashMap<String, Object> params) {
-
-        //장비정보(equip), 업체명, 제품구분, 메뉴얼정보
-        List<EquipDetailVo> equipList = equipMapper.getEquipList(params);
-        List<String> equipIds = equipList.stream()
-                .map(EquipDetailVo::getEqpmntId)
-                .collect(Collectors.toList());
-
-        //todo 영상 메뉴얼 result 추가하기
-        List<MnulVo> mnulList = mnulService.getMnulListByEquipIds(equipIds);
-
-        return equipList;
     }
 
     @Override
@@ -142,7 +154,11 @@ public class EquipServiceImpl implements EquipService {
         EquipResponse result = new EquipResponse();
         result.setEquipDetailVo(equipMapper.getDetailEquip(eqpmntId));
 
-        result.setAmsImgList(amsImgService.getImgListByEqpmntId(eqpmntId));
+        //todo 이미지 : thumnail & 설치 이미지
+        List<String> id = Arrays.asList(eqpmntId);
+        result.setAmsImgList(amsImgService.getImgListByEqpmntId(id));
+
+//        result.setInstlImgList(amsImgService.getImgListByInstlId(instlId));
 
         result.setInstallList(installService.getInstallList(eqpmntId));
 
@@ -156,7 +172,8 @@ public class EquipServiceImpl implements EquipService {
     public int updateEquip(EquipRequest equipRequest) {
         String eqpmntId = equipRequest.getEqpmntId();
         //1.제품정보
-//        equipRequest.setMdfrId(new SecurityInfoUtil().getAccountId());
+
+        equipRequest.setMdfrId(new SecurityInfoUtil().getAccountId());
         equipMapper.updateEquip(equipRequest);
 
         //2.영상메뉴얼

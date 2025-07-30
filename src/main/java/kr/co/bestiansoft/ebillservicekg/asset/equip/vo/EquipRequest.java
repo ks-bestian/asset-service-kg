@@ -21,8 +21,5 @@ public class EquipRequest extends ComDefaultVO {
     private List<String> detailImg;
     private MultipartFile[] files;
     private MultipartFile[] dtlImg;
-    private MultipartFile[] videoFiles;
-
-    //FAQ
-    List<FaqVo> faqVoList;
+    private MultipartFile[] thumbnail;
 }

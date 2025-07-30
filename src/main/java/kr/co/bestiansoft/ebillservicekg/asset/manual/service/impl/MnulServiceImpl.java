@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -37,7 +38,6 @@ public class MnulServiceImpl implements MnulService {
                     mnulVo.setOrgnlFileNm(file.getOriginalFilename());
                     mnulVo.setFileExtn(file.getContentType());
                     mnulVo.setFileSz(file.getSize());
-                    i++;
                 } catch (IOException e) {
                     throw new RuntimeException("파일저장실패 : " + e);
                 }
@@ -47,8 +47,15 @@ public class MnulServiceImpl implements MnulService {
             mnulVo.setEqpmntId(eqpmntId);
             mnulVo.setMnlSe(mnlSe);
             mnulVo.setSeq(i);
-            mnulVo.setMnlLng("KR"); //todo 수정
             mnulVo.setRgtrId(new SecurityInfoUtil().getAccountId());
+
+            Optional.ofNullable(mnulVo.getFileNm2())
+                    .ifPresent(mnulVo::setFileNm);
+
+//            Optional.ofNullable(mnulVo.getMnlLng2())
+//                    .ifPresent(mnulVo::setMnlLng);
+            mnulVo.setMnlLng("KR");
+
             i++;
         }
 

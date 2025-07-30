@@ -29,17 +29,18 @@ public class InstallServiceImpl implements InstallService {
     public void createInstall(List<InstallVo> installVoList, String eqpmntId) {
 
         for(InstallVo installVo: installVoList) {
+
             String instlId = StringUtil.getInstlUUUID();
+            installVo.setInstlId(instlId);
+            installVo.setEqpmntId(eqpmntId);
+            installVo.setRgtrId(new SecurityInfoUtil().getAccountId());
+            installMapper.insertInstall(installVo);
 
             if(installVo.getFile() != null) {
                 MultipartFile[] files = {installVo.getFile()};
                 amsImgService.saveImgs(files, eqpmntId, instlId, "installImg");
             }
-            installVo.setInstlId(instlId);
-            installVo.setEqpmntId(eqpmntId);
-            installVo.setRgtrId(new SecurityInfoUtil().getAccountId());
         }
-        installMapper.insertInstall(installVoList);
     }
 
     @Override

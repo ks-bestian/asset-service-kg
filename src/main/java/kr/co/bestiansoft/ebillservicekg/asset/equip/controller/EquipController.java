@@ -12,9 +12,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Tag(name = "장비 API")
 @Slf4j
@@ -27,14 +29,14 @@ public class EquipController {
 
     @Operation(summary = "장비 생성", description = "장비를 생성한다.")
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<CommonResponse> createEuip(EquipRequest equipRequest, @RequestParam String lang, @RequestParam("mnulVoList") String mnlVoJson, @RequestParam("installVoList") String installVoJson) {
-        return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Equipment created successfully", equipService.createEquip(equipRequest, mnlVoJson, installVoJson)), HttpStatus.CREATED);
+    public ResponseEntity<CommonResponse> createEuip(EquipRequest equipRequest, @RequestParam("mnulVoList") String mnlVoJson, @RequestParam("installVoList") String installVoJson, @RequestParam("faqVoList") String faqVoJson, @RequestParam Map<String, MultipartFile> fileMap) {
+        return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Equipment created successfully", equipService.createEquip(equipRequest, mnlVoJson, installVoJson, faqVoJson, fileMap)), HttpStatus.CREATED);
     }
 
     @Operation(summary = "장비유지관리 목록 조회", description = "장비유지관리 목록 조회한다.")
     @GetMapping
     public ResponseEntity<CommonResponse> getEquipList(@RequestParam HashMap<String, Object> params) {
-        return new ResponseEntity<>(new CommonResponse(200, "OK", equipService.getEquipItemLists(params)), HttpStatus.OK);
+        return new ResponseEntity<>(new CommonResponse(200, "OK", equipService.getEquipList(params)), HttpStatus.OK);
     }
 
     @Operation(summary = "equipment detail", description = "search equipment detail by eqpmntId")

@@ -24,7 +24,7 @@ public class AmsImgServiceImpl implements AmsImgService {
     private String fileUploadDir;
 
     @Override
-    public List<AmsImgVo> getImgListByEqpmntId(String eqpmntId) {
+    public List<AmsImgVo> getImgListByEqpmntId(List<String> eqpmntId) {
         return amsImgMapper.getImgListByEqpmntId(eqpmntId);
     }
 

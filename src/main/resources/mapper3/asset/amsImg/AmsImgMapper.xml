@@ -15,7 +15,13 @@
             , file_extn
             , file_sz
         from ams_img
-        where eqpmnt_id = #{eqpmntId}
+        where 1=1 and instl_id is null
+        <if test="eqpmntIds.size() > 0">
+            and eqpmnt_id in
+            <foreach collection="eqpmntIds" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
     </select>
 
     <delete id="deleteImg" parameterType="java.lang.String">

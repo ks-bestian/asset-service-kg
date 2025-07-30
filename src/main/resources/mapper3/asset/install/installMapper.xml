@@ -15,24 +15,21 @@
                         , instl_pic_nm
                         , rmrk
                         , reg_dt
-                        , rgtr_id )
-        <foreach collection="installVoList" item="vo" open="VALUES" separator=",">
-            (
-                  #{vo.instlId}
-                , #{vo.eqpmntId}
-                , #{vo.instlYmd}
-                , #{vo.dscdYmd}
-                , #{vo.instlPlcCd}
-                , #{vo.instlPlcDtl1}
-                , #{vo.instlPlcDtl2}
-                , #{vo.instlPlcDtl3}
-                , #{vo.instlPicNm}
-                , #{vo.rmrk}
-                , now()
-                , #{vo.rgtrId}
+                        , rgtr_id)
+        values (
+                          #{instlId}
+                        , #{eqpmntId}
+                        , #{instlYmd}
+                        , #{dscdYmd}
+                        , #{instlPlcCd}
+                        , #{instlPlcDtl1}
+                        , #{instlPlcDtl2}
+                        , #{instlPlcDtl3}
+                        , #{instlPicNm}
+                        , #{rmrk}
+                        , now()
+                        , #{rgtrId}
             )
-        </foreach>
-
     </insert>
 
     <select id="getInstallList" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.asset.install.vo.InstallVo">

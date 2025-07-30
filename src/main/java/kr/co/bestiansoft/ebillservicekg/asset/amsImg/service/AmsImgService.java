@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface AmsImgService {
-    List<AmsImgVo> getImgListByEqpmntId(String eqpmntId);
+    List<AmsImgVo> getImgListByEqpmntId(List<String> eqpmntId);
     void deleteImg(String eqpmntId);
     int saveImgs(MultipartFile[] files, String eqpmntId, String instlId, String imgSe);
 

@@ -3,14 +3,15 @@ package kr.co.bestiansoft.ebillservicekg.asset.equip.service;
 import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipDetailVo;
 import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipRequest;
 import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipResponse;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface EquipService {
-    int createEquip(EquipRequest equipRequest, String mnlVoJson, String installVoJson);
+    int createEquip(EquipRequest equipRequest, String mnlVoJson, String installVoJson, String faqVoJson,  Map<String, MultipartFile> fileMap);
     List<EquipResponse> getEquipList(HashMap<String, Object> parmas);
-    List<EquipDetailVo> getEquipItemLists(HashMap<String, Object> params);
     EquipResponse getEquipDetail(String eqpmntId);
     int updateEquip(EquipRequest equipRequest);
     void deleteEquip(List<String> ids);

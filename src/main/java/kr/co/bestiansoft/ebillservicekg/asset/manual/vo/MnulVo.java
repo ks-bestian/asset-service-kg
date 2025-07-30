@@ -1,6 +1,7 @@
 package kr.co.bestiansoft.ebillservicekg.asset.manual.vo;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Builder;
 import lombok.Data;
@@ -16,12 +17,17 @@ public class MnulVo extends ComDefaultVO {
     private int seq;
     private String filePath;
     private String fileNm;
+    private String fileNm2;
     private String orgnlFileNm;
     private String fileExtn;
     private Long fileSz;
     private String mnlLng;
+    private String mnlLng2;
+
+    @JsonIgnore
     private MultipartFile file;
 
+    private String fileId;
 
 
     @Builder

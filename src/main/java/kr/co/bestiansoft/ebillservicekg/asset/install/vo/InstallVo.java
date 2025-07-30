@@ -1,5 +1,6 @@
 package kr.co.bestiansoft.ebillservicekg.asset.install.vo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipDetailVo;
 import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
@@ -24,6 +25,8 @@ public class InstallVo extends ComDefaultVO {
     private String imgId;
     //설치 위치명
     private String cdNm;
+
+    @JsonIgnore
     private MultipartFile file;
     private String instlPlcNm1;
     private String instlPlcNm2;
@@ -31,6 +34,9 @@ public class InstallVo extends ComDefaultVO {
     
     private String regNm1;
     private String regNm2;
+
+    private String fileId;
+
 
     public InstallVo(EquipDetailVo vo) {
         this.instlId = vo.getInstlId();

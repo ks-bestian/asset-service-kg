@@ -28,15 +28,15 @@ public class FileUtil {
         return path.toAbsolutePath().toString();
     }
 
-    public static Resource loadFile(String fileName) {
+    public static Resource loadFile(String filePath) {
 
-        Path filePath = Paths.get(fileName).normalize();
+        Path path = Paths.get(filePath).normalize();
         try {
-            Resource resource = new UrlResource(filePath.toUri());
+            Resource resource = new UrlResource(path.toUri());
 
             if(!resource.exists()){
                 // TODO 새로운 exception 필요
-                throw new RuntimeException("File not found " + fileName);
+                throw new RuntimeException("File not found " + filePath);
             }
 
             return resource;

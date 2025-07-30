@@ -8,7 +8,7 @@ import java.util.List;
 @Mapper
 public interface InstallMapper {
 
-    int insertInstall(List<InstallVo> installVoList);
+    int insertInstall(InstallVo installVoList);
     List<InstallVo> getInstallList(String eqpmntId);
     void deleteInstall(String eqpmntId);
     void deleteInstlById(String instlId);
