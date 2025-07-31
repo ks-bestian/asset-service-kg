@@ -31,11 +31,11 @@ public class MnulController {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "OK", "Manual deleted"), HttpStatus.OK);
     }
 
-//    @GetMapping(value="/preview",produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-//    public ResponseEntity<Resource> streamVideo() throws IOException {
-//        Resource video = mnulService.loadVideoAsResource("video");
-//        return ResponseEntity.ok()
-//                .contentType(MediaType.valueOf("video/mp4"))
-//                .body(video);
-//    }
+    @GetMapping(value="/preview/{eqpmntId}",produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<Resource> streamVideo(@PathVariable String eqpmntId) throws IOException {
+        Resource video = mnulService.loadVideoAsResource(eqpmntId);
+        return ResponseEntity.ok()
+                .contentType(MediaType.valueOf("video/mp4"))
+                .body(video);
+    }
 }

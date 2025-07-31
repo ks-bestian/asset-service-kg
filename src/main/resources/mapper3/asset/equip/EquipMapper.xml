@@ -48,7 +48,7 @@
         left join kgst.com_code_detail ccd on ccd.code_id = ae.eqpmnt_se
         where 1=1
         <if test="searchEq != null and searchEq != ''">
-            and eqpmnt_nm like '%' || #{searchEq} || '%'
+            and eqpmnt_nm like concat ('%', #{searchEq}, '%')
         </if>
         <if test="searchBz != null and searchBz != ''">
         	and bzenty_id = #{searchBz}

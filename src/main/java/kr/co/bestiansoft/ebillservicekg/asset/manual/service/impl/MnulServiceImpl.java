@@ -8,10 +8,15 @@ import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
@@ -100,5 +105,14 @@ public class MnulServiceImpl implements MnulService {
             mnulMapper.upsertMnul(vo);
         }
         return 1;
+    }
+
+    @Override
+    public Resource loadVideoAsResource(String eqpmntId) throws IOException {
+        List<MnulVo> list = mnulMapper.getMnulListByEqpmntId(eqpmntId);
+        Optional<MnulVo> vo = list.stream().filter(item -> "video".equals(item.getMnlSe())).findFirst();
+        File videoFile = new File(vo.get().getFilePath());
+        InputStream stream = new FileInputStream(videoFile);
+        return new InputStreamResource(stream);
     }
 }

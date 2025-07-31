@@ -8,12 +8,14 @@ import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipRequest;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,5 +59,16 @@ public class EquipController {
         equipService.deleteEquip(ids);
         return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "OK", "equipment deleted"), HttpStatus.OK);
     }
+
+    @GetMapping(value = "/thumbnail/{eqpmntId}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<Resource> streamThumbnail(@PathVariable String eqpmntId) throws IOException {
+        Resource thumbnail = equipService.loadThumbnail(eqpmntId);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.valueOf("image/jpeg"))
+                .body(thumbnail);
+    }
+
+
 
 }

@@ -46,6 +46,8 @@ public class SecurityConfig {
                 .requestMatchers(
                         "/v3/api-docs",
                         "/swagger*/**").permitAll()
+                .requestMatchers("/mnul/preview/**").permitAll() //todo 수정
+                .requestMatchers("/equip/thumbnail/**").permitAll() //todo 수정
                 .requestMatchers("/login").permitAll()
                 .requestMatchers("/com/file/pdf").permitAll()
                 .requestMatchers("/com/file/down").permitAll()

@@ -23,7 +23,6 @@
                 #{id}
             </foreach>
         </if>
-
     </select>
 
     <select id="getMnulListByEqpmntId" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.asset.manual.vo.MnulVo">
@@ -40,6 +39,7 @@
             , mnl_lng
         from ams_mnl
         where eqpmnt_id = #{eqpmntId}
+        order by seq
     </select>
     
     <insert id="createMnul" parameterType="kr.co.bestiansoft.ebillservicekg.asset.manual.vo.MnulVo">

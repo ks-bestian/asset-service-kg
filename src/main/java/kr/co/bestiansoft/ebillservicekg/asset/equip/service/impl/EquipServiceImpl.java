@@ -15,13 +15,16 @@ import kr.co.bestiansoft.ebillservicekg.asset.install.service.InstallService;
 import kr.co.bestiansoft.ebillservicekg.asset.install.vo.InstallVo;
 import kr.co.bestiansoft.ebillservicekg.asset.manual.service.MnulService;
 import kr.co.bestiansoft.ebillservicekg.asset.manual.vo.MnulVo;
+import kr.co.bestiansoft.ebillservicekg.common.utils.FileUtil;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -128,20 +131,11 @@ public class EquipServiceImpl implements EquipService {
         Map<String, List<MnulVo>> mnulMap = mList.stream()
                 .collect(Collectors.groupingBy(MnulVo::getEqpmntId));
 
-        //장비 상세 이미지
-        List<AmsImgVo> imgList = amsImgService.getImgListByEqpmntId(eqpmntIds);
-
-        Map<String, List<AmsImgVo>> imgMap = imgList.stream()
-                .filter(img -> "thumbnail".equals(img.getImgSe()))
-                .collect(Collectors.groupingBy(AmsImgVo::getEqpmntId));
-
-
         //result
         List<EquipResponse> result = new ArrayList<>();
 
         for (EquipDetailVo raw : equipList) {
             EquipResponse eq = new EquipResponse();
-
             eq.setEquipDetailVo(new EquipDetailVo(raw));
             eq.setMnulList(mnulMap.getOrDefault(raw.getEqpmntId(), new ArrayList<>()));
             result.add(eq);
@@ -195,5 +189,15 @@ public class EquipServiceImpl implements EquipService {
             equipMapper.deleteEquip(equipId);
 
         }
+    }
+
+    @Override
+    public Resource loadThumbnail(String eqpmntId) throws IOException {
+        List<String> id = Arrays.asList(eqpmntId);
+        //장비 상세 이미지
+        List<AmsImgVo> imgList = amsImgService.getImgListByEqpmntId(id);
+        Optional<AmsImgVo> vo = imgList.stream().filter(item -> "thumbnail".equals(item.getImgSe())).findFirst();
+
+        return FileUtil.loadFile(vo.get().getFilePath());
     }
 }
