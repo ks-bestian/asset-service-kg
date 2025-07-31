@@ -228,4 +228,23 @@ public class EquipServiceImpl implements EquipService {
 
         return FileUtil.loadFile(vo.get().getFilePath());
     }
+    
+    @Override
+    public Resource loadImg(String imgId) throws IOException {
+        //장비 상세 이미지
+        AmsImgVo vo = amsImgService.getImgVoByImgId(imgId);
+
+        return FileUtil.loadFile(vo.getFilePath());
+    }
+    
+    @Override
+    public Resource loadInstallImg(String instlId) throws IOException {
+        List<String> id = Arrays.asList(instlId);
+        //장비 상세 이미지
+        List<AmsImgVo> imgList = amsImgService.getImgListByInstlId(id);
+        Optional<AmsImgVo> vo = imgList.stream().filter(item -> "installImg".equals(item.getImgSe())).findFirst();
+
+        return FileUtil.loadFile(vo.get().getFilePath());
+    }
+    
 }

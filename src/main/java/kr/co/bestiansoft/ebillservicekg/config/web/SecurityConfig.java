@@ -48,6 +48,8 @@ public class SecurityConfig {
                         "/swagger*/**").permitAll()
                 .requestMatchers("/mnul/preview/**").permitAll() //todo 수정
                 .requestMatchers("/equip/thumbnail/**").permitAll() //todo 수정
+                .requestMatchers("/equip/img/**").permitAll()
+                .requestMatchers("/equip/installImg/**").permitAll()
                 .requestMatchers("/login").permitAll()
                 .requestMatchers("/com/file/pdf").permitAll()
                 .requestMatchers("/com/file/down").permitAll()

@@ -27,6 +27,11 @@ public class AmsImgServiceImpl implements AmsImgService {
     public List<AmsImgVo> getImgListByEqpmntId(List<String> eqpmntId) {
         return amsImgMapper.getImgListByEqpmntId(eqpmntId);
     }
+    
+    @Override
+    public List<AmsImgVo> getImgListByInstlId(List<String> instlId) {
+        return amsImgMapper.getImgListByInstlId(instlId);
+    }
 
     @Override
     public void deleteImg(String eqpmntId) {
@@ -61,5 +66,10 @@ public class AmsImgServiceImpl implements AmsImgService {
             }
         }
         return 1;
+    }
+    
+    @Override
+    public AmsImgVo getImgVoByImgId(String imgId) {
+        return amsImgMapper.getImgVoByImgId(imgId);
     }
 }

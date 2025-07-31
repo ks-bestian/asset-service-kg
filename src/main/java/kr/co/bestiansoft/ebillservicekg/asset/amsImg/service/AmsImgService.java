@@ -7,7 +7,9 @@ import java.util.List;
 
 public interface AmsImgService {
     List<AmsImgVo> getImgListByEqpmntId(List<String> eqpmntId);
+    List<AmsImgVo> getImgListByInstlId(List<String> instlId);
     void deleteImg(String eqpmntId);
     int saveImgs(MultipartFile[] files, String eqpmntId, String instlId, String imgSe);
+    AmsImgVo getImgVoByImgId(String imgId);
 
 }

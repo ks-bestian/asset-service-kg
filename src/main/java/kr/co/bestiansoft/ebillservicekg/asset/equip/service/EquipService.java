@@ -20,4 +20,6 @@ public interface EquipService {
     int updateEquip(EquipRequest equipRequest, String faqVoJson);
     void deleteEquip(List<String> ids);
     Resource loadThumbnail(String eqpmntId) throws IOException;
+    Resource loadImg(String imgId) throws IOException;
+    Resource loadInstallImg(String instlId) throws IOException;
 }
