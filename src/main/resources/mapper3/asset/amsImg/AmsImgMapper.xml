@@ -24,6 +24,24 @@
         </if>
     </select>
 
+    <select id="getDetailListByEqpmntId" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.asset.amsImg.vo.AmsImgVo">
+        select
+        img_id
+        , eqpmnt_id
+        , instl_id
+        , img_se
+        , file_path
+        , file_nm
+        , orgnl_file_nm
+        , file_extn
+        , file_sz
+        from ams_img
+        where 1=1 and instl_id is null and img_se = 'detail'
+        <if test="eqpmntId != null and eqpmntId != ''">
+            and eqpmnt_id = #{eqpmntId}
+        </if>
+    </select>
+
     <delete id="deleteImg" parameterType="java.lang.String">
         delete from ams_img
         where eqpmnt_id = #{eqpmntId}
@@ -56,4 +74,19 @@
             , #{rgtrId}
         )
     </insert>
+
+    <select id="getImgByInstlId" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.asset.amsImg.vo.AmsImgVo">
+        select
+              img_id
+            , eqpmnt_id
+            , instl_id
+            , img_se
+            , file_path
+            , file_nm
+            , orgnl_file_nm
+            , file_extn
+            , file_sz
+        from ams_img
+        where 1=1 and instl_id = #{instlId}
+    </select>
 </mapper>

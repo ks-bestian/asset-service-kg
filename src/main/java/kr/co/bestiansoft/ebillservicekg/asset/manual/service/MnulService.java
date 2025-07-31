@@ -11,12 +11,12 @@ public interface MnulService {
 
     List<MnulVo> getMnulListByEquipIds(List<String> eqpmntIds);
 
-    List<MnulVo> getMnulListByEqpmntId(String eqpmntId);
+    List<MnulVo> getMnulListByEqpmntId(String eqpmntId, String videoYn);
 
     void deleteMnul(String eqpmntId);
     void deleteMnulById(List<String> ids);
     int upsertMnul(List<MnulVo> mnulVoList, String eqpmntId);
     Resource loadVideoAsResource(String videoId)throws IOException;
-
+    Resource videoMnlAsResource(String mnlId)throws IOException;
 
 }

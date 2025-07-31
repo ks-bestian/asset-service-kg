@@ -39,6 +39,8 @@ public class EquipDetailVo {
     private String eqpmntSeNm2;
     private String eqpmntSeNm3;
 
+    private Boolean fileExist;
+
     @Builder
     public EquipDetailVo(EquipDetailVo vo) {
         this.eqpmntId = vo.getEqpmntId();

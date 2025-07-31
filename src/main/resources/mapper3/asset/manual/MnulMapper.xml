@@ -25,7 +25,7 @@
         </if>
     </select>
 
-    <select id="getMnulListByEqpmntId" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.asset.manual.vo.MnulVo">
+    <select id="getMnulListByEqpmntId" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.asset.manual.vo.MnulVo">
         select
               mnl_id
             , eqpmnt_id
@@ -39,6 +39,26 @@
             , mnl_lng
         from ams_mnl
         where eqpmnt_id = #{eqpmntId}
+        <if test="videoYn != null and videoYn != ''">
+            and mnl_se = 'video'
+        </if>
+        order by seq
+    </select>
+
+    <select id="getVideoByMnlId" parameterType="java.util.HashMap" resultType="kr.co.bestiansoft.ebillservicekg.asset.manual.vo.MnulVo">
+        select
+              mnl_id
+            , eqpmnt_id
+            , mnl_se
+            , seq
+            , file_path
+            , file_nm
+            , orgnl_file_nm
+            , file_extn
+            , file_sz
+            , mnl_lng
+        from ams_mnl
+        where mnl_id = #{mnlId} and mnl_se = 'video'
         order by seq
     </select>
     

@@ -1,7 +1,9 @@
 package kr.co.bestiansoft.ebillservicekg.asset.equip.repository;
 
+import kr.co.bestiansoft.ebillservicekg.asset.amsImg.vo.AmsImgVo;
 import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipDetailVo;
 import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipRequest;
+import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipVo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.HashMap;
@@ -15,4 +17,5 @@ public interface EquipMapper {
     EquipDetailVo getDetailEquip(String eqpmntId);
     int updateEquip(EquipRequest equipRequest);
     void deleteEquip(String eqpmntId);
+    List<AmsImgVo> getImgListByInstlId(String eqpmntId);
 }

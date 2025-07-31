@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 @Service
@@ -36,7 +37,9 @@ public class AmsImgServiceImpl implements AmsImgService {
     @Override
     public int saveImgs(MultipartFile[] files, String eqpmntId, String instlId, String imgSe){
         for(MultipartFile file : files) {
-            String fileNm = file.getOriginalFilename();
+            String orlFileNm = file.getOriginalFilename();
+            int lastDot = orlFileNm.lastIndexOf('.');
+            String fileNm = orlFileNm.substring(0, lastDot);
             String fileType = file.getContentType();
 
             try {
@@ -48,7 +51,7 @@ public class AmsImgServiceImpl implements AmsImgService {
                 amsImgVo.setEqpmntId(eqpmntId);
                 amsImgVo.setFilePath(filePath);
                 amsImgVo.setFileNm(fileNm);
-                amsImgVo.setOrgnlFileNm(fileNm);
+                amsImgVo.setOrgnlFileNm(orlFileNm);
                 amsImgVo.setFileExtn(file.getContentType());
                 amsImgVo.setFileSz(file.getSize());
                 amsImgVo.setImgSe(imgSe);
@@ -61,5 +64,21 @@ public class AmsImgServiceImpl implements AmsImgService {
             }
         }
         return 1;
+    }
+
+    @Override
+    public InputStream imgDownload(String fileId) {
+//        List<AmsImgVo> list = amsImgMapper.getImgListByEqpmntId();
+        return null;
+    }
+
+    @Override
+    public List<AmsImgVo> getDetailListByEqpmntId(String eqpmntId) {
+        return amsImgMapper.getDetailListByEqpmntId(eqpmntId);
+    }
+
+    @Override
+    public AmsImgVo getImgByInstlId(String instlId) {
+        return amsImgMapper.getImgByInstlId(instlId);
     }
 }

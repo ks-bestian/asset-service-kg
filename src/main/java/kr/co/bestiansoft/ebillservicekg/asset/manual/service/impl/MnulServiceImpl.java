@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,14 +34,17 @@ public class MnulServiceImpl implements MnulService {
         for (MnulVo mnulVo : mnulVoList) {
             if (mnulVo.getFile() != null) {
                 MultipartFile file = mnulVo.getFile();
-                String fileNm = file.getOriginalFilename();
+                String orgFileNm = file.getOriginalFilename();
+
+                int lastDotIndex = orgFileNm.lastIndexOf('.');
+                String fileNm = orgFileNm.substring(0, lastDotIndex);
                 String fileType = file.getContentType();
 
                 try {
-                    String filePath = FileUtil.upload(file, fileUploadDir, fileType, fileNm);
+                    String filePath = FileUtil.upload(file, fileUploadDir, fileType, orgFileNm);
                     mnulVo.setFilePath(filePath);
-                    mnulVo.setFileNm(file.getOriginalFilename());
-                    mnulVo.setOrgnlFileNm(file.getOriginalFilename());
+                    mnulVo.setFileNm(fileNm);
+                    mnulVo.setOrgnlFileNm(orgFileNm);
                     mnulVo.setFileExtn(file.getContentType());
                     mnulVo.setFileSz(file.getSize());
                 } catch (IOException e) {
@@ -78,8 +82,11 @@ public class MnulServiceImpl implements MnulService {
     }
 
     @Override
-    public List<MnulVo> getMnulListByEqpmntId(String eqpmntId) {
-        return mnulMapper.getMnulListByEqpmntId(eqpmntId);
+    public List<MnulVo> getMnulListByEqpmntId(String eqpmntId, String videoYn) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("eqpmntId", eqpmntId);
+        params.put("videoYn", videoYn);
+        return mnulMapper.getMnulListByEqpmntId(params);
     }
 
     @Override
@@ -109,9 +116,20 @@ public class MnulServiceImpl implements MnulService {
 
     @Override
     public Resource loadVideoAsResource(String eqpmntId) throws IOException {
-        List<MnulVo> list = mnulMapper.getMnulListByEqpmntId(eqpmntId);
+        HashMap<String, String> params = new HashMap<>();
+        params.put("eqpmntId", eqpmntId);
+        params.put("videoYn", "Y");
+        List<MnulVo> list = mnulMapper.getMnulListByEqpmntId(params);
         Optional<MnulVo> vo = list.stream().filter(item -> "video".equals(item.getMnlSe())).findFirst();
         File videoFile = new File(vo.get().getFilePath());
+        InputStream stream = new FileInputStream(videoFile);
+        return new InputStreamResource(stream);
+    }
+
+    @Override
+    public Resource videoMnlAsResource(String mnlId) throws IOException {
+        MnulVo vo = mnulMapper.getVideoByMnlId(mnlId);
+        File videoFile = new File(vo.getFilePath());
         InputStream stream = new FileInputStream(videoFile);
         return new InputStreamResource(stream);
     }

@@ -9,6 +9,7 @@ import kr.co.bestiansoft.ebillservicekg.asset.equip.service.EquipService;
 import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipDetailVo;
 import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipRequest;
 import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipResponse;
+import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipVo;
 import kr.co.bestiansoft.ebillservicekg.asset.faq.service.FaqService;
 import kr.co.bestiansoft.ebillservicekg.asset.faq.vo.FaqVo;
 import kr.co.bestiansoft.ebillservicekg.asset.install.service.InstallService;
@@ -33,12 +34,12 @@ import java.util.stream.Collectors;
 @Service
 public class EquipServiceImpl implements EquipService {
 
+    private final ObjectMapper objectMapper;
     private final EquipMapper equipMapper;
     private final MnulService mnulService;
     private final InstallService installService;
     private final FaqService faqService;
     private final AmsImgService amsImgService;
-    private final ObjectMapper objectMapper;
 
     @Transactional
     @Override
@@ -158,13 +159,12 @@ public class EquipServiceImpl implements EquipService {
 
         //todo 이미지 : thumnail & 설치 이미지
         List<String> id = Arrays.asList(eqpmntId);
-        result.setAmsImgList(amsImgService.getImgListByEqpmntId(id));
 
-//        result.setInstlImgList(amsImgService.getImgListByInstlId(instlId));
+        result.setAmsImgList(amsImgService.getDetailListByEqpmntId(eqpmntId));
 
         result.setInstallList(installService.getInstallList(eqpmntId));
 
-        result.setMnulList(mnulService.getMnulListByEqpmntId(eqpmntId));
+        result.setMnulList(mnulService.getMnulListByEqpmntId(eqpmntId, "N"));
         result.setFaqList(faqService.getFaqList(eqpmntId));
         return result;
     }

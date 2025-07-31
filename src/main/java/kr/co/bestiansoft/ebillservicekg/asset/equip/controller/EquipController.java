@@ -36,13 +36,6 @@ public class EquipController {
     }
     
     //목록만 가져옵시다!! 목록안에 목록이 또있다!!
-    /*
-    @Operation(summary = "장비유지관리 목록 조회", description = "장비유지관리 목록 조회한다.")
-    @GetMapping
-    public ResponseEntity<CommonResponse> getEquipList(@RequestParam HashMap<String, Object> params) {
-        return new ResponseEntity<>(new CommonResponse(200, "OK", equipService.getEquipList(params)), HttpStatus.OK);
-    }
-    */
     @Operation(summary = "장비유지관리 목록 조회", description = "장비유지관리 목록 조회한다.")
     @GetMapping
     public ResponseEntity<CommonResponse> getEquipListAll(@RequestParam HashMap<String, Object> params) {

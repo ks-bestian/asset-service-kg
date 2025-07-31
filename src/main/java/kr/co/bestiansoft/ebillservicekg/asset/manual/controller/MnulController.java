@@ -38,4 +38,18 @@ public class MnulController {
                 .contentType(MediaType.valueOf("video/mp4"))
                 .body(video);
     }
+
+    @Operation(summary = "장비 비디오 메뉴얼 목록 조회", description = "장비 비디오 메뉴얼 목록 조회한다.")
+    @GetMapping("/video/list")
+    public ResponseEntity<CommonResponse> getVideoList(@RequestParam String eqpmntId) {
+        return new ResponseEntity<>(new CommonResponse(200, "OK", mnulService.getMnulListByEqpmntId(eqpmntId, "Y")), HttpStatus.OK);
+    }
+
+    @GetMapping(value="/video/{mnlId}",produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<Resource> videoMnl(@PathVariable String mnlId) throws IOException {
+        Resource video = mnulService.videoMnlAsResource(mnlId);
+        return ResponseEntity.ok()
+                .contentType(MediaType.valueOf("video/mp4"))
+                .body(video);
+    }
 }

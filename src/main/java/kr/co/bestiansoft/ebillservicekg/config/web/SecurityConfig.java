@@ -47,10 +47,14 @@ public class SecurityConfig {
                         "/v3/api-docs",
                         "/swagger*/**").permitAll()
                 .requestMatchers("/mnul/preview/**").permitAll() //todo 수정
+                .requestMatchers("/mnul/video/**").permitAll() //todo 수정
                 .requestMatchers("/equip/thumbnail/**").permitAll() //todo 수정
+                .requestMatchers("/install/imgs/**").permitAll() //todo 수정
                 .requestMatchers("/login").permitAll()
                 .requestMatchers("/com/file/pdf").permitAll()
                 .requestMatchers("/com/file/down").permitAll()
+                .requestMatchers("/com/img/down").permitAll()
+                .requestMatchers("/com/mnl/down").permitAll()
                 .requestMatchers("/ws").permitAll()
                 .anyRequest().authenticated()
         );

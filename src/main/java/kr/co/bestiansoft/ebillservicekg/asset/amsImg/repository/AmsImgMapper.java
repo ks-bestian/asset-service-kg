@@ -10,5 +10,8 @@ public interface AmsImgMapper {
     List<AmsImgVo> getImgListByEqpmntId(List<String> eqpmntIds);
     void deleteImg(String eqpmntId);
     int saveImg(AmsImgVo amsImgVo);
+    List<AmsImgVo> getDetailListByEqpmntId(String eqpmntId);
+    AmsImgVo getImgByInstlId(String instlId);
+
 
 }

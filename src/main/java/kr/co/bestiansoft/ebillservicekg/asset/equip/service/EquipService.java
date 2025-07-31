@@ -3,6 +3,7 @@ package kr.co.bestiansoft.ebillservicekg.asset.equip.service;
 import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipDetailVo;
 import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipRequest;
 import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipResponse;
+import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipVo;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
