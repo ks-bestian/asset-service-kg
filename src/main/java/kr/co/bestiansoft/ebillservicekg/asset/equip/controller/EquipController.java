@@ -49,8 +49,8 @@ public class EquipController {
     }
 
     @Operation(summary = "장비 수정", description = "장비 수정한다.")
-    @PutMapping
-    public ResponseEntity<CommonResponse> updateEquip(@RequestBody EquipRequest equipRequest, @RequestParam("faqVoList") String faqVoJson) {
+    @PutMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<CommonResponse> updateEquip(EquipRequest equipRequest, @RequestParam("mnulVoList") String mnlVoJson, @RequestParam("installVoList") String installVoJson, @RequestParam("faqVoList") String faqVoJson, @RequestParam Map<String, MultipartFile> fileMap) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "Equipment updated successfully", equipService.updateEquip(equipRequest, faqVoJson)), HttpStatus.CREATED);
     }
 
@@ -61,14 +61,60 @@ public class EquipController {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "OK", "equipment deleted"), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/thumbnail/{eqpmntId}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public ResponseEntity<Resource> streamThumbnail(@PathVariable String eqpmntId) throws IOException {
-        Resource thumbnail = equipService.loadThumbnail(eqpmntId);
+    @GetMapping(value = "/thumbnail/{eqpmntId}", produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<Resource> streamThumbnail(@PathVariable String eqpmntId) {
+        try {
+            Resource thumbnail = equipService.loadThumbnail(eqpmntId);
 
-        return ResponseEntity.ok()
-                .contentType(MediaType.valueOf("image/jpeg"))
+            if (thumbnail == null || !thumbnail.exists()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
                 .body(thumbnail);
+        } catch (Exception e) {
+            System.out.println("❗ 썸네일 읽기 실패: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
+    
+    @GetMapping(value = "/img/{imgId}", produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<Resource> streamImg(@PathVariable String imgId) {
+        try {
+            Resource img = equipService.loadImg(imgId);
+
+            if (img == null || !img.exists()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(img);
+        } catch (Exception e) {
+            System.out.println("❗ 이미지 읽기 실패: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    //installImg
+    @GetMapping(value = "/installImg/{instlId}", produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<Resource> streamInstallImg(@PathVariable String instlId) {
+        try {
+            Resource installImg = equipService.loadInstallImg(instlId);
+
+            if (installImg == null || !installImg.exists()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(installImg);
+        } catch (Exception e) {
+            System.out.println("❗ 설치 이미지 읽기 실패: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 
 
 

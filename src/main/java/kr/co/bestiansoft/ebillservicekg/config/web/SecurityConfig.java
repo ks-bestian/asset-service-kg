@@ -50,6 +50,8 @@ public class SecurityConfig {
                 .requestMatchers("/mnul/video/**").permitAll() //todo 수정
                 .requestMatchers("/equip/thumbnail/**").permitAll() //todo 수정
                 .requestMatchers("/install/imgs/**").permitAll() //todo 수정
+                .requestMatchers("/equip/img/**").permitAll()
+                .requestMatchers("/equip/installImg/**").permitAll()
                 .requestMatchers("/login").permitAll()
                 .requestMatchers("/com/file/pdf").permitAll()
                 .requestMatchers("/com/file/down").permitAll()

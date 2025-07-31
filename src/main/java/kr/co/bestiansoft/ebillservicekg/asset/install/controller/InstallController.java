@@ -48,7 +48,7 @@ public class InstallController {
     public ResponseEntity<Resource> imgByInstlId(@PathVariable String instlId) throws IOException {
         Resource video = installService.instlImgAsResource(instlId);
         return ResponseEntity.ok()
-                .contentType(MediaType.valueOf("image/jpeg"))
+                .contentType(MediaType.IMAGE_JPEG)
                 .body(video);
     }
 

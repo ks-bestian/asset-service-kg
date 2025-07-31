@@ -8,10 +8,12 @@ import java.util.List;
 @Mapper
 public interface AmsImgMapper {
     List<AmsImgVo> getImgListByEqpmntId(List<String> eqpmntIds);
+    List<AmsImgVo> getImgListByInstlId(List<String> instlIds);
     void deleteImg(String eqpmntId);
     int saveImg(AmsImgVo amsImgVo);
     List<AmsImgVo> getDetailListByEqpmntId(String eqpmntId);
     AmsImgVo getImgByInstlId(String instlId);
 
+    AmsImgVo getImgVoByImgId(String imgId);
 
 }

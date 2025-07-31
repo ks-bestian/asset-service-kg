@@ -23,6 +23,26 @@
             </foreach>
         </if>
     </select>
+    <select id="getImgListByInstlId" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.asset.amsImg.vo.AmsImgVo">
+        select
+              img_id
+            , eqpmnt_id
+            , instl_id
+            , img_se
+            , file_path
+            , file_nm
+            , orgnl_file_nm
+            , file_extn
+            , file_sz
+        from ams_img
+        where 1=1
+        <if test="instlIds.size() > 0">
+            and instl_id in
+            <foreach collection="instlIds" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+    </select>
 
     <select id="getDetailListByEqpmntId" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.asset.amsImg.vo.AmsImgVo">
         select
@@ -76,6 +96,21 @@
     </insert>
 
     <select id="getImgByInstlId" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.asset.amsImg.vo.AmsImgVo">
+    select
+          img_id
+        , eqpmnt_id
+        , instl_id
+        , img_se
+        , file_path
+        , file_nm
+        , orgnl_file_nm
+        , file_extn
+        , file_sz
+    from ams_img
+        where 1=1 and instl_id = #{instlId}
+    </select>
+
+    <select id="getImgVoByImgId" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.asset.amsImg.vo.AmsImgVo">
         select
               img_id
             , eqpmnt_id
@@ -87,6 +122,6 @@
             , file_extn
             , file_sz
         from ams_img
-        where 1=1 and instl_id = #{instlId}
+        where img_id = #{imgId}
     </select>
 </mapper>
