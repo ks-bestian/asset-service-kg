@@ -10,6 +10,7 @@ public interface FaqMapper {
 
     int insertFaq(List<FaqVo> faqVoList);
     List<FaqVo> getFaqList(String eqpmntId);
+    int updateFaq(FaqVo faqVo);
     void deleteFaq(String eqpmntId);
     void deleteFaqById(String faqId);
 }

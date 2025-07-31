@@ -142,6 +142,14 @@ public class EquipServiceImpl implements EquipService {
         }
         return result;
     }
+    
+    @Override
+    public List<EquipDetailVo> getEquipListAll(HashMap<String, Object> params) { //todo 수정
+        //장비 정보 + 업체명 + 제품구분
+        List<EquipDetailVo> equipList = equipMapper.getEquipList(params);
+
+        return equipList;
+    }
 
     @Override
     public EquipResponse getEquipDetail(String eqpmntId) {
@@ -163,8 +171,23 @@ public class EquipServiceImpl implements EquipService {
 
     @Transactional
     @Override
-    public int updateEquip(EquipRequest equipRequest) {
+    public int updateEquip(EquipRequest equipRequest, String faqVoJson) {
         String eqpmntId = equipRequest.getEqpmntId();
+        
+        List<FaqVo> faqList = null;
+
+        try {
+        	
+            if(faqVoJson != null) {
+                faqList = objectMapper.readValue(faqVoJson, new TypeReference<List<FaqVo>>() {});
+            }
+
+
+        } catch (IOException e) {
+            System.err.println("ERROR : " + e);
+        }
+        
+        
         //1.제품정보
 
         equipRequest.setMdfrId(new SecurityInfoUtil().getAccountId());
@@ -175,18 +198,23 @@ public class EquipServiceImpl implements EquipService {
 
         //3.설치정보(위치 : 공통코드)
 //        installService.upsertInstl(equipRequest.getInstallVoList(), eqpmntId);
+        
+        //4. faq
+        faqService.updateFaq(faqList, eqpmntId);
 
-        return equipMapper.updateEquip(equipRequest);
+        return 1;
     }
 
     @Transactional
     @Override
     public void deleteEquip(List<String> ids) { //eqpmnt_id 관련 모든 데이터 삭제
         for (String equipId : ids) {
+        	faqService.deleteFaq(equipId);
             installService.deleteInstall(equipId);
             mnulService.deleteMnul(equipId);
             amsImgService.deleteImg(equipId);
             equipMapper.deleteEquip(equipId);
+            
 
         }
     }

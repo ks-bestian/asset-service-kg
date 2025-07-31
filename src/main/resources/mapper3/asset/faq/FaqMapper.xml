@@ -45,6 +45,20 @@
 		where ast.eqpmnt_id = #{eqpmntId}
 		
     </select>
+    
+    <update id="updateFaq" parameterType="kr.co.bestiansoft.ebillservicekg.asset.faq.vo.FaqVo">
+
+            UPDATE ams_faq SET
+            	 faq_se = #{faqSe}
+            	, qstn = #{qstn}
+            	, ans = #{ans}
+            	, seq = #{seq}
+            	, mdfcn_dt = now()
+            	, mdfr_id = #{mdfrId}
+			WHERE faq_id = #{faqId}
+
+
+    </update>
 
     <select id="deleteFaq" parameterType="java.lang.String">
         delete from ams_faq

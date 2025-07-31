@@ -34,11 +34,19 @@ public class EquipController {
     public ResponseEntity<CommonResponse> createEuip(EquipRequest equipRequest, @RequestParam("mnulVoList") String mnlVoJson, @RequestParam("installVoList") String installVoJson, @RequestParam("faqVoList") String faqVoJson, @RequestParam Map<String, MultipartFile> fileMap) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Equipment created successfully", equipService.createEquip(equipRequest, mnlVoJson, installVoJson, faqVoJson, fileMap)), HttpStatus.CREATED);
     }
-
+    
+    //목록만 가져옵시다!! 목록안에 목록이 또있다!!
+    /*
     @Operation(summary = "장비유지관리 목록 조회", description = "장비유지관리 목록 조회한다.")
     @GetMapping
     public ResponseEntity<CommonResponse> getEquipList(@RequestParam HashMap<String, Object> params) {
         return new ResponseEntity<>(new CommonResponse(200, "OK", equipService.getEquipList(params)), HttpStatus.OK);
+    }
+    */
+    @Operation(summary = "장비유지관리 목록 조회", description = "장비유지관리 목록 조회한다.")
+    @GetMapping
+    public ResponseEntity<CommonResponse> getEquipListAll(@RequestParam HashMap<String, Object> params) {
+        return new ResponseEntity<>(new CommonResponse(200, "OK", equipService.getEquipListAll(params)), HttpStatus.OK);
     }
 
     @Operation(summary = "equipment detail", description = "search equipment detail by eqpmntId")
@@ -49,8 +57,8 @@ public class EquipController {
 
     @Operation(summary = "장비 수정", description = "장비 수정한다.")
     @PutMapping
-    public ResponseEntity<CommonResponse> updateEquip(@RequestBody EquipRequest equipRequest) {
-        return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "Equipment updated successfully", equipService.updateEquip(equipRequest)), HttpStatus.CREATED);
+    public ResponseEntity<CommonResponse> updateEquip(@RequestBody EquipRequest equipRequest, @RequestParam("faqVoList") String faqVoJson) {
+        return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "Equipment updated successfully", equipService.updateEquip(equipRequest, faqVoJson)), HttpStatus.CREATED);
     }
 
     @Operation(summary = "장비 삭제", description = "장비삭제한다.")
