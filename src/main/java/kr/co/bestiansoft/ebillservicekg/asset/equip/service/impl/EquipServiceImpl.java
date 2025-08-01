@@ -1,7 +1,23 @@
 package kr.co.bestiansoft.ebillservicekg.asset.equip.service.impl;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import kr.co.bestiansoft.ebillservicekg.asset.amsImg.service.AmsImgService;
 import kr.co.bestiansoft.ebillservicekg.asset.amsImg.vo.AmsImgVo;
 import kr.co.bestiansoft.ebillservicekg.asset.equip.repository.EquipMapper;
@@ -9,7 +25,6 @@ import kr.co.bestiansoft.ebillservicekg.asset.equip.service.EquipService;
 import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipDetailVo;
 import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipRequest;
 import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipResponse;
-import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipVo;
 import kr.co.bestiansoft.ebillservicekg.asset.faq.service.FaqService;
 import kr.co.bestiansoft.ebillservicekg.asset.faq.vo.FaqVo;
 import kr.co.bestiansoft.ebillservicekg.asset.install.service.InstallService;
@@ -20,15 +35,6 @@ import kr.co.bestiansoft.ebillservicekg.common.utils.FileUtil;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.Resource;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -40,6 +46,8 @@ public class EquipServiceImpl implements EquipService {
     private final InstallService installService;
     private final FaqService faqService;
     private final AmsImgService amsImgService;
+    @Value("${file.upload.path}")
+    private String fileUploadDir;
 
     @Transactional
     @Override
@@ -273,5 +281,6 @@ public class EquipServiceImpl implements EquipService {
 
         return FileUtil.loadFile(vo.get().getFilePath());
     }
+
     
 }

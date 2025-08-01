@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: ebill-service-sng
+    name: ebill-service-kg
   datasource:
     kgst:
       driver-class-name: org.postgresql.Driver
