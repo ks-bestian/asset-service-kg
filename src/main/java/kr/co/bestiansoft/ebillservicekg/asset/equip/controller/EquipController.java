@@ -3,11 +3,15 @@ package kr.co.bestiansoft.ebillservicekg.asset.equip.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import kr.co.bestiansoft.ebillservicekg.asset.equip.service.EquipService;
 import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipRequest;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.desair.tus.server.TusFileUploadService;
+
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,6 +32,7 @@ import java.util.Map;
 @RequestMapping("/equip")
 public class EquipController {
     private final EquipService equipService;
+
 
     @Operation(summary = "장비 생성", description = "장비를 생성한다.")
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
@@ -96,7 +101,7 @@ public class EquipController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-    //installImg
+    
     @GetMapping(value = "/installImg/{instlId}", produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<Resource> streamInstallImg(@PathVariable String instlId) {
         try {
@@ -114,6 +119,7 @@ public class EquipController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 
 
 

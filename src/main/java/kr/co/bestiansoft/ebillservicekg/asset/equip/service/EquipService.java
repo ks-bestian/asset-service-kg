@@ -7,6 +7,9 @@ import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipVo;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +26,7 @@ public interface EquipService {
     Resource loadThumbnail(String eqpmntId) throws IOException;
     Resource loadImg(String imgId) throws IOException;
     Resource loadInstallImg(String instlId) throws IOException;
+
 }
 
 
