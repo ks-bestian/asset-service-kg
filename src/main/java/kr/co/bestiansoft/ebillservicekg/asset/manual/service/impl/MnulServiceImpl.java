@@ -63,8 +63,6 @@ public class MnulServiceImpl implements MnulService {
 
 //            Optional.ofNullable(mnulVo.getMnlLng2())
 //                    .ifPresent(mnulVo::setMnlLng);
-            mnulVo.setMnlLng("KR");
-
             i++;
         }
 
@@ -108,7 +106,44 @@ public class MnulServiceImpl implements MnulService {
                 vo.setMnlId(StringUtil.getMnlUUID());
             }
             vo.setEqpmntId(eqpmntId);
-            vo.setMnlLng("KR"); //todo 수정
+
+            int i = 1;
+            for (MnulVo mnulVo : mnulVoList) {
+                if (vo.getMnlId() == null || vo.getMnlId().isEmpty()) {
+                    vo.setMnlId(StringUtil.getMnlUUID());
+                    vo.setRgtrId(new SecurityInfoUtil().getAccountId());
+                } else {
+                    vo.setMdfrId(new SecurityInfoUtil().getAccountId());
+                }
+                vo.setEqpmntId(eqpmntId);
+
+
+                if (mnulVo.getFile() != null) {
+                    MultipartFile file = mnulVo.getFile();
+                    String orgFileNm = file.getOriginalFilename();
+
+                    int lastDotIndex = orgFileNm.lastIndexOf('.');
+                    String fileNm = orgFileNm.substring(0, lastDotIndex);
+                    String fileType = file.getContentType();
+
+                    try {
+                        String filePath = FileUtil.upload(file, fileUploadDir, fileType, orgFileNm);
+                        mnulVo.setFilePath(filePath);
+                        mnulVo.setFileNm(fileNm);
+                        mnulVo.setOrgnlFileNm(orgFileNm);
+                        mnulVo.setFileExtn(file.getContentType());
+                        mnulVo.setFileSz(file.getSize());
+                    } catch (IOException e) {
+                        throw new RuntimeException("파일저장실패 : " + e);
+                    }
+                }
+                mnulVo.setMdfrId(new SecurityInfoUtil().getAccountId());
+
+                Optional.ofNullable(mnulVo.getFileNm2())
+                        .ifPresent(mnulVo::setFileNm);
+                i++;
+            }
+
             mnulMapper.upsertMnul(vo);
         }
         return 1;

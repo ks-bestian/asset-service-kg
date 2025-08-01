@@ -77,12 +77,35 @@ public class InstallServiceImpl implements InstallService {
 
     @Override
     public int upsertInstl(List<InstallVo> instlList, String eqpmntId) {
+
+
+//        for(InstallVo installVo: installVoList) {
+//
+//            installVo.setRgtrId(new SecurityInfoUtil().getAccountId());
+//            installMapper.insertInstall(installVo);
+//
+//            if(installVo.getFile() != null) {
+//                MultipartFile[] files = {installVo.getFile()};
+//                amsImgService.saveImgs(files, eqpmntId, instlId, "installImg");
+//            }
+//        }
+
+
         for (InstallVo vo : instlList) {
             if(vo.getInstlId() == null || vo.getInstlId().isEmpty()) {
                 vo.setInstlId(StringUtil.getInstlUUUID());
+                vo.setRgtrId(new SecurityInfoUtil().getAccountId());
+            }else {
+                vo.setMdfrId(new SecurityInfoUtil().getAccountId());
             }
-            vo.setEqpmntId(eqpmntId);
-            installMapper.upsertInstl(vo);
+
+            if(vo.getFile() != null) {
+                MultipartFile[] files = {vo.getFile()};
+                vo.setEqpmntId(eqpmntId);
+                installMapper.upsertInstl(vo);
+
+                amsImgService.saveImgs(files, eqpmntId, vo.getInstlId(), "installImg");
+            }
         }
         return 1;
     }

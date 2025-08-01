@@ -145,7 +145,7 @@ public class EquipServiceImpl implements EquipService {
     }
     
     @Override
-    public List<EquipDetailVo> getEquipListAll(HashMap<String, Object> params) { //todo 수정
+    public List<EquipDetailVo> getEquipListAll(HashMap<String, Object> params) {
         //장비 정보 + 업체명 + 제품구분
         List<EquipDetailVo> equipList = equipMapper.getEquipList(params);
 
@@ -171,13 +171,20 @@ public class EquipServiceImpl implements EquipService {
 
     @Transactional
     @Override
-    public int updateEquip(EquipRequest equipRequest, String faqVoJson) {
+    public int updateEquip(EquipRequest equipRequest,  String mnlVoJson, String installVoJson, String faqVoJson,  Map<String, MultipartFile> fileMap) {
         String eqpmntId = equipRequest.getEqpmntId();
-        
+        List<MnulVo> mnulList = null;
+        List<InstallVo> installVoList = null;
         List<FaqVo> faqList = null;
 
+
         try {
-        	
+            if (mnlVoJson != null) {
+                mnulList = objectMapper.readValue(mnlVoJson, new TypeReference<List<MnulVo>>() {});
+            }
+            if (installVoJson != null) {
+                installVoList = objectMapper.readValue(installVoJson, new TypeReference<List<InstallVo>>() {});
+            }
             if(faqVoJson != null) {
                 faqList = objectMapper.readValue(faqVoJson, new TypeReference<List<FaqVo>>() {});
             }
@@ -188,16 +195,36 @@ public class EquipServiceImpl implements EquipService {
         }
         
         
-        //1.제품정보
+        //1.장비정보
+        if (equipRequest.getFiles() != null) {
+            List files = new ArrayList<>();
+            for (MultipartFile file : equipRequest.getFiles()) {
+                MnulVo vo = MnulVo.builder()
+                        .file(file)
+                        .build();
+                files.add(vo);
+            }
+            mnulService.upsertMnul(files, eqpmntId);
+        }
 
         equipRequest.setMdfrId(new SecurityInfoUtil().getAccountId());
         equipMapper.updateEquip(equipRequest);
 
+        //장비 썸네일, 상세 이미지
+        amsImgService.deleteImg(eqpmntId);
+        if (equipRequest.getDtlImg() != null) {
+            amsImgService.saveImgs(equipRequest.getDtlImg(), eqpmntId, null, "detail");
+        }
+
+        if (equipRequest.getThumbnail() != null) {
+            amsImgService.saveImgs(equipRequest.getThumbnail(), eqpmntId, null, "thumbnail");
+        }
+
         //2.영상메뉴얼
-//        mnulService.upsertMnul(equipRequest.getMnulVoList(), eqpmntId);
+        mnulService.upsertMnul(mnulList, eqpmntId);
 
         //3.설치정보(위치 : 공통코드)
-//        installService.upsertInstl(equipRequest.getInstallVoList(), eqpmntId);
+        installService.upsertInstl(installVoList, eqpmntId);
         
         //4. faq
         faqService.updateFaq(faqList, eqpmntId);

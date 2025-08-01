@@ -51,7 +51,7 @@ public class EquipController {
     @Operation(summary = "장비 수정", description = "장비 수정한다.")
     @PutMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<CommonResponse> updateEquip(EquipRequest equipRequest, @RequestParam("mnulVoList") String mnlVoJson, @RequestParam("installVoList") String installVoJson, @RequestParam("faqVoList") String faqVoJson, @RequestParam Map<String, MultipartFile> fileMap) {
-        return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "Equipment updated successfully", equipService.updateEquip(equipRequest, faqVoJson)), HttpStatus.CREATED);
+        return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "Equipment updated successfully", equipService.updateEquip(equipRequest, mnlVoJson, installVoJson, faqVoJson, fileMap)), HttpStatus.CREATED);
     }
 
     @Operation(summary = "장비 삭제", description = "장비삭제한다.")
