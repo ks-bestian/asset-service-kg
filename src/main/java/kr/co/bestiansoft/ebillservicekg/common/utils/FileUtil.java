@@ -40,6 +40,8 @@ public class FileUtil {
     public static Resource loadFile(String filePath) {
 
         Path path = Paths.get(filePath).normalize();
+        System.out.println("!22");
+        System.out.println(path);
         try {
             Resource resource = new UrlResource(path.toUri());
 
@@ -54,26 +56,6 @@ public class FileUtil {
             // TODO 새로운 exception 필요
             throw new RuntimeException(e);
         }
-    }
-
-
-    public  InputStream downLoadFile (String fileId)  throws Exception {
-//        InputStream is = null;
-//        try {
-//
-//            Node root = session.getRootNode();
-//            Node fileNode = root.getNode(fileId);
-//            Node resourcenode = fileNode.getNode(JcrConstants.JCR_CONTENT);
-//
-//            Binary binary = JcrUtils.getBinaryProperty(resourcenode, JcrConstants.JCR_DATA, null);
-//
-//            is = binary.getStream();
-//            session.logout();
-//        } catch (RepositoryException e) {
-//            LOGGER.error(e.getMessage());
-//        }
-//        return is;
-        return null;
     }
 
 }

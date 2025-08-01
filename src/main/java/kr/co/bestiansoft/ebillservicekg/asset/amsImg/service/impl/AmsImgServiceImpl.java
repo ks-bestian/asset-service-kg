@@ -72,14 +72,6 @@ public class AmsImgServiceImpl implements AmsImgService {
     }
 
 
-
-
-    @Override
-    public InputStream imgDownload(String fileId) {
-//        List<AmsImgVo> list = amsImgMapper.getImgListByEqpmntId();
-        return null;
-    }
-
     @Override
     public List<AmsImgVo> getDetailListByEqpmntId(String eqpmntId) {
         return amsImgMapper.getDetailListByEqpmntId(eqpmntId);

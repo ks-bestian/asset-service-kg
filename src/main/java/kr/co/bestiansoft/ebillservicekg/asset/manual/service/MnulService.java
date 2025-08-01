@@ -4,6 +4,7 @@ import kr.co.bestiansoft.ebillservicekg.asset.manual.vo.MnulVo;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 public interface MnulService {
@@ -18,5 +19,6 @@ public interface MnulService {
     int upsertMnul(List<MnulVo> mnulVoList, String eqpmntId);
     Resource loadVideoAsResource(String videoId)throws IOException;
     Resource videoMnlAsResource(String mnlId)throws IOException;
+    Resource downloadFile(String fileId);
 
 }

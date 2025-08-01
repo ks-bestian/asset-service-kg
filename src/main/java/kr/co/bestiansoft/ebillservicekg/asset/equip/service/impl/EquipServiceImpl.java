@@ -164,7 +164,7 @@ public class EquipServiceImpl implements EquipService {
 
         result.setInstallList(installService.getInstallList(eqpmntId));
 
-        result.setMnulList(mnulService.getMnulListByEqpmntId(eqpmntId, "N"));
+        result.setMnulList(mnulService.getMnulListByEqpmntId(eqpmntId, "file"));
         result.setFaqList(faqService.getFaqList(eqpmntId));
         return result;
     }

@@ -57,6 +57,7 @@ public class MnulServiceImpl implements MnulService {
             mnulVo.setMnlSe(mnlSe);
             mnulVo.setSeq(i);
             mnulVo.setRgtrId(new SecurityInfoUtil().getAccountId());
+            mnulVo.setMnlLng("KR"); //todo 수정
 
             Optional.ofNullable(mnulVo.getFileNm2())
                     .ifPresent(mnulVo::setFileNm);
@@ -65,6 +66,7 @@ public class MnulServiceImpl implements MnulService {
 //                    .ifPresent(mnulVo::setMnlLng);
             i++;
         }
+
 
         return mnulMapper.createMnul(mnulVoList);
     }
@@ -167,5 +169,10 @@ public class MnulServiceImpl implements MnulService {
         File videoFile = new File(vo.getFilePath());
         InputStream stream = new FileInputStream(videoFile);
         return new InputStreamResource(stream);
+    }
+
+    @Override
+    public Resource downloadFile(String fileId){
+        return FileUtil.loadFile(fileId);
     }
 }

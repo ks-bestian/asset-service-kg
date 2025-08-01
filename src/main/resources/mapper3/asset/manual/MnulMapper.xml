@@ -39,8 +39,13 @@
             , mnl_lng
         from ams_mnl
         where eqpmnt_id = #{eqpmntId}
-        <if test="videoYn != null and videoYn != ''">
-            and mnl_se = 'video'
+        <if test="videoYn != null">
+            <if test="videoYn == 'video'">
+                and mnl_se = #{videoYn}
+            </if>
+            <if test="videoYn == 'file'">
+                and mnl_se = #{videoYn}
+            </if>
         </if>
         order by seq
     </select>
