@@ -40,8 +40,6 @@ public class FileUtil {
     public static Resource loadFile(String filePath) {
 
         Path path = Paths.get(filePath).normalize();
-        System.out.println("!22");
-        System.out.println(path);
         try {
             Resource resource = new UrlResource(path.toUri());
 

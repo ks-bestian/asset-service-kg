@@ -10,6 +10,7 @@ import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.respon
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -66,19 +67,23 @@ public class MnulController {
     @Operation(summary = "File download", description = "File Download.")
     @GetMapping("/asset/file/down")
     public ResponseEntity<?> fileDownload(@RequestParam String fileId, HttpServletResponse response, HttpServletRequest request) throws Exception {
-        System.out.println("!dd");
-        System.out.println(fileId);
-//    	ComFileVo fileVo = comFileService.getFile(fileId);
-//		String orgFileNm = URLEncoder.encode(fileVo.getOrgFileNm(),"UTF-8") ;
-
-//        InputStream ins = edv.download(fileId);
         Resource resource = mnulService.downloadFile(fileId);
 
         if (resource == null) return ResponseEntity.notFound().build();
 
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
-//				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + orgFileNm + "\"")
+                .body(resource);
+    }
+
+    @GetMapping("/asset/file/view")
+    public ResponseEntity<?> fileViewer(@RequestParam String pdfFileNm, HttpServletResponse response, HttpServletRequest request) throws Exception {
+        Resource resource = mnulService.downloadFile(pdfFileNm);
+
+        if (resource == null) return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
                 .body(resource);
     }
 
