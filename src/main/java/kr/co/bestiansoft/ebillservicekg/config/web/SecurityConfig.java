@@ -57,6 +57,7 @@ public class SecurityConfig {
                 .requestMatchers("/com/file/down").permitAll()
                 .requestMatchers("/asset/file/down").permitAll()
                 .requestMatchers("/mnul/asset/file/view").permitAll()
+                .requestMatchers("/asset/img/view").permitAll()
                 .requestMatchers("/ws").permitAll()
                 .anyRequest().authenticated()
         );

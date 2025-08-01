@@ -2,6 +2,7 @@ package kr.co.bestiansoft.ebillservicekg.asset.faq.service.impl;
 
 import kr.co.bestiansoft.ebillservicekg.asset.faq.repository.FaqMapper;
 import kr.co.bestiansoft.ebillservicekg.asset.faq.service.FaqService;
+import kr.co.bestiansoft.ebillservicekg.asset.faq.vo.FaqResponse;
 import kr.co.bestiansoft.ebillservicekg.asset.faq.vo.FaqVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
 import kr.co.bestiansoft.ebillservicekg.common.utils.StringUtil;
@@ -38,6 +39,14 @@ public class FaqServiceImpl implements FaqService {
     @Override
     public List<FaqVo> getFaqList(String eqpmntId) {
         return faqMapper.getFaqList(eqpmntId);
+    }
+
+    @Override
+    public FaqResponse getFaqsAndBzenty(String eqpmntId) {
+        FaqResponse result = new FaqResponse();
+//        result.setBzentyVo();
+        result.setFaqVoList(faqMapper.getFaqList(eqpmntId));
+        return result;
     }
     
     @Transactional

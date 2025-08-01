@@ -6,10 +6,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.co.bestiansoft.ebillservicekg.asset.amsImg.service.AmsImgService;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
+import kr.co.bestiansoft.ebillservicekg.common.utils.FileUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +39,14 @@ public class AmsImgController {
         return new ResponseEntity<>(new CommonResponse(200, "OK", amsImgService.getDetailListByEqpmntId(eqpmntId)), HttpStatus.OK);
     }
 
+    @Operation(summary = "My information image", description="My information Image Inquiry.")
+    @GetMapping("asset/img/view")
+    public ResponseEntity<?> getMyInfoImg(@RequestParam String pdfFileNm) {
+        Resource resource = FileUtil.loadFile(pdfFileNm);
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        return new ResponseEntity<>(resource, headers, HttpStatus.OK);
+    }
 
 }

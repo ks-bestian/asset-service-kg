@@ -1,5 +1,6 @@
 package kr.co.bestiansoft.ebillservicekg.asset.faq.vo;
 
+import kr.co.bestiansoft.ebillservicekg.asset.bzenty.vo.BzentyVo;
 import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,7 @@ public class FaqVo extends ComDefaultVO{
     private String faqSeNm1;
     private String faqSeNm2;
     private String faqSeNm3;
-    
+
     public FaqVo(FaqVo vo) {
     	this.eqpmntId = vo.getEqpmntId();
     	this.faqSe = vo.getFaqSe();

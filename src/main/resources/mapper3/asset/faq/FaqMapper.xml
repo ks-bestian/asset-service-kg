@@ -24,11 +24,9 @@
                 , #{vo.rgtrId}
             )
         </foreach>
-
     </insert>
 
     <select id="getFaqList" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.asset.faq.vo.FaqVo">
-
         select
 			faq_id
 			, eqpmnt_id
@@ -43,7 +41,6 @@
 			ams_faq ast
 			left join kgst.com_code_detail ccd on ccd.code_id = ast.faq_se
 		where ast.eqpmnt_id = #{eqpmntId}
-		
     </select>
     
     <update id="updateFaq" parameterType="kr.co.bestiansoft.ebillservicekg.asset.faq.vo.FaqVo">
