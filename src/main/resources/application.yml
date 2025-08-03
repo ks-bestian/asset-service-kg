@@ -110,5 +110,10 @@ scheduler.gateway.new.documents.interval.milliseconds: 300000
 file:
   upload:
     path: C:\equipment\
-    
+
+
+tus:
+  server:
+    data: 
+      expiration: 864000    
     

@@ -52,7 +52,7 @@ public class SecurityConfig {
                 .requestMatchers("/install/imgs/**").permitAll() //todo 수정
                 .requestMatchers("/equip/img/**").permitAll()
                 .requestMatchers("/equip/installImg/**").permitAll()
-                .requestMatchers("/tus/upload", "/tus/upload/**").permitAll()
+                .requestMatchers("/tus/**").permitAll()
                 .requestMatchers("/login").permitAll()
                 .requestMatchers("/com/file/pdf").permitAll()
                 .requestMatchers("/com/file/down").permitAll()

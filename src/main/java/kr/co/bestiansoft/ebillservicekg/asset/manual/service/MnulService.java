@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface MnulService {
     int createMnul(List<MnulVo> mnulVo, String eqpmntId, String mnlSe);
+    
+    int createMnulFromUrl(List<MnulVo> mnulVoList, String eqpmntId);
 
     List<MnulVo> getMnulListByEquipIds(List<String> eqpmntIds);
 

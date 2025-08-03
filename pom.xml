@@ -30,6 +30,7 @@
         <url/>
     </scm>
     <properties>
+      <tus-java-server-systemPath>C:/workspace/asset-service-kg/lib/tus-java-server-1.0.0-3.1-SNAPSHOT.jar</tus-java-server-systemPath>
         <java.version>21</java.version>
         <mybastis.version>3.0.4</mybastis.version>
     </properties>
@@ -288,7 +289,13 @@
 		    <artifactId>p6spy-spring-boot-starter</artifactId>
 		    <version>1.9.1</version>
 		</dependency>
-
+		<dependency>
+		  <groupId>me.desair.tus</groupId>
+		  <artifactId>tus-java-server</artifactId>
+		  <version>1.0.0-3.1-SNAPSHOT</version>
+		  <scope>system</scope>
+          <systemPath>${tus-java-server-systemPath}</systemPath>
+		</dependency>
 		
 		<!--
 		<dependency>

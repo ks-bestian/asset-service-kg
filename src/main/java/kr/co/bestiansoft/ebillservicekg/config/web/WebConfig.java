@@ -33,8 +33,9 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins(allowedUrl)
                 .allowedOrigins(allowedUrl2)
-                .allowedMethods("GET", "POST", "PUT", "DELETE") // Http method setting to be allowed
-                .allowedHeaders("*");
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD")
+                .allowedHeaders("*")
+        		.exposedHeaders("Upload-Offset", "Location", "Tus-Resumable", "Upload-Length", "Upload-Metadata");
 //                .allowCredentials(true);
     }
 }

@@ -1,44 +1,43 @@
 package kr.co.bestiansoft.ebillservicekg.common.file.controller;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
+import java.io.IOException;
+
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import kr.co.bestiansoft.ebillservicekg.common.file.service.TusService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.desair.tus.server.TusFileUploadService;
 
 @Slf4j
-@CrossOrigin(origins = "*", allowedHeaders = "*")
-@RequiredArgsConstructor
 @RestController
+@RequiredArgsConstructor
 public class TusController {
 
-    private final TusService tusService;
-/*
-    @RequestMapping(value = {"/tus/upload", "/tus/upload/**"}, method = {RequestMethod.POST, RequestMethod.PATCH, RequestMethod.HEAD, RequestMethod.OPTIONS})
-    @ResponseBody
-    public void tusUpload(HttpServletRequest request, HttpServletResponse response) {
-        try {
-            tusService.uploadTus(request, response);
-        } catch (Exception e) {
-            log.error("TUS 업로드 처리 중 오류 발생", e);
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        }
+    private final TusFileUploadService tusService;
+
+    @PostMapping("/")
+    public void uploadWithTus(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    	tusService.process(request, response);
     }
-*/    
-    @ResponseBody
-    @RequestMapping(value = {"/tus/upload", "/tus/upload/**"})
-    public void tusUpload(HttpServletRequest request, HttpServletResponse response){
-        try {
-            tusService.uploadTus(request, response);
-        } catch (Exception e) {
-            log.error("TUS 업로드 처리 중 오류 발생", e);
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        }
+    
+    @PatchMapping("/**")
+    public void processPatch(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    	tusService.process(request, response);
+    }
+
+    @RequestMapping(value = "/**", method = RequestMethod.HEAD)
+    public void processHead(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    	tusService.process(request, response);
+    }
+
+    @RequestMapping(value = "/**", method = RequestMethod.OPTIONS)
+    public void processOptions(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        response.setStatus(HttpServletResponse.SC_OK);
     }
 }

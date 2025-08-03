@@ -57,7 +57,6 @@ public class MnulServiceImpl implements MnulService {
             mnulVo.setMnlSe(mnlSe);
             mnulVo.setSeq(i);
             mnulVo.setRgtrId(new SecurityInfoUtil().getAccountId());
-            mnulVo.setMnlLng("KR"); //todo 수정
 
             Optional.ofNullable(mnulVo.getFileNm2())
                     .ifPresent(mnulVo::setFileNm);
@@ -67,6 +66,33 @@ public class MnulServiceImpl implements MnulService {
             i++;
         }
 
+
+        return mnulMapper.createMnul(mnulVoList);
+    }
+    
+    @Override
+    public int createMnulFromUrl(List<MnulVo> mnulVoList, String eqpmntId) {
+        int i = 1;
+        for (MnulVo mnulVo : mnulVoList) {
+            String videoUrl = null;
+            if (mnulVo.getVideoFileUrl() != null && !mnulVo.getVideoFileUrl().isEmpty()) {
+                videoUrl = mnulVo.getVideoFileUrl().get(0); // 현재는 한 개만 사용한다고 가정
+            }
+            // UUID 추출
+            String uuid = videoUrl.substring(videoUrl.lastIndexOf("/") + 1);
+
+            mnulVo.setMnlId(StringUtil.getMnlUUID());
+            mnulVo.setEqpmntId(eqpmntId);
+            mnulVo.setMnlSe("video");
+            mnulVo.setSeq(i++);
+            mnulVo.setRgtrId(new SecurityInfoUtil().getAccountId());
+
+            mnulVo.setFilePath(videoUrl);
+            mnulVo.setFileNm(uuid);
+
+            Optional.ofNullable(mnulVo.getFileNm2())
+                    .ifPresent(mnulVo::setFileNm);
+        }
 
         return mnulMapper.createMnul(mnulVoList);
     }

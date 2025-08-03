@@ -115,7 +115,7 @@ public class EquipServiceImpl implements EquipService {
         }
 
         //2.영상메뉴얼
-        mnulService.createMnul(mnulList, eqpmntId, "video");
+        mnulService.createMnulFromUrl(mnulList, eqpmntId);
         //3.설치정보
         installService.createInstall(installVoList, eqpmntId);
 
