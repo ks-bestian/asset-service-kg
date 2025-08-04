@@ -3,5 +3,5 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public interface TusService {
-	String uploadTus(HttpServletRequest request, HttpServletResponse response);
+	void uploadTus(HttpServletRequest request, HttpServletResponse response);
 }

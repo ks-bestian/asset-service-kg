@@ -1,5 +1,6 @@
 package kr.co.bestiansoft.ebillservicekg.asset.manual.service.impl;
 
+import kr.co.bestiansoft.ebillservicekg.asset.amsImg.vo.AmsImgVo;
 import kr.co.bestiansoft.ebillservicekg.asset.manual.repository.MnulMapper;
 import kr.co.bestiansoft.ebillservicekg.asset.manual.service.MnulService;
 import kr.co.bestiansoft.ebillservicekg.asset.manual.vo.MnulVo;
@@ -17,6 +18,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -39,13 +43,15 @@ public class MnulServiceImpl implements MnulService {
                 int lastDotIndex = orgFileNm.lastIndexOf('.');
                 String fileNm = orgFileNm.substring(0, lastDotIndex);
                 String fileType = file.getContentType();
+                String ext = (lastDotIndex != -1) ? orgFileNm.substring(lastDotIndex + 1) : "";
+                String uuid = StringUtil.getUUUID();
 
                 try {
-                    String filePath = FileUtil.upload(file, fileUploadDir, fileType, orgFileNm);
-                    mnulVo.setFilePath(filePath);
-                    mnulVo.setFileNm(fileNm);
-                    mnulVo.setOrgnlFileNm(orgFileNm);
-                    mnulVo.setFileExtn(file.getContentType());
+                    String filePath = FileUtil.upload(file, makeUploadPath("mnl"), "", uuid+ "." + ext);
+                    mnulVo.setFilePath(makeSavePath("mnl"));
+                    mnulVo.setFileNm(uuid);
+                    mnulVo.setOrgnlFileNm(fileNm);
+                    mnulVo.setFileExtn(ext);
                     mnulVo.setFileSz(file.getSize());
                 } catch (IOException e) {
                     throw new RuntimeException("파일저장실패 : " + e);
@@ -87,7 +93,7 @@ public class MnulServiceImpl implements MnulService {
             mnulVo.setSeq(i++);
             mnulVo.setRgtrId(new SecurityInfoUtil().getAccountId());
 
-            mnulVo.setFilePath(videoUrl);
+            mnulVo.setFilePath(makeSavePath("mnl"));
             mnulVo.setFileNm(uuid);
 
             Optional.ofNullable(mnulVo.getFileNm2())
@@ -95,6 +101,18 @@ public class MnulServiceImpl implements MnulService {
         }
 
         return mnulMapper.createMnul(mnulVoList);
+    }
+    
+    public String makeUploadPath(String middleDir) {
+        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String savePath = Paths.get(fileUploadDir, middleDir, today).toString();
+        return savePath;
+    }
+    
+    public String makeSavePath(String middleDir) {
+        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String savePath = Paths.get(middleDir, today).toString();
+        return savePath;
     }
 
     public void saveMultipartFiles(MultipartFile[] files) {
@@ -192,13 +210,23 @@ public class MnulServiceImpl implements MnulService {
     @Override
     public Resource videoMnlAsResource(String mnlId) throws IOException {
         MnulVo vo = mnulMapper.getVideoByMnlId(mnlId);
-        File videoFile = new File(vo.getFilePath());
+        File videoFile = new File(makeLoadPath(vo));
+        
         InputStream stream = new FileInputStream(videoFile);
         return new InputStreamResource(stream);
+    }
+    
+    public String makeLoadPath(MnulVo vo) {
+        String fileNameWithExt = vo.getFileExtn() != null && !vo.getFileExtn().isBlank()
+                ? vo.getFileNm() + "." + vo.getFileExtn()
+                : vo.getFileNm();
+        String loadPath = Paths.get(fileUploadDir, vo.getFilePath(), fileNameWithExt).toString();
+        return loadPath;
     }
 
     @Override
     public Resource downloadFile(String fileId){
-        return FileUtil.loadFile(fileId);
+    	String savePath = Paths.get(fileUploadDir, fileId).toString();
+        return FileUtil.loadFile(savePath);
     }
 }

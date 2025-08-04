@@ -14,6 +14,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -46,18 +49,19 @@ public class AmsImgServiceImpl implements AmsImgService {
             int lastDot = orlFileNm.lastIndexOf('.');
             String fileNm = orlFileNm.substring(0, lastDot);
             String fileType = file.getContentType();
-
+            String ext = (lastDot != -1) ? orlFileNm.substring(lastDot + 1) : "";
+            String uuid = StringUtil.getUUUID();
             try {
-                String filePath = FileUtil.upload(file, fileUploadDir, fileType, fileNm);
+                String filePath = FileUtil.upload(file, makeUploadPath("img"), "", uuid+ "." + ext);
 
                 //amsImg save
                 AmsImgVo amsImgVo = new AmsImgVo();
                 amsImgVo.setImgId(StringUtil.getImgUUUID());
                 amsImgVo.setEqpmntId(eqpmntId);
-                amsImgVo.setFilePath(filePath);
-                amsImgVo.setFileNm(fileNm);
-                amsImgVo.setOrgnlFileNm(orlFileNm);
-                amsImgVo.setFileExtn(file.getContentType());
+                amsImgVo.setFilePath(makeSavePath("img"));
+                amsImgVo.setFileNm(uuid);
+                amsImgVo.setOrgnlFileNm(fileNm);
+                amsImgVo.setFileExtn(ext);
                 amsImgVo.setFileSz(file.getSize());
                 amsImgVo.setImgSe(imgSe);
                 amsImgVo.setInstlId(instlId);
@@ -69,6 +73,18 @@ public class AmsImgServiceImpl implements AmsImgService {
             }
         }
         return 1;
+    }
+    
+    public String makeUploadPath(String middleDir) {
+        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String savePath = Paths.get(fileUploadDir, middleDir, today).toString();
+        return savePath;
+    }
+    
+    public String makeSavePath(String middleDir) {
+        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String savePath = Paths.get(middleDir, today).toString();
+        return savePath;
     }
 
 
