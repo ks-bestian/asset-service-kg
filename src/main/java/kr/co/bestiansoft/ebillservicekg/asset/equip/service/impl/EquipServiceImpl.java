@@ -1,6 +1,10 @@
 package kr.co.bestiansoft.ebillservicekg.asset.equip.service.impl;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -259,8 +263,8 @@ public class EquipServiceImpl implements EquipService {
         //장비 상세 이미지
         List<AmsImgVo> imgList = amsImgService.getImgListByEqpmntId(id);
         Optional<AmsImgVo> vo = imgList.stream().filter(item -> "thumbnail".equals(item.getImgSe())).findFirst();
-
-        return FileUtil.loadFile(vo.get().getFilePath());
+        AmsImgVo imgVo = vo.orElseThrow(() -> new FileNotFoundException("No Img"));
+        return FileUtil.loadFile(makeLoadPath(imgVo));
     }
     
     @Override
@@ -268,7 +272,7 @@ public class EquipServiceImpl implements EquipService {
         //장비 상세 이미지
         AmsImgVo vo = amsImgService.getImgVoByImgId(imgId);
 
-        return FileUtil.loadFile(vo.getFilePath());
+        return FileUtil.loadFile(makeLoadPath(vo));
     }
     
     @Override
@@ -277,8 +281,16 @@ public class EquipServiceImpl implements EquipService {
         //장비 상세 이미지
         List<AmsImgVo> imgList = amsImgService.getImgListByInstlId(id);
         Optional<AmsImgVo> vo = imgList.stream().filter(item -> "installImg".equals(item.getImgSe())).findFirst();
-
-        return FileUtil.loadFile(vo.get().getFilePath());
+        AmsImgVo imgVo = vo.orElseThrow(() -> new FileNotFoundException("No Img"));
+        return FileUtil.loadFile(makeLoadPath(imgVo));
+    }
+    
+    public String makeLoadPath(AmsImgVo vo) {
+        String fileNameWithExt = vo.getFileExtn() != null && !vo.getFileExtn().isBlank()
+                ? vo.getFileNm() + "." + vo.getFileExtn()
+                : vo.getFileNm();
+        String loadPath = Paths.get(fileUploadDir, vo.getFilePath(), fileNameWithExt).toString();
+        return loadPath;
     }
 
     

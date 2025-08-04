@@ -1,10 +1,16 @@
 package kr.co.bestiansoft.ebillservicekg.config.web;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.CacheControl;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 
 import kr.co.bestiansoft.ebillservicekg.admin.acsHist.service.AcsHistService;
 import kr.co.bestiansoft.ebillservicekg.config.web.interceptor.LogInterceptor;
@@ -13,6 +19,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+	
+    @Value("${video.upload.path}") // ex) /upload/video
+    private String videoUploadPath;
+
 
 	private final AcsHistService acsHistService;
 //    private final TokenProvider tokenProvider;
@@ -37,5 +47,14 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedHeaders("*")
         		.exposedHeaders("Upload-Offset", "Location", "Tus-Resumable", "Upload-Length", "Upload-Metadata");
 //                .allowCredentials(true);
+    }
+    
+    @Bean
+    public ResourceHttpRequestHandler videoRequestHandler() {
+        ResourceHttpRequestHandler requestHandler = new ResourceHttpRequestHandler();
+        requestHandler.setLocations(List.of(new FileSystemResource(videoUploadPath)));
+        requestHandler.setCacheControl(CacheControl.noCache());
+
+        return requestHandler;
     }
 }

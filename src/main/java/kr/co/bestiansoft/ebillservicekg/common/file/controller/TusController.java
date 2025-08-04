@@ -10,30 +10,30 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import kr.co.bestiansoft.ebillservicekg.common.file.service.TusService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.desair.tus.server.TusFileUploadService;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 public class TusController {
 
-    private final TusFileUploadService tusService;
+    private final TusService tusService;
 
     @PostMapping("/")
     public void uploadWithTus(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    	tusService.process(request, response);
+    	tusService.uploadTus(request, response);
     }
     
     @PatchMapping("/**")
     public void processPatch(HttpServletRequest request, HttpServletResponse response) throws Exception {
-    	tusService.process(request, response);
+    	tusService.uploadTus(request, response);
     }
 
     @RequestMapping(value = "/**", method = RequestMethod.HEAD)
     public void processHead(HttpServletRequest request, HttpServletResponse response) throws Exception {
-    	tusService.process(request, response);
+    	tusService.uploadTus(request, response);
     }
 
     @RequestMapping(value = "/**", method = RequestMethod.OPTIONS)

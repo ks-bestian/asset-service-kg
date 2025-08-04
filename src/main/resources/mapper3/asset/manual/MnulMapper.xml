@@ -15,6 +15,7 @@
             , file_extn
             , file_sz
             , mnl_lng
+            , mnl_nm
         from ams_mnl
         where 1=1
         <if test="eqpmntIds.size() > 0">
@@ -37,6 +38,7 @@
             , file_extn
             , file_sz
             , mnl_lng
+            , mnl_nm
         from ams_mnl
         where eqpmnt_id = #{eqpmntId}
         <if test="videoYn != null">
@@ -62,6 +64,7 @@
             , file_extn
             , file_sz
             , mnl_lng
+            , mnl_nm
         from ams_mnl
         where mnl_id = #{mnlId} and mnl_se = 'video'
         order by seq
@@ -79,6 +82,7 @@
             , file_extn
             , file_sz
             , mnl_lng
+            , mnl_nm
             , reg_dt
             , rgtr_id
         )
@@ -94,6 +98,7 @@
             , #{vo.fileExtn}
             , #{vo.fileSz}
             , #{vo.mnlLng}
+            , #{vo.mnlNm}
             , now()
             , #{vo.rgtrId}
             )
@@ -124,6 +129,7 @@
             , file_extn
             , file_sz
             , mnl_lng
+            , mnl_nm
             , reg_dt
             ) values (
               #{mnlId}
@@ -136,6 +142,7 @@
             , #{fileExtn}
             , #{fileSz}
             , #{mnlLng}
+            , #{mnlNm}
             , now()
             , #{rgtrId}
             )
@@ -149,6 +156,7 @@
             , file_extn = excluded.file_extn
             , file_sz = excluded.file_sz
             , mnl_lng = excluded.mnl_lng
+            , mnl_nm = excluded.mnl_nm
             , mdfcn_dt = now()
             , mdfr_id = #{mdfrId}
         where ams_mnl.mnl_id = excluded.mnl_id

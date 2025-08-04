@@ -9,6 +9,8 @@ import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.respon
 import kr.co.bestiansoft.ebillservicekg.common.utils.FileUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Paths;
 import java.util.HashMap;
 
 
@@ -29,7 +32,8 @@ import java.util.HashMap;
 @RestController
 @RequestMapping
 public class AmsImgController {
-
+    @Value("${file.upload.path}")
+    private String fileUploadDir;
     private final AmsImgService amsImgService;
 
 
@@ -42,7 +46,8 @@ public class AmsImgController {
     @Operation(summary = "My information image", description="My information Image Inquiry.")
     @GetMapping("asset/img/view")
     public ResponseEntity<?> getMyInfoImg(@RequestParam String pdfFileNm) {
-        Resource resource = FileUtil.loadFile(pdfFileNm);
+    	String savePath = Paths.get(fileUploadDir, pdfFileNm).toString();
+        Resource resource = FileUtil.loadFile(savePath);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
