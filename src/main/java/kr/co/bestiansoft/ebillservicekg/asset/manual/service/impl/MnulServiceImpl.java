@@ -32,24 +32,22 @@ public class MnulServiceImpl implements MnulService {
     public int createMnul(List<MnulVo> mnulVoList, String eqpmntId, String mnlSe) {
         int i = 1;
         for (MnulVo mnulVo : mnulVoList) {
-            if (mnulVo.getFile() != null) {
-                MultipartFile file = mnulVo.getFile();
-                String orgFileNm = file.getOriginalFilename();
+            String videoUrl = null;
+            if (mnulVo.getVideoFileUrl() != null && !mnulVo.getVideoFileUrl().isEmpty()) {
+                videoUrl = mnulVo.getVideoFileUrl().get(0);
+            }
+            String uuid = videoUrl.substring(videoUrl.lastIndexOf("/") + 1);
 
-                int lastDotIndex = orgFileNm.lastIndexOf('.');
-                String fileNm = orgFileNm.substring(0, lastDotIndex);
-                String fileType = file.getContentType();
+            MultipartFile file = mnulVo.getFile();
 
-                try {
-                    String filePath = FileUtil.upload(file, fileUploadDir, fileType, orgFileNm);
-                    mnulVo.setFilePath(filePath);
-                    mnulVo.setFileNm(fileNm);
-                    mnulVo.setOrgnlFileNm(orgFileNm);
-                    mnulVo.setFileExtn(file.getContentType());
-                    mnulVo.setFileSz(file.getSize());
-                } catch (IOException e) {
-                    throw new RuntimeException("파일저장실패 : " + e);
-                }
+            String fileType = file.getContentType();
+
+            try {
+                FileUtil.upload(file, fileUploadDir, fileType, mnulVo.getOrgnlFileNm());
+                mnulVo.setFilePath(videoUrl);
+                mnulVo.setFileNm(uuid);//fileNm은 입력받은값 //filePath 주소
+            } catch (IOException e) {
+                throw new RuntimeException("파일저장실패 : " + e);
             }
 
             mnulVo.setMnlId(StringUtil.getMnlUUID());
@@ -69,7 +67,7 @@ public class MnulServiceImpl implements MnulService {
 
         return mnulMapper.createMnul(mnulVoList);
     }
-    
+
     @Override
     public int createMnulFromUrl(List<MnulVo> mnulVoList, String eqpmntId) {
         int i = 1;
@@ -113,6 +111,11 @@ public class MnulServiceImpl implements MnulService {
         params.put("eqpmntId", eqpmntId);
         params.put("videoYn", videoYn);
         return mnulMapper.getMnulListByEqpmntId(params);
+    }
+
+    @Override
+    public MnulVo getMnlByMnlId(String mnlId) {
+        return mnulMapper.getVideoByMnlId(mnlId);
     }
 
     @Override
@@ -198,7 +201,7 @@ public class MnulServiceImpl implements MnulService {
     }
 
     @Override
-    public Resource downloadFile(String fileId){
+    public Resource downloadFile(String fileId) {
         return FileUtil.loadFile(fileId);
     }
 }

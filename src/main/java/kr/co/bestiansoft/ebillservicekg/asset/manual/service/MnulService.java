@@ -15,6 +15,7 @@ public interface MnulService {
     List<MnulVo> getMnulListByEquipIds(List<String> eqpmntIds);
 
     List<MnulVo> getMnulListByEqpmntId(String eqpmntId, String videoYn);
+    MnulVo getMnlByMnlId(String mnlId);
 
     void deleteMnul(String eqpmntId);
     void deleteMnulById(List<String> ids);

@@ -10,7 +10,7 @@ import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipRequest;
 import kr.co.bestiansoft.ebillservicekg.common.exceptionadvice.controller.response.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.desair.tus.server.TusFileUploadService;
+//import me.desair.tus.server.TusFileUploadService;
 
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;

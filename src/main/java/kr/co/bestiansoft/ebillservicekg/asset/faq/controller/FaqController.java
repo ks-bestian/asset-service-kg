@@ -24,8 +24,8 @@ public class FaqController {
 
     @Operation(summary = "get faq list by eqpmntId")
     @GetMapping
-    public ResponseEntity<CommonResponse> getFaqList(@RequestParam String eqpmntId) {
-        return new ResponseEntity<>(new CommonResponse(200, "OK", faqService.getFaqList(eqpmntId)), HttpStatus.OK);
+    public ResponseEntity<CommonResponse> getFaqList(@RequestParam String eqpmntId, @RequestParam String bzentyId) {
+        return new ResponseEntity<>(new CommonResponse(200, "OK", faqService.getFaqsAndBzenty(eqpmntId, bzentyId)), HttpStatus.OK);
     }
 
     @Operation(summary = "설치 정보 삭제", description = "설치 정보를 삭제한다.")

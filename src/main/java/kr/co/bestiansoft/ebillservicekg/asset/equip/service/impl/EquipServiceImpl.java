@@ -165,7 +165,6 @@ public class EquipServiceImpl implements EquipService {
         EquipResponse result = new EquipResponse();
         result.setEquipDetailVo(equipMapper.getDetailEquip(eqpmntId));
 
-        //todo 이미지 : thumnail & 설치 이미지
         List<String> id = Arrays.asList(eqpmntId);
 
         result.setAmsImgList(amsImgService.getDetailListByEqpmntId(eqpmntId));

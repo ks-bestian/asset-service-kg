@@ -50,6 +50,12 @@ public class MnulController {
         return new ResponseEntity<>(new CommonResponse(200, "OK", mnulService.getMnulListByEqpmntId(eqpmntId, "video")), HttpStatus.OK);
     }
 
+    @Operation(summary = "장비 비디오 메뉴얼 목록 조회", description = "장비 비디오 메뉴얼 목록 조회한다.")
+    @GetMapping("/video/detail")
+    public ResponseEntity<CommonResponse> getMnlByMnlId(@RequestParam String mnlId) {
+        return new ResponseEntity<>(new CommonResponse(200, "OK", mnulService.getMnlByMnlId(mnlId)), HttpStatus.OK);
+    }
+
     @GetMapping(value="/video/{mnlId}",produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<Resource> videoMnl(@PathVariable String mnlId) throws IOException {
         Resource video = mnulService.videoMnlAsResource(mnlId);
@@ -84,6 +90,7 @@ public class MnulController {
 
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_PDF)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
                 .body(resource);
     }
 

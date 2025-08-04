@@ -41,11 +41,22 @@
             , ab.bzenty_nm_2
             , ab.bzenty_nm_3
             , ccd.code_nm1 as eqpmnt_se_nm_1
-            , ccd.code_nm2 as eqpmnt_se_nm_2
+            , ccd.code_nm2 as eqpmnt_se_nm_2p
             , ccd.code_nm3 as eqpmnt_se_nm_3
             , case when exists (select 1 from ams_mnl am where am.eqpmnt_id = ae.eqpmnt_id and am.mnl_se = 'file') then true
             else false
             end as file_exist
+            ,    (
+                SELECT
+                am.mnl_id
+                FROM
+                ams_mnl am
+                WHERE
+                am.eqpmnt_id = ae.eqpmnt_id
+                AND am.mnl_se = 'video'
+                ORDER BY am.seq ASC
+                LIMIT 1
+            ) AS video_mnl_id
         from ams_eqpmnt ae
         left join ams_bzenty ab on ab.bzenty_id = ae.bzenty_id
         left join kgst.com_code_detail ccd on ccd.code_id = ae.eqpmnt_se

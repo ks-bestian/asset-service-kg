@@ -40,7 +40,7 @@ public class EquipDetailVo {
     private String eqpmntSeNm3;
 
     private Boolean fileExist;
-
+    private String videoMnlId;
     @Builder
     public EquipDetailVo(EquipDetailVo vo) {
         this.eqpmntId = vo.getEqpmntId();
