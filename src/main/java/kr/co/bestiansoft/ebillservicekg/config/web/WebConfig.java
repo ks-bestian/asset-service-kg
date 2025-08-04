@@ -20,8 +20,8 @@ import lombok.RequiredArgsConstructor;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 	
-    @Value("${video.upload.path}") // ex) /upload/video
-    private String videoUploadPath;
+    @Value("${file.upload.path}") // ex) /upload/video
+    private String fileUploadDir;
 
 
 	private final AcsHistService acsHistService;
@@ -52,7 +52,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Bean
     public ResourceHttpRequestHandler videoRequestHandler() {
         ResourceHttpRequestHandler requestHandler = new ResourceHttpRequestHandler();
-        requestHandler.setLocations(List.of(new FileSystemResource(videoUploadPath)));
+        requestHandler.setLocations(List.of(new FileSystemResource(fileUploadDir)));
         requestHandler.setCacheControl(CacheControl.noCache());
 
         return requestHandler;
