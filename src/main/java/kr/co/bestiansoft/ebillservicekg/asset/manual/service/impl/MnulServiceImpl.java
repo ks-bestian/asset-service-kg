@@ -36,24 +36,12 @@ public class MnulServiceImpl implements MnulService {
     public int createMnul(List<MnulVo> mnulVoList, String eqpmntId, String mnlSe) {
         int i = 1;
         for (MnulVo mnulVo : mnulVoList) {
-            String videoUrl = null;
-            if (mnulVo.getVideoFileUrl() != null && !mnulVo.getVideoFileUrl().isEmpty()) {
-                videoUrl = mnulVo.getVideoFileUrl().get(0);
-            }
-            String uuid = videoUrl.substring(videoUrl.lastIndexOf("/") + 1);
-
-<<<<<<< HEAD
-            MultipartFile file = mnulVo.getFile();
-
-            String fileType = file.getContentType();
-
-            try {
-                FileUtil.upload(file, fileUploadDir, fileType, mnulVo.getOrgnlFileNm());
-                mnulVo.setFilePath(videoUrl);
-                mnulVo.setFileNm(uuid);//fileNm은 입력받은값 //filePath 주소
-            } catch (IOException e) {
-                throw new RuntimeException("파일저장실패 : " + e);
-=======
+        	if (mnulVo.getFile() != null) {
+            
+        		MultipartFile file = mnulVo.getFile();
+            
+        		String orgFileNm = file.getOriginalFilename();
+            
                 int lastDotIndex = orgFileNm.lastIndexOf('.');
                 String fileNm = orgFileNm.substring(0, lastDotIndex);
                 String fileType = file.getContentType();
@@ -70,7 +58,6 @@ public class MnulServiceImpl implements MnulService {
                 } catch (IOException e) {
                     throw new RuntimeException("파일저장실패 : " + e);
                 }
->>>>>>> ks
             }
 
             mnulVo.setMnlId(StringUtil.getMnlUUID());
