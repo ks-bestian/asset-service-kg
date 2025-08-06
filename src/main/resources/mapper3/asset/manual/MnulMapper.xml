@@ -70,7 +70,24 @@
         order by seq
     </select>
     
-    <insert id="createMnul" parameterType="kr.co.bestiansoft.ebillservicekg.asset.manual.vo.MnulVo">
+    <select id="getMnlByFileNm" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.asset.manual.vo.MnulVo">
+        select
+              mnl_id
+            , eqpmnt_id
+            , mnl_se
+            , seq
+            , file_path
+            , file_nm
+            , orgnl_file_nm
+            , file_extn
+            , file_sz
+            , mnl_lng
+            , mnl_nm
+        from ams_mnl
+        where file_nm = #{fileNm}
+    </select>
+    
+    <insert id="createMnul" parameterType="java.util.List">
         insert into ams_mnl (
               mnl_id
             , eqpmnt_id
@@ -86,7 +103,7 @@
             , reg_dt
             , rgtr_id
         )
-        <foreach collection="mnulVoList" item="vo" open="VALUES" separator="," >
+        <foreach collection="list" item="vo" open="VALUES" separator="," >
             (
               #{vo.mnlId}
             , #{vo.eqpmntId}
@@ -115,6 +132,17 @@
         delete from ams_mnl
         where mnl_id = #{mnlId}
     </delete>
+    
+    <delete id="deleteNotIn">
+	    DELETE FROM ams_mnl
+	    WHERE eqpmnt_id = #{eqpmntId}
+	    <if test="instlIdList != null and instlIdList.size() > 0">
+	        AND mnl_id NOT IN
+	        <foreach item="id" collection="mnlIdList" open="(" separator="," close=")">
+	            #{id}
+	        </foreach>
+	    </if>
+	</delete>
 
 
     <update id="upsertMnul" parameterType="kr.co.bestiansoft.ebillservicekg.asset.manual.vo.MnulVo">

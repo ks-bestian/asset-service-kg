@@ -22,4 +22,26 @@ public class EquipRequest extends ComDefaultVO {
     private MultipartFile[] files;
     private MultipartFile[] dtlImg;
     private MultipartFile[] thumbnail;
+    
+    private String mnulVoList;      // JSON 문자열
+    private String installVoList;
+    private String faqVoList;
+    
+    private String thumbnailId;    // 예: dtlImgKeep
+    private String filesId;    // 예: thumbnailKeep
+    private String dtlImgId;    // 예: thumbnailKeep
+    private String instlFileId;    // 예: thumbnailKeep
+    private String videoFileId;    // 예: thumbnailKeep
+
+    private List<String> thumbnailKeep;    // 예: dtlImgKeep
+    private List<String> thumbnailDelete;  // 예: dtlImgDelete
+    private List<String> filesKeep;    // 예: thumbnailKeep
+    private List<String> filesDelete;  // 예: thumbnailDelete
+    private List<String> dtlImgKeep;    // 예: thumbnailKeep
+    private List<String> dtlImgDelete;  // 예: thumbnailDelete
+    private List<String> instlFileKeep;    // 예: thumbnailKeep
+    private List<String> instlFileDelete;  // 예: thumbnailDelete
+    private List<String> videoFileKeep;    // 예: thumbnailKeep
+    private List<String> videoFileDelete;  // 예: thumbnailDelete
+
 }

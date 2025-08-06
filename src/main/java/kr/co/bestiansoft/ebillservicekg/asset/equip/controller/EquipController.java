@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -42,7 +43,7 @@ public class EquipController {
 
     @Operation(summary = "장비 생성", description = "장비를 생성한다.")
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<CommonResponse> createEuip(EquipRequest equipRequest, @RequestParam("mnulVoList") String mnlVoJson, @RequestParam("installVoList") String installVoJson, @RequestParam("faqVoList") String faqVoJson, @RequestParam Map<String, MultipartFile> fileMap) {
+    public ResponseEntity<CommonResponse> createEuip(@ModelAttribute EquipRequest equipRequest, @RequestParam("mnulVoList") String mnlVoJson, @RequestParam("installVoList") String installVoJson, @RequestParam("faqVoList") String faqVoJson, @RequestParam Map<String, MultipartFile> fileMap) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Equipment created successfully", equipService.createEquip(equipRequest, mnlVoJson, installVoJson, faqVoJson, fileMap)), HttpStatus.CREATED);
     }
     
@@ -61,8 +62,12 @@ public class EquipController {
 
     @Operation(summary = "장비 수정", description = "장비 수정한다.")
     @PutMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<CommonResponse> updateEquip(EquipRequest equipRequest, @RequestParam("mnulVoList") String mnlVoJson, @RequestParam("installVoList") String installVoJson, @RequestParam("faqVoList") String faqVoJson, @RequestParam Map<String, MultipartFile> fileMap) {
-        return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "Equipment updated successfully", equipService.updateEquip(equipRequest, mnlVoJson, installVoJson, faqVoJson, fileMap)), HttpStatus.CREATED);
+    public ResponseEntity<CommonResponse> updateEquip(    @ModelAttribute EquipRequest equipRequest,
+    	    @RequestParam("mnulVoList") String mnulJson,
+    	    @RequestParam("installVoList") String installJson,
+    	    @RequestParam("faqVoList") String faqJson,
+    	    @RequestParam Map<String, MultipartFile> fileMap) {
+        return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "Equipment updated successfully", equipService.updateEquip(equipRequest, fileMap)), HttpStatus.CREATED);
     }
 
     @Operation(summary = "장비 삭제", description = "장비삭제한다.")

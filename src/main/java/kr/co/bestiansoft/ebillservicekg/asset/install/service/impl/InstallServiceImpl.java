@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -78,34 +79,33 @@ public class InstallServiceImpl implements InstallService {
     public int upsertInstl(List<InstallVo> instlList, String eqpmntId) {
 
 
-//        for(InstallVo installVo: installVoList) {
-//
-//            installVo.setRgtrId(new SecurityInfoUtil().getAccountId());
-//            installMapper.insertInstall(installVo);
-//
-//            if(installVo.getFile() != null) {
-//                MultipartFile[] files = {installVo.getFile()};
-//                amsImgService.saveImgs(files, eqpmntId, instlId, "installImg");
-//            }
-//        }
-
-
         for (InstallVo vo : instlList) {
+        	
             if(vo.getInstlId() == null || vo.getInstlId().isEmpty()) {
                 vo.setInstlId(StringUtil.getInstlUUUID());
                 vo.setRgtrId(new SecurityInfoUtil().getAccountId());
             }else {
                 vo.setMdfrId(new SecurityInfoUtil().getAccountId());
             }
-
+            
+            vo.setEqpmntId(eqpmntId);
+            installMapper.upsertInstl(vo);
+            
             if(vo.getFile() != null) {
                 MultipartFile[] files = {vo.getFile()};
-                vo.setEqpmntId(eqpmntId);
-                installMapper.upsertInstl(vo);
-
                 amsImgService.saveImgs(files, eqpmntId, vo.getInstlId(), "installImg");
             }
+            
+
         }
+        
+    	List<String> currentIds = instlList.stream()
+    		    .map(InstallVo::getInstlId)
+    		    .filter(Objects::nonNull)
+    		    .toList();
+
+    	installMapper.deleteNotIn(eqpmntId, currentIds);
+        
         return 1;
     }
 

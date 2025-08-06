@@ -67,6 +67,17 @@
         delete from ams_instl
         where instl_id = #{instlId}
     </delete>
+    
+	<delete id="deleteNotIn">
+	    DELETE FROM ams_instl
+	    WHERE eqpmnt_id = #{eqpmntId}
+	    <if test="instlIdList != null and instlIdList.size() > 0">
+	        AND instl_id NOT IN
+	        <foreach item="id" collection="instlIdList" open="(" separator="," close=")">
+	            #{id}
+	        </foreach>
+	    </if>
+	</delete>
 
     <update id="upsertInstl" parameterType="kr.co.bestiansoft.ebillservicekg.asset.install.vo.InstallVo">
         insert into asset_uzb.ams_instl (

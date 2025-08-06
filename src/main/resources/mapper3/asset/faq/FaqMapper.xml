@@ -66,4 +66,13 @@
         delete from ams_faq
         where faq_id = #{faqId}
     </delete>
+    
+    <delete id="deleteFaqsNotIn">
+	    DELETE FROM ams_faq
+	    WHERE eqpmnt_id = #{eqpmntId}
+	    AND faq_id NOT IN
+	    <foreach item="faqId" collection="faqIds" open="(" separator="," close=")">
+	        #{faqId}
+	    </foreach>
+	</delete>
 </mapper>
