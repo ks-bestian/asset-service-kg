@@ -46,8 +46,8 @@ public class BzentyServiceImpl implements BzentyService {
 
     @Override
     public int updateBzenty(BzentyVo bzentyVo) {
-//        String modId = new SecurityInfoUtil().getAccountId();
-//        bzentyVo.setModId(modId);
+        String modId = new SecurityInfoUtil().getAccountId();
+        bzentyVo.setMdfrId(modId);
         bzentyMapper.updateBzenty(bzentyVo);
 
         return 0;

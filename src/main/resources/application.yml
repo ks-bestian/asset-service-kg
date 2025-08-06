@@ -7,7 +7,7 @@ spring:
   datasource:
     kgst:
       driver-class-name: org.postgresql.Driver
-      jdbcUrl: jdbc:postgresql://3.39.79.144:5432/bestian?currentSchema=kgst&useUnicode=true&characterEncoding=utf8&autoReconnect=true
+      jdbcUrl: jdbc:postgresql://3.36.232.32:5432/postgres?currentSchema=kgst&useUnicode=true&characterEncoding=utf8&autoReconnect=true
       username: best
       password: best1234
     homepage:
@@ -112,8 +112,9 @@ file:
     path: C:\equipment\
 
 
+
 tus:
   server:
-    data: 
-      expiration: 864000    
+    data:
+      expiration: 864000
     

@@ -87,7 +87,7 @@
 		)
     </insert>
     
-    <update id="updateBzenty" parameterType="kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipVo">
+    <update id="updateBzenty" parameterType="kr.co.bestiansoft.ebillservicekg.asset.bzenty.vo.BzentyVo">
         update ams_bzenty
         set
               bzenty_nm_1 = #{bzentyNm1}
