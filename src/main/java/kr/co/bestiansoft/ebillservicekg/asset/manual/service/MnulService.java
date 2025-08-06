@@ -11,6 +11,7 @@ public interface MnulService {
     int createMnul(List<MnulVo> mnulVo, String eqpmntId, String mnlSe);
     
     int createMnulFromUrl(List<MnulVo> mnulVoList, String eqpmntId);
+    int upsertMnulFromUrl(List<MnulVo> mnulVoList, String eqpmntId);
 
     List<MnulVo> getMnulListByEquipIds(List<String> eqpmntIds);
 
@@ -19,7 +20,7 @@ public interface MnulService {
 
     void deleteMnul(String eqpmntId);
     void deleteMnulById(List<String> ids);
-    int upsertMnul(List<MnulVo> mnulVoList, String eqpmntId);
+    int upsertMnul(List<MnulVo> mnulVoList, String eqpmntId, String mnlSe);
     Resource loadVideoAsResource(String videoId)throws IOException;
     Resource videoMnlAsResource(String mnlId)throws IOException;
     Resource downloadFile(String fileId);

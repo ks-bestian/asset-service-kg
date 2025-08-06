@@ -21,7 +21,7 @@ public interface EquipService {
     List<EquipResponse> getEquipList(HashMap<String, Object> parmas);
     List<EquipDetailVo> getEquipListAll(HashMap<String, Object> parmas);
     EquipResponse getEquipDetail(String eqpmntId);
-    int updateEquip(EquipRequest equipRequest,  String mnlVoJson, String installVoJson, String faqVoJson,  Map<String, MultipartFile> fileMap);
+    int updateEquip(EquipRequest equipRequest, Map<String, MultipartFile> fileMap);
     void deleteEquip(List<String> ids);
     Resource loadThumbnail(String eqpmntId) throws IOException;
     Resource loadImg(String imgId) throws IOException;

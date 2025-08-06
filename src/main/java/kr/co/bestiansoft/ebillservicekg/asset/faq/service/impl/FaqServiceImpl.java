@@ -55,6 +55,7 @@ public class FaqServiceImpl implements FaqService {
     @Override
     public void updateFaq(List<FaqVo> faqVoList, String eqpmntId) {
     	List<FaqVo> insertList = new ArrayList<FaqVo>();
+    	List<String> incomingFaqIds = new ArrayList<>();
     	
         for(int i = 0; i < faqVoList.size(); i++) {
         	FaqVo faqVo = faqVoList.get(i);
@@ -64,20 +65,31 @@ public class FaqServiceImpl implements FaqService {
                 faqVo.setSeq(i+1);
                 faqVo.setMdfrId(new SecurityInfoUtil().getAccountId());
         		faqMapper.updateFaq(faqVo);
+        		incomingFaqIds.add(faqId);
         	} else {
                 faqId = StringUtil.getFaqUUID();
                 faqVo.setFaqId(faqId);
                 faqVo.setSeq(i+1);
                 faqVo.setEqpmntId(eqpmntId);
                 faqVo.setRgtrId(new SecurityInfoUtil().getAccountId());
-                
                 insertList.add(faqVo);
+                incomingFaqIds.add(faqId);
         	}
 
 
         }
         
-        faqMapper.insertFaq(insertList);
+        // ⛔ 삭제 대상: 기존 DB에 있으나 요청에 포함되지 않은 FAQ
+        if (!incomingFaqIds.isEmpty()) {
+            faqMapper.deleteFaqsNotIn(eqpmntId, incomingFaqIds);
+        } else {
+            // 전달된 리스트가 비어있을 경우: 모두 삭제
+            faqMapper.deleteFaq(eqpmntId);
+        }
+        
+        if (!insertList.isEmpty()) {
+        	faqMapper.insertFaq(insertList);
+        }
 
     }
 
