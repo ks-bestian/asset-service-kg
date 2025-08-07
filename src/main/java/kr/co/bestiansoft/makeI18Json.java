@@ -33,7 +33,7 @@ public class makeI18Json {
 	public Connection getPostgreSQLConnection() throws Exception
 	{
 		Class.forName("org.postgresql.Driver");
-		return DriverManager.getConnection("jdbc:postgresql://3.39.79.144:5432/bestian?currentSchema=kgst&useUnicode=true&characterEncoding=utf8&autoReconnect=true","best","best1234");
+		return DriverManager.getConnection("jdbc:postgresql://3.36.232.32:5432/postgres?currentSchema=kgst&useUnicode=true&characterEncoding=utf8&autoReconnect=true","best","best1234");
 	}
 
 	public void makeJsonData() throws Exception {

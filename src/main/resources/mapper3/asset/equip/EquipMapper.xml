@@ -71,7 +71,7 @@
             and eqpmnt_nm like concat ('%', #{searchEq}, '%')
         </if>
         <if test="searchBz != null and searchBz != ''">
-        	and bzenty_id like concat('%', #{searchBz}, '%')
+        	and ab.bzenty_id like concat('%', #{searchBz}, '%')
         </if>
         <if test="searchSe != null and searchSe != ''">
             and eqpmnt_se = #{searchSe}
