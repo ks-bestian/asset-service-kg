@@ -143,6 +143,16 @@
 	        </foreach>
 	    </if>
 	</delete>
+	<delete id="deleteNotInfileNm">
+	    DELETE FROM ams_mnl
+	    WHERE eqpmnt_id = #{eqpmntId}
+	    <if test="fileNmList != null and fileNmList.size() > 0">
+	        AND file_nm NOT IN
+	        <foreach item="id" collection="fileNmList" open="(" separator="," close=")">
+	            #{id}
+	        </foreach>
+	    </if>
+	</delete>
 
 
     <update id="upsertMnul" parameterType="kr.co.bestiansoft.ebillservicekg.asset.manual.vo.MnulVo">
@@ -183,8 +193,8 @@
             , orgnl_file_nm = excluded.orgnl_file_nm
             , file_extn = excluded.file_extn
             , file_sz = excluded.file_sz
-            , mnl_lng = excluded.mnl_lng
-            , mnl_nm = excluded.mnl_nm
+            , mnl_lng = #{mnlLng}
+            , mnl_nm = #{mnlNm}
             , mdfcn_dt = now()
             , mdfr_id = #{mdfrId}
         where ams_mnl.mnl_id = excluded.mnl_id

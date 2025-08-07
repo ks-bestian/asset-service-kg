@@ -17,6 +17,7 @@ public interface MnulMapper {
     void deleteMnul(String eqpmntId);
     void deleteMnulById(String mnlId);
     void deleteNotIn(@Param("eqpmntId") String eqpmntId, @Param("mnlIdList") List<String> mnlIdList);
+    void deleteNotInfileNm(@Param("eqpmntId") String eqpmntId, @Param("fileNmList") List<String> fileNmList);
     int upsertMnul(MnulVo vo);
 
 }

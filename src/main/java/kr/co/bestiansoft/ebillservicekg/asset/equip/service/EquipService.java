@@ -7,6 +7,9 @@ import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipVo;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -21,7 +24,7 @@ public interface EquipService {
     List<EquipResponse> getEquipList(HashMap<String, Object> parmas);
     List<EquipDetailVo> getEquipListAll(HashMap<String, Object> parmas);
     EquipResponse getEquipDetail(String eqpmntId);
-    int updateEquip(EquipRequest equipRequest, Map<String, MultipartFile> fileMap);
+    int updateEquip(EquipRequest equipRequest, Map<String, MultipartFile> fileMap) throws JsonMappingException, JsonProcessingException;
     void deleteEquip(List<String> ids);
     Resource loadThumbnail(String eqpmntId) throws IOException;
     Resource loadImg(String imgId) throws IOException;

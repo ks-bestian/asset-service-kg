@@ -80,7 +80,7 @@
 	</delete>
 
     <update id="upsertInstl" parameterType="kr.co.bestiansoft.ebillservicekg.asset.install.vo.InstallVo">
-        insert into asset_uzb.ams_instl (
+        insert into ams_instl (
         instl_id
         , eqpmnt_id
         , instl_ymd

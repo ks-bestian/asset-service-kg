@@ -32,16 +32,22 @@ public class EquipRequest extends ComDefaultVO {
     private String dtlImgId;    // 예: thumbnailKeep
     private String instlFileId;    // 예: thumbnailKeep
     private String videoFileId;    // 예: thumbnailKeep
+    
+    private String thumbnailKeep;
+    private String filesKeep;
+    private String dtlImgKeep;
+    private String instlFileKeep;
+    private String videoFileKeep;
 
-    private List<String> thumbnailKeep;    // 예: dtlImgKeep
+    //private List<String> thumbnailKeep;    // 예: dtlImgKeep
     private List<String> thumbnailDelete;  // 예: dtlImgDelete
-    private List<String> filesKeep;    // 예: thumbnailKeep
+    //private List<String> filesKeep;    // 예: thumbnailKeep
     private List<String> filesDelete;  // 예: thumbnailDelete
-    private List<String> dtlImgKeep;    // 예: thumbnailKeep
+    //private List<String> dtlImgKeep;    // 예: thumbnailKeep
     private List<String> dtlImgDelete;  // 예: thumbnailDelete
-    private List<String> instlFileKeep;    // 예: thumbnailKeep
+    // List<String> instlFileKeep;    // 예: thumbnailKeep
     private List<String> instlFileDelete;  // 예: thumbnailDelete
-    private List<String> videoFileKeep;    // 예: thumbnailKeep
+    // List<String> videoFileKeep;    // 예: thumbnailKeep
     private List<String> videoFileDelete;  // 예: thumbnailDelete
 
 }

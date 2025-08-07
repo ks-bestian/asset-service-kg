@@ -152,13 +152,13 @@ public class MnulServiceImpl implements MnulService {
             
             mnulMapper.upsertMnul(mnulVo);
         }
-        
+        /*
     	List<String> currentIds = mnulVoList.stream()
     		    .map(MnulVo::getMnlId)
     		    .filter(Objects::nonNull)
     		    .toList();
-
-    	mnulMapper.deleteNotIn(eqpmntId, currentIds);
+*/
+    	//mnulMapper.deleteNotIn(eqpmntId, currentIds);
 
         return 1;
     }
@@ -233,17 +233,21 @@ public class MnulServiceImpl implements MnulService {
                     mnulVo.setOrgnlFileNm(fileNm);
                     mnulVo.setFileExtn(ext);
                     mnulVo.setFileSz(file.getSize());
+    	            mnulVo.setMnlId(StringUtil.getMnlUUID());
+    		        mnulVo.setRgtrId(new SecurityInfoUtil().getAccountId());
                 } catch (IOException e) {
                     throw new RuntimeException("파일저장실패 : " + e);
                 }
             }
+        	/*
 
 		    if (mnulVo.getMnlId() == null || mnulVo.getMnlId().isEmpty()) {
-	            mnulVo.setMnlId(StringUtil.getMnlUUID());
-		        mnulVo.setRgtrId(new SecurityInfoUtil().getAccountId());
+
 	        } else {
 	        	mnulVo.setMdfrId(new SecurityInfoUtil().getAccountId());
 		    } 
+		    
+		    */
             mnulVo.setEqpmntId(eqpmntId);
             mnulVo.setMnlSe(mnlSe);
             mnulVo.setSeq(i);
@@ -257,13 +261,13 @@ public class MnulServiceImpl implements MnulService {
             
             i++;
         }
-
+/*
     	List<String> currentIds = mnulVoList.stream()
     		    .map(MnulVo::getMnlId)
     		    .filter(Objects::nonNull)
     		    .toList();
-
-    	mnulMapper.deleteNotIn(eqpmntId, currentIds);
+*/
+    	//mnulMapper.deleteNotIn(eqpmntId, currentIds);
 
         return 1;
     }

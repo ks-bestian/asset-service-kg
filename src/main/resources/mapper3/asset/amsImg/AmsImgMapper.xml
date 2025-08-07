@@ -75,11 +75,66 @@
             and eqpmnt_id = #{eqpmntId}
         </if>
     </select>
+    <select id="getThumbnailByEqpmntId" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.asset.amsImg.vo.AmsImgVo">
+        select
+        img_id
+        , eqpmnt_id
+        , instl_id
+        , img_se
+        , file_path
+        , file_nm
+        , orgnl_file_nm
+        , file_extn
+        , file_sz
+        from ams_img
+        where 1=1 and instl_id is null and img_se = 'thumbnail'
+        <if test="eqpmntId != null and eqpmntId != ''">
+            and eqpmnt_id = #{eqpmntId}
+        </if>
+    </select>
+    <select id="getInstallListByEqpmntId" parameterType="java.lang.String" resultType="kr.co.bestiansoft.ebillservicekg.asset.amsImg.vo.AmsImgVo">
+        select
+        img_id
+        , eqpmnt_id
+        , instl_id
+        , img_se
+        , file_path
+        , file_nm
+        , orgnl_file_nm
+        , file_extn
+        , file_sz
+        from ams_img
+        where 1=1 and instl_id is null and img_se = 'installImg'
+        <if test="eqpmntId != null and eqpmntId != ''">
+            and eqpmnt_id = #{eqpmntId}
+        </if>
+    </select>
 
     <delete id="deleteImg" parameterType="java.lang.String">
         delete from ams_img
         where eqpmnt_id = #{eqpmntId}
     </delete>
+    <delete id="deleteThumbnailImg" parameterType="java.lang.String">
+        delete from ams_img
+        where eqpmnt_id = #{eqpmntId}
+        and img_se = 'thumbnail'
+    </delete>
+    <delete id="deleteDetailImg" parameterType="java.lang.String">
+        delete from ams_img
+        where eqpmnt_id = #{eqpmntId}
+        and img_se = 'detail'
+    </delete>
+    
+	<delete id="deleteNotInfileNm">
+	    DELETE FROM ams_img
+	    WHERE eqpmnt_id = #{eqpmntId}
+	    <if test="fileNmList != null and fileNmList.size() > 0">
+	        AND file_nm NOT IN
+	        <foreach item="id" collection="fileNmList" open="(" separator="," close=")">
+	            #{id}
+	        </foreach>
+	    </if>
+	</delete>
 
     <insert id="saveImg" parameterType="kr.co.bestiansoft.ebillservicekg.asset.amsImg.vo.AmsImgVo">
         insert into ams_img (

@@ -33,10 +33,12 @@ public class MnulVo extends ComDefaultVO {
 
     private String fileId;
     private List<String> videoFileUrl;
+    
+    private MnulDto videoFile;
 
 
     @Builder
-    public MnulVo(String mnlId, String eqpmntId, String mnlSe, int seq, String filePath, String fileNm, String orgnlFileNm, String fileExtn, Long fileSz, String mnlLng, String mnlNm, MultipartFile file, String fileId, List<String> videoFileUrl) {
+    public MnulVo(String mnlId, String eqpmntId, String mnlSe, int seq, String filePath, String fileNm, String orgnlFileNm, String fileExtn, Long fileSz, String mnlLng, String mnlNm, MultipartFile file, String fileId, List<String> videoFileUrl, MnulDto videoFile) {
         this.mnlId = mnlId;
         this.eqpmntId = eqpmntId;
         this.mnlSe = mnlSe;
@@ -51,6 +53,7 @@ public class MnulVo extends ComDefaultVO {
         this.file = file;
         this.fileId = fileId;
         this.videoFileUrl = videoFileUrl;
+        this.videoFile = videoFile;
     }
 
 }

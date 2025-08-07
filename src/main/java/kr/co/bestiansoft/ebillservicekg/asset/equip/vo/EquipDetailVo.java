@@ -1,5 +1,9 @@
 package kr.co.bestiansoft.ebillservicekg.asset.equip.vo;
 
+import java.util.List;
+
+import kr.co.bestiansoft.ebillservicekg.asset.amsImg.vo.AmsImgVo;
+import kr.co.bestiansoft.ebillservicekg.asset.manual.vo.MnulVo;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -42,6 +46,11 @@ public class EquipDetailVo {
     private Boolean fileExist;
     private String videoMnlId;
     private String fileNm;
+    
+    private List<MnulVo> files;
+    private AmsImgVo thumbnail;
+    private List<AmsImgVo> dtlImg;
+    
     @Builder
     public EquipDetailVo(EquipDetailVo vo) {
         this.eqpmntId = vo.getEqpmntId();

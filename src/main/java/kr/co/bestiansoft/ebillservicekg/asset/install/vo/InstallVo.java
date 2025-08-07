@@ -1,7 +1,10 @@
 package kr.co.bestiansoft.ebillservicekg.asset.install.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import kr.co.bestiansoft.ebillservicekg.asset.amsImg.vo.AmsImgVo;
 import kr.co.bestiansoft.ebillservicekg.asset.equip.vo.EquipDetailVo;
+import kr.co.bestiansoft.ebillservicekg.asset.manual.vo.MnulVo;
 import kr.co.bestiansoft.ebillservicekg.common.vo.ComDefaultVO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -36,6 +39,8 @@ public class InstallVo extends ComDefaultVO {
     private String regNm2;
 
     private String fileId;
+    
+    private AmsImgVo instlFile;
 
 
     public InstallVo(EquipDetailVo vo) {

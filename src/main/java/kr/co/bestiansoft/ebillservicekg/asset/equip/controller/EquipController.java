@@ -23,6 +23,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.bestiansoft.ebillservicekg.asset.equip.service.EquipService;
@@ -43,7 +46,11 @@ public class EquipController {
 
     @Operation(summary = "장비 생성", description = "장비를 생성한다.")
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<CommonResponse> createEuip(@ModelAttribute EquipRequest equipRequest, @RequestParam("mnulVoList") String mnlVoJson, @RequestParam("installVoList") String installVoJson, @RequestParam("faqVoList") String faqVoJson, @RequestParam Map<String, MultipartFile> fileMap) {
+    public ResponseEntity<CommonResponse> createEuip(@ModelAttribute EquipRequest equipRequest,
+    		@RequestParam("mnulVoList") String mnlVoJson,
+    		@RequestParam("installVoList") String installVoJson,
+    		@RequestParam("faqVoList") String faqVoJson,
+    		@RequestParam Map<String, MultipartFile> fileMap) {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.CREATED.value(), "Equipment created successfully", equipService.createEquip(equipRequest, mnlVoJson, installVoJson, faqVoJson, fileMap)), HttpStatus.CREATED);
     }
     
@@ -66,7 +73,7 @@ public class EquipController {
     	    @RequestParam("mnulVoList") String mnulJson,
     	    @RequestParam("installVoList") String installJson,
     	    @RequestParam("faqVoList") String faqJson,
-    	    @RequestParam Map<String, MultipartFile> fileMap) {
+    	    @RequestParam Map<String, MultipartFile> fileMap) throws JsonMappingException, JsonProcessingException {
         return new ResponseEntity<>(new CommonResponse(HttpStatus.OK.value(), "Equipment updated successfully", equipService.updateEquip(equipRequest, fileMap)), HttpStatus.CREATED);
     }
 

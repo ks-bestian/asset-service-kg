@@ -17,7 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kr.co.bestiansoft.ebillservicekg.asset.amsImg.repository.AmsImgMapper;
@@ -34,6 +36,7 @@ import kr.co.bestiansoft.ebillservicekg.asset.install.service.InstallService;
 import kr.co.bestiansoft.ebillservicekg.asset.install.vo.InstallVo;
 import kr.co.bestiansoft.ebillservicekg.asset.manual.repository.MnulMapper;
 import kr.co.bestiansoft.ebillservicekg.asset.manual.service.MnulService;
+import kr.co.bestiansoft.ebillservicekg.asset.manual.vo.MnulDto;
 import kr.co.bestiansoft.ebillservicekg.asset.manual.vo.MnulVo;
 import kr.co.bestiansoft.ebillservicekg.common.utils.FileUtil;
 import kr.co.bestiansoft.ebillservicekg.common.utils.SecurityInfoUtil;
@@ -166,39 +169,114 @@ public class EquipServiceImpl implements EquipService {
         return equipList;
     }
 
+    
     @Override
     public EquipResponse getEquipDetail(String eqpmntId) {
         EquipResponse result = new EquipResponse();
-        result.setEquipDetailVo(equipMapper.getDetailEquip(eqpmntId));
+        
+        EquipDetailVo equipDetailVo = new EquipDetailVo();
+        
+        List<MnulVo> mnulVoList = new ArrayList<MnulVo>();
+        
+        List<InstallVo> installVoList = new ArrayList<InstallVo>();
+        
+        List<FaqVo> faqVoList = new ArrayList<FaqVo>();
+        
+        equipDetailVo = equipMapper.getDetailEquip(eqpmntId);
+        mnulVoList = mnulService.getMnulListByEqpmntId(eqpmntId, "video");
+        installVoList = installService.getInstallList(eqpmntId);
+        faqVoList = faqService.getFaqList(eqpmntId);
+        
 
-        List<String> id = Arrays.asList(eqpmntId);
+        equipDetailVo.setFiles(mnulService.getMnulListByEqpmntId(eqpmntId, "file"));
+        
+        equipDetailVo.setDtlImg(amsImgService.getDetailListByEqpmntId(eqpmntId));      
+        equipDetailVo.setThumbnail(amsImgMapper.getThumbnailByEqpmntId(eqpmntId));
+        
+        for (MnulVo vo : mnulVoList) {
+        	MnulDto dto = MnulDto.from(vo);
+            vo.setVideoFile(dto); // 자기 자신을 설정
+        }
+        for (InstallVo vo : installVoList) {
+        	AmsImgVo amsImgVo = amsImgMapper.getImgByInstlId(vo.getInstlId());
+            vo.setInstlFile(amsImgVo); // 자기 자신을 설정
+        }
 
+        
+        
+        result.setEquipDetailVo(equipDetailVo);
+        result.setMnulList(mnulVoList);
+        result.setInstallList(installVoList);
+        result.setFaqList(faqVoList);
+        
         result.setAmsImgList(amsImgService.getDetailListByEqpmntId(eqpmntId));
-
-        result.setInstallList(installService.getInstallList(eqpmntId));
-
-        result.setMnulList(mnulService.getMnulListByEqpmntId(eqpmntId, "file"));
-        result.setFaqList(faqService.getFaqList(eqpmntId));
+        
         return result;
     }
 
     @Transactional
     @Override
-    public int updateEquip(EquipRequest equipRequest, Map<String, MultipartFile> fileMap) {
+    public int updateEquip(EquipRequest equipRequest, Map<String, MultipartFile> fileMap) throws JsonMappingException, JsonProcessingException {
         String eqpmntId = equipRequest.getEqpmntId();
         List<MnulVo> mnulList = null;
         List<InstallVo> installVoList = null;
         List<FaqVo> faqList = null;
+        List<Map<String, Object>> thumbnailKeepIds = objectMapper.readValue(equipRequest.getThumbnailKeep(), new TypeReference<>() {});
+        List<Map<String, Object>> filesKeepIds = objectMapper.readValue(equipRequest.getFilesKeep(), new TypeReference<>() {});
+        List<Map<String, Object>> dtlImglKeepIds = objectMapper.readValue(equipRequest.getDtlImgKeep(), new TypeReference<>() {});
+        List<Map<String, Object>> videoFileKeepIds = objectMapper.readValue(equipRequest.getVideoFileKeep(), new TypeReference<>() {});
+        List<Map<String, Object>> instlFileKeepIds = objectMapper.readValue(equipRequest.getInstlFileKeep(), new TypeReference<>() {});
+        
+        
+        List<String> thumbnailKeepList = thumbnailKeepIds.stream()
+                .map(file -> (String) file.get("fileNm"))
+                .collect(Collectors.toList());
+        List<String> filesKeepList = filesKeepIds.stream()
+        		.map(file -> (String) file.get("fileNm"))
+        		.collect(Collectors.toList());
+        List<String> dtlImglKeepList = dtlImglKeepIds.stream()
+        		.map(file -> (String) file.get("fileNm"))
+        		.collect(Collectors.toList());
+        List<String> videoFileKeepList = videoFileKeepIds.stream()
+        		.map(file -> (String) file.get("fileNm"))
+        		.collect(Collectors.toList());
+        List<String> instlFileKeepList = instlFileKeepIds.stream()
+        		.map(file -> (String) file.get("fileNm"))
+        		.collect(Collectors.toList());
+        
+        
+        List<String> mergedMnulList = new ArrayList<>();
+        if (filesKeepList != null) {
+        	mergedMnulList.addAll(filesKeepList);
+        }
+        if (videoFileKeepList != null) {
+        	mergedMnulList.addAll(videoFileKeepList);
+        }
+        
+        List<String> mergedImgList = new ArrayList<>();
+        if (dtlImglKeepList != null) {
+        	mergedImgList.addAll(dtlImglKeepList);
+        }
+        if (thumbnailKeepList != null) {
+        	mergedImgList.addAll(thumbnailKeepList);
+        }
+        if (instlFileKeepList != null) {
+        	mergedImgList.addAll(instlFileKeepList);
+        }
+
+        mnulMapper.deleteNotInfileNm(eqpmntId, mergedMnulList);
+        amsImgMapper.deleteNotInfileNm(eqpmntId, mergedImgList);
+        
         List<String> thumbnailDeletedIds = equipRequest.getThumbnailDelete();
         List<String> mnulDeletedIds = equipRequest.getFilesDelete();
         List<String> dtlImgDeletedIds = equipRequest.getDtlImgDelete();
         List<String> mnulVideoDeletedIds = equipRequest.getVideoFileDelete();
         List<String> instlDeletedIds = equipRequest.getInstlFileDelete();
-        List<String> thumbnailKeepIds = equipRequest.getThumbnailKeep();
-        List<String> mnulKeepIds = equipRequest.getFilesKeep();
-        List<String> dtlImgKeepIds = equipRequest.getDtlImgKeep();
-        List<String> mnulVideoKeepIds = equipRequest.getVideoFileKeep();
-        List<String> instlKeepIds = equipRequest.getInstlFileKeep();
+        //List<String> thumbnailKeepIds = equipRequest.getThumbnailKeep();
+        //List<String> mnulKeepIds = equipRequest.getFilesKeep();
+        //List<String> dtlImgKeepIds = equipRequest.getDtlImgKeep();
+        //List<String> mnulVideoKeepIds = equipRequest.getVideoFileKeep();
+        //List<String> instlKeepIds = equipRequest.getInstlFileKeep();
 
         try {
         	mnulList = objectMapper.readValue(equipRequest.getMnulVoList(), new TypeReference<>() {});
@@ -209,7 +287,7 @@ public class EquipServiceImpl implements EquipService {
             System.err.println("ERROR : " + e);
         }
         
-        
+        /*
         if (thumbnailDeletedIds != null && !thumbnailDeletedIds.isEmpty()) {
             for (String fileNm : thumbnailDeletedIds) {
                 AmsImgVo vo = amsImgMapper.getImgByFileNm(fileNm);
@@ -251,7 +329,7 @@ public class EquipServiceImpl implements EquipService {
                 }
             }
         }
-        
+        */
         //1.장비정보
         if (equipRequest.getFiles() != null) {
             List files = new ArrayList<>();
@@ -268,7 +346,7 @@ public class EquipServiceImpl implements EquipService {
         equipMapper.updateEquip(equipRequest);
 
         //장비 썸네일, 상세 이미지
-        amsImgService.deleteImg(eqpmntId);
+        
         if (equipRequest.getDtlImg() != null) {
             amsImgService.saveImgs(equipRequest.getDtlImg(), eqpmntId, null, "detail");
         }
